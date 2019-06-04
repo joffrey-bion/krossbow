@@ -1,18 +1,33 @@
 package org.hildan.krossbow.engines
 
-interface KrossbowEngine
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.ReceiveChannel
 
-data class HeartBeat(
+@Suppress("FunctionName")
+fun KrossbowClient(engine: KrossbowEngine, configure: KrossbowConfig.() -> Unit = {}): KrossbowClient {
+    val config = KrossbowConfig().apply { configure() }
+    return engine.createClient(config)
+}
+
+interface KrossbowEngine {
+
+    fun createClient(config: KrossbowConfig): KrossbowClient
+}
+
+interface KrossbowClient {
+
     /**
-     * Represents what the sender of the frame can do (outgoing heart-beats).
-     * The value 0 means it cannot send heart-beats, otherwise it is the smallest number of milliseconds between
-     * heart-beats that it can guarantee.
+     * Connects to the given WebSocket [url] and to the STOMP session, and returns after receiving the CONNECTED frame.
      */
-    val minSendPeriodMillis: Int = 0,
-    /**
-     * Represents what the sender of the frame would like to get (incoming heart-beats).
-     * The value 0 means it does not want to receive heart-beats, otherwise it is the desired number of milliseconds
-     * between heart-beats.
-     */
-    val expectedPeriodMillis: Int = 0
-)
+    suspend fun connect(url: String, login: String? = null, passcode: String? = null): KrossbowSession
+}
+
+interface KrossbowSession {
+
+    suspend fun send(destination: String, body: Any)
+
+    suspend fun <T> subscribe(destination: String, onFrameReceived: (T) -> Unit)
+    suspend fun <T> CoroutineScope.subscribe(destination: String): ReceiveChannel<T>
+
+    suspend fun disconnect()
+}

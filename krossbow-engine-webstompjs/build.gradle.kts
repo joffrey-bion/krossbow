@@ -15,6 +15,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-js"))
     implementation(project(":krossbow-engine-api"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.2.1")
 }
 
 tasks {
