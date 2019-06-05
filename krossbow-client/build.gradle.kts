@@ -9,7 +9,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation(project(":krossbow-engine-api"))
+                api(project(":krossbow-engine-api"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.2.1")
             }
         }
