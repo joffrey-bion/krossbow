@@ -1,7 +1,6 @@
 package org.hildan.krossbow.engines
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlin.reflect.KClass
 
 @Suppress("FunctionName")
 fun KrossbowClient(engine: KrossbowEngine, configure: KrossbowConfig.() -> Unit = {}): KrossbowClient {
@@ -22,12 +21,34 @@ interface KrossbowClient {
     suspend fun connect(url: String, login: String? = null, passcode: String? = null): KrossbowSession
 }
 
-interface KrossbowSession {
+suspend fun KrossbowClient.useSession(
+    url: String,
+    login: String? = null,
+    passcode: String? = null,
+    block: suspend KrossbowSession.() -> Unit
+) {
+    val session = connect(url, login, passcode)
+    try {
+        session.block()
+    } finally {
+        session.disconnect()
+    }
+}
 
-    suspend fun send(destination: String, body: Any)
+interface KrossbowEngineSession {
 
-    suspend fun <T> subscribe(destination: String, onFrameReceived: (T) -> Unit)
-    suspend fun <T> CoroutineScope.subscribe(destination: String): ReceiveChannel<T>
+    suspend fun send(destination: String, body: Any): KrossbowReceipt?
+
+    suspend fun <T : Any> subscribe(
+        destination: String,
+        clazz: KClass<T>,
+        callbacks: SubscriptionCallbacks<T>
+    ): KrossbowEngineSubscription
 
     suspend fun disconnect()
 }
+
+data class KrossbowEngineSubscription(
+    val id: String,
+    val unsubscribe: suspend (UnsubscribeHeaders?) -> Unit
+)

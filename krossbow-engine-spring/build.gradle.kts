@@ -5,6 +5,8 @@ plugins {
 dependencies {
     api(project(":krossbow-engine-api"))
 
+    api("org.slf4j:slf4j-api:1.7.26")
+
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect")) // required by jackson-module-kotlin
 
@@ -23,4 +25,5 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
+    testImplementation("uk.org.lidalia:slf4j-test:1.1.0")
 }
