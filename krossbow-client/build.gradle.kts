@@ -10,7 +10,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 api(project(":krossbow-engine-api"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.2.1")
             }
         }
         val commonTest by getting {
@@ -29,7 +28,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
             }
         }
         val jsMain by getting {
@@ -41,7 +39,6 @@ kotlin {
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.2.1")
             }
         }
     }
