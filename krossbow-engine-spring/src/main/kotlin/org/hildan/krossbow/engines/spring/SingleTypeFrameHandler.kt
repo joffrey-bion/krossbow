@@ -1,7 +1,5 @@
 package org.hildan.krossbow.engines.spring
 
-import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.channels.sendBlocking
 import org.hildan.krossbow.engines.KrossbowMessage
 import org.hildan.krossbow.engines.MessageHeaders
 import org.springframework.messaging.simp.stomp.StompFrameHandler
@@ -30,8 +28,7 @@ internal class SingleTypeFrameHandler<T: Any>(
         }
         val headers = stompHeaders.toKrossbowHeaders()
         val typedPayload = payloadType.cast(payload)
-        val message = KrossbowMessage(typedPayload, headers)
-        onReceive(message)
+        onReceive(KrossbowMessage(typedPayload, headers))
     }
 }
 

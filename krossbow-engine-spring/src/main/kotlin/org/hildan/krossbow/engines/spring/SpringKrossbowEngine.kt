@@ -1,20 +1,16 @@
 package org.hildan.krossbow.engines.spring
 
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.hildan.krossbow.engines.AbstractKrossbowSession
 import org.hildan.krossbow.engines.KrossbowClient
 import org.hildan.krossbow.engines.KrossbowConfig
 import org.hildan.krossbow.engines.KrossbowEngine
 import org.hildan.krossbow.engines.KrossbowEngineSession
 import org.hildan.krossbow.engines.KrossbowEngineSubscription
-import org.hildan.krossbow.engines.KrossbowMessage
 import org.hildan.krossbow.engines.KrossbowReceipt
 import org.hildan.krossbow.engines.KrossbowSession
-import org.hildan.krossbow.engines.KrossbowSubscription
 import org.hildan.krossbow.engines.SubscriptionCallbacks
 import org.hildan.krossbow.engines.UnsubscribeHeaders
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
@@ -39,9 +35,13 @@ object SpringKrossbowEngine: KrossbowEngine {
 
     private fun defaultStompClient(webSocketClient: WebSocketClient = defaultWsClient()): WebSocketStompClient =
         WebSocketStompClient(webSocketClient).apply {
-            messageConverter = MappingJackson2MessageConverter() // for custom object exchanges
+            messageConverter = createJacksonConverter() // for custom object exchanges
             taskScheduler = createTaskScheduler() // for heartbeats
         }
+
+    private fun createJacksonConverter() = MappingJackson2MessageConverter().apply {
+        objectMapper.registerModule(KotlinModule())
+    }
 
     private fun defaultWsClient(transports: List<Transport> = defaultWsTransports()): WebSocketClient = SockJsClient(transports)
 
@@ -58,7 +58,7 @@ class SpringKrossbowClient(private val client: WebSocketStompClient): KrossbowCl
             val sessionHandler = LoggingStompSessionHandler()
             val futureSession = client.connect(url, sessionHandler)
             val session = SpringKrossbowSession(futureSession.get(), sessionHandler)
-            cont.resume(AbstractKrossbowSession(session))
+            cont.resume(KrossbowSession(session))
         }
     }
 }
@@ -76,16 +76,16 @@ private class SpringKrossbowSession(
     override suspend fun <T : Any> subscribe(
         destination: String,
         clazz: KClass<T>,
-        subscriptionCallbacks: SubscriptionCallbacks<T>
+        callbacks: SubscriptionCallbacks<T>
     ): KrossbowEngineSubscription {
         val handler = SingleTypeFrameHandler(clazz) {
             runBlocking {
-                subscriptionCallbacks.onReceive(it)
+                callbacks.onReceive(it)
             }
         }
         val sub = session.subscribe(destination, handler)
         sessionHandler.registerExceptionHandler(sub.subscriptionId!!) {
-            subscriptionCallbacks.onError(it)
+            callbacks.onError(it)
         }
 
         return KrossbowEngineSubscription(sub.subscriptionId!!) { headers ->

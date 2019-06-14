@@ -9,35 +9,25 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KClass
 
-// TODO handle headers in params
-interface KrossbowSession: CoroutineScope {
-
-    suspend fun send(destination: String, body: Any): KrossbowReceipt?
-
-    suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): KrossbowSubscription<T>
-
-    suspend fun disconnect()
-}
-
-suspend inline fun <reified T : Any> KrossbowSession.subscribe(destination: String): KrossbowSubscription<T> =
-    subscribe(destination, T::class)
-
-class AbstractKrossbowSession(private val engineSession: KrossbowEngineSession): KrossbowSession {
+class KrossbowSession(private val engineSession: KrossbowEngineSession): CoroutineScope {
 
     private val job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = job
 
-    override suspend fun send(destination: String, body: Any): KrossbowReceipt? = engineSession.send(destination, body)
+    suspend fun send(destination: String, body: Any): KrossbowReceipt? = engineSession.send(destination, body)
 
-    override suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): KrossbowSubscription<T> {
+    suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): KrossbowSubscription<T> {
         val channel = Channel<KrossbowMessage<T>>()
         val sub = engineSession.subscribe(destination, clazz, SubscriptionCallbacks(channel))
         return KrossbowSubscription(sub, channel)
     }
 
-    override suspend fun disconnect() {
+    suspend inline fun <reified T : Any> subscribe(destination: String): KrossbowSubscription<T> =
+        subscribe(destination, T::class)
+
+    suspend fun disconnect() {
         job.cancelAndJoin()
         engineSession.disconnect()
     }
@@ -66,6 +56,6 @@ class KrossbowSubscription<out T>(
         internalMsgChannel.close()
     }
 
-    operator fun component0() = messages
-    operator fun component1() = ::unsubscribe
+    operator fun component1() = messages
+    operator fun component2() = ::unsubscribe
 }

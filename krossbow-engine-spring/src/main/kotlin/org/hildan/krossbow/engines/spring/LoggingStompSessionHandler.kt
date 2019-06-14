@@ -6,11 +6,9 @@ import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 
-typealias SubscriptionExceptionHandler = (Throwable) -> Unit
-
 internal class LoggingStompSessionHandler : StompSessionHandlerAdapter() {
 
-    private val subscriptionHandlers = mutableMapOf<String, SubscriptionExceptionHandler>()
+    private val subscriptionHandlers = mutableMapOf<String, (Throwable) -> Unit>()
 
     override fun afterConnected(session: StompSession, connectedHeaders: StompHeaders) {
         logger.error("STOMP session connected: ${session.sessionId}")
@@ -44,7 +42,7 @@ internal class LoggingStompSessionHandler : StompSessionHandlerAdapter() {
         logger.error("Transport exception thrown in session ${session.sessionId}", exception)
     }
 
-    fun registerExceptionHandler(subscriptionId: String, handler: SubscriptionExceptionHandler) {
+    fun registerExceptionHandler(subscriptionId: String, handler: (Throwable) -> Unit) {
         subscriptionHandlers[subscriptionId] = handler
     }
 
