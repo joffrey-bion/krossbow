@@ -1,10 +1,14 @@
 package org.hildan.krossbow.engines.webstompjs
 
 import js.webstomp.client.Client
+import js.webstomp.client.ExtendedHeaders
 import js.webstomp.client.Heartbeat
+import js.webstomp.client.Message
 import js.webstomp.client.Options
 import js.webstomp.client.client
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.promise
 import kotlinx.coroutines.withContext
 import org.hildan.krossbow.engines.HeartBeat
 import org.hildan.krossbow.engines.KrossbowClient
@@ -12,9 +16,13 @@ import org.hildan.krossbow.engines.KrossbowConfig
 import org.hildan.krossbow.engines.KrossbowEngine
 import org.hildan.krossbow.engines.KrossbowEngineSession
 import org.hildan.krossbow.engines.KrossbowEngineSubscription
+import org.hildan.krossbow.engines.KrossbowMessage
 import org.hildan.krossbow.engines.KrossbowReceipt
 import org.hildan.krossbow.engines.KrossbowSession
+import org.hildan.krossbow.engines.MessageHeaders
 import org.hildan.krossbow.engines.SubscriptionCallbacks
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.reflect.KClass
 
 class WebstompHeartbeat(
@@ -47,18 +55,26 @@ class WebstompKrossbowClient(private val config: KrossbowConfig): KrossbowClient
 
 class WebstompKrossbowSession(private val client: Client): KrossbowEngineSession {
 
-    override suspend fun send(destination: String, body: Any): KrossbowReceipt? = withContext(Dispatchers.Default) {
-        client.send(destination, TODO("Serialize body to String"))
-        null
+    override suspend fun send(destination: String, body: Any): KrossbowReceipt? {
+        client.send(destination, JSON.stringify(body))
+        return null
     }
 
     override suspend fun <T : Any> subscribe(
         destination: String, clazz: KClass<T>, callbacks: SubscriptionCallbacks<T>
     ): KrossbowEngineSubscription {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        val sub = client.subscribe(destination, { m: Message ->
+            val payload = JSON.parse<T>(m.body)
+            val msg = KrossbowMessage(payload, m.headers.toKrossbowHeaders())
+            GlobalScope.promise { callbacks.onReceive(msg) }
+        })
+        return KrossbowEngineSubscription(sub.id) { sub.unsubscribe() }
     }
 
-    override suspend fun disconnect() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun disconnect(): Unit = suspendCoroutine { cont ->
+        client.disconnect({ cont.resume(Unit) }, null) // TODO headers
     }
 }
+
+private fun ExtendedHeaders.toKrossbowHeaders(): MessageHeaders = object : MessageHeaders {} // TODO fill that up

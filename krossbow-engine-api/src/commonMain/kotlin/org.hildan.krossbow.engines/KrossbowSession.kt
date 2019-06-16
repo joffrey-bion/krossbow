@@ -57,5 +57,5 @@ class KrossbowSubscription<out T>(
     }
 
     operator fun component1() = messages
-    operator fun component2() = ::unsubscribe
+//    operator fun component2() = this::unsubscribe
 }
