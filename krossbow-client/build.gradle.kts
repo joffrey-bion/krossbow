@@ -28,6 +28,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
+                implementation("uk.org.lidalia:slf4j-test:1.1.0")
             }
         }
         val jsMain by getting {

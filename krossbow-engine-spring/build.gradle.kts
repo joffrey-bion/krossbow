@@ -22,8 +22,4 @@ dependencies {
     val jacksonVersion = "2.9.9"
     implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-
-    testImplementation(kotlin("test"))
-    testImplementation(kotlin("test-junit"))
-    testImplementation("uk.org.lidalia:slf4j-test:1.1.0")
 }
