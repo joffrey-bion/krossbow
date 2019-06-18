@@ -1,0 +1,13 @@
+language: java
+
+# These files change at every build, and should not be cached
+# https://docs.travis-ci.com/user/languages/java/#Caching
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+# Cache Gradle's dependencies and wrapper download
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
