@@ -27,7 +27,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlin.reflect.KClass
 
-object SpringKrossbowEngine: KrossbowEngine {
+object SpringKrossbowEngine : KrossbowEngine {
 
     override fun createClient(config: KrossbowConfig): KrossbowClient {
         return SpringKrossbowClient(defaultStompClient())
@@ -43,15 +43,17 @@ object SpringKrossbowEngine: KrossbowEngine {
         objectMapper.registerModule(KotlinModule())
     }
 
-    private fun defaultWsClient(transports: List<Transport> = defaultWsTransports()): WebSocketClient = SockJsClient(transports)
+    private fun defaultWsClient(transports: List<Transport> = defaultWsTransports()): WebSocketClient =
+        SockJsClient(transports)
 
-    private fun defaultWsTransports(): List<Transport> = listOf<Transport>(WebSocketTransport(StandardWebSocketClient()))
+    private fun defaultWsTransports(): List<Transport> =
+        listOf<Transport>(WebSocketTransport(StandardWebSocketClient()))
 
-    private fun createTaskScheduler(): ThreadPoolTaskScheduler = ThreadPoolTaskScheduler().apply { afterPropertiesSet() }
-
+    private fun createTaskScheduler(): ThreadPoolTaskScheduler =
+        ThreadPoolTaskScheduler().apply { afterPropertiesSet() }
 }
 
-class SpringKrossbowClient(private val client: WebSocketStompClient): KrossbowClient {
+class SpringKrossbowClient(private val client: WebSocketStompClient) : KrossbowClient {
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowSession {
         return suspendCoroutine { cont ->
@@ -66,7 +68,7 @@ class SpringKrossbowClient(private val client: WebSocketStompClient): KrossbowCl
 private class SpringKrossbowSession(
     private val session: StompSession,
     private val sessionHandler: LoggingStompSessionHandler
-): KrossbowEngineSession {
+) : KrossbowEngineSession {
 
     // TODO suspendCoroutine and wait for receipt
     override suspend fun send(destination: String, body: Any): KrossbowReceipt? = withContext(Dispatchers.Default) {

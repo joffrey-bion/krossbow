@@ -9,7 +9,7 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KClass
 
-class KrossbowSession(private val engineSession: KrossbowEngineSession): CoroutineScope {
+class KrossbowSession(private val engineSession: KrossbowEngineSession) : CoroutineScope {
 
     private val job = Job()
 

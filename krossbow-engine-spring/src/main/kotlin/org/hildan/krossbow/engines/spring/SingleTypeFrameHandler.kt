@@ -15,9 +15,9 @@ import kotlin.reflect.full.cast
  *
  * @param <T> the target type for the conversion of the received messages' payload
  */
-internal class SingleTypeFrameHandler<T: Any>(
-        private val payloadType: KClass<T>,
-        private val onReceive: (KrossbowMessage<T>) -> Unit
+internal class SingleTypeFrameHandler<T : Any>(
+    private val payloadType: KClass<T>,
+    private val onReceive: (KrossbowMessage<T>) -> Unit
 ) : StompFrameHandler {
 
     override fun getPayloadType(stompHeaders: StompHeaders): Type = payloadType.java
@@ -32,4 +32,4 @@ internal class SingleTypeFrameHandler<T: Any>(
     }
 }
 
-private fun StompHeaders.toKrossbowHeaders(): MessageHeaders = object: MessageHeaders {} // TODO fill them up
+private fun StompHeaders.toKrossbowHeaders(): MessageHeaders = object : MessageHeaders {} // TODO fill them up

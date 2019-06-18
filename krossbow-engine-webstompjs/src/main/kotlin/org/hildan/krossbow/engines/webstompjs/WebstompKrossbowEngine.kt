@@ -6,10 +6,8 @@ import js.webstomp.client.Heartbeat
 import js.webstomp.client.Message
 import js.webstomp.client.Options
 import js.webstomp.client.client
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
-import kotlinx.coroutines.withContext
 import org.hildan.krossbow.engines.HeartBeat
 import org.hildan.krossbow.engines.KrossbowClient
 import org.hildan.krossbow.engines.KrossbowConfig
@@ -39,12 +37,12 @@ class WebstompOptions(
     override var debug: Boolean = false
 ) : Options
 
-object WebstompKrossbowEngine: KrossbowEngine {
+object WebstompKrossbowEngine : KrossbowEngine {
 
     override fun createClient(config: KrossbowConfig): KrossbowClient = WebstompKrossbowClient(config)
 }
 
-class WebstompKrossbowClient(private val config: KrossbowConfig): KrossbowClient {
+class WebstompKrossbowClient(private val config: KrossbowConfig) : KrossbowClient {
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowSession {
         val options = WebstompOptions(heartbeat = config.heartBeat.toWebstomp())
@@ -53,7 +51,7 @@ class WebstompKrossbowClient(private val config: KrossbowConfig): KrossbowClient
     }
 }
 
-class WebstompKrossbowSession(private val client: Client): KrossbowEngineSession {
+class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSession {
 
     override suspend fun send(destination: String, body: Any): KrossbowReceipt? {
         client.send(destination, JSON.stringify(body))
@@ -61,7 +59,9 @@ class WebstompKrossbowSession(private val client: Client): KrossbowEngineSession
     }
 
     override suspend fun <T : Any> subscribe(
-        destination: String, clazz: KClass<T>, callbacks: SubscriptionCallbacks<T>
+        destination: String,
+        clazz: KClass<T>,
+        callbacks: SubscriptionCallbacks<T>
     ): KrossbowEngineSubscription {
 
         val sub = client.subscribe(destination, { m: Message ->
