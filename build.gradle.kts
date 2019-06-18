@@ -10,10 +10,12 @@ plugins {
 
 allprojects {
     group = "org.hildan.krossbow"
+    version = "0.1.0"
 }
 
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    apply(plugin = "maven-publish")
 
     repositories {
         jcenter()
