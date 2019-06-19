@@ -2,16 +2,11 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         jcenter()
-        // this one is for kotlin-frontend-plugin
-        maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
     }
     resolutionStrategy {
         eachPlugin {
-            if (requested.id.id == "kotlin-multiplatform" || requested.id.id == "kotlin2js") {
+            if (requested.id.id == "kotlin-multiplatform" || requested.id.id == "org.jetbrains.kotlin.js") {
                 useModule("org.jetbrains.kotlin:kotlin-gradle-plugin:${requested.version}")
-            }
-            if (requested.id.id == "org.jetbrains.kotlin.frontend") {
-                useModule("org.jetbrains.kotlin:kotlin-frontend-plugin:${requested.version}")
             }
         }
     }
