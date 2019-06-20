@@ -6,10 +6,13 @@ plugins {
 
 repositories {
     jcenter()
-    maven(url = "https://kotlin.bintray.com/kotlin-js-wrappers")
 }
 
 kotlin {
+    target {
+        nodejs()
+        browser()
+    }
     sourceSets["main"].dependencies {
         api(project(":krossbow-engine-api"))
         implementation(kotlin("stdlib-js"))
@@ -24,6 +27,18 @@ tasks {
         kotlinOptions.outputFile = "${project.buildDir.path}/js/${project.name}.js"
         kotlinOptions.sourceMap = true
         kotlinOptions.moduleKind = "commonjs"
-        kotlinOptions.main = "call"
+        kotlinOptions.main = "noCall"
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
+
+            from(components["kotlin"])
+        }
     }
 }
