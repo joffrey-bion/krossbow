@@ -2,6 +2,8 @@ plugins {
     kotlin("multiplatform")
 }
 
+description = "The API that must be implemented by Krossbow engines to be used in a Krossbow client"
+
 val coroutinesVersion = "1.2.1"
 
 kotlin {

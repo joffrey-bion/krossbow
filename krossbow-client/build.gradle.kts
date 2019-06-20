@@ -2,6 +2,8 @@ plugins {
     kotlin("multiplatform")
 }
 
+description = "A Kotlin multiplatform STOMP client with JVM and JS support"
+
 kotlin {
     jvm()
     js()

@@ -4,6 +4,8 @@ plugins {
     kotlin("js")
 }
 
+description = "A Krossbow STOMP client JS implementation wrapping the Webstomp JS library"
+
 repositories {
     jcenter()
 }

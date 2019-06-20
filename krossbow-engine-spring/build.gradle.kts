@@ -2,6 +2,8 @@ plugins {
     kotlin("jvm")
 }
 
+description = "A Krossbow STOMP client JVM implementation wrapping the Spring WebsocketStompClient"
+
 dependencies {
     api(project(":krossbow-engine-api"))
 
