@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    id("org.jetbrains.dokka") version "0.9.17"
 }
 
 description = "A Krossbow STOMP client JVM implementation wrapping the Spring WebsocketStompClient"
@@ -26,6 +27,21 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 }
 
+tasks.dokka {
+    outputFormat = "javadoc"
+    outputDirectory = "$buildDir/javadoc"
+}
+
+val dokkaJar by tasks.creating(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from(tasks.dokka)
+}
+
+val sourcesJar by tasks.creating(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -34,6 +50,8 @@ publishing {
             version = project.version.toString()
 
             from(components["kotlin"])
+            artifact(dokkaJar)
+            artifact(sourcesJar)
         }
     }
 }

@@ -27,6 +27,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlin.reflect.KClass
 
+/**
+ * Implementation of [KrossbowEngine] for the JVM based on Spring's [WebSocketStompClient].
+ */
 object SpringKrossbowEngine : KrossbowEngine {
 
     override fun createClient(config: KrossbowConfig): KrossbowClient {
@@ -53,7 +56,7 @@ object SpringKrossbowEngine : KrossbowEngine {
         ThreadPoolTaskScheduler().apply { afterPropertiesSet() }
 }
 
-class SpringKrossbowClient(private val client: WebSocketStompClient) : KrossbowClient {
+private class SpringKrossbowClient(private val client: WebSocketStompClient) : KrossbowClient {
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowSession {
         return suspendCoroutine { cont ->
