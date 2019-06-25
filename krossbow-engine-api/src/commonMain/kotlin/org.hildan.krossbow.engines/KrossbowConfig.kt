@@ -1,9 +1,18 @@
 package org.hildan.krossbow.engines
 
+/**
+ * Configuration of the STOMP [KrossbowClient].
+ */
 data class KrossbowConfig(
+    /**
+     * The heartbeat to use during STOMP sessions.
+     */
     var heartBeat: HeartBeat = HeartBeat()
 )
 
+/**
+ * Defines the heart beats for STOMP sessions, as specified in the STOMP specification.
+ */
 data class HeartBeat(
     /**
      * Represents what the sender of the frame can do (outgoing heart-beats).

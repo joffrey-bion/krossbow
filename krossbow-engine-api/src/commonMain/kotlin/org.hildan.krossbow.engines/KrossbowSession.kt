@@ -9,6 +9,9 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KClass
 
+/**
+ * A coroutine-based STOMP session API. The provided [KrossbowEngineSession] is a bridge to the platform implementation.
+ */
 class KrossbowSession(private val engineSession: KrossbowEngineSession) : CoroutineScope {
 
     private val job = Job()
@@ -33,6 +36,9 @@ class KrossbowSession(private val engineSession: KrossbowEngineSession) : Corout
     }
 }
 
+/**
+ * Used to bridge the callback-based platform-specific implementations with the coroutine-based [KrossbowSession]
+ */
 class SubscriptionCallbacks<in T>(private val channel: SendChannel<KrossbowMessage<T>>) {
 
     suspend fun onReceive(message: KrossbowMessage<T>) {
@@ -44,13 +50,23 @@ class SubscriptionCallbacks<in T>(private val channel: SendChannel<KrossbowMessa
     }
 }
 
+/**
+ * Represents a STOMP subscription to receive messages of a single type [T].
+ */
 class KrossbowSubscription<out T>(
     private val engineSubscription: KrossbowEngineSubscription,
     private val internalMsgChannel: Channel<KrossbowMessage<T>>
 ) {
+    /** The subscription's ID. */
     val id: String = engineSubscription.id
+
+    /** The subscription messages channel, to read incoming messages from. */
     val messages: ReceiveChannel<KrossbowMessage<T>> get() = internalMsgChannel
 
+    /**
+     * Unsubscribes from this subscription to stop receive messages. This closes the [message] channel, so that any
+     * loop on it.
+     */
     suspend fun unsubscribe(headers: UnsubscribeHeaders? = null) {
         engineSubscription.unsubscribe(headers)
         internalMsgChannel.close()

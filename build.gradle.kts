@@ -8,6 +8,7 @@ plugins {
     kotlin("multiplatform") version kotlinVersion apply false
     kotlin("plugin.spring") version kotlinVersion apply false
     id("org.jlleitschuh.gradle.ktlint") version "7.1.0" apply false
+    id("org.jetbrains.dokka") version "0.9.18" apply false
     id("com.jfrog.bintray") version "1.8.4" apply false
 }
 

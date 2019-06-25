@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    id("org.jetbrains.dokka")
 }
 
 description = "A Kotlin multiplatform STOMP client with JVM and JS support"
