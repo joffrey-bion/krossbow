@@ -9,8 +9,6 @@ This project contains the following modules:
 - `krossbow-engine-webstompjs`: a JavaScript implementation of the engine API using 
 [webstomp-client](https://github.com/JSteunou/webstomp-client) as backend
 
-**DISCLAIMER** - The project has just started. It is not usable right now
-
 For now, the `krossbow-client` artifact is going to include the spring and webstomp 
 engines so that users don't have to specify anything. This doesn't have any drawback for now as there is only 1 
 engine implementation per platform. If the need arises to have more implementations on a single, I'll remove the 
