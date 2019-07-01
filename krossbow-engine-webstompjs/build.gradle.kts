@@ -33,6 +33,11 @@ tasks {
     }
 }
 
+val sourcesJar by tasks.creating(Jar::class) {
+    from(kotlin.sourceSets["main"].kotlin)
+    archiveClassifier.set("sources")
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -41,6 +46,7 @@ publishing {
             version = project.version.toString()
 
             from(components["kotlin"])
+            artifact(sourcesJar)
         }
     }
 }
