@@ -19,7 +19,7 @@ dependencies {
     implementation("org.springframework:spring-messaging:$springVersion")
 
     // JSR 356 - Java API for WebSocket (reference implementation)
-    // Low-level mplementation required by Spring's client
+    // Low-level implementation required by Spring's client
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.15")
 
     val jacksonVersion = "2.9.9"
