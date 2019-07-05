@@ -95,11 +95,7 @@ private class SpringKrossbowSession(
         }
 
         return KrossbowEngineSubscription(sub.subscriptionId!!) { headers ->
-            if (headers == null) {
-                sub.unsubscribe()
-            } else {
-                sub.unsubscribe(headers.toSpringStompHeaders())
-            }
+            sub.unsubscribe(headers?.toSpringStompHeaders())
         }
     }
 
