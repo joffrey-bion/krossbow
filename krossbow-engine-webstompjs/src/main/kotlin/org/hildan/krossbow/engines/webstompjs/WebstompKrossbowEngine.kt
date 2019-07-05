@@ -53,8 +53,8 @@ class WebstompKrossbowClient(private val config: KrossbowConfig) : KrossbowClien
 
 class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSession {
 
-    override suspend fun send(destination: String, body: Any): KrossbowReceipt? {
-        client.send(destination, JSON.stringify(body))
+    override suspend fun send(destination: String, body: Any?): KrossbowReceipt? {
+        client.send(destination, body?.let { JSON.stringify(it) })
         return null
     }
 
