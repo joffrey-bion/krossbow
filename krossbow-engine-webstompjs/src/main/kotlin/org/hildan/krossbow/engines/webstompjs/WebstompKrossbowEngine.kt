@@ -39,7 +39,12 @@ class WebstompOptions(
 
 object WebstompKrossbowEngine : KrossbowEngine {
 
-    override fun createClient(config: KrossbowConfig): KrossbowClient = WebstompKrossbowClient(config)
+    override fun createClient(config: KrossbowConfig): KrossbowClient {
+        if (config.autoReceipt) {
+            throw IllegalArgumentException("Receipts not supported yet by JS client")
+        }
+        return WebstompKrossbowClient(config)
+    }
 }
 
 class WebstompKrossbowClient(private val config: KrossbowConfig) : KrossbowClient {

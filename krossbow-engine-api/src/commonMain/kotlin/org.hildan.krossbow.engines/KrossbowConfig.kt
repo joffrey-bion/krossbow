@@ -7,7 +7,9 @@ data class KrossbowConfig(
     /**
      * The heartbeat to use during STOMP sessions.
      */
-    var heartBeat: HeartBeat = HeartBeat()
+    var heartBeat: HeartBeat = HeartBeat(),
+    val autoReceipt: Boolean = false,
+    val receiptTimeLimit: Long = 15000
 )
 
 /**

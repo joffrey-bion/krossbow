@@ -34,7 +34,9 @@ import kotlin.reflect.KClass
 object SpringKrossbowEngine : KrossbowEngine {
 
     override fun createClient(config: KrossbowConfig): KrossbowClient {
-        return SpringKrossbowClient(defaultStompClient())
+        val springClient = defaultStompClient()
+        springClient.receiptTimeLimit = config.receiptTimeLimit
+        return SpringKrossbowClient(springClient, config)
     }
 
     private fun defaultStompClient(webSocketClient: WebSocketClient = defaultWsClient()): WebSocketStompClient =
@@ -57,11 +59,15 @@ object SpringKrossbowEngine : KrossbowEngine {
         ThreadPoolTaskScheduler().apply { afterPropertiesSet() }
 }
 
-private class SpringKrossbowClient(private val client: WebSocketStompClient) : KrossbowClient {
+private class SpringKrossbowClient(
+    private val client: WebSocketStompClient,
+    private val config: KrossbowConfig
+) : KrossbowClient {
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowSession {
         val sessionHandler = LoggingStompSessionHandler()
         val session = client.connect(url, sessionHandler).completable().await()
+        session.setAutoReceipt(config.autoReceipt)
         val engineSession = SpringKrossbowSession(session, sessionHandler)
         return KrossbowSession(engineSession)
     }
@@ -72,10 +78,7 @@ private class SpringKrossbowSession(
     private val sessionHandler: LoggingStompSessionHandler
 ) : KrossbowEngineSession {
 
-    init {
-        session.setAutoReceipt(true)
-    }
-
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     override suspend fun send(destination: String, body: Any?): KrossbowReceipt? =
         session.send(destination, body).await()?.let { KrossbowReceipt(it) }
 
