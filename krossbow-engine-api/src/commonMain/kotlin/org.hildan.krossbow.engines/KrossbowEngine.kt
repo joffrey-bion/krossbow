@@ -92,4 +92,4 @@ data class KrossbowEngineSubscription(
     val unsubscribe: suspend (UnsubscribeHeaders?) -> Unit
 )
 
-class LostReceiptException(val receiptId: String): Exception()
+class LostReceiptException(val receiptId: String) : Exception()
