@@ -10,6 +10,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "7.1.0" apply false
     id("org.jetbrains.dokka") version "0.9.18" apply false
     id("com.jfrog.bintray") version "1.8.4" apply false
+    id("org.hildan.github.changelog") version "0.8.0"
 }
 
 allprojects {
@@ -22,6 +23,12 @@ val githubSlug = "$githubUser/${rootProject.name}"
 val githubRepoUrl = "https://github.com/$githubSlug"
 val Project.labels get() = arrayOf("websocket", "stomp", "krossbow", "multiplatform", "kotlin", "client")
 val Project.licenses get() = arrayOf("MIT")
+
+changelog {
+    futureVersionTag = project.version.toString()
+    excludeLabels = listOf("internal")
+    customTagByIssueNumber = mapOf(6 to "0.1.1", 10 to "0.1.2")
+}
 
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
