@@ -19,17 +19,44 @@ class KrossbowSession(private val engineSession: KrossbowEngineSession) : Corout
     override val coroutineContext: CoroutineContext
         get() = job
 
+
+    /**
+     * Sends a SEND frame to the server at the given [destination] with the given [body].
+     *
+     * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received form the server and returns a
+     * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
+     * [LostReceiptException] is thrown.
+     *
+     * If receipts are not enabled, this method sends the frame and immediately returns null.
+     */
     suspend fun send(destination: String, body: Any? = null): KrossbowReceipt? = engineSession.send(destination, body)
 
+    /**
+     * Subscribes to the given [destination], expecting objects of type [T]. The returned [KrossbowSubscription]
+     * can be used to access the channel of received objects.
+     *
+     * A platform-specific deserializer is used to create instances of the given type from the body of every message
+     * received on the created subscription.
+     */
+    suspend inline fun <reified T : Any> subscribe(destination: String): KrossbowSubscription<T> =
+            subscribe(destination, T::class)
+
+    /**
+     * Subscribes to the given [destination], expecting objects of type [clazz]. The returned [KrossbowSubscription]
+     * can be used to access the channel of received objects.
+     *
+     * A platform-specific deserializer is used to create instances of the given type from the body of every message
+     * received on the created subscription.
+     */
     suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): KrossbowSubscription<T> {
         val channel = Channel<KrossbowMessage<T>>()
         val sub = engineSession.subscribe(destination, clazz, SubscriptionCallbacks(channel))
         return KrossbowSubscription(sub, channel)
     }
 
-    suspend inline fun <reified T : Any> subscribe(destination: String): KrossbowSubscription<T> =
-        subscribe(destination, T::class)
-
+    /**
+     * Sends a DISCONNECT frame to close the session, and closes the connection.
+     */
     suspend fun disconnect() {
         job.cancelAndJoin()
         engineSession.disconnect()

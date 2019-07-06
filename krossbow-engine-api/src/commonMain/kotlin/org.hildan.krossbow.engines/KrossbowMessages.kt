@@ -8,7 +8,12 @@ interface UnsubscribeHeaders
 /**
  * A STOMP receipt description, as specified in the STOMP specification.
  */
-data class KrossbowReceipt(val id: String)
+data class KrossbowReceipt(
+    /**
+     * The value of the receipt header sent to the server, and returned in a RECEIPT frame.
+     */
+    val id: String
+)
 
 /**
  * A STOMP message.

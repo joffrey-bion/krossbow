@@ -8,6 +8,7 @@ import org.hildan.krossbow.engines.KrossbowEngine
  * Creates an instance of [KrossbowClient] based on the current platform's default engine. The provided configuration
  * function is applied to the newly created client.
  */
+@Suppress("FunctionName")
 fun KrossbowClient(configure: KrossbowConfig.() -> Unit = {}): KrossbowClient =
     KrossbowClient(defaultEngine(), configure)
 

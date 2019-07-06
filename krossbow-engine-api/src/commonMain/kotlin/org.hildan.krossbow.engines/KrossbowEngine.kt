@@ -62,7 +62,12 @@ interface KrossbowEngineSession {
 
     /**
      * Sends a SEND frame to the server at the given [destination] with the given [body].
-     * A [KrossbowReceipt] is returned if receipts are activated and the server returns one.
+     *
+     * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received form the server and returns a
+     * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
+     * [LostReceiptException] is thrown.
+     *
+     * If receipts are not enabled, this method sends the frame and immediately returns null.
      */
     suspend fun send(destination: String, body: Any? = null): KrossbowReceipt?
 
@@ -92,4 +97,12 @@ data class KrossbowEngineSubscription(
     val unsubscribe: suspend (UnsubscribeHeaders?) -> Unit
 )
 
-class LostReceiptException(val receiptId: String) : Exception()
+/**
+ * An exception thrown when a RECEIPT frame was expected from the server, but not received in the configured time limit.
+ */
+class LostReceiptException(
+    /**
+     * The value of the receipt header sent to the server, and expected in a RECEIPT frame.
+     */
+    val receiptId: String
+) : Exception("No RECEIPT frame received for receiptId '$receiptId' within the configured time limit")
