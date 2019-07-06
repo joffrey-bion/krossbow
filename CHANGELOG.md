@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.3.0](https://github.com/joffrey-bion/krossbow/tree/0.3.0) (2019-07-07)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.2.1...0.3.0)
+
+**Implemented enhancements:**
+
+- Allow subscriptions for empty payloads [\#14](https://github.com/joffrey-bion/krossbow/issues/14)
+
 ## [0.2.1](https://github.com/joffrey-bion/krossbow/tree/0.2.1) (2019-07-06)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.2.0...0.2.1)
 
