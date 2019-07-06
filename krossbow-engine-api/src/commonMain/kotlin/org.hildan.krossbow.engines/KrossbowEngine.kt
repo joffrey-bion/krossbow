@@ -72,15 +72,26 @@ interface KrossbowEngineSession {
     suspend fun send(destination: String, body: Any? = null): KrossbowReceipt?
 
     /**
-     * Subscribes to the given [destination], expecting objects of type [clazz]. A platform-specific deserializer is
-     * used to create instances of the given [clazz] from the body of every message received on the created
-     * subscription. The subscription callbacks are adapted to the coroutines model by the actual [KrossbowSession].
+     * Subscribes to the given [destination], expecting objects of type [clazz]. Empty payloads are represented by the
+     * [Unit] type.
+     *
+     * A platform-specific deserializer is used to create instances of the given [clazz] from the body of every message
+     * received on the created subscription.
+     *
+     * The subscription callbacks are adapted to the coroutines model by the actual [KrossbowSession].
      */
     suspend fun <T : Any> subscribe(
         destination: String,
         clazz: KClass<T>,
         callbacks: SubscriptionCallbacks<T>
     ): KrossbowEngineSubscription
+
+    /**
+     * Subscribes to the given [destination], expecting empty payloads.
+     *
+     * The subscription callbacks are adapted to the coroutines model by the actual [KrossbowSession].
+     */
+    suspend fun subscribeNoPayload(destination: String, callbacks: SubscriptionCallbacks<Unit>): KrossbowEngineSubscription
 
     /**
      * Sends a DISCONNECT frame to close the session, and closes the connection.
@@ -106,3 +117,8 @@ class LostReceiptException(
      */
     val receiptId: String
 ) : Exception("No RECEIPT frame received for receiptId '$receiptId' within the configured time limit")
+
+/**
+ * An exception thrown when a MESSAGE frame does not contain the expected payload type.
+ */
+class InvalidFramePayloadException(message: String) : Exception(message)

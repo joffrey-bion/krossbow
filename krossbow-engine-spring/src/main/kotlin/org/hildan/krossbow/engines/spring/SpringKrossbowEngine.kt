@@ -8,12 +8,14 @@ import org.hildan.krossbow.engines.KrossbowConfig
 import org.hildan.krossbow.engines.KrossbowEngine
 import org.hildan.krossbow.engines.KrossbowEngineSession
 import org.hildan.krossbow.engines.KrossbowEngineSubscription
+import org.hildan.krossbow.engines.KrossbowMessage
 import org.hildan.krossbow.engines.KrossbowReceipt
 import org.hildan.krossbow.engines.KrossbowSession
 import org.hildan.krossbow.engines.LostReceiptException
 import org.hildan.krossbow.engines.SubscriptionCallbacks
 import org.hildan.krossbow.engines.UnsubscribeHeaders
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
+import org.springframework.messaging.simp.stomp.StompFrameHandler
 import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
@@ -86,17 +88,25 @@ private class SpringKrossbowSession(
         destination: String,
         clazz: KClass<T>,
         callbacks: SubscriptionCallbacks<T>
+    ): KrossbowEngineSubscription = subscribe(destination, callbacks) { SingleTypeFrameHandler(clazz, it) }
+
+    override suspend fun subscribeNoPayload(
+        destination: String,
+        callbacks: SubscriptionCallbacks<Unit>
+    ): KrossbowEngineSubscription = subscribe(destination, callbacks) { NoPayloadFrameHandler(it) }
+
+    private suspend fun <T : Any> subscribe(
+        destination: String,
+        callbacks: SubscriptionCallbacks<T>,
+        createFrameHandler: ((KrossbowMessage<T>) -> Unit) -> StompFrameHandler
     ): KrossbowEngineSubscription {
-        val handler = SingleTypeFrameHandler(clazz) {
+        val handler = createFrameHandler {
             runBlocking {
                 callbacks.onReceive(it)
             }
         }
         val sub = session.subscribe(destination, handler)
-        sessionHandler.registerExceptionHandler(sub.subscriptionId!!) {
-            callbacks.onError(it)
-        }
-
+        sessionHandler.registerExceptionHandler(sub.subscriptionId!!) { callbacks.onError(it) }
         return KrossbowEngineSubscription(sub.subscriptionId!!) { headers ->
             sub.unsubscribe(headers?.toSpringStompHeaders())
         }

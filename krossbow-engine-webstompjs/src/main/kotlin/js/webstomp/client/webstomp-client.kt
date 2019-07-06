@@ -39,7 +39,7 @@ external interface Subscription {
 }
 external interface Message {
     var command: String
-    var body: String
+    var body: String?
     var headers: ExtendedHeaders
     fun ack(headers: AckHeaders? = definedExternally /* null */): Any
     fun nack(headers: NackHeaders? = definedExternally /* null */): Any

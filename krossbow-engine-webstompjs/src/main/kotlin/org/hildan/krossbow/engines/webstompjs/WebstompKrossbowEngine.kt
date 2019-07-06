@@ -9,6 +9,7 @@ import js.webstomp.client.client
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 import org.hildan.krossbow.engines.HeartBeat
+import org.hildan.krossbow.engines.InvalidFramePayloadException
 import org.hildan.krossbow.engines.KrossbowClient
 import org.hildan.krossbow.engines.KrossbowConfig
 import org.hildan.krossbow.engines.KrossbowEngine
@@ -67,11 +68,30 @@ class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSessio
         destination: String,
         clazz: KClass<T>,
         callbacks: SubscriptionCallbacks<T>
-    ): KrossbowEngineSubscription {
+    ): KrossbowEngineSubscription = subscribe(destination, callbacks) { body ->
+        when (body) {
+            null -> throw InvalidFramePayloadException("Unsupported null websocket payload, expected $clazz")
+            else -> JSON.parse<T>(body)
+        }
+    }
 
+    override suspend fun subscribeNoPayload(
+        destination: String,
+        callbacks: SubscriptionCallbacks<Unit>
+    ): KrossbowEngineSubscription = subscribe(destination, callbacks) { body ->
+        when (body) {
+            null, "" -> Unit
+            else -> throw InvalidFramePayloadException("No payload was expected but some content was received")
+        }
+    }
+
+    private fun <T : Any> subscribe(
+        destination: String,
+        callbacks: SubscriptionCallbacks<T>,
+        convertPayload: (String?) -> T
+    ): KrossbowEngineSubscription {
         val sub = client.subscribe(destination, { m: Message ->
-            val payload = JSON.parse<T>(m.body)
-            val msg = KrossbowMessage(payload, m.headers.toKrossbowHeaders())
+            val msg = KrossbowMessage(convertPayload(m.body), m.headers.toKrossbowHeaders())
             GlobalScope.promise { callbacks.onReceive(msg) }
         })
         return KrossbowEngineSubscription(sub.id) { sub.unsubscribe() }
