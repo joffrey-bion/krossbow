@@ -19,7 +19,6 @@ class KrossbowSession(private val engineSession: KrossbowEngineSession) : Corout
     override val coroutineContext: CoroutineContext
         get() = job
 
-
     /**
      * Sends a SEND frame to the server at the given [destination] with the given [body].
      *
@@ -91,7 +90,7 @@ class KrossbowSubscription<out T>(
     val messages: ReceiveChannel<KrossbowMessage<T>> get() = internalMsgChannel
 
     /**
-     * Unsubscribes from this subscription to stop receive messages. This closes the [message] channel, so that any
+     * Unsubscribes from this subscription to stop receive messages. This closes the [messages] channel, so that any
      * loop on it.
      */
     suspend fun unsubscribe(headers: UnsubscribeHeaders? = null) {
