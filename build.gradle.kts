@@ -45,12 +45,15 @@ subprojects {
 
     afterEvaluate {
 
-        val publicationNames = extensions.getByType<PublishingExtension>().publications.names
+        val publications = extensions.getByType<PublishingExtension>().publications
+        publications.mapNotNull { it as? MavenPublication }.forEach {
+            it.configurePomForMavenCentral()
+        }
 
         extensions.configure<BintrayExtension>("bintray") {
             user = getPropOrEnv("bintrayUser", "BINTRAY_USER")
             key = getPropOrEnv("bintrayApiKey", "BINTRAY_KEY")
-            setPublications(*publicationNames.toTypedArray())
+            setPublications(*publications.names.toTypedArray())
             publish = true
 
             pkg(closureOf<PackageConfig> {
@@ -71,11 +74,6 @@ subprojects {
                     gpg(closureOf<GpgConfig> {
                         sign = true
                     })
-                    mavenCentralSync(closureOf<MavenCentralSyncConfig> {
-                        sync = true
-                        user = getPropOrEnv("ossrhUserToken", "OSSRH_USER_TOKEN")
-                        password = getPropOrEnv("ossrhKey", "OSSRH_KEY")
-                    })
                 })
             })
         }
@@ -87,3 +85,26 @@ subprojects {
 fun Project.getPropOrEnv(propName: String, envVar: String? = null): String? =
   findProperty(propName) as String? ?: System.getenv(envVar)
 
+fun MavenPublication.configurePomForMavenCentral() = pom {
+    name.set(project.name)
+    description.set(project.description)
+    url.set(githubRepoUrl)
+    licenses {
+        license {
+            name.set("The MIT License")
+            url.set("https://opensource.org/licenses/MIT")
+        }
+    }
+    developers {
+        developer {
+            id.set("joffrey-bion")
+            name.set("Joffrey Bion")
+            email.set("joffrey.bion@gmail.com")
+        }
+    }
+    scm {
+        connection.set("scm:git:$githubRepoUrl.git")
+        developerConnection.set("scm:git:git@github.com:$githubSlug.git")
+        url.set(githubRepoUrl)
+    }
+}
