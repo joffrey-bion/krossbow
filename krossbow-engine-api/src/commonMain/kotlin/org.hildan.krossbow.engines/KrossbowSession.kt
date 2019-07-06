@@ -19,7 +19,7 @@ class KrossbowSession(private val engineSession: KrossbowEngineSession) : Corout
     override val coroutineContext: CoroutineContext
         get() = job
 
-    suspend fun send(destination: String, body: Any): KrossbowReceipt? = engineSession.send(destination, body)
+    suspend fun send(destination: String, body: Any? = null): KrossbowReceipt? = engineSession.send(destination, body)
 
     suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): KrossbowSubscription<T> {
         val channel = Channel<KrossbowMessage<T>>()

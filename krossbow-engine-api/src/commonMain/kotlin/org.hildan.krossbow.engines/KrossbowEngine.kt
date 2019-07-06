@@ -64,7 +64,7 @@ interface KrossbowEngineSession {
      * Sends a SEND frame to the server at the given [destination] with the given [body].
      * A [KrossbowReceipt] is returned if receipts are activated and the server returns one.
      */
-    suspend fun send(destination: String, body: Any?): KrossbowReceipt?
+    suspend fun send(destination: String, body: Any? = null): KrossbowReceipt?
 
     /**
      * Subscribes to the given [destination], expecting objects of type [clazz]. A platform-specific deserializer is
