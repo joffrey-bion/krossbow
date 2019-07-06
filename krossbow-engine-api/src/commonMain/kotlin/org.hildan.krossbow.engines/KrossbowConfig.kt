@@ -11,13 +11,13 @@ data class KrossbowConfig(
     /**
      * Whether to automatically attach a `receipt` header to the sent messages in order to track receipts.
      */
-    val autoReceipt: Boolean = false,
+    var autoReceipt: Boolean = false,
     /**
      * Defines how long to wait for a RECEIPT frame from the server before throwing a [LostReceiptException].
      * Only crashes when a `receipt` header was actually present in the sent frame (and thus a RECEIPT was expected).
      * Such header is always present if [autoReceipt] is enabled.
      */
-    val receiptTimeLimit: Long = 15000
+    var receiptTimeLimit: Long = 15000
 )
 
 /**
