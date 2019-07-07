@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.3.1](https://github.com/joffrey-bion/krossbow/tree/0.3.1) (2019-07-07)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.3.0...0.3.1)
+
+**Fixed bugs:**
+
+- Absent payloads API is not public [\#17](https://github.com/joffrey-bion/krossbow/issues/17)
+
 ## [0.3.0](https://github.com/joffrey-bion/krossbow/tree/0.3.0) (2019-07-07)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.2.1...0.3.0)
 
