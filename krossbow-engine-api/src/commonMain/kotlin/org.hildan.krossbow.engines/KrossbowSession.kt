@@ -55,8 +55,6 @@ class KrossbowSession(private val engineSession: KrossbowEngineSession) : Corout
 
     /**
      * Subscribes to the given [destination], expecting empty payloads.
-     *
-     * The subscription callbacks are adapted to the coroutines model by the actual [KrossbowSession].
      */
     suspend fun subscribeNoPayload(destination: String): KrossbowSubscription<Unit> {
         val channel = Channel<KrossbowMessage<Unit>>()
