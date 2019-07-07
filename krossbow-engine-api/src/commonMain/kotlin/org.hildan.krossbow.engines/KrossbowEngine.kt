@@ -91,7 +91,10 @@ interface KrossbowEngineSession {
      *
      * The subscription callbacks are adapted to the coroutines model by the actual [KrossbowSession].
      */
-    suspend fun subscribeNoPayload(destination: String, callbacks: SubscriptionCallbacks<Unit>): KrossbowEngineSubscription
+    suspend fun subscribeNoPayload(
+        destination: String,
+        callbacks: SubscriptionCallbacks<Unit>
+    ): KrossbowEngineSubscription
 
     /**
      * Sends a DISCONNECT frame to close the session, and closes the connection.
