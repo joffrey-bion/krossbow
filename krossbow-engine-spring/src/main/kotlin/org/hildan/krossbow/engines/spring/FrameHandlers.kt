@@ -24,10 +24,14 @@ internal class SingleTypeFrameHandler<T : Any>(
     override fun getPayloadType(stompHeaders: StompHeaders): Type = payloadType.java
 
     override fun handleFrame(stompHeaders: StompHeaders, payload: Any?) {
+        val headers = stompHeaders.toKrossbowHeaders()
+        if (payloadType == Unit::class) {
+            @Suppress("UNCHECKED_CAST") onReceive(KrossbowMessage(Unit as T, headers))
+            return
+        }
         if (payload == null) {
             throw InvalidFramePayloadException("Unsupported null websocket payload, expected ${payloadType.qualifiedName}")
         }
-        val headers = stompHeaders.toKrossbowHeaders()
         val typedPayload = payloadType.cast(payload)
         onReceive(KrossbowMessage(typedPayload, headers))
     }

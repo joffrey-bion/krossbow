@@ -72,8 +72,8 @@ interface KrossbowEngineSession {
     suspend fun send(destination: String, body: Any? = null): KrossbowReceipt?
 
     /**
-     * Subscribes to the given [destination], expecting objects of type [clazz]. Empty payloads are represented by the
-     * [Unit] type.
+     * Subscribes to the given [destination], expecting objects of type [clazz]. Empty payloads are accepted if the
+     * provided [clazz] is [Unit].
      *
      * A platform-specific deserializer is used to create instances of the given [clazz] from the body of every message
      * received on the created subscription.
