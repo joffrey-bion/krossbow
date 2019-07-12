@@ -55,7 +55,7 @@ KrossbowClient().useSession(url) { // this: KrossbowSession
 
     send("/some/destination", CustomObject("Typed values", 42))
 
-    val (messages) = session.subscribe<Message>("/some/topic/destination")
+    val (messages) = subscribe<Message>("/some/topic/destination")
 
     val firstMessage = messages.receive()
     println("Received: $firstMessage")
