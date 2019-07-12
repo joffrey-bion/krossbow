@@ -1,5 +1,16 @@
 # Change Log
 
+## [0.3.2](https://github.com/joffrey-bion/krossbow/tree/0.3.2) (2019-07-12)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.3.1...0.3.2)
+
+**Fixed bugs:**
+
+- Artifacts not uploaded to Maven Central [\#19](https://github.com/joffrey-bion/krossbow/issues/19)
+
+**Implemented enhancements:**
+
+- Allow null payloads for Unit type subscriptions [\#18](https://github.com/joffrey-bion/krossbow/issues/18)
+
 ## [0.3.1](https://github.com/joffrey-bion/krossbow/tree/0.3.1) (2019-07-07)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.3.0...0.3.1)
 
