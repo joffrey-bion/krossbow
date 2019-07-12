@@ -47,7 +47,7 @@ subprojects {
 
         val publications = extensions.getByType<PublishingExtension>().publications
         publications.mapNotNull { it as? MavenPublication }.forEach {
-            it.configurePomForMavenCentral()
+            it.configurePomForMavenCentral(project)
         }
 
         extensions.configure<BintrayExtension>("bintray") {
@@ -74,6 +74,11 @@ subprojects {
                     gpg(closureOf<GpgConfig> {
                         sign = true
                     })
+                    mavenCentralSync(closureOf<MavenCentralSyncConfig> {
+                        sync = true
+                        user = getPropOrEnv("ossrhUserToken", "OSSRH_USER_TOKEN")
+                        password = getPropOrEnv("ossrhKey", "OSSRH_KEY")
+                    })
                 })
             })
         }
@@ -85,7 +90,7 @@ subprojects {
 fun Project.getPropOrEnv(propName: String, envVar: String? = null): String? =
   findProperty(propName) as String? ?: System.getenv(envVar)
 
-fun MavenPublication.configurePomForMavenCentral() = pom {
+fun MavenPublication.configurePomForMavenCentral(project: Project) = pom {
     name.set(project.name)
     description.set(project.description)
     url.set(githubRepoUrl)
