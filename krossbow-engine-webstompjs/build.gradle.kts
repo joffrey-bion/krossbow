@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
-
 plugins {
     kotlin("js")
 }
@@ -24,7 +22,7 @@ kotlin {
 }
 
 tasks {
-    "compileKotlinJs"(Kotlin2JsCompile::class) {
+    compileKotlinJs {
         kotlinOptions.metaInfo = true
         kotlinOptions.outputFile = "${project.buildDir.path}/js/${project.name}.js"
         kotlinOptions.sourceMap = true
