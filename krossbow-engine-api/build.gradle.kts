@@ -9,7 +9,10 @@ val coroutinesVersion = "1.2.1"
 
 kotlin {
     jvm()
-    js()
+    js {
+        nodejs()
+        browser()
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {

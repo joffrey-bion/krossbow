@@ -7,7 +7,10 @@ description = "A Kotlin multiplatform STOMP client with JVM and JS support"
 
 kotlin {
     jvm()
-    js()
+    js {
+        nodejs()
+        browser()
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {

@@ -4,30 +4,36 @@ plugins {
 
 description = "A Krossbow STOMP client JS implementation wrapping the Webstomp JS library"
 
-repositories {
-    jcenter()
-}
-
 kotlin {
     target {
         nodejs()
         browser()
     }
-    sourceSets["main"].dependencies {
-        api(project(":krossbow-engine-api"))
-        implementation(kotlin("stdlib-js"))
-        implementation(npm("sockjs-client", "1.1.4"))
-        implementation(npm("webstomp-client", "1.0.6"))
+    sourceSets {
+        main {
+            dependencies {
+                api(project(":krossbow-engine-api"))
+                implementation(kotlin("stdlib-js"))
+                implementation(npm("sockjs-client", "1.1.4"))
+                implementation(npm("webstomp-client", "1.0.6"))
+            }
+        }
     }
 }
 
 tasks {
     compileKotlinJs {
         kotlinOptions.metaInfo = true
-        kotlinOptions.outputFile = "${project.buildDir.path}/js/${project.name}.js"
         kotlinOptions.sourceMap = true
+        // commonjs module kind is necessary to use top-level declarations from UMD modules (e.g. react-redux)
+        // because the Kotlin wrapper didn't specify @JsNonModule
         kotlinOptions.moduleKind = "commonjs"
-        kotlinOptions.main = "noCall"
+        kotlinOptions.main = "call"
+    }
+    compileTestKotlinJs {
+        // commonjs module kind is necessary to use top-level declarations from UMD modules (e.g. react-redux)
+        // because the Kotlin wrapper didn't specify @JsNonModule
+        kotlinOptions.moduleKind = "commonjs"
     }
 }
 
