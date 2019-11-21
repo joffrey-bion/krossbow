@@ -15,7 +15,7 @@ kotlin {
                 api(project(":krossbow-engine-api"))
                 implementation(kotlin("stdlib-js"))
                 implementation(npm("sockjs-client", "1.1.4"))
-                implementation(npm("webstomp-client", "1.0.6"))
+                implementation(npm("webstomp-client", "1.2.6"))
             }
         }
     }

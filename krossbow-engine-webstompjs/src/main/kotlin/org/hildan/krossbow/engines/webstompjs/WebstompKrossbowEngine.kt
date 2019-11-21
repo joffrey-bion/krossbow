@@ -5,7 +5,7 @@ import ExtendedHeaders
 import Heartbeat
 import Message
 import Options
-import client
+import webstomp
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 import org.hildan.krossbow.engines.HeartBeat
@@ -32,10 +32,10 @@ class WebstompHeartbeat(
 private fun HeartBeat.toWebstomp(): WebstompHeartbeat = WebstompHeartbeat(minSendPeriodMillis, expectedPeriodMillis)
 
 class WebstompOptions(
-    override var protocols: Array<String> = emptyArray(),
-    override var binary: Boolean = false,
+    override var protocols: Array<String>? = emptyArray(),
+    override var binary: Boolean? = false,
     override var heartbeat: WebstompHeartbeat,
-    override var debug: Boolean = false
+    override var debug: Boolean? = false
 ) : Options
 
 object WebstompKrossbowEngine : KrossbowEngine {
@@ -52,7 +52,7 @@ class WebstompKrossbowClient(private val config: KrossbowConfig) : KrossbowClien
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowSession {
         val options = WebstompOptions(heartbeat = config.heartBeat.toWebstomp())
-        val client = client(url, options)
+        val client = webstomp.client(url, options)
         return KrossbowSession(WebstompKrossbowSession(client))
     }
 }

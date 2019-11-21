@@ -1,13 +1,18 @@
-@file:Suppress("INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS", "EXTERNAL_DELEGATION", "NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@file:Suppress("INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS", "EXTERNAL_DELEGATION")
 
 external fun client(url: String, options: Options? = definedExternally /* null */): Client
 
 external fun over(socketType: Any, options: Options? = definedExternally /* null */): Client
 
 open external class Client {
-    open fun connect(headers: ConnectionHeaders, connectCallback: (frame: Frame? /* = null */) -> Any, errorCallback: ((error: String) -> Any)? = definedExternally /* null */)
-    open fun connect(login: String, passcode: String, connectCallback: (frame: Frame? /* = null */) -> Any, errorCallback: ((error: String) -> Any)? = definedExternally /* null */, host: String? = definedExternally /* null */)
-    open fun disconnect(disconnectCallback: () -> Any, headers: DisconnectHeaders? = definedExternally /* null */)
+    open var connected: Boolean
+    open var isBinary: Boolean
+    open var partialData: String
+    open var subscriptions: SubscriptionsMap
+    open var ws: Any
+    open fun connect(headers: ConnectionHeaders, connectCallback: (frame: Frame? /* = null */) -> Any, errorCallback: ((error: dynamic /* CloseEvent | Frame */) -> Any)? = definedExternally /* null */)
+    open fun connect(login: String, passcode: String, connectCallback: (frame: Frame? /* = null */) -> Any, errorCallback: ((error: dynamic /* CloseEvent | Frame */) -> Any)? = definedExternally /* null */, host: String? = definedExternally /* null */)
+    open fun disconnect(disconnectCallback: (() -> Any)? = definedExternally /* null */, headers: DisconnectHeaders? = definedExternally /* null */)
     open fun send(destination: String, body: String? = definedExternally /* null */, headers: ExtendedHeaders? = definedExternally /* null */)
     open fun subscribe(destination: String, callback: ((message: Message) -> Any)? = definedExternally /* null */, headers: SubscribeHeaders? = definedExternally /* null */): Subscription
     open fun unsubscribe(id: String, header: UnsubscribeHeaders? = definedExternally /* null */)
@@ -16,13 +21,28 @@ open external class Client {
     open fun abort(transaction: String)
     open fun ack(messageID: String, subscription: Subscription, headers: AckHeaders? = definedExternally /* null */)
     open fun nack(messageID: String, subscription: Subscription, headers: NackHeaders? = definedExternally /* null */)
+    open fun debug(vararg args: Any)
+    open fun onreceipt(frame: Frame)
 }
 
-open external class Frame(command: String, headers: Any? = definedExternally /* null */, body: String? = definedExternally /* null */) {
+external interface `T$0` {
+    var frames: Array<Frame>
+    var partial: String?
+        get() = definedExternally
+        set(value) = definedExternally
+}
+
+open external class Frame(command: String, headers: Headers? = definedExternally /* null */, body: String? = definedExternally /* null */) {
+    open var command: String
+    open var body: String
+    open val headers: Headers
     override fun toString(): String
-    open fun sizeOfUTF8(s: String): Number
-    open fun unmarshall(datas: Any): Any
-    open fun marshall(command: String, headers: Any? = definedExternally /* null */, body: String? = definedExternally /* null */): Any
+
+    companion object {
+        fun unmarshallSingle(data: String): Frame
+        fun unmarshall(datas: String): `T$0`
+        fun marshall(command: String, headers: Headers? = definedExternally /* null */, body: String? = definedExternally /* null */): String
+    }
 }
 
 external object VERSIONS {
@@ -43,49 +63,76 @@ external interface Subscription {
     var unsubscribe: () -> Unit
 }
 
-external interface Message {
-    var command: String
-    var body: String
-    var headers: ExtendedHeaders
+external interface SubscriptionsMap
+
+@Suppress("NOTHING_TO_INLINE")
+inline operator fun SubscriptionsMap.get(id: String): ((message: Message) -> Any)? = asDynamic()[id]
+
+@Suppress("NOTHING_TO_INLINE")
+inline operator fun SubscriptionsMap.set(id: String, noinline value: (message: Message) -> Any) {
+    asDynamic()[id] = value
+}
+
+external interface Message : Frame {
+    override var headers: ExtendedHeaders
     fun ack(headers: AckHeaders? = definedExternally /* null */): Any
     fun nack(headers: NackHeaders? = definedExternally /* null */): Any
 }
 
 external interface Options : ClientOptions {
-    var protocols: Array<String>
+    var protocols: Array<String>?
+        get() = definedExternally
+        set(value) = definedExternally
 }
 
 external interface ClientOptions {
-    var binary: Boolean
+    var binary: Boolean?
+        get() = definedExternally
+        set(value) = definedExternally
     var heartbeat: dynamic /* Heartbeat | Boolean */
-    var debug: Boolean
+        get() = definedExternally
+        set(value) = definedExternally
+    var debug: Boolean?
+        get() = definedExternally
+        set(value) = definedExternally
 }
 
-external interface ConnectionHeaders {
-    var login: String
-    var passcode: String
+external interface Headers
+
+@Suppress("NOTHING_TO_INLINE")
+inline operator fun Headers.get(key: String): String? = asDynamic()[key]
+
+@Suppress("NOTHING_TO_INLINE")
+inline operator fun Headers.set(key: String, value: String?) {
+    asDynamic()[key] = value
+}
+
+external interface ConnectionHeaders : Headers {
+    var login: String?
+        get() = definedExternally
+        set(value) = definedExternally
+    var passcode: String?
+        get() = definedExternally
+        set(value) = definedExternally
     var host: String?
         get() = definedExternally
         set(value) = definedExternally
 }
 
-external interface DisconnectHeaders {
+external interface DisconnectHeaders : Headers {
     var `receipt`: String?
         get() = definedExternally
         set(value) = definedExternally
 }
 
 external interface StandardHeaders : DisconnectHeaders {
-    // content-length defined as extension
-    // content-type defined as extension
+//    var `content-length`: String?
+//        get() = definedExternally
+//        set(value) = definedExternally
+//    var `content-type`: String?
+//        get() = definedExternally
+//        set(value) = definedExternally
 }
-var StandardHeaders.contentLength: String?
-    get() = asDynamic()["content-length"]
-    set(value) { asDynamic()["content-length"] = value }
-
-var StandardHeaders.contentType: String?
-    get() = asDynamic()["content-type"]
-    set(value) { asDynamic()["content-type"] = value }
 
 external interface ExtendedHeaders : StandardHeaders {
 //    var `amqp-message-id`: String?
@@ -148,3 +195,10 @@ external interface AckHeaders : UnsubscribeHeaders {
 }
 
 external interface NackHeaders : AckHeaders
+
+external object webstomp {
+    var Frame: Frame
+    var VERSIONS: Any
+    var client: (url: String, options: Options?) -> Client
+    var over: (socketType: Any, options: Options?) -> Client
+}
