@@ -2,7 +2,7 @@ import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayExtension.*
 
 plugins {
-    val kotlinVersion = "1.3.50"
+    val kotlinVersion = "1.3.60"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
