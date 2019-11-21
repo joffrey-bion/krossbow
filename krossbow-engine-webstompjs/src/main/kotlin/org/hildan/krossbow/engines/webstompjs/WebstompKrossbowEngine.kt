@@ -1,11 +1,11 @@
 package org.hildan.krossbow.engines.webstompjs
 
-import js.webstomp.client.Client
-import js.webstomp.client.ExtendedHeaders
-import js.webstomp.client.Heartbeat
-import js.webstomp.client.Message
-import js.webstomp.client.Options
-import js.webstomp.client.client
+import Client
+import ExtendedHeaders
+import Heartbeat
+import Message
+import Options
+import client
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 import org.hildan.krossbow.engines.HeartBeat
@@ -32,7 +32,7 @@ class WebstompHeartbeat(
 private fun HeartBeat.toWebstomp(): WebstompHeartbeat = WebstompHeartbeat(minSendPeriodMillis, expectedPeriodMillis)
 
 class WebstompOptions(
-    override var protocols: Array<String>? = null,
+    override var protocols: Array<String> = emptyArray(),
     override var binary: Boolean = false,
     override var heartbeat: WebstompHeartbeat,
     override var debug: Boolean = false
