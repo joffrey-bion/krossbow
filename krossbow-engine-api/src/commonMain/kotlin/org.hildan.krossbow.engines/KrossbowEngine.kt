@@ -112,6 +112,11 @@ data class KrossbowEngineSubscription(
 )
 
 /**
+ * An exception thrown when something went wrong during the connection.
+ */
+class ConnectionException(message: String) : Exception(message)
+
+/**
  * An exception thrown when a RECEIPT frame was expected from the server, but not received in the configured time limit.
  */
 class LostReceiptException(

@@ -5,9 +5,9 @@ import ExtendedHeaders
 import Heartbeat
 import Message
 import Options
-import webstomp
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
+import org.hildan.krossbow.engines.ConnectionException
 import org.hildan.krossbow.engines.HeartBeat
 import org.hildan.krossbow.engines.InvalidFramePayloadException
 import org.hildan.krossbow.engines.KrossbowClient
@@ -20,7 +20,9 @@ import org.hildan.krossbow.engines.KrossbowReceipt
 import org.hildan.krossbow.engines.KrossbowSession
 import org.hildan.krossbow.engines.MessageHeaders
 import org.hildan.krossbow.engines.SubscriptionCallbacks
+import webstomp
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlin.reflect.KClass
 
@@ -53,7 +55,14 @@ class WebstompKrossbowClient(private val config: KrossbowConfig) : KrossbowClien
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowSession {
         val options = WebstompOptions(heartbeat = config.heartBeat.toWebstomp())
         val client = webstomp.client(url, options)
-        return KrossbowSession(WebstompKrossbowSession(client))
+        return suspendCoroutine { cont ->
+            // TODO headers
+            client.connect(js("{}"), {
+                cont.resume(KrossbowSession(WebstompKrossbowSession(client)))
+            }, { err ->
+                cont.resumeWithException(ConnectionException("webstomp connect failed with the following error: ${JSON.stringify(err)}"))
+            })
+        }
     }
 }
 
