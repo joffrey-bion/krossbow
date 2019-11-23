@@ -98,7 +98,7 @@ class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSessio
     }
 
     override suspend fun disconnect(): Unit = suspendCoroutine { cont ->
-        client.disconnect({ cont.resume(Unit) }, null) // TODO headers
+        client.disconnect({ cont.resume(Unit) }, js("{}")) // TODO headers
     }
 }
 

@@ -12,7 +12,7 @@ open external class Client {
     open var ws: Any
     open fun connect(headers: ConnectionHeaders, connectCallback: (frame: Frame? /* = null */) -> Any, errorCallback: ((error: dynamic /* CloseEvent | Frame */) -> Any)? = definedExternally /* null */)
     open fun connect(login: String, passcode: String, connectCallback: (frame: Frame? /* = null */) -> Any, errorCallback: ((error: dynamic /* CloseEvent | Frame */) -> Any)? = definedExternally /* null */, host: String? = definedExternally /* null */)
-    open fun disconnect(disconnectCallback: (() -> Any)? = definedExternally /* null */, headers: DisconnectHeaders? = definedExternally /* null */)
+    open fun disconnect(disconnectCallback: (() -> Any)? = definedExternally /* null */, headers: DisconnectHeaders = definedExternally /* null */)
     open fun send(destination: String, body: String? = definedExternally /* null */, headers: ExtendedHeaders? = definedExternally /* null */)
     open fun subscribe(destination: String, callback: ((message: Message) -> Any)? = definedExternally /* null */, headers: SubscribeHeaders? = definedExternally /* null */): Subscription
     open fun unsubscribe(id: String, header: UnsubscribeHeaders? = definedExternally /* null */)
