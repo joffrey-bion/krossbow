@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 
 class KrossbowClientTest {
 
-    private val testUrl = "ws://seven-wonders-online.herokuapp.com/seven-wonders-websocket"
+    private val testUrl = "http://seven-wonders-online.herokuapp.com/seven-wonders-websocket"
 
     data class ChooseNameAction(val playerName: String)
 

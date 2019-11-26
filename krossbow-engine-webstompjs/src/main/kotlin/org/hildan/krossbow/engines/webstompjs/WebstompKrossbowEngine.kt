@@ -5,6 +5,7 @@ import ExtendedHeaders
 import Heartbeat
 import Message
 import Options
+import SockJS
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 import org.hildan.krossbow.engines.ConnectionException
@@ -54,7 +55,7 @@ class WebstompKrossbowClient(private val config: KrossbowConfig) : KrossbowClien
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowSession {
         val options = WebstompOptions(heartbeat = config.heartBeat.toWebstomp())
-        val client = webstomp.client(url, options)
+        val client = webstomp.over(SockJS(url), options)
         return suspendCoroutine { cont ->
             // TODO headers
             client.connect(js("{}"), {
@@ -80,7 +81,8 @@ class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSessio
     ): KrossbowEngineSubscription = subscribe(destination, callbacks) { body ->
         when (body) {
             null -> throw InvalidFramePayloadException("Unsupported null websocket payload, expected $clazz")
-            else -> JSON.parse<T>(body)
+            else -> JSON.parse<T>(body) // FIXME use proper deserialization to get an actual object of proper type
+            // NOTE: conversion should be moved to common code and should be customizable
         }
     }
 
@@ -99,6 +101,7 @@ class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSessio
         callbacks: SubscriptionCallbacks<T>,
         convertPayload: (String?) -> T
     ): KrossbowEngineSubscription {
+        console.log("Subscribing to $destination")
         val sub = client.subscribe(destination, { m: Message ->
             val msg = KrossbowMessage(convertPayload(m.body), m.headers.toKrossbowHeaders())
             GlobalScope.promise { callbacks.onReceive(msg) }
