@@ -1,24 +1,24 @@
 package org.hildan.krossbow.engines
 
 /**
- * Configuration of the STOMP [KrossbowClient].
+ * Configuration of the STOMP [KrossbowEngineClient].
  */
-data class KrossbowConfig(
+interface KrossbowEngineConfig {
     /**
      * The heartbeat to use during STOMP sessions.
      */
-    var heartBeat: HeartBeat = HeartBeat(),
+    val heartBeat: HeartBeat
     /**
      * Whether to automatically attach a `receipt` header to the sent messages in order to track receipts.
      */
-    var autoReceipt: Boolean = false,
+    val autoReceipt: Boolean
     /**
      * Defines how long to wait for a RECEIPT frame from the server before throwing a [LostReceiptException].
      * Only crashes when a `receipt` header was actually present in the sent frame (and thus a RECEIPT was expected).
      * Such header is always present if [autoReceipt] is enabled.
      */
-    var receiptTimeLimit: Long = 15000
-)
+    val receiptTimeLimit: Long
+}
 
 /**
  * Defines the heart beats for STOMP sessions, as specified in the STOMP specification.

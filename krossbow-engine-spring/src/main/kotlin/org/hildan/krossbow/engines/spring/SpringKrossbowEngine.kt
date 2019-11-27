@@ -1,20 +1,19 @@
 package org.hildan.krossbow.engines.spring
 
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
-import org.hildan.krossbow.engines.KrossbowClient
-import org.hildan.krossbow.engines.KrossbowConfig
+import kotlinx.coroutines.withContext
 import org.hildan.krossbow.engines.KrossbowEngine
+import org.hildan.krossbow.engines.KrossbowEngineClient
+import org.hildan.krossbow.engines.KrossbowEngineConfig
 import org.hildan.krossbow.engines.KrossbowEngineSession
 import org.hildan.krossbow.engines.KrossbowEngineSubscription
 import org.hildan.krossbow.engines.KrossbowMessage
 import org.hildan.krossbow.engines.KrossbowReceipt
-import org.hildan.krossbow.engines.KrossbowSession
 import org.hildan.krossbow.engines.LostReceiptException
 import org.hildan.krossbow.engines.SubscriptionCallbacks
 import org.hildan.krossbow.engines.UnsubscribeHeaders
-import org.springframework.messaging.converter.MappingJackson2MessageConverter
 import org.springframework.messaging.simp.stomp.StompFrameHandler
 import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSession
@@ -28,14 +27,13 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-import kotlin.reflect.KClass
 
 /**
  * Implementation of [KrossbowEngine] for the JVM based on Spring's [WebSocketStompClient].
  */
 object SpringKrossbowEngine : KrossbowEngine {
 
-    override fun createClient(config: KrossbowConfig): KrossbowClient {
+    override fun createClient(config: KrossbowEngineConfig): KrossbowEngineClient {
         val springClient = defaultStompClient()
         springClient.receiptTimeLimit = config.receiptTimeLimit
         return SpringKrossbowClient(springClient, config)
@@ -43,13 +41,9 @@ object SpringKrossbowEngine : KrossbowEngine {
 
     private fun defaultStompClient(webSocketClient: WebSocketClient = defaultWsClient()): WebSocketStompClient =
         WebSocketStompClient(webSocketClient).apply {
-            messageConverter = createJacksonConverter() // for custom object exchanges
+//            messageConverter = StringMessageConverter() // for custom object exchanges
             taskScheduler = createTaskScheduler() // for heartbeats
         }
-
-    private fun createJacksonConverter() = MappingJackson2MessageConverter().apply {
-        objectMapper.registerModule(KotlinModule())
-    }
 
     private fun defaultWsClient(transports: List<Transport> = defaultWsTransports()): WebSocketClient =
         SockJsClient(transports)
@@ -63,15 +57,14 @@ object SpringKrossbowEngine : KrossbowEngine {
 
 private class SpringKrossbowClient(
     private val client: WebSocketStompClient,
-    private val config: KrossbowConfig
-) : KrossbowClient {
+    private val config: KrossbowEngineConfig
+) : KrossbowEngineClient {
 
-    override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowSession {
+    override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowEngineSession {
         val sessionHandler = LoggingStompSessionHandler()
         val session = client.connect(url, sessionHandler).completable().await()
         session.setAutoReceipt(config.autoReceipt)
-        val engineSession = SpringKrossbowSession(session, sessionHandler)
-        return KrossbowSession(engineSession)
+        return SpringKrossbowSession(session, sessionHandler)
     }
 }
 
@@ -81,23 +74,22 @@ private class SpringKrossbowSession(
 ) : KrossbowEngineSession {
 
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    override suspend fun send(destination: String, body: Any?): KrossbowReceipt? =
+    override suspend fun send(destination: String, body: ByteArray?): KrossbowReceipt? =
         session.send(destination, body).await()?.let { KrossbowReceipt(it) }
 
-    override suspend fun <T : Any> subscribe(
+    override suspend fun subscribe(
         destination: String,
-        clazz: KClass<T>,
-        callbacks: SubscriptionCallbacks<T>
-    ): KrossbowEngineSubscription = subscribe(destination, callbacks) { SingleTypeFrameHandler(clazz, it) }
+        callbacks: SubscriptionCallbacks<ByteArray>
+    ): KrossbowEngineSubscription = subscribe(callbacks, destination) { BinaryFrameHandler(it) }
 
     override suspend fun subscribeNoPayload(
         destination: String,
         callbacks: SubscriptionCallbacks<Unit>
-    ): KrossbowEngineSubscription = subscribe(destination, callbacks) { NoPayloadFrameHandler(it) }
+    ): KrossbowEngineSubscription = subscribe(callbacks, destination) { NoPayloadFrameHandler(it) }
 
-    private suspend fun <T : Any> subscribe(
-        destination: String,
+    private suspend inline fun <T : Any> subscribe(
         callbacks: SubscriptionCallbacks<T>,
+        destination: String,
         createFrameHandler: ((KrossbowMessage<T>) -> Unit) -> StompFrameHandler
     ): KrossbowEngineSubscription {
         val handler = createFrameHandler {
@@ -105,15 +97,15 @@ private class SpringKrossbowSession(
                 callbacks.onReceive(it)
             }
         }
-        val sub = session.subscribe(destination, handler)
+        val sub = withContext(Dispatchers.IO) { session.subscribe(destination, handler) }
         sessionHandler.registerExceptionHandler(sub.subscriptionId!!) { callbacks.onError(it) }
         return KrossbowEngineSubscription(sub.subscriptionId!!) { headers ->
-            sub.unsubscribe(headers?.toSpringStompHeaders())
+            withContext(Dispatchers.IO) { sub.unsubscribe(headers?.toSpringStompHeaders()) }
         }
     }
 
     override suspend fun disconnect() {
-        session.disconnect()
+        withContext(Dispatchers.IO) { session.disconnect() }
     }
 }
 

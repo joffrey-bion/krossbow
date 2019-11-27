@@ -65,13 +65,13 @@ external interface Subscription {
 
 external interface SubscriptionsMap
 
-//@Suppress("NOTHING_TO_INLINE")
-//inline operator fun SubscriptionsMap.get(id: String): ((message: Message) -> Any)? = asDynamic()[id]
+// @Suppress("NOTHING_TO_INLINE")
+// inline operator fun SubscriptionsMap.get(id: String): ((message: Message) -> Any)? = asDynamic()[id]
 //
-//@Suppress("NOTHING_TO_INLINE")
-//inline operator fun SubscriptionsMap.set(id: String, noinline value: (message: Message) -> Any) {
-//    asDynamic()[id] = value
-//}
+// @Suppress("NOTHING_TO_INLINE")
+// inline operator fun SubscriptionsMap.set(id: String, noinline value: (message: Message) -> Any) {
+//     asDynamic()[id] = value
+// }
 
 external interface Message : Frame {
     override var headers: ExtendedHeaders
@@ -99,13 +99,13 @@ external interface ClientOptions {
 
 external interface Headers
 
-//@Suppress("NOTHING_TO_INLINE")
-//inline operator fun Headers.get(key: String): String? = asDynamic()[key]
+// @Suppress("NOTHING_TO_INLINE")
+// inline operator fun Headers.get(key: String): String? = asDynamic()[key]
 //
-//@Suppress("NOTHING_TO_INLINE")
-//inline operator fun Headers.set(key: String, value: String?) {
-//    asDynamic()[key] = value
-//}
+// @Suppress("NOTHING_TO_INLINE")
+// inline operator fun Headers.set(key: String, value: String?) {
+//     asDynamic()[key] = value
+// }
 
 external interface ConnectionHeaders : Headers {
     var login: String?

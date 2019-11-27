@@ -1,9 +1,12 @@
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.dokka")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 description = "A Kotlin multiplatform STOMP client with JVM and JS support"
+
+val serializationVersion = "0.14.0"
 
 kotlin {
     jvm()
@@ -15,7 +18,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                api(project(":krossbow-engine-api"))
+                implementation(project(":krossbow-engine-api"))
+
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
             }
         }
         val commonTest by getting {
@@ -28,6 +33,11 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 implementation(project(":krossbow-engine-spring"))
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
+
+                val jacksonVersion = "2.9.9"
+                implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
             }
         }
         val jvmTest by getting {
@@ -41,6 +51,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-js"))
                 implementation(project(":krossbow-engine-webstompjs"))
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
             }
         }
         val jsTest by getting {

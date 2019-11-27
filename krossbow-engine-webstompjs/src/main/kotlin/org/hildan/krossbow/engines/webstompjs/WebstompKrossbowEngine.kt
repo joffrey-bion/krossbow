@@ -11,21 +11,19 @@ import kotlinx.coroutines.promise
 import org.hildan.krossbow.engines.ConnectionException
 import org.hildan.krossbow.engines.HeartBeat
 import org.hildan.krossbow.engines.InvalidFramePayloadException
-import org.hildan.krossbow.engines.KrossbowClient
-import org.hildan.krossbow.engines.KrossbowConfig
 import org.hildan.krossbow.engines.KrossbowEngine
+import org.hildan.krossbow.engines.KrossbowEngineClient
+import org.hildan.krossbow.engines.KrossbowEngineConfig
 import org.hildan.krossbow.engines.KrossbowEngineSession
 import org.hildan.krossbow.engines.KrossbowEngineSubscription
 import org.hildan.krossbow.engines.KrossbowMessage
 import org.hildan.krossbow.engines.KrossbowReceipt
-import org.hildan.krossbow.engines.KrossbowSession
 import org.hildan.krossbow.engines.MessageHeaders
 import org.hildan.krossbow.engines.SubscriptionCallbacks
 import webstomp
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-import kotlin.reflect.KClass
 
 class WebstompHeartbeat(
     override var outgoing: Number,
@@ -43,7 +41,7 @@ class WebstompOptions(
 
 object WebstompKrossbowEngine : KrossbowEngine {
 
-    override fun createClient(config: KrossbowConfig): KrossbowClient {
+    override fun createClient(config: KrossbowEngineConfig): KrossbowEngineClient {
         if (config.autoReceipt) {
             throw IllegalArgumentException("Receipts not supported yet by JS client")
         }
@@ -51,15 +49,15 @@ object WebstompKrossbowEngine : KrossbowEngine {
     }
 }
 
-class WebstompKrossbowClient(private val config: KrossbowConfig) : KrossbowClient {
+class WebstompKrossbowClient(private val config: KrossbowEngineConfig) : KrossbowEngineClient {
 
-    override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowSession {
+    override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowEngineSession {
         val options = WebstompOptions(heartbeat = config.heartBeat.toWebstomp())
         val client = webstomp.over(SockJS(url), options)
         return suspendCoroutine { cont ->
             // TODO headers
             client.connect(js("{}"), {
-                cont.resume(KrossbowSession(WebstompKrossbowSession(client)))
+                cont.resume(WebstompKrossbowSession(client))
             }, { err ->
                 cont.resumeWithException(ConnectionException("webstomp connect failed with the following error: ${JSON.stringify(err)}"))
             })
@@ -69,20 +67,20 @@ class WebstompKrossbowClient(private val config: KrossbowConfig) : KrossbowClien
 
 class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSession {
 
-    override suspend fun send(destination: String, body: Any?): KrossbowReceipt? {
-        client.send(destination, body?.let { JSON.stringify(it) })
+    @UseExperimental(ExperimentalStdlibApi::class)
+    override suspend fun send(destination: String, body: ByteArray?): KrossbowReceipt? {
+        client.send(destination, body?.let { body.decodeToString() })
         return null
     }
 
-    override suspend fun <T : Any> subscribe(
+    @UseExperimental(ExperimentalStdlibApi::class)
+    override suspend fun subscribe(
         destination: String,
-        clazz: KClass<T>,
-        callbacks: SubscriptionCallbacks<T>
+        callbacks: SubscriptionCallbacks<ByteArray>
     ): KrossbowEngineSubscription = subscribe(destination, callbacks) { body ->
         when (body) {
-            null -> throw InvalidFramePayloadException("Unsupported null websocket payload, expected $clazz")
-            else -> JSON.parse<T>(body) // FIXME use proper deserialization to get an actual object of proper type
-            // NOTE: conversion should be moved to common code and should be customizable
+            null -> throw InvalidFramePayloadException("A payload was expected but nothing was received")
+            else -> body.encodeToByteArray()
         }
     }
 
@@ -96,15 +94,19 @@ class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSessio
         }
     }
 
-    private fun <T : Any> subscribe(
+    private suspend inline fun <T : Any> subscribe(
         destination: String,
         callbacks: SubscriptionCallbacks<T>,
-        convertPayload: (String?) -> T
+        crossinline convertPayload: (String?) -> T
     ): KrossbowEngineSubscription {
         console.log("Subscribing to $destination")
         val sub = client.subscribe(destination, { m: Message ->
-            val msg = KrossbowMessage(convertPayload(m.body), m.headers.toKrossbowHeaders())
-            GlobalScope.promise { callbacks.onReceive(msg) }
+            try {
+                val msg = KrossbowMessage(convertPayload(m.body), m.headers.toKrossbowHeaders())
+                GlobalScope.promise { callbacks.onReceive(msg) }
+            } catch (e: Exception) {
+                callbacks.onError(e)
+            }
         })
         return KrossbowEngineSubscription(sub.id) { sub.unsubscribe() }
     }

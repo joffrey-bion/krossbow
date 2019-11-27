@@ -28,3 +28,5 @@ data class KrossbowMessage<out T>(
      */
     val headers: MessageHeaders
 )
+
+fun <T, U> KrossbowMessage<T>.map(transform: (T) -> U): KrossbowMessage<U> = KrossbowMessage(transform(payload), headers)

@@ -14,7 +14,6 @@ external object SockJS {
     var CLOSED: String /* 3 */
 }
 
-
 external interface BaseEvent : Event {
     override var type: String
 }

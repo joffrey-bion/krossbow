@@ -1,62 +1,30 @@
 package org.hildan.krossbow.engines
 
-import kotlin.reflect.KClass
-
 /**
- * Creates an instance of [KrossbowClient] based on the given [KrossbowEngine]. The provided configuration function
- * is applied to the newly created client.
- */
-@Suppress("FunctionName")
-fun KrossbowClient(engine: KrossbowEngine, configure: KrossbowConfig.() -> Unit = {}): KrossbowClient {
-    val config = KrossbowConfig().apply { configure() }
-    return engine.createClient(config)
-}
-
-/**
- * An interface to define how to create a [KrossbowClient]. Implementations can build platform-specific clients.
+ * An interface to define how to create a [KrossbowEngineClient]. Implementations can build platform-specific clients.
  */
 interface KrossbowEngine {
 
     /**
-     * Creates a [KrossbowClient] based on the given config. Implementations SHOULD implement all supported
+     * Creates a [KrossbowEngineClient] based on the given config. Implementations SHOULD implement all supported
      * configuration, and MAY ignore configuration that are not supported by the underlying websocket STOMP client.
      */
-    fun createClient(config: KrossbowConfig): KrossbowClient
+    fun createClient(config: KrossbowEngineConfig): KrossbowEngineClient
 }
 
 /**
- * A STOMP client interface based on Websockets. The client is used to connect to the server and create a
- * [KrossbowSession]. Then, most of the STOMP interactions are done through the [KrossbowSession].
+ * An adapter STOMP clients in a platform-specific engine.
  */
-interface KrossbowClient {
+interface KrossbowEngineClient {
 
     /**
      * Connects to the given WebSocket [url] and to the STOMP session, and returns after receiving the CONNECTED frame.
      */
-    suspend fun connect(url: String, login: String? = null, passcode: String? = null): KrossbowSession
+    suspend fun connect(url: String, login: String? = null, passcode: String? = null): KrossbowEngineSession
 }
 
 /**
- * Connects to the given [url] and executes the given [block] with the created session. The session is then
- * automatically closed at the end of the block.
- */
-suspend fun KrossbowClient.useSession(
-    url: String,
-    login: String? = null,
-    passcode: String? = null,
-    block: suspend KrossbowSession.() -> Unit
-) {
-    val session = connect(url, login, passcode)
-    try {
-        session.block()
-    } finally {
-        session.disconnect()
-    }
-}
-
-/**
- * An adapter for Krossbow sessions in a platform-specific engine. Is can be used to easily create an actual
- * [KrossbowSession].
+ * An adapter for STOMP sessions in a platform-specific engine.
  */
 interface KrossbowEngineSession {
 
@@ -69,32 +37,22 @@ interface KrossbowEngineSession {
      *
      * If receipts are not enabled, this method sends the frame and immediately returns null.
      */
-    suspend fun send(destination: String, body: Any? = null): KrossbowReceipt?
+    suspend fun send(destination: String, body: ByteArray? = null): KrossbowReceipt?
 
     /**
-     * Subscribes to the given [destination], expecting objects of type [clazz]. Empty payloads are accepted if the
-     * provided [clazz] is [Unit].
-     *
-     * A platform-specific deserializer is used to create instances of the given [clazz] from the body of every message
-     * received on the created subscription.
+     * Subscribes to the given [destination], expecting objects of type [T]. Empty payloads are accepted if the
+     * provided [T] is [Unit].
      *
      * The subscription callbacks are adapted to the coroutines model by the actual [KrossbowSession].
      */
-    suspend fun <T : Any> subscribe(
-        destination: String,
-        clazz: KClass<T>,
-        callbacks: SubscriptionCallbacks<T>
-    ): KrossbowEngineSubscription
+    suspend fun subscribe(destination: String, callbacks: SubscriptionCallbacks<ByteArray>): KrossbowEngineSubscription
 
     /**
      * Subscribes to the given [destination], expecting empty payloads.
      *
      * The subscription callbacks are adapted to the coroutines model by the actual [KrossbowSession].
      */
-    suspend fun subscribeNoPayload(
-        destination: String,
-        callbacks: SubscriptionCallbacks<Unit>
-    ): KrossbowEngineSubscription
+    suspend fun subscribeNoPayload(destination: String, callbacks: SubscriptionCallbacks<Unit>): KrossbowEngineSubscription
 
     /**
      * Sends a DISCONNECT frame to close the session, and closes the connection.
@@ -103,8 +61,17 @@ interface KrossbowEngineSession {
 }
 
 /**
- * An adapter for STOMP subscriptions in a platform-specific engine. Is can be used to easily create an actual
- * [KrossbowSubscription].
+ * Used to bridge the callback-based platform-specific implementations with the coroutine-based [KrossbowSession]
+ */
+interface SubscriptionCallbacks<in T> {
+
+    suspend fun onReceive(message: KrossbowMessage<T>)
+
+    fun onError(throwable: Throwable)
+}
+
+/**
+ * An adapter for STOMP subscriptions in a platform-specific engine.
  */
 data class KrossbowEngineSubscription(
     val id: String,
