@@ -2,14 +2,14 @@ import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayExtension.*
 
 plugins {
-    val kotlinVersion = "1.3.60"
+    val kotlinVersion = "1.3.61"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
     kotlin("plugin.spring") version kotlinVersion apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.3.60" apply false
+    id("org.jetbrains.kotlin.plugin.serialization") version kotlinVersion apply false
     id("org.jlleitschuh.gradle.ktlint") version "9.1.1" apply false
-    id("org.jetbrains.dokka") version "0.9.18" apply false
+    id("org.jetbrains.dokka") version "0.10.0" apply false
     id("com.jfrog.bintray") version "1.8.4" apply false
     id("org.hildan.github.changelog") version "0.8.0"
 }
