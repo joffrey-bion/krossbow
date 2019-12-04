@@ -35,6 +35,7 @@ subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "maven-publish")
     apply(plugin = "com.jfrog.bintray")
+    apply(plugin = "org.jetbrains.dokka")
 
     repositories {
         jcenter()
@@ -92,6 +93,7 @@ subprojects {
             })
         }
 
+        tasks["build"].dependsOn(tasks["dokka"])
         tasks["bintrayUpload"].dependsOn(tasks["build"])
     }
 }

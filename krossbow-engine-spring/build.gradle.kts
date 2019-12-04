@@ -1,6 +1,5 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.dokka")
 }
 
 description = "A Krossbow STOMP client JVM implementation wrapping the Spring WebsocketStompClient"
