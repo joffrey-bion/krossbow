@@ -70,6 +70,16 @@ class KrossbowSession(
      * Subscribes to the given [destination], expecting objects of type [T]. The returned [KrossbowSubscription]
      * can be used to access the channel of received objects.
      *
+     * A platform-specific deserializer is used to create instances of the given type from the body of every message
+     * received on the created subscription.
+     */
+    suspend inline fun <reified T : Any> subscribe(destination: String): KrossbowSubscription<T> =
+            subscribe(destination, T::class)
+
+    /**
+     * Subscribes to the given [destination], expecting objects of type [T]. The returned [KrossbowSubscription]
+     * can be used to access the channel of received objects.
+     *
      * The configured [MessageConverter] is used to create instances of the given type from the body of every message
      * received on the created subscription. If no payload is received in a message, an exception is thrown, unless
      * [T] is [Unit].
@@ -93,16 +103,6 @@ class KrossbowSession(
         val sub = engineSession.subscribeNoPayload(destination, EmptyPayloadCallbacks(channel))
         return KrossbowSubscription(sub, channel)
     }
-
-    /**
-     * Subscribes to the given [destination], expecting objects of type [T]. The returned [KrossbowSubscription]
-     * can be used to access the channel of received objects.
-     *
-     * A platform-specific deserializer is used to create instances of the given type from the body of every message
-     * received on the created subscription.
-     */
-    suspend inline fun <reified T : Any> KrossbowSession.subscribe(destination: String): KrossbowSubscription<T> =
-            subscribe(destination, T::class)
 
     /**
      * Sends a DISCONNECT frame to close the session, and closes the connection.
