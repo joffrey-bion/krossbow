@@ -37,6 +37,16 @@ tasks {
     }
 }
 
+tasks.dokka {
+    outputFormat = "markdown"
+    outputDirectory = "$buildDir/javadoc"
+}
+
+val dokkaJar by tasks.creating(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from(tasks.dokka)
+}
+
 val sourcesJar by tasks.creating(Jar::class) {
     from(kotlin.sourceSets["main"].kotlin)
     archiveClassifier.set("sources")
