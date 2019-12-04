@@ -16,16 +16,17 @@ plugins {
 
 allprojects {
     group = "org.hildan.krossbow"
-    version = "0.3.2"
+    version = "0.4.0"
 }
 
-val githubUser = "joffrey-bion"
+val Project.githubUser get() = "joffrey-bion"
 val githubSlug = "$githubUser/${rootProject.name}"
 val githubRepoUrl = "https://github.com/$githubSlug"
 val Project.labels get() = arrayOf("websocket", "stomp", "krossbow", "multiplatform", "kotlin", "client")
 val Project.licenses get() = arrayOf("MIT")
 
 changelog {
+    githubUser = project.githubUser
     futureVersionTag = project.version.toString()
     excludeLabels = listOf("internal")
     customTagByIssueNumber = mapOf(6 to "0.1.1", 10 to "0.1.2")
