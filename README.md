@@ -6,23 +6,9 @@
 
 A coroutine-based Kotlin multiplatform [STOMP 1.2](https://stomp.github.io/index.html) client over websockets.
 
-The current implementation simply defines a common API for the STOMP client, as well as adapter interfaces to plug in
- a platform-specific STOMP implementation.
+***This project should be considered very beta, it's still in its early development stage.***
 
-In the long run, it would be nice to 
-[write the complete STOMP implementation in common code](https://github.com/joffrey-bion/krossbow/issues/5), and simply abstract the
- websocket API, so that it can be plugged into anything, including Ktor's websocket API.
- If you'd like to see it happen, don't hesitate to upvote the issue.
- 
-This project contains the following modules:
-- `krossbow-client`: the multiplatform client to use as a STOMP library in common, JVM or JS projects. It basically
- acts as a facade on top of other modules, for easier dependency declaration.
-- `krossbow-engine-api`: the API that engines must conform to in order to be used by the multiplatform client
-- `krossbow-engine-spring`: a JVM implementation of the engine API using Spring's WebsocketStompClient as backend
-- `krossbow-engine-webstompjs`: a JavaScript implementation of the engine API using 
-[webstomp-client](https://github.com/JSteunou/webstomp-client) as backend
-
-## Using Krossbow
+## Usage
 
 This is how to create a client and interact with it (the verbose way):
 
@@ -62,6 +48,30 @@ KrossbowClient().useSession(url) { // this: KrossbowSession
 }
 ```
 
+### Message payload conversion
+
+By default, Kotlinx Serialization is used (because cross-platform), but it can be customized.
+
+For instance, on the JVM, you can use the `JacksonConverter` this way:
+
+```kotlin
+val client = KrossbowClient {
+    messageConverter = JacksonConverter()
+}
+```
+
+You can use it with your own `ObjectMapper` this way:
+
+```kotlin
+val objectMapper = jacksonObjectMapper().enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+val client = KrossbowClient {
+    messageConverter = JacksonConverter(objectMapper)
+}
+```
+
+You can also implement your own `MessageConverter` or `StringMessageConverter`, by implementing these interfaces
+ yourself.
+
 ## Adding the dependency
 
 All the dependencies are currently published to Bintray JCenter.
@@ -79,3 +89,21 @@ implementation("org.hildan.krossbow:krossbow-client-jvm:$krossbowVersion")
 // js source set
 implementation("org.hildan.krossbow:krossbow-client-js:$krossbowVersion")
 ```
+
+## Project structure
+
+The current implementation simply defines a common API for the STOMP client, as well as adapter interfaces to plug in
+ a platform-specific STOMP implementation.
+
+In the long run, it would be nice to 
+[write the complete STOMP implementation in common code](https://github.com/joffrey-bion/krossbow/issues/5), and simply abstract the
+ websocket API, so that it can be plugged into anything, including Ktor's websocket API.
+ If you'd like to see it happen, don't hesitate to upvote the issue.
+ 
+This project contains the following modules:
+- `krossbow-client`: the multiplatform client to use as a STOMP library in common, JVM or JS projects. It basically
+ acts as a facade on top of other modules, for easier dependency declaration.
+- `krossbow-engine-api`: the API that engines must conform to in order to be used by the multiplatform client
+- `krossbow-engine-spring`: a JVM implementation of the engine API using Spring's WebsocketStompClient as backend
+- `krossbow-engine-webstompjs`: a JavaScript implementation of the engine API using 
+[webstomp-client](https://github.com/JSteunou/webstomp-client) as backend

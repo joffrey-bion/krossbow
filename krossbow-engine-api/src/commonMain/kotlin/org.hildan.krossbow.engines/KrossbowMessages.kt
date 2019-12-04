@@ -1,8 +1,14 @@
 package org.hildan.krossbow.engines
 
 // TODO handle headers typing for params and received frames
+/**
+ * Unsupported yet. Support is tracked under [this issue](https://github.com/joffrey-bion/krossbow/issues/16)
+ */
 interface MessageHeaders
 
+/**
+ * Unsupported yet. Support is tracked under [this issue](https://github.com/joffrey-bion/krossbow/issues/16)
+ */
 interface UnsubscribeHeaders
 
 /**
@@ -29,4 +35,7 @@ data class KrossbowMessage<out T>(
     val headers: MessageHeaders
 )
 
+/**
+ * Transforms the payload type of this message using the given [transform]. Headers are preserved.
+ */
 fun <T, U> KrossbowMessage<T>.map(transform: (T) -> U): KrossbowMessage<U> = KrossbowMessage(transform(payload), headers)

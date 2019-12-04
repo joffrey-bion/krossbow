@@ -6,6 +6,7 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
+import org.hildan.krossbow.client.converters.MessageConverter
 import org.hildan.krossbow.engines.KrossbowEngineSession
 import org.hildan.krossbow.engines.KrossbowEngineSubscription
 import org.hildan.krossbow.engines.KrossbowMessage
@@ -40,6 +41,15 @@ class KrossbowSession(
     suspend inline fun <reified T : Any> send(destination: String, payload: T? = null): KrossbowReceipt? =
             send(destination, payload, T::class)
 
+    /**
+     * Sends a SEND frame to the server at the given [destination] with the given [payload].
+     *
+     * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received from the server and returns a
+     * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
+     * [LostReceiptException] is thrown.
+     *
+     * If receipts are not enabled, this method sends the frame and immediately returns null.
+     */
     suspend fun <T : Any> send(destination: String, payload: T? = null, payloadType: KClass<T>): KrossbowReceipt? {
         val bytesBody = payload?.let { config.messageConverter.convertToBytes(it, payloadType) }
         return engineSession.send(destination, bytesBody)

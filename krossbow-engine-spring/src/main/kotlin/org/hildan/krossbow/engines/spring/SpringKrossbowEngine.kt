@@ -41,7 +41,6 @@ object SpringKrossbowEngine : KrossbowEngine {
 
     private fun defaultStompClient(webSocketClient: WebSocketClient = defaultWsClient()): WebSocketStompClient =
         WebSocketStompClient(webSocketClient).apply {
-//            messageConverter = StringMessageConverter() // for custom object exchanges
             taskScheduler = createTaskScheduler() // for heartbeats
         }
 

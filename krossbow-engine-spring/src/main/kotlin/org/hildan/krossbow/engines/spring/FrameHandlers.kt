@@ -7,6 +7,9 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler
 import org.springframework.messaging.simp.stomp.StompHeaders
 import java.lang.reflect.Type
 
+/**
+ * An implementation of [StompFrameHandler] that expects messages with binary payloads.
+ */
 internal class BinaryFrameHandler(
     private val onReceive: (KrossbowMessage<ByteArray>) -> Unit
 ) : StompFrameHandler {

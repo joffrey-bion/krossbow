@@ -5,7 +5,7 @@ import org.hildan.krossbow.engines.KrossbowEngine
 internal expect fun defaultEngine(): KrossbowEngine
 
 /**
- * A STOMP client based on Websockets. The client is used to connect to the server and create a [KrossbowSession].
+ * A STOMP client based on web sockets. The client is used to connect to the server and create a [KrossbowSession].
  * Then, most of the STOMP interactions are done through the [KrossbowSession].
  */
 class KrossbowClient(engine: KrossbowEngine = defaultEngine(), configure: KrossbowConfig.() -> Unit = {}) {

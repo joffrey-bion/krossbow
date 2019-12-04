@@ -7,13 +7,13 @@ interface KrossbowEngine {
 
     /**
      * Creates a [KrossbowEngineClient] based on the given config. Implementations SHOULD implement all supported
-     * configuration, and MAY ignore configuration that are not supported by the underlying websocket STOMP client.
+     * configuration, and MAY ignore features that are not supported by the underlying websocket STOMP client.
      */
     fun createClient(config: KrossbowEngineConfig): KrossbowEngineClient
 }
 
 /**
- * An adapter STOMP clients in a platform-specific engine.
+ * An engine-specific STOMP client.
  */
 interface KrossbowEngineClient {
 
@@ -24,7 +24,7 @@ interface KrossbowEngineClient {
 }
 
 /**
- * An adapter for STOMP sessions in a platform-specific engine.
+ * An engine-specific STOMP session.
  */
 interface KrossbowEngineSession {
 
@@ -40,33 +40,43 @@ interface KrossbowEngineSession {
     suspend fun send(destination: String, body: ByteArray? = null): KrossbowReceipt?
 
     /**
-     * Subscribes to the given [destination], expecting objects of type [T]. Empty payloads are accepted if the
-     * provided [T] is [Unit].
+     * Subscribes to the given [destination], expecting binary payloads.
      *
-     * The subscription callbacks are adapted to the coroutines model by the actual [KrossbowSession].
+     * The given [callbacks] must be used to send the received messages. Payload conversions are handled by Krossbow.
+     *
+     * Implementations SHOULD suspend until the subscription is acknowledged by the server.
      */
     suspend fun subscribe(destination: String, callbacks: SubscriptionCallbacks<ByteArray>): KrossbowEngineSubscription
 
     /**
      * Subscribes to the given [destination], expecting empty payloads.
      *
-     * The subscription callbacks are adapted to the coroutines model by the actual [KrossbowSession].
+     * The given [callbacks] must be used to send the received messages. Payload conversions are handled by Krossbow.
+     *
+     * Implementations SHOULD suspend until the subscription is acknowledged by the server.
      */
     suspend fun subscribeNoPayload(destination: String, callbacks: SubscriptionCallbacks<Unit>): KrossbowEngineSubscription
 
     /**
      * Sends a DISCONNECT frame to close the session, and closes the connection.
+     *
+     * Implementations SHOULD suspend until the disconnection is acknowledged by the server.
      */
     suspend fun disconnect()
 }
 
 /**
- * Used to bridge the callback-based platform-specific implementations with the coroutine-based [KrossbowSession]
+ * Used to bridge the callback-based platform-specific implementations with the coroutine-based Krossbow sessions.
  */
 interface SubscriptionCallbacks<in T> {
-
+    /**
+     * Called on each received MESSAGE frame for this subscription.
+     */
     suspend fun onReceive(message: KrossbowMessage<T>)
 
+    /**
+     * Called if an error occurs in the context of this subscription.
+     */
     fun onError(throwable: Throwable)
 }
 
@@ -74,7 +84,13 @@ interface SubscriptionCallbacks<in T> {
  * An adapter for STOMP subscriptions in a platform-specific engine.
  */
 data class KrossbowEngineSubscription(
+    /**
+     * The subscription ID.
+     */
     val id: String,
+    /**
+     * A function to call in order to unsubscribe from this subscription, optionally taking headers as parameter.
+     */
     val unsubscribe: suspend (UnsubscribeHeaders?) -> Unit
 )
 

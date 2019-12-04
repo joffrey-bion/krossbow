@@ -25,20 +25,23 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class WebstompHeartbeat(
+private class WebstompHeartbeat(
     override var outgoing: Number,
     override var incoming: Number
 ) : Heartbeat
 
 private fun HeartBeat.toWebstomp(): WebstompHeartbeat = WebstompHeartbeat(minSendPeriodMillis, expectedPeriodMillis)
 
-class WebstompOptions(
+private class WebstompOptions(
     override var protocols: Array<String>? = emptyArray(),
     override var binary: Boolean? = false,
     override var heartbeat: WebstompHeartbeat,
     override var debug: Boolean? = false
 ) : Options
 
+/**
+ * Implementation of [KrossbowEngine] for JavaScript based on the `webstomp-client` NPM module.
+ */
 object WebstompKrossbowEngine : KrossbowEngine {
 
     override fun createClient(config: KrossbowEngineConfig): KrossbowEngineClient {
@@ -49,7 +52,7 @@ object WebstompKrossbowEngine : KrossbowEngine {
     }
 }
 
-class WebstompKrossbowClient(private val config: KrossbowEngineConfig) : KrossbowEngineClient {
+private class WebstompKrossbowClient(private val config: KrossbowEngineConfig) : KrossbowEngineClient {
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowEngineSession {
         val options = WebstompOptions(heartbeat = config.heartBeat.toWebstomp())
@@ -65,7 +68,7 @@ class WebstompKrossbowClient(private val config: KrossbowEngineConfig) : Krossbo
     }
 }
 
-class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSession {
+private class WebstompKrossbowSession(private val client: Client) : KrossbowEngineSession {
 
     @UseExperimental(ExperimentalStdlibApi::class)
     override suspend fun send(destination: String, body: ByteArray?): KrossbowReceipt? {
