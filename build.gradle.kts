@@ -94,7 +94,7 @@ subprojects {
             })
         }
 
-        tasks["build"].dependsOn(tasks["dokka"])
+        tasks["check"].dependsOn(tasks["dokka"])
         tasks["bintrayUpload"].dependsOn(tasks["build"])
     }
 }
