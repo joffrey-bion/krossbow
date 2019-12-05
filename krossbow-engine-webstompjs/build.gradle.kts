@@ -40,6 +40,9 @@ tasks {
 tasks.dokka {
     outputFormat = "markdown"
     outputDirectory = "$buildDir/javadoc"
+    configuration {
+        platform = "js"
+    }
 }
 
 val dokkaJar by tasks.creating(Jar::class) {
