@@ -1,3 +1,5 @@
+import java.net.URL
+
 plugins {
     kotlin("js")
 }
@@ -42,6 +44,10 @@ tasks.dokka {
     outputDirectory = "$buildDir/javadoc"
     configuration {
         platform = "js"
+        externalDocumentationLink {
+            url = URL("file://${project(":krossbow-engine-api").buildDir}/dokka/krossbow-engine-api/")
+            packageListUrl = URL(url, "package-list")
+        }
     }
 }
 
