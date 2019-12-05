@@ -1,3 +1,5 @@
+import java.net.URL
+
 plugins {
     kotlin("jvm")
 }
@@ -29,6 +31,12 @@ dependencies {
 tasks.dokka {
     outputFormat = "javadoc"
     outputDirectory = "$buildDir/javadoc"
+    configuration {
+        externalDocumentationLink {
+            url = URL("https://docs.spring.io/spring/docs/current/javadoc-api/")
+            packageListUrl = URL(url, "package-list")
+        }
+    }
 }
 
 val dokkaJar by tasks.creating(Jar::class) {
