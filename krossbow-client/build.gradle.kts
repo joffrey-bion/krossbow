@@ -1,3 +1,5 @@
+import java.net.URL
+
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.kotlin.plugin.serialization")
@@ -56,6 +58,35 @@ kotlin {
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
+            }
+        }
+    }
+}
+
+tasks.dokka {
+    dependsOn(
+        ":krossbow-engine-api:dokka",
+        ":krossbow-engine-spring:dokka",
+        ":krossbow-engine-webstompjs:dokka"
+    )
+    outputFormat = "javadoc"
+    multiplatform {
+        val global by creating {
+            externalDocumentationLink {
+                url = URL("file://${project(":krossbow-engine-api").buildDir}/dokka/krossbow-engine-api/")
+                packageListUrl = URL(url, "package-list")
+            }
+        }
+        val jvm by creating {
+            externalDocumentationLink {
+                url = URL("file://${project(":krossbow-engine-spring").buildDir}/dokka/krossbow-engine-spring/")
+                packageListUrl = URL(url, "package-list")
+            }
+        }
+        val js by creating {
+            externalDocumentationLink {
+                url = URL("file://${project(":krossbow-engine-webstompjs").buildDir}/dokka/krossbow-engine-webstompjs/")
+                packageListUrl = URL(url, "package-list")
             }
         }
     }

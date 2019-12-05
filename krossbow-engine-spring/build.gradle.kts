@@ -29,8 +29,7 @@ dependencies {
 }
 
 tasks.dokka {
-    outputFormat = "javadoc"
-    outputDirectory = "$buildDir/javadoc"
+    dependsOn(":krossbow-engine-api:dokka")
     configuration {
         externalDocumentationLink {
             url = URL("https://docs.spring.io/spring/docs/current/javadoc-api/")

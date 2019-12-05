@@ -40,8 +40,7 @@ tasks {
 }
 
 tasks.dokka {
-    outputFormat = "markdown"
-    outputDirectory = "$buildDir/javadoc"
+    dependsOn(":krossbow-engine-api:dokka")
     configuration {
         platform = "js"
         externalDocumentationLink {
