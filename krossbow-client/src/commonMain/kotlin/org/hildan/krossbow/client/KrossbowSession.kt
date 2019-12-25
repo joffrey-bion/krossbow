@@ -34,11 +34,11 @@ class KrossbowSession(
      *
      * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received from the server and returns a
      * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
-     * [LostReceiptException] is thrown.
+     * [LostReceiptException][org.hildan.krossbow.engines.LostReceiptException] is thrown.
      *
      * If receipts are not enabled, this method sends the frame and immediately returns null.
      */
-    suspend inline fun <reified T : Any> send(destination: String, payload: T): KrossbowReceipt? =
+    suspend inline fun <reified T : Any> send(destination: String, payload: T?): KrossbowReceipt? =
             send(destination, payload, T::class)
 
     /**
@@ -46,7 +46,7 @@ class KrossbowSession(
      *
      * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received from the server and returns a
      * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
-     * [LostReceiptException] is thrown.
+     * [LostReceiptException][org.hildan.krossbow.engines.LostReceiptException] is thrown.
      *
      * If receipts are not enabled, this method sends the frame and immediately returns null.
      */
@@ -57,7 +57,7 @@ class KrossbowSession(
      *
      * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received from the server and returns a
      * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
-     * [LostReceiptException] is thrown.
+     * [LostReceiptException][org.hildan.krossbow.engines.LostReceiptException] is thrown.
      *
      * If receipts are not enabled, this method sends the frame and immediately returns null.
      */
