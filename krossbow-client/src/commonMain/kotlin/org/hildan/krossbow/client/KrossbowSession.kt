@@ -86,9 +86,6 @@ class KrossbowSession(
      */
     suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): KrossbowSubscription<T> {
         val converter = config.messageConverter
-        requireNotNull(converter) {
-            "No MessageConverter was configured, unable to handle arbitrary subscription types"
-        }
         val channel = Channel<KrossbowMessage<T>>()
         val callbacks = CallbacksAdapter(converter, clazz, channel)
         val sub = engineSession.subscribe(destination, callbacks)
