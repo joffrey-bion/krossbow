@@ -35,10 +35,10 @@ tasks.dokka {
             url = URL("https://docs.spring.io/spring/docs/current/javadoc-api/")
             packageListUrl = URL(url, "package-list")
         }
-        externalDocumentationLink {
-            url = URL("file://${project(":krossbow-engine-api").buildDir}/dokka/krossbow-engine-api/")
-            packageListUrl = URL(url, "package-list")
-        }
+        // externalDocumentationLink {
+        //     url = URL("file://${project(":krossbow-engine-api").buildDir}/dokka/krossbow-engine-api/")
+        //     packageListUrl = URL(url, "package-list")
+        // }
     }
 }
 

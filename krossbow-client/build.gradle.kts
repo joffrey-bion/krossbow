@@ -1,4 +1,4 @@
-import java.net.URL
+// import java.net.URL
 
 plugins {
     kotlin("multiplatform")
@@ -69,19 +69,19 @@ tasks.dokka {
         ":krossbow-engine-spring:dokka",
         ":krossbow-engine-webstompjs:dokka"
     )
-    outputFormat = "javadoc"
+    //    outputFormat = "javadoc"
     multiplatform {
         val global by creating {
-            externalDocumentationLink {
-                url = URL("file://${project(":krossbow-engine-api").buildDir}/dokka/krossbow-engine-api/")
-                packageListUrl = URL(url, "package-list")
-            }
+            // externalDocumentationLink {
+            //     url = URL("file://${project(":krossbow-engine-api").buildDir}/dokka/krossbow-engine-api/")
+            //     packageListUrl = URL(url, "package-list")
+            // }
         }
         val jvm by creating {
-            externalDocumentationLink {
-                url = URL("file://${project(":krossbow-engine-spring").buildDir}/dokka/krossbow-engine-spring/")
-                packageListUrl = URL(url, "package-list")
-            }
+            // externalDocumentationLink {
+            //     url = URL("file://${project(":krossbow-engine-spring").buildDir}/dokka/krossbow-engine-spring/")
+            //     packageListUrl = URL(url, "package-list")
+            // }
         }
         val js by creating {
             // externalDocumentationLink {
