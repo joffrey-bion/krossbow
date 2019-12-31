@@ -70,6 +70,7 @@ publishing {
             version = project.version.toString()
 
             from(components["kotlin"])
+            artifact(dokkaJar)
             artifact(sourcesJar)
         }
     }
