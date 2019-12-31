@@ -84,10 +84,10 @@ tasks.dokka {
             }
         }
         val js by creating {
-            externalDocumentationLink {
-                url = URL("file://${project(":krossbow-engine-webstompjs").buildDir}/dokka/krossbow-engine-webstompjs/")
-                packageListUrl = URL(url, "package-list")
-            }
+            // externalDocumentationLink {
+            //    url = URL("file://${project(":krossbow-engine-webstompjs").buildDir}/dokka/krossbow-engine-webstompjs/")
+            //    packageListUrl = URL(url, "package-list")
+            // }
         }
     }
 }

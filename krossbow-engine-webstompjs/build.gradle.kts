@@ -1,4 +1,4 @@
-import java.net.URL
+// import java.net.URL
 
 plugins {
     kotlin("js")
@@ -40,19 +40,21 @@ tasks {
 }
 
 tasks.dokka {
-    dependsOn(":krossbow-engine-api:dokka")
-    configuration {
-        platform = "js"
-        externalDocumentationLink {
-            url = URL("file://${project(":krossbow-engine-api").buildDir}/dokka/krossbow-engine-api/")
-            packageListUrl = URL(url, "package-list")
-        }
-    }
+    enabled = false
+//    dependsOn(":krossbow-engine-api:dokka")
+//    configuration {
+//        platform = "js"
+//        externalDocumentationLink {
+//            url = URL("file://${project(":krossbow-engine-api").buildDir}/dokka/krossbow-engine-api/")
+//            packageListUrl = URL(url, "package-list")
+//        }
+//    }
 }
 
 val dokkaJar by tasks.creating(Jar::class) {
     archiveClassifier.set("javadoc")
-    from(tasks.dokka)
+//    from(tasks.dokka)
+    from("doc/README.md")
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
