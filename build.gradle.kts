@@ -86,7 +86,7 @@ subprojects {
                         sign = true
                     })
                     mavenCentralSync(closureOf<MavenCentralSyncConfig> {
-                        sync = true
+                        sync = false // TODO re-activate when javadoc stuff is fixed
                         user = getPropOrEnv("ossrhUserToken", "OSSRH_USER_TOKEN")
                         password = getPropOrEnv("ossrhKey", "OSSRH_KEY")
                     })
