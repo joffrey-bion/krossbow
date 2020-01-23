@@ -16,7 +16,7 @@ plugins {
 
 allprojects {
     group = "org.hildan.krossbow"
-    version = "0.4.1"
+    version = "0.4.2"
 }
 
 val Project.githubUser get() = "joffrey-bion"
@@ -29,7 +29,7 @@ changelog {
     githubUser = project.githubUser
     futureVersionTag = project.version.toString()
     excludeLabels = listOf("internal")
-    customTagByIssueNumber = mapOf(6 to "0.1.1", 10 to "0.1.2")
+    customTagByIssueNumber = mapOf(6 to "0.1.1", 10 to "0.1.2", 15 to "0.4.0")
 }
 
 subprojects {

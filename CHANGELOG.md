@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.4.2](https://github.com/joffrey-bion/krossbow/tree/0.4.2) (2020-01-23)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.4.1...0.4.2)
+
+**Implemented enhancements:**
+
+- Expose Kotlinx.Serialization dependency [\#25](https://github.com/joffrey-bion/krossbow/issues/25)
+
 ## [0.4.1](https://github.com/joffrey-bion/krossbow/tree/0.4.1) (2019-12-31)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.4.0...0.4.1)
 
@@ -14,6 +21,10 @@
 **Fixed bugs:**
 
 - JS version not working [\#20](https://github.com/joffrey-bion/krossbow/issues/20)
+
+**Implemented enhancements:**
+
+- Allow subscriptions for arbitrary/bytes/string payload [\#15](https://github.com/joffrey-bion/krossbow/issues/15)
 
 ## [0.3.2](https://github.com/joffrey-bion/krossbow/tree/0.3.2) (2019-07-12)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.3.1...0.3.2)
