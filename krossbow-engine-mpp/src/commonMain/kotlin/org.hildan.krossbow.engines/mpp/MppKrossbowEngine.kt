@@ -1,5 +1,6 @@
 package org.hildan.krossbow.engines.mpp
 
+import io.ktor.util.KtorExperimentalAPI
 import org.hildan.krossbow.engines.KrossbowEngine
 import org.hildan.krossbow.engines.KrossbowEngineClient
 import org.hildan.krossbow.engines.KrossbowEngineConfig
@@ -7,24 +8,30 @@ import org.hildan.krossbow.engines.KrossbowEngineSession
 import org.hildan.krossbow.engines.KrossbowEngineSubscription
 import org.hildan.krossbow.engines.KrossbowReceipt
 import org.hildan.krossbow.engines.SubscriptionCallbacks
+import org.hildan.krossbow.engines.mpp.websocket.KtorWebSocket
+import org.hildan.krossbow.engines.mpp.websocket.WebSocket
+import org.hildan.krossbow.engines.mpp.websocket.WebSocketSession
 
 object MppKrossbowEngine: KrossbowEngine {
 
-    override fun createClient(config: KrossbowEngineConfig): KrossbowEngineClient = MppKrossbowEngineClient(config)
+    override fun createClient(config: KrossbowEngineConfig): KrossbowEngineClient =
+            MppKrossbowEngineClient(config, KtorWebSocket())
 }
 
+@UseExperimental(KtorExperimentalAPI::class)
 class MppKrossbowEngineClient(
-    val config: KrossbowEngineConfig
+    private val config: KrossbowEngineConfig,
+    private val webSocket: WebSocket
 ): KrossbowEngineClient {
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowEngineSession =
-            MppKrossbowEngineSession()
+            MppKrossbowEngineSession(config, webSocket.connect(url))
 }
 
-/**
- * An engine-specific STOMP session.
- */
-class MppKrossbowEngineSession: KrossbowEngineSession {
+class MppKrossbowEngineSession(
+    private val config: KrossbowEngineConfig,
+    private val webSocketSession: WebSocketSession
+): KrossbowEngineSession {
 
     override suspend fun send(destination: String, body: ByteArray?): KrossbowReceipt? {
         TODO()
