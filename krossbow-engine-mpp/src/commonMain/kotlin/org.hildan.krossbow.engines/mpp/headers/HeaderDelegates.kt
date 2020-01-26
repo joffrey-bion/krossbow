@@ -1,20 +1,26 @@
-package org.hildan.krossbow.client.headers
+package org.hildan.krossbow.engines.mpp.headers
 
-import org.hildan.krossbow.client.frame.toHeartBeat
+import org.hildan.krossbow.engines.mpp.frame.toHeartBeat
 import kotlin.reflect.KProperty
 
-internal fun StompHeaders.acceptVersionHeader() = header(HeaderKeys.ACCEPT_VERSION) { it.split(',') }
+internal fun StompHeaders.acceptVersionHeader() = header(
+    HeaderKeys.ACCEPT_VERSION
+) { it.split(',') }
 
-internal fun StompHeaders.heartBeatHeader() = optionalHeader(HeaderKeys.HEART_BEAT) { it.toHeartBeat() }
+internal fun StompHeaders.heartBeatHeader() = optionalHeader(
+    HeaderKeys.HEART_BEAT
+) { it.toHeartBeat() }
 
-internal fun StompHeaders.contentLengthHeader() = optionalHeader(HeaderKeys.CONTENT_LENGTH) { it.toLong() }
+internal fun StompHeaders.contentLengthHeader() = optionalHeader(
+    HeaderKeys.CONTENT_LENGTH
+) { it.toLong() }
 
 internal fun StompHeaders.header(customKey: String? = null) = header(customKey) { it }
 
 internal inline fun <T> StompHeaders.header(customKey: String? = null, crossinline transform: (String) -> T) =
-    HeaderDelegate(this, customKey) { value, key ->
-        value?.let { transform(it) } ?: throw IllegalStateException("missing required header '$key'")
-    }
+        HeaderDelegate(this, customKey) { value, key ->
+            value?.let { transform(it) } ?: throw IllegalStateException("missing required header '$key'")
+        }
 
 internal fun StompHeaders.optionalHeader(customKey: String? = null, default: String? = null): HeaderDelegate<String?> =
     optionalHeader(customKey, default) { it }
@@ -30,9 +36,9 @@ internal inline fun <T> StompHeaders.optionalHeader(
     default: T,
     crossinline transform: (String) -> T
 ): HeaderDelegate<T> =
-    HeaderDelegate(this, customKey) { value, _ ->
-        value?.let { transform(it) } ?: default
-    }
+        HeaderDelegate(this, customKey) { value, _ ->
+            value?.let { transform(it) } ?: default
+        }
 
 internal class HeaderDelegate<T>(
     private val rawHeaders: StompHeaders,

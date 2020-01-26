@@ -18,5 +18,6 @@ include("krossbow-client")
 include("krossbow-engine-api")
 include("krossbow-engine-spring")
 include("krossbow-engine-webstompjs")
+include("krossbow-engine-mpp")
 
 enableFeaturePreview("GRADLE_METADATA")

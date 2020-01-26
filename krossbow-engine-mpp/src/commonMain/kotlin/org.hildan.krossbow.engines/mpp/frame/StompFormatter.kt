@@ -1,7 +1,7 @@
-package org.hildan.krossbow.client.frame
+package org.hildan.krossbow.engines.mpp.frame
 
-import org.hildan.krossbow.client.headers.StompHeader
-import org.hildan.krossbow.client.headers.escapeForHeader
+import org.hildan.krossbow.engines.mpp.headers.StompHeader
+import org.hildan.krossbow.engines.mpp.headers.escapeForHeader
 
 fun StompFrame.format(): String = """
 $command
@@ -21,9 +21,7 @@ private val StompFrame.formattedHeaders: String
 private fun StompHeader.format(shouldEscapeContent: Boolean): String =
     allValues.joinToString("\n") {
         formatHeader(
-            key,
-            it,
-            shouldEscapeContent
+            key, it, shouldEscapeContent
         )
     }
 
@@ -42,7 +40,6 @@ internal fun HeartBeat.formatAsHeaderValue() = "$minSendPeriodMillis,$expectedPe
 internal fun String.toHeartBeat(): HeartBeat {
     val (minSendPeriod, expectedReceivePeriod) = split(',')
     return HeartBeat(
-        minSendPeriodMillis = minSendPeriod.toInt(),
-        expectedPeriodMillis = expectedReceivePeriod.toInt()
+        minSendPeriodMillis = minSendPeriod.toInt(), expectedPeriodMillis = expectedReceivePeriod.toInt()
     )
 }

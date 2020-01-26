@@ -1,12 +1,12 @@
-package org.hildan.krossbow.client.frame
+package org.hildan.krossbow.engines.mpp.frame
 
-import org.hildan.krossbow.client.headers.StompConnectHeaders
-import org.hildan.krossbow.client.headers.StompConnectedHeaders
-import org.hildan.krossbow.client.headers.StompDisconnectHeaders
-import org.hildan.krossbow.client.headers.StompHeader
-import org.hildan.krossbow.client.headers.StompHeaders
-import org.hildan.krossbow.client.headers.StompSendHeaders
-import org.hildan.krossbow.client.headers.toHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompConnectHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompConnectedHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompDisconnectHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompHeader
+import org.hildan.krossbow.engines.mpp.headers.StompHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompSendHeaders
+import org.hildan.krossbow.engines.mpp.headers.toHeaders
 
 object StompParser {
 
@@ -15,7 +15,11 @@ object StompParser {
         val command = lines[0]
 
         val headerLines = lines.drop(1).takeWhile { it.isNotEmpty() }
-        val headers = headerLines.map { parseHeader(it) }.aggregate()
+        val headers = headerLines.map {
+            parseHeader(
+                it
+            )
+        }.aggregate()
 
         val bodyLines = lines.drop(2 + headerLines.size).takeIf { it.isNotEmpty() }
         val body = bodyLines?.joinToString("\n")
@@ -46,8 +50,7 @@ data class UntypedStompFrame(
                 StompDisconnectHeaders(headers)
             )
             StompCommands.SEND -> StompFrame.Send(
-                StompSendHeaders(headers),
-                body
+                StompSendHeaders(headers), body
             )
             else -> TODO("command $command not implemented")
         }
@@ -61,9 +64,7 @@ private data class RawStompHeader(
 
 private fun List<RawStompHeader>.aggregate(): StompHeaders =
     groupBy { it.key }.mapValues { (k, vals) ->
-        StompHeader(
-            key = k,
+        StompHeader(key = k,
             value = vals[0].value,
-            formerValues = vals.drop(1).map { it.value }
-        )
+            formerValues = vals.drop(1).map { it.value })
     }.toHeaders()

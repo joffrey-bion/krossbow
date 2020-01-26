@@ -1,10 +1,10 @@
-package org.hildan.krossbow.client.frame
+package org.hildan.krossbow.engines.mpp.frame
 
-import org.hildan.krossbow.client.headers.StompConnectHeaders
-import org.hildan.krossbow.client.headers.StompConnectedHeaders
-import org.hildan.krossbow.client.headers.StompDisconnectHeaders
-import org.hildan.krossbow.client.headers.StompHeaders
-import org.hildan.krossbow.client.headers.StompSendHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompConnectHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompConnectedHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompDisconnectHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompSendHeaders
 
 object StompCommands {
     const val CONNECT = "CONNECT"
@@ -28,19 +28,16 @@ sealed class StompFrame(
     open val headers: StompHeaders,
     open val body: String? = null
 ) {
-    data class Connect(override val headers: StompConnectHeaders) : StompFrame(
-        StompCommands.CONNECT, headers)
+    data class Connect(override val headers: StompConnectHeaders) : StompFrame(StompCommands.CONNECT, headers)
 
-    data class Connected(override val headers: StompConnectedHeaders) : StompFrame(
-        StompCommands.CONNECTED, headers)
+    data class Connected(override val headers: StompConnectedHeaders) : StompFrame(StompCommands.CONNECTED, headers)
 
     data class Send(
         override val headers: StompSendHeaders,
         override val body: String?
     ) : StompFrame(StompCommands.SEND, headers, body)
 
-    data class Disconnect(override val headers: StompDisconnectHeaders) : StompFrame(
-        StompCommands.DISCONNECT, headers)
+    data class Disconnect(override val headers: StompDisconnectHeaders) : StompFrame(StompCommands.DISCONNECT, headers)
 
     fun toBytes(): ByteArray {
         TODO()

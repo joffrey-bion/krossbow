@@ -1,18 +1,18 @@
-package org.hildan.krossbow.client.headers
+package org.hildan.krossbow.engines.mpp.headers
 
-import org.hildan.krossbow.client.frame.HeartBeat
-import org.hildan.krossbow.client.frame.formatAsHeaderValue
-import org.hildan.krossbow.client.headers.HeaderKeys.ACCEPT_VERSION
-import org.hildan.krossbow.client.headers.HeaderKeys.DESTINATION
-import org.hildan.krossbow.client.headers.HeaderKeys.HEART_BEAT
-import org.hildan.krossbow.client.headers.HeaderKeys.HOST
-import org.hildan.krossbow.client.headers.HeaderKeys.LOGIN
-import org.hildan.krossbow.client.headers.HeaderKeys.PASSCODE
-import org.hildan.krossbow.client.headers.HeaderKeys.RECEIPT
-import org.hildan.krossbow.client.headers.HeaderKeys.SERVER
-import org.hildan.krossbow.client.headers.HeaderKeys.SESSION
-import org.hildan.krossbow.client.headers.HeaderKeys.TRANSACTION
-import org.hildan.krossbow.client.headers.HeaderKeys.VERSION
+import org.hildan.krossbow.engines.mpp.frame.HeartBeat
+import org.hildan.krossbow.engines.mpp.frame.formatAsHeaderValue
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.ACCEPT_VERSION
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.DESTINATION
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.HEART_BEAT
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.HOST
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.LOGIN
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.PASSCODE
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.RECEIPT
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.SERVER
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.SESSION
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.TRANSACTION
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.VERSION
 
 object HeaderKeys {
     const val ACCEPT_VERSION = "accept-version"
@@ -57,9 +57,15 @@ internal data class SimpleStompHeaders(
     override fun getAll(): Collection<StompHeader> = headers.values
 }
 
-fun Map<String, StompHeader>.toHeaders(): StompHeaders = SimpleStompHeaders(this)
+fun Map<String, StompHeader>.toHeaders(): StompHeaders =
+        SimpleStompHeaders(this)
 
-private fun Pair<String, String?>.toHeader(): StompHeader? = second?.let { StompHeader(first, it) }
+private fun Pair<String, String?>.toHeader(): StompHeader? = second?.let {
+    StompHeader(
+        first,
+        it
+    )
+}
 
 fun headersOf(
     vararg pairs: Pair<String, String?>,
@@ -112,10 +118,7 @@ class StompConnectedHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeade
         heartBeat: HeartBeat? = null
     ) : this(
         headersOf(
-            VERSION to version,
-            SESSION to session,
-            SERVER to server,
-            HEART_BEAT to heartBeat?.formatAsHeaderValue()
+            VERSION to version, SESSION to session, SERVER to server, HEART_BEAT to heartBeat?.formatAsHeaderValue()
         )
     )
 }
@@ -123,7 +126,11 @@ class StompConnectedHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeade
 class StompDisconnectHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val receipt: String? by optionalHeader()
 
-    constructor(receipt: String? = null) : this(headersOf(RECEIPT to receipt))
+    constructor(receipt: String? = null) : this(
+        headersOf(
+            RECEIPT to receipt
+        )
+    )
 }
 
 class StompSendHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
@@ -136,9 +143,7 @@ class StompSendHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
         customHeaders: Map<String, String> = emptyMap()
     ) : this(
         headersOf(
-                DESTINATION to destination,
-                TRANSACTION to transaction,
-                customHeaders = customHeaders
+            DESTINATION to destination, TRANSACTION to transaction, customHeaders = customHeaders
         )
     )
 }
