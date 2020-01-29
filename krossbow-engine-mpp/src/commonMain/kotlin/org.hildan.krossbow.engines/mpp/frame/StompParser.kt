@@ -26,7 +26,7 @@ object StompParser {
         val headers = headerLines.map { parseHeader(it) }.aggregate()
 
         val bodyLines = lines.drop(2 + headerLines.size).takeIf { it.isNotEmpty() }
-        val body = bodyLines?.joinToString("\n")
+        val body = bodyLines?.joinToString("\n")?.let { FrameBody.Text(it) }
 
         return when (command) {
             StompCommand.CONNECT -> StompFrame.Connect(StompConnectHeaders(headers))

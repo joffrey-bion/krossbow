@@ -36,7 +36,7 @@ enum class StompCommand(val text: String) {
 sealed class StompFrame(
     val command: StompCommand,
     open val headers: StompHeaders,
-    open val body: String? = null
+    open val body: FrameBody? = null
 ) {
     data class Connect(override val headers: StompConnectHeaders) : StompFrame(StompCommand.CONNECT, headers)
 
@@ -48,23 +48,46 @@ sealed class StompFrame(
 
     data class Send(
         override val headers: StompSendHeaders,
-        override val body: String?
+        override val body: FrameBody?
     ) : StompFrame(StompCommand.SEND, headers, body)
 
     data class Message(
         override val headers: StompMessageHeaders,
-        override val body: String?
+        override val body: FrameBody?
     ) : StompFrame(StompCommand.MESSAGE, headers, body)
 
     data class Disconnect(override val headers: StompDisconnectHeaders) : StompFrame(StompCommand.DISCONNECT, headers)
 
     data class Error(
         override val headers: StompErrorHeaders,
-        override val body: String?
+        override val body: FrameBody?
     ) : StompFrame(StompCommand.MESSAGE, headers, body)
 
     fun toBytes(): ByteArray {
         TODO()
+    }
+}
+
+sealed class FrameBody(open val rawBytes: ByteArray) {
+
+    @UseExperimental(ExperimentalStdlibApi::class)
+    data class Text(val text: String): FrameBody(text.encodeToByteArray())
+
+    data class Binary(override val rawBytes: ByteArray): FrameBody(rawBytes) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other == null || this::class != other::class) return false
+
+            other as Binary
+
+            if (!rawBytes.contentEquals(other.rawBytes)) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            return rawBytes.contentHashCode()
+        }
     }
 }
 
