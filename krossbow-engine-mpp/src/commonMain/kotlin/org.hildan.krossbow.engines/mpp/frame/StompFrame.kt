@@ -3,41 +3,65 @@ package org.hildan.krossbow.engines.mpp.frame
 import org.hildan.krossbow.engines.mpp.headers.StompConnectHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompConnectedHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompDisconnectHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompErrorHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompMessageHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompSendHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompSubscribeHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompUnsubscribeHeaders
 
-object StompCommands {
-    const val CONNECT = "CONNECT"
-    const val CONNECTED = "CONNECTED"
-    const val SEND = "SEND"
-    const val SUBSCRIBE = "SUBSCRIBE"
-    const val UNSUBSCRIBE = "UNSUBSCRIBE"
-    const val ACK = "ACK"
-    const val NACK = "NACK"
-    const val BEGIN = "BEGIN"
-    const val COMMIT = "COMMIT"
-    const val ABORT = "ABORT"
-    const val DISCONNECT = "DISCONNECT"
-    const val MESSAGE = "MESSAGE"
-    const val RECEIPT = "RECEIPT"
-    const val ERROR = "ERROR"
+enum class StompCommand(val text: String) {
+    CONNECT("CONNECT"),
+    CONNECTED("CONNECTED"),
+    SEND("SEND"),
+    SUBSCRIBE("SUBSCRIBE"),
+    UNSUBSCRIBE("UNSUBSCRIBE"),
+    ACK("ACK"),
+    NACK("NACK"),
+    BEGIN("BEGIN"),
+    COMMIT("COMMIT"),
+    ABORT("ABORT"),
+    DISCONNECT("DISCONNECT"),
+    MESSAGE("MESSAGE"),
+    RECEIPT("RECEIPT"),
+    ERROR("ERROR");
+
+    companion object {
+        private val valuesByText = values().associateBy { it.text }
+
+        fun parse(text: String) = valuesByText[text] ?: error("Unknown command $text")
+    }
 }
 
 sealed class StompFrame(
-    val command: String,
+    val command: StompCommand,
     open val headers: StompHeaders,
     open val body: String? = null
 ) {
-    data class Connect(override val headers: StompConnectHeaders) : StompFrame(StompCommands.CONNECT, headers)
+    data class Connect(override val headers: StompConnectHeaders) : StompFrame(StompCommand.CONNECT, headers)
 
-    data class Connected(override val headers: StompConnectedHeaders) : StompFrame(StompCommands.CONNECTED, headers)
+    data class Connected(override val headers: StompConnectedHeaders) : StompFrame(StompCommand.CONNECTED, headers)
+
+    data class Subscribe(override val headers: StompSubscribeHeaders) : StompFrame(StompCommand.SUBSCRIBE, headers)
+
+    data class Unsubscribe(override val headers: StompUnsubscribeHeaders) : StompFrame(StompCommand.UNSUBSCRIBE, headers)
 
     data class Send(
         override val headers: StompSendHeaders,
         override val body: String?
-    ) : StompFrame(StompCommands.SEND, headers, body)
+    ) : StompFrame(StompCommand.SEND, headers, body)
 
-    data class Disconnect(override val headers: StompDisconnectHeaders) : StompFrame(StompCommands.DISCONNECT, headers)
+    data class Message(
+        override val headers: StompMessageHeaders,
+        override val body: String?
+    ) : StompFrame(StompCommand.MESSAGE, headers, body)
+
+    data class Disconnect(override val headers: StompDisconnectHeaders) : StompFrame(StompCommand.DISCONNECT, headers)
+
+    data class Error(
+        override val headers: StompErrorHeaders,
+        override val body: String?
+    ) : StompFrame(StompCommand.MESSAGE, headers, body)
 
     fun toBytes(): ByteArray {
         TODO()

@@ -14,7 +14,7 @@ private val StompFrame.formattedHeaders: String
     get() = headers.getAll().joinToString("\n") {
         // The CONNECT and CONNECTED frames do not escape the carriage return, line feed or colon octets
         // in order to remain backward compatible with STOMP 1.0
-        val shouldEscape = command != StompCommands.CONNECT && command != StompCommands.CONNECTED
+        val shouldEscape = command != StompCommand.CONNECT && command != StompCommand.CONNECTED
         it.format(shouldEscape)
     }
 
