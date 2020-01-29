@@ -2,9 +2,7 @@ package org.hildan.krossbow.engines.mpp.headers
 
 private const val ESCAPE_CHAR = '\\'
 
-internal fun String.escapeForHeader(): String = if (isEmpty()) this else buildEscapedString(
-    this
-)
+internal fun String.escapeForHeader(): String = if (isEmpty()) this else buildEscapedString(this)
 
 private fun buildEscapedString(str: String): String = buildString(str.length) {
     for (c in str) {
@@ -18,9 +16,7 @@ private fun buildEscapedString(str: String): String = buildString(str.length) {
     }
 }
 
-internal fun String.unescapeHeader(): String = if (isEmpty()) this else buildUnescapedString(
-    this
-)
+internal fun String.unescapeHeader(): String = if (isEmpty()) this else buildUnescapedString(this)
 
 private fun buildUnescapedString(escapedStr: String): String = buildString(escapedStr.length) {
     var escaping = false
