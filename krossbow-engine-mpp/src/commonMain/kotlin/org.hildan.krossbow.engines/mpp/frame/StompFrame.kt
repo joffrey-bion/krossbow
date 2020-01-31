@@ -6,6 +6,7 @@ import org.hildan.krossbow.engines.mpp.headers.StompDisconnectHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompErrorHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompMessageHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompReceiptHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompSendHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompUnsubscribeHeaders
@@ -56,15 +57,21 @@ sealed class StompFrame(
         override val body: FrameBody?
     ) : StompFrame(StompCommand.MESSAGE, headers, body)
 
+    data class Receipt(override val headers: StompReceiptHeaders) : StompFrame(StompCommand.RECEIPT, headers)
+
     data class Disconnect(override val headers: StompDisconnectHeaders) : StompFrame(StompCommand.DISCONNECT, headers)
 
     data class Error(
         override val headers: StompErrorHeaders,
         override val body: FrameBody?
-    ) : StompFrame(StompCommand.MESSAGE, headers, body)
+    ) : StompFrame(StompCommand.MESSAGE, headers, body) {
+        val message: String = headers.message ?: (body as? FrameBody.Text)?.text ?: "(binary error message)"
+    }
 
+    @UseExperimental(ExperimentalStdlibApi::class)
     fun toBytes(): ByteArray {
-        TODO()
+        // TODO make this more efficient
+        return format().encodeToByteArray()
     }
 }
 

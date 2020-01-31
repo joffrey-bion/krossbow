@@ -1,5 +1,6 @@
 package org.hildan.krossbow.engines.mpp.headers
 
+import org.hildan.krossbow.engines.MessageHeaders
 import org.hildan.krossbow.engines.mpp.frame.HeartBeat
 import org.hildan.krossbow.engines.mpp.frame.formatAsHeaderValue
 import org.hildan.krossbow.engines.mpp.headers.HeaderKeys.ACCEPT_VERSION
@@ -57,7 +58,7 @@ data class StompHeader(
     val formerValues: List<String> = listOf()
 )
 
-interface StompHeaders {
+interface StompHeaders : MessageHeaders {
     /**
      * Gets the header with the given key, or null if the header is absent.
      */

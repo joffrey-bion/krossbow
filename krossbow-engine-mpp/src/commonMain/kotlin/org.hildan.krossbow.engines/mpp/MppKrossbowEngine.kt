@@ -1,10 +1,16 @@
 package org.hildan.krossbow.engines.mpp
 
 import io.ktor.util.KtorExperimentalAPI
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.hildan.krossbow.engines.KrossbowEngine
 import org.hildan.krossbow.engines.KrossbowEngineClient
 import org.hildan.krossbow.engines.KrossbowEngineConfig
@@ -12,12 +18,11 @@ import org.hildan.krossbow.engines.KrossbowEngineSession
 import org.hildan.krossbow.engines.KrossbowEngineSubscription
 import org.hildan.krossbow.engines.KrossbowMessage
 import org.hildan.krossbow.engines.KrossbowReceipt
-import org.hildan.krossbow.engines.MessageHeaders
 import org.hildan.krossbow.engines.SubscriptionCallbacks
 import org.hildan.krossbow.engines.mpp.frame.FrameBody
-import org.hildan.krossbow.engines.mpp.frame.StompCommand
 import org.hildan.krossbow.engines.mpp.frame.StompFrame
 import org.hildan.krossbow.engines.mpp.frame.StompParser
+import org.hildan.krossbow.engines.mpp.headers.HeaderKeys
 import org.hildan.krossbow.engines.mpp.headers.StompConnectHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompDisconnectHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompSendHeaders
@@ -51,53 +56,79 @@ class MppKrossbowEngineSession(
     private val webSocketSession: WebSocketSession
 ): KrossbowEngineSession {
 
-    private var nextSubscriptionId = 0
+    private var nextSubscriptionId = SuspendingAtomicInt(0)
 
-    private val subscriptions: MutableMap<String, SubscriptionCallbacks<ByteArray>> = mutableMapOf()
+    private var nextReceiptId = SuspendingAtomicInt(0)
 
-    private val frameChannels = StompCommand.values().associate { it to Channel<StompFrame>(1) }
+    private val subscriptionsById: MutableMap<String, SubscriptionCallbacks<ByteArray>> = mutableMapOf()
 
-    @UseExperimental(ExperimentalStdlibApi::class)
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.Factory.BUFFERED)
+
+    // TODO maybe change the WS API to use a listener (with callbacks) instead of a channel to avoid this coroutine
     private val wsListenerJob = GlobalScope.launch {
         for (frameBytes in webSocketSession.incomingFrames) {
-            when (val frame = StompParser.parse(frameBytes)) {
-                is StompFrame.Message -> onMessageFrameReceived(frame)
-                else -> frameChannels.getValue(frame.command).send(frame)
-            }
+            onFrameReceived(frameBytes)
+        }
+    }
+
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    private suspend fun onFrameReceived(frameBytes: ByteArray) {
+        when (val frame = StompParser.parse(frameBytes)) {
+            is StompFrame.Message -> onMessageFrameReceived(frame)
+            else -> nonMsgFrames.send(frame)
         }
     }
 
     private suspend fun onMessageFrameReceived(frame: StompFrame.Message) {
         val payload = frame.body?.rawBytes ?: ByteArray(0)
-        val headers = object : MessageHeaders {} // TODO use actual headers
-        subscriptions.getValue(frame.headers.subscription).onReceive(KrossbowMessage(payload, headers))
+        subscriptionsById.getValue(frame.headers.subscription).onReceive(KrossbowMessage(payload, frame.headers))
     }
 
-    suspend fun connect(url: String, login: String?, passcode: String?) {
+    suspend fun connect(url: String, login: String?, passcode: String?): StompFrame.Connected {
         val host = url.substringAfter("://").substringBefore("/").substringBefore(":")
-        sendStompFrame(StompFrame.Connect(StompConnectHeaders(host = host, login = login, passcode = passcode)))
-        val connectedFrame = waitForFrame<StompFrame.Connected>(StompCommand.CONNECTED)
-        // TODO use connected frame to setup heartbeat config
+        val connectFrame = StompFrame.Connect(StompConnectHeaders(host = host, login = login, passcode = passcode))
+        return coroutineScope {
+            val connectedFrame = async { waitForTypedFrame<StompFrame.Connected>() }
+            sendStompFrameWithoutReceipt(connectFrame)
+            connectedFrame.await()
+        }
     }
 
-    private suspend inline fun <reified T : StompFrame> waitForFrame(command: StompCommand): T =
-            frameChannels.getValue(command).receive() as T
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    private suspend inline fun <reified T : StompFrame> waitForTypedFrame(predicate: (T) -> Boolean = { true }): T {
+        val frameSubscription = nonMsgFrames.openSubscription()
+        for (f in frameSubscription) {
+            if (f is StompFrame.Error) {
+                frameSubscription.cancel()
+                throw StompErrorFrameReceived(f)
+            }
+            if (f is T && predicate(f)) {
+                frameSubscription.cancel()
+                return f
+            }
+        }
+        throw IllegalStateException("Connection closed unexpectedly while expecting frame of type ${T::class}")
+    }
+
+    private suspend fun waitForReceipt(receiptId: String): StompFrame.Receipt {
+        return waitForTypedFrame { it.headers.receiptId == receiptId }
+    }
 
     @UseExperimental(ExperimentalStdlibApi::class)
     override suspend fun send(destination: String, body: ByteArray?): KrossbowReceipt? {
-        sendStompFrame(StompFrame.Send(StompSendHeaders(destination), body?.let { FrameBody.Binary(it) }))
-        // TODO suspend until receipt
-        return null
+        val sendFrame = StompFrame.Send(StompSendHeaders(destination), body?.let { FrameBody.Binary(it) })
+        return sendStompFrame(sendFrame)
     }
 
     override suspend fun subscribe(destination: String, callbacks: SubscriptionCallbacks<ByteArray>): KrossbowEngineSubscription {
-        val id = (nextSubscriptionId++).toString()
-        subscriptions[id] = callbacks
-        sendStompFrame(StompFrame.Subscribe(StompSubscribeHeaders(destination = destination, id = id)))
-        // TODO suspend until receipt
+        val id = nextSubscriptionId.getAndIncrement().toString()
+        subscriptionsById[id] = callbacks
+        val subscribeFrame = StompFrame.Subscribe(StompSubscribeHeaders(destination = destination, id = id))
+        sendStompFrame(subscribeFrame)
         return KrossbowEngineSubscription(id) {
-            sendStompFrame(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = id)))
-            subscriptions.remove(id)
+            sendStompFrameWithoutReceipt(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = id)))
+            subscriptionsById.remove(id)
         }
     }
 
@@ -110,13 +141,45 @@ class MppKrossbowEngineSession(
         })
     }
 
-    private suspend fun sendStompFrame(frame: StompFrame) {
+    private suspend fun sendStompFrame(sendFrame: StompFrame): KrossbowReceipt? {
+        return if (config.autoReceipt) {
+            val receiptFrame = sendStompFrameWithReceipt(sendFrame)
+            KrossbowReceipt(receiptFrame.headers.receiptId)
+        } else {
+            sendStompFrameWithoutReceipt(sendFrame)
+            null
+        }
+    }
+
+    private suspend fun sendStompFrameWithoutReceipt(frame: StompFrame) {
         webSocketSession.send(frame.toBytes())
     }
 
+    private suspend fun sendStompFrameWithReceipt(frame: StompFrame): StompFrame.Receipt {
+        // FIXME actually set the receipt header on the frame to send
+        val receiptId = frame.headers.getValue(HeaderKeys.RECEIPT_ID) ?: nextReceiptId.getAndIncrement().toString()
+        return coroutineScope {
+            val receiptFrame = async { waitForReceipt(receiptId) }
+            webSocketSession.send(frame.toBytes())
+            receiptFrame.await()
+        }
+    }
+
     override suspend fun disconnect() {
+        // TODO maybe give a config option for auto-receipt on disconnect only
         sendStompFrame(StompFrame.Disconnect(StompDisconnectHeaders()))
         wsListenerJob.cancelAndJoin()
         webSocketSession.close()
     }
 }
+
+class SuspendingAtomicInt(private var value: Int = 0) {
+
+    private val mutex = Mutex()
+
+    // TODO maybe change this to actor to completely avoid locking
+    // https://kotlinlang.org/docs/reference/coroutines/shared-mutable-state-and-concurrency.html#actors
+    suspend fun getAndIncrement(): Int = mutex.withLock { value++ }
+}
+
+class StompErrorFrameReceived(val frame: StompFrame.Error): Exception("STOMP ERROR frame received: ${frame.message}")

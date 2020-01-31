@@ -19,11 +19,7 @@ private val StompFrame.formattedHeaders: String
     }
 
 private fun StompHeader.format(shouldEscapeContent: Boolean): String =
-    allValues.joinToString("\n") {
-        formatHeader(
-            key, it, shouldEscapeContent
-        )
-    }
+    allValues.joinToString("\n") { formatHeader(key, it, shouldEscapeContent) }
 
 private val StompHeader.allValues
     get() = listOf(value) + formerValues
