@@ -1,6 +1,6 @@
 package org.hildan.krossbow.engines.mpp.frame
 
-import org.hildan.krossbow.engines.mpp.headers.escapeForHeader
+import org.hildan.krossbow.engines.mpp.headers.HeaderEscaper
 
 fun StompFrame.format(): String = """
 $command
@@ -16,7 +16,7 @@ private val StompFrame.formattedHeaders: String
 
 private fun formatHeader(key: String, value: String, escapeContent: Boolean): String =
     if (escapeContent) {
-        "${key.escapeForHeader()}:${value.escapeForHeader()}"
+        "${HeaderEscaper.escape(key)}:${HeaderEscaper.escape(value)}"
     } else {
         "$key:$value"
     }
