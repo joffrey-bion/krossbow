@@ -11,9 +11,15 @@ import org.hildan.krossbow.engines.mpp.headers.StompSendHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompUnsubscribeHeaders
 
-enum class StompCommand(val text: String) {
-    CONNECT("CONNECT"),
-    CONNECTED("CONNECTED"),
+enum class StompCommand(
+    val text: String,
+    val supportsHeaderEscapes: Boolean = true
+) {
+    // The CONNECT and CONNECTED frames do not escape the carriage return, line feed or colon octets
+    // in order to remain backward compatible with STOMP 1.0
+    // https://stomp.github.io/stomp-specification-1.2.html#Value_Encoding
+    CONNECT("CONNECT", supportsHeaderEscapes = false),
+    CONNECTED("CONNECTED", supportsHeaderEscapes = false),
     SEND("SEND"),
     SUBSCRIBE("SUBSCRIBE"),
     UNSUBSCRIBE("UNSUBSCRIBE"),
@@ -30,7 +36,7 @@ enum class StompCommand(val text: String) {
     companion object {
         private val valuesByText = values().associateBy { it.text }
 
-        fun parse(text: String) = valuesByText[text] ?: error("Unknown command $text")
+        fun parse(text: String) = valuesByText[text] ?: error("Unknown STOMP command $text")
     }
 }
 

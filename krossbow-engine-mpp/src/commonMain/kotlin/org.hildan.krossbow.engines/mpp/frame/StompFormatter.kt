@@ -1,6 +1,5 @@
 package org.hildan.krossbow.engines.mpp.frame
 
-import org.hildan.krossbow.engines.mpp.headers.StompHeader
 import org.hildan.krossbow.engines.mpp.headers.escapeForHeader
 
 fun StompFrame.format(): String = """
@@ -11,18 +10,9 @@ ${body ?: ""}
 """.trimIndent()
 
 private val StompFrame.formattedHeaders: String
-    get() = headers.getAll().joinToString("\n") {
-        // The CONNECT and CONNECTED frames do not escape the carriage return, line feed or colon octets
-        // in order to remain backward compatible with STOMP 1.0
-        val shouldEscape = command != StompCommand.CONNECT && command != StompCommand.CONNECTED
-        it.format(shouldEscape)
+    get() = headers.entries.joinToString("\n") {
+        formatHeader(it.key, it.value, command.supportsHeaderEscapes)
     }
-
-private fun StompHeader.format(shouldEscapeContent: Boolean): String =
-    allValues.joinToString("\n") { formatHeader(key, it, shouldEscapeContent) }
-
-private val StompHeader.allValues
-    get() = listOf(value) + formerValues
 
 private fun formatHeader(key: String, value: String, escapeContent: Boolean): String =
     if (escapeContent) {

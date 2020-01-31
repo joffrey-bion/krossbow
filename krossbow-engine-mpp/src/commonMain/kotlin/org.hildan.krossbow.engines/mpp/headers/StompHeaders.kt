@@ -52,50 +52,24 @@ enum class AckMode(val headerValue: String) {
     }
 }
 
-data class StompHeader(
-    val key: String,
-    val value: String,
-    val formerValues: List<String> = listOf()
-)
+interface StompHeaders : Map<String, String>, MessageHeaders
 
-interface StompHeaders : MessageHeaders {
-    /**
-     * Gets the header with the given key, or null if the header is absent.
-     */
-    operator fun get(key: String): StompHeader?
-    /**
-     * Gets the current value of the given header, or null if the header is absent.
-     */
-    fun getValue(key: String): String? = get(key)?.value
-    /**
-     * Gets all headers from this container.
-     */
-    fun getAll(): Collection<StompHeader>
-}
+internal data class SimpleStompHeaders(private val headers: Map<String, String>): StompHeaders, Map<String, String> by headers
 
-internal data class SimpleStompHeaders(
-    private val headers: Map<String, StompHeader>
-): StompHeaders {
-    override fun get(key: String): StompHeader? = headers[key]
-    override fun getAll(): Collection<StompHeader> = headers.values
-}
-
-fun Map<String, StompHeader>.toHeaders(): StompHeaders =
-        SimpleStompHeaders(this)
-
-private fun Pair<String, String?>.toHeader(): StompHeader? = second?.let {
-    StompHeader(
-        first,
-        it
-    )
-}
+fun Map<String, String>.asStompHeaders(): StompHeaders = SimpleStompHeaders(this)
 
 fun headersOf(
     vararg pairs: Pair<String, String?>,
     customHeaders: Map<String, String> = emptyMap()
 ): StompHeaders {
-    val headerPairs = pairs.asList() + customHeaders.toList()
-    return headerPairs.mapNotNull { it.toHeader() }.associateBy { it.key }.toHeaders()
+    val headersMap = mutableMapOf<String, String>()
+    pairs.forEach { (key, value) ->
+        if (value != null) {
+            headersMap[key] = value
+        }
+    }
+    headersMap.putAll(customHeaders)
+    return headersMap.asStompHeaders()
 }
 
 interface StandardHeaders: StompHeaders {

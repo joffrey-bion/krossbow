@@ -157,7 +157,7 @@ class MppKrossbowEngineSession(
 
     private suspend fun sendStompFrameWithReceipt(frame: StompFrame): StompFrame.Receipt {
         // FIXME actually set the receipt header on the frame to send
-        val receiptId = frame.headers.getValue(HeaderKeys.RECEIPT_ID) ?: nextReceiptId.getAndIncrement().toString()
+        val receiptId = frame.headers[HeaderKeys.RECEIPT_ID] ?: nextReceiptId.getAndIncrement().toString()
         return coroutineScope {
             val receiptFrame = async { waitForReceipt(receiptId) }
             webSocketSession.send(frame.toBytes())

@@ -1,12 +1,12 @@
 package org.hildan.krossbow.engines.mpp.frame
 
-import org.hildan.krossbow.engines.mpp.headers.StompConnectHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompConnectedHeaders
-import org.hildan.krossbow.engines.mpp.headers.StompDisconnectHeaders
-import org.hildan.krossbow.engines.mpp.headers.StompHeader
+import org.hildan.krossbow.engines.mpp.headers.StompErrorHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompHeaders
-import org.hildan.krossbow.engines.mpp.headers.StompSendHeaders
-import org.hildan.krossbow.engines.mpp.headers.toHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompMessageHeaders
+import org.hildan.krossbow.engines.mpp.headers.StompReceiptHeaders
+import org.hildan.krossbow.engines.mpp.headers.asStompHeaders
+import org.hildan.krossbow.engines.mpp.headers.unescapeHeader
 
 object StompParser {
 
@@ -23,37 +23,36 @@ object StompParser {
         val command = StompCommand.parse(lines[0])
 
         val headerLines = lines.drop(1).takeWhile { it.isNotEmpty() }
-        val headers = headerLines.map { parseHeader(it) }.aggregate()
+        val headers = parseHeaders(headerLines, command.supportsHeaderEscapes)
 
         val bodyLines = lines.drop(2 + headerLines.size).takeIf { it.isNotEmpty() }
         val body = bodyLines?.joinToString("\n")?.let { FrameBody.Text(it) }
 
         return when (command) {
-            StompCommand.CONNECT -> StompFrame.Connect(StompConnectHeaders(headers))
             StompCommand.CONNECTED -> StompFrame.Connected(StompConnectedHeaders(headers))
-            StompCommand.DISCONNECT -> StompFrame.Disconnect(StompDisconnectHeaders(headers))
-            StompCommand.SEND -> StompFrame.Send(StompSendHeaders(headers), body)
-            else -> TODO("command $command not implemented")
+            StompCommand.MESSAGE -> StompFrame.Message(StompMessageHeaders(headers), body)
+            StompCommand.RECEIPT -> StompFrame.Receipt(StompReceiptHeaders(headers))
+            StompCommand.ERROR -> StompFrame.Error(StompErrorHeaders(headers), body)
+            else -> error("Unsupported server frame command '$command'")
         }
     }
 
-    private fun parseHeader(header: String): RawStompHeader {
-        val (key, value) = header.split(':', ignoreCase = false, limit = 2)
-        return RawStompHeader(key, value)
+    private fun parseHeaders(headerLines: List<String>, shouldUnescapeHeaders: Boolean): StompHeaders {
+        val headersMap = mutableMapOf<String, String>()
+        headerLines.forEach { line ->
+            val (rawKey, rawValue) = line.split(':', ignoreCase = false, limit = 2)
+            val key = if (shouldUnescapeHeaders) rawKey.unescapeHeader() else rawKey
+            val value = if (shouldUnescapeHeaders) rawValue.unescapeHeader() else rawValue
+            // If a client or a server receives repeated frame header entries, only the first header entry SHOULD be
+            // used as the value of header entry. Subsequent values are only used to maintain a history of state changes
+            // of the header and MAY be ignored.
+            // https://stomp.github.io/stomp-specification-1.2.html#Repeated_Header_Entries
+            headersMap.putIfAbsent(key, value)
+        }
+        return headersMap.asStompHeaders()
     }
 }
 
-private data class RawStompHeader(
-    val key: String,
-    val value: String
-)
-
-// TODO forget about header history, who cares
-private fun List<RawStompHeader>.aggregate(): StompHeaders =
-    groupBy { it.key }.mapValues { (k, vals) ->
-        StompHeader(
-            key = k,
-            value = vals[0].value,
-            formerValues = vals.drop(1).map { it.value }
-        )
-    }.toHeaders()
+private fun MutableMap<String, String>.putIfAbsent(key: String, value: String) {
+    getOrPut(key) { value }
+}
