@@ -1,14 +1,10 @@
 package org.hildan.krossbow.engines.mpp
 
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.hildan.krossbow.engines.KrossbowEngine
@@ -28,9 +24,10 @@ import org.hildan.krossbow.engines.mpp.headers.StompDisconnectHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompSendHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompUnsubscribeHeaders
-import org.hildan.krossbow.engines.mpp.websocket.KtorWebSocket
-import org.hildan.krossbow.engines.mpp.websocket.WebSocket
-import org.hildan.krossbow.engines.mpp.websocket.WebSocketSession
+import org.hildan.krossbow.websocket.KWebSocket
+import org.hildan.krossbow.websocket.KWebSocketListener
+import org.hildan.krossbow.websocket.KWebSocketSession
+import org.hildan.krossbow.websocket.KtorWebSocket
 
 object MppKrossbowEngine: KrossbowEngine {
 
@@ -38,10 +35,9 @@ object MppKrossbowEngine: KrossbowEngine {
             MppKrossbowEngineClient(config, KtorWebSocket())
 }
 
-@UseExperimental(KtorExperimentalAPI::class)
 class MppKrossbowEngineClient(
     private val config: KrossbowEngineConfig,
-    private val webSocket: WebSocket
+    private val webSocket: KWebSocket
 ): KrossbowEngineClient {
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowEngineSession =
@@ -53,8 +49,8 @@ class MppKrossbowEngineClient(
 
 class MppKrossbowEngineSession(
     private val config: KrossbowEngineConfig,
-    private val webSocketSession: WebSocketSession
-): KrossbowEngineSession {
+    private val webSocketSession: KWebSocketSession
+): KrossbowEngineSession, KWebSocketListener {
 
     private var nextSubscriptionId = SuspendingAtomicInt(0)
 
@@ -65,16 +61,21 @@ class MppKrossbowEngineSession(
     @UseExperimental(ExperimentalCoroutinesApi::class)
     private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.Factory.BUFFERED)
 
-    // TODO maybe change the WS API to use a listener (with callbacks) instead of a channel to avoid this coroutine
-    private val wsListenerJob = GlobalScope.launch {
-        for (frameBytes in webSocketSession.incomingFrames) {
-            onFrameReceived(frameBytes)
-        }
+    init {
+        webSocketSession.listener = this
     }
 
+    override suspend fun onTextMessage(text: String) = onFrameReceived(StompParser.parse(text))
+
+    override suspend fun onBinaryMessage(bytes: ByteArray) = onFrameReceived(StompParser.parse(bytes))
+
+    override suspend fun onError(error: Throwable) {}
+
+    override suspend fun onClose() {}
+
     @UseExperimental(ExperimentalCoroutinesApi::class)
-    private suspend fun onFrameReceived(frameBytes: ByteArray) {
-        when (val frame = StompParser.parse(frameBytes)) {
+    private suspend fun onFrameReceived(frame: StompFrame) {
+        when (frame) {
             is StompFrame.Message -> onMessageFrameReceived(frame)
             else -> nonMsgFrames.send(frame)
         }
@@ -168,7 +169,6 @@ class MppKrossbowEngineSession(
     override suspend fun disconnect() {
         // TODO maybe give a config option for auto-receipt on disconnect only
         sendStompFrame(StompFrame.Disconnect(StompDisconnectHeaders()))
-        wsListenerJob.cancelAndJoin()
         webSocketSession.close()
     }
 }
