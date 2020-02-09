@@ -24,24 +24,23 @@ import org.hildan.krossbow.engines.mpp.headers.StompDisconnectHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompSendHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.engines.mpp.headers.StompUnsubscribeHeaders
-import org.hildan.krossbow.websocket.KWebSocket
+import org.hildan.krossbow.websocket.KWebSocketClient
 import org.hildan.krossbow.websocket.KWebSocketListener
 import org.hildan.krossbow.websocket.KWebSocketSession
-import org.hildan.krossbow.websocket.KtorWebSocket
 
-object MppKrossbowEngine: KrossbowEngine {
+class MppKrossbowEngine(private val webSocketClient: KWebSocketClient): KrossbowEngine {
 
     override fun createClient(config: KrossbowEngineConfig): KrossbowEngineClient =
-            MppKrossbowEngineClient(config, KtorWebSocket())
+            MppKrossbowEngineClient(config, webSocketClient)
 }
 
 class MppKrossbowEngineClient(
     private val config: KrossbowEngineConfig,
-    private val webSocket: KWebSocket
+    private val webSocketClient: KWebSocketClient
 ): KrossbowEngineClient {
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowEngineSession =
-            MppKrossbowEngineSession(config, webSocket.connect(url)).apply {
+            MppKrossbowEngineSession(config, webSocketClient.connect(url)).apply {
                 // connect at STOMP protocol level
                 connect(url, login, passcode)
             }

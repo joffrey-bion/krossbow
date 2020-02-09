@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 import org.hildan.krossbow.websocket.KWebSocketClient
 import org.hildan.krossbow.websocket.KWebSocketListener
 import org.hildan.krossbow.websocket.KWebSocketSession
-import org.hildan.krossbow.websocket.NoopWebsocketListener
+import org.hildan.krossbow.websocket.NoopWebSocketListener
 import org.springframework.web.socket.BinaryMessage
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.PingMessage
@@ -23,13 +23,13 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-object SpringDefaultWebSocketClient: SpringWebSocketClientAdapter(StandardWebSocketClient())
+object SpringDefaultWebSocketClient : SpringWebSocketClientAdapter(StandardWebSocketClient())
 
-object SpringSockJSWebSocketClient: SpringWebSocketClientAdapter(SockJsClient(defaultWsTransports()))
+object SpringSockJSWebSocketClient : SpringWebSocketClientAdapter(SockJsClient(defaultWsTransports()))
 
 private fun defaultWsTransports(): List<Transport> = listOf(WebSocketTransport(StandardWebSocketClient()))
 
-open class SpringWebSocketClientAdapter(private val client: WebSocketClient): KWebSocketClient {
+open class SpringWebSocketClientAdapter(private val client: WebSocketClient) : KWebSocketClient {
 
     override suspend fun connect(url: String): KWebSocketSession {
         return suspendCoroutine { cont ->
@@ -37,7 +37,9 @@ open class SpringWebSocketClientAdapter(private val client: WebSocketClient): KW
 
                 private var WebSocketSession.krossbowWrapper: KWebSocketSession
                     get() = attributes["krossbowSession"] as KWebSocketSession
-                    set(value) { attributes["krossbowSession"] = value }
+                    set(value) {
+                        attributes["krossbowSession"] = value
+                    }
 
                 override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
                     runBlocking {
@@ -54,7 +56,7 @@ open class SpringWebSocketClientAdapter(private val client: WebSocketClient): KW
                 override fun handleMessage(session: WebSocketSession, message: WebSocketMessage<*>) {
                     val listener = session.krossbowWrapper.listener
                     runBlocking {
-                        when(message) {
+                        when (message) {
                             is PingMessage -> Unit
                             is PongMessage -> Unit
                             is BinaryMessage -> listener.onBinaryMessage(message.payload.array())
@@ -77,8 +79,8 @@ open class SpringWebSocketClientAdapter(private val client: WebSocketClient): KW
     }
 }
 
-class SpringWebSocketSession(private val session: WebSocketSession): KWebSocketSession {
-    override var listener: KWebSocketListener = NoopWebsocketListener
+class SpringWebSocketSession(private val session: WebSocketSession) : KWebSocketSession {
+    override var listener: KWebSocketListener = NoopWebSocketListener
 
     override suspend fun send(frameData: ByteArray) {
         withContext(Dispatchers.IO) {
