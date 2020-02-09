@@ -54,7 +54,9 @@ enum class AckMode(val headerValue: String) {
 
 interface StompHeaders : Map<String, String>, MessageHeaders
 
-internal data class SimpleStompHeaders(private val headers: Map<String, String>): StompHeaders, Map<String, String> by headers
+internal data class SimpleStompHeaders(
+    private val headers: Map<String, String>
+) : StompHeaders, Map<String, String> by headers
 
 fun Map<String, String>.asStompHeaders(): StompHeaders = SimpleStompHeaders(this)
 
@@ -72,7 +74,7 @@ fun headersOf(
     return headersMap.asStompHeaders()
 }
 
-interface StandardHeaders: StompHeaders {
+interface StandardHeaders : StompHeaders {
     val contentLength: Long?
     val contentType: String?
     val receipt: String?

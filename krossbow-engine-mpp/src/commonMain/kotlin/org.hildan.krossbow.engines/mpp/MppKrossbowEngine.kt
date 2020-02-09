@@ -28,7 +28,7 @@ import org.hildan.krossbow.websocket.KWebSocketClient
 import org.hildan.krossbow.websocket.KWebSocketListener
 import org.hildan.krossbow.websocket.KWebSocketSession
 
-class MppKrossbowEngine(private val webSocketClient: KWebSocketClient): KrossbowEngine {
+class MppKrossbowEngine(private val webSocketClient: KWebSocketClient) : KrossbowEngine {
 
     override fun createClient(config: KrossbowEngineConfig): KrossbowEngineClient =
             MppKrossbowEngineClient(config, webSocketClient)
@@ -37,7 +37,7 @@ class MppKrossbowEngine(private val webSocketClient: KWebSocketClient): Krossbow
 class MppKrossbowEngineClient(
     private val config: KrossbowEngineConfig,
     private val webSocketClient: KWebSocketClient
-): KrossbowEngineClient {
+) : KrossbowEngineClient {
 
     override suspend fun connect(url: String, login: String?, passcode: String?): KrossbowEngineSession =
             MppKrossbowEngineSession(config, webSocketClient.connect(url)).apply {
@@ -49,7 +49,7 @@ class MppKrossbowEngineClient(
 class MppKrossbowEngineSession(
     private val config: KrossbowEngineConfig,
     private val webSocketSession: KWebSocketSession
-): KrossbowEngineSession, KWebSocketListener {
+) : KrossbowEngineSession, KWebSocketListener {
 
     private var nextSubscriptionId = SuspendingAtomicInt(0)
 
@@ -95,7 +95,6 @@ class MppKrossbowEngineSession(
         }
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
     private suspend inline fun <reified T : StompFrame> waitForTypedFrame(predicate: (T) -> Boolean = { true }): T {
         val frameSubscription = nonMsgFrames.openSubscription()
         for (f in frameSubscription) {
@@ -115,7 +114,6 @@ class MppKrossbowEngineSession(
         return waitForTypedFrame { it.headers.receiptId == receiptId }
     }
 
-    @UseExperimental(ExperimentalStdlibApi::class)
     override suspend fun send(destination: String, body: ByteArray?): KrossbowReceipt? {
         val sendFrame = StompFrame.Send(StompSendHeaders(destination), body?.let { FrameBody.Binary(it) })
         return sendStompFrame(sendFrame)
@@ -181,4 +179,4 @@ class SuspendingAtomicInt(private var value: Int = 0) {
     suspend fun getAndIncrement(): Int = mutex.withLock { value++ }
 }
 
-class StompErrorFrameReceived(val frame: StompFrame.Error): Exception("STOMP ERROR frame received: ${frame.message}")
+class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception("STOMP ERROR frame received: ${frame.message}")

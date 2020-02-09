@@ -51,7 +51,8 @@ sealed class StompFrame(
 
     data class Subscribe(override val headers: StompSubscribeHeaders) : StompFrame(StompCommand.SUBSCRIBE, headers)
 
-    data class Unsubscribe(override val headers: StompUnsubscribeHeaders) : StompFrame(StompCommand.UNSUBSCRIBE, headers)
+    data class Unsubscribe(override val headers: StompUnsubscribeHeaders) :
+        StompFrame(StompCommand.UNSUBSCRIBE, headers)
 
     data class Send(
         override val headers: StompSendHeaders,
@@ -84,9 +85,9 @@ sealed class StompFrame(
 sealed class FrameBody(open val rawBytes: ByteArray) {
 
     @UseExperimental(ExperimentalStdlibApi::class)
-    data class Text(val text: String): FrameBody(text.encodeToByteArray())
+    data class Text(val text: String) : FrameBody(text.encodeToByteArray())
 
-    data class Binary(override val rawBytes: ByteArray): FrameBody(rawBytes) {
+    data class Binary(override val rawBytes: ByteArray) : FrameBody(rawBytes) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
