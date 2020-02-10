@@ -55,10 +55,10 @@ interface StompHeaders : Map<String, String> {
     fun setReceipt(receiptId: String)
 }
 
-inline fun StompHeaders.ensureReceiptHeader(generateId: () -> String): String = getOrElse(RECEIPT) {
-    val receiptId = generateId()
-    setReceipt(receiptId)
-    receiptId
+inline fun StompHeaders.ensureReceiptHeader(generateReceiptId: () -> String) {
+    if (!containsKey(RECEIPT)) {
+        setReceipt(generateReceiptId())
+    }
 }
 
 internal data class SimpleStompHeaders(

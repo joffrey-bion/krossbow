@@ -11,6 +11,7 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.StompParser
+import org.hildan.krossbow.stomp.headers.HeaderKeys
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
@@ -18,6 +19,7 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.stomp.headers.ensureReceiptHeader
 import org.hildan.krossbow.utils.SuspendingAtomicInt
+import org.hildan.krossbow.utils.getStringAndInc
 import org.hildan.krossbow.websocket.KWebSocketListener
 import org.hildan.krossbow.websocket.KWebSocketSession
 import kotlin.reflect.KClass
@@ -75,8 +77,9 @@ class StompSession(
         val connectedFrame = async {
             waitForTypedFrame<StompFrame.Connected>()
         }
-        sendStompFrameWithoutReceipt(StompFrame.Connect(headers))
+        sendStompFrameAsIs(StompFrame.Connect(headers))
         connectedFrame.await()
+        // TODO initialize heart beat coroutine if server is ok with it
     }
 
     private suspend inline fun <reified T : StompFrame> waitForTypedFrame(predicate: (T) -> Boolean = { true }): T {
@@ -111,7 +114,8 @@ class StompSession(
     }
 
     /**
-     * Sends a SEND frame to the server at the given [destination] with the given [payload].
+     * Sends a SEND frame to the server with the given [headers] and the given [payload] (converted via the configured
+     * [MessageConverter]).
      *
      * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received from the server and returns a
      * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
@@ -125,24 +129,28 @@ class StompSession(
     }
 
     private suspend fun sendStompFrame(frame: StompFrame): KrossbowReceipt? {
-        return if (config.autoReceipt) {
-            val receiptFrame = sendStompFrameWithReceipt(frame)
-            KrossbowReceipt(receiptFrame.headers.receiptId)
-        } else {
-            sendStompFrameWithoutReceipt(frame)
-            null
+        if (config.autoReceipt) {
+            frame.headers.ensureReceiptHeader { nextReceiptId.getStringAndInc() }
+        }
+        val receiptId = frame.headers[HeaderKeys.RECEIPT]
+        if (receiptId == null) {
+            sendStompFrameAsIs(frame)
+            return null
+        }
+        sendAndWaitForReceipt(receiptId, frame)
+        return KrossbowReceipt(receiptId)
+    }
+
+    private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
+        coroutineScope {
+            val receiptFrame = async { waitForReceipt(receiptId) }
+            sendStompFrameAsIs(frame)
+            receiptFrame.await()
         }
     }
 
-    private suspend fun sendStompFrameWithoutReceipt(frame: StompFrame) {
+    private suspend fun sendStompFrameAsIs(frame: StompFrame) {
         webSocketSession.send(frame.toBytes())
-    }
-
-    private suspend fun sendStompFrameWithReceipt(frame: StompFrame): StompFrame.Receipt = coroutineScope {
-        val receiptId = frame.headers.ensureReceiptHeader { nextReceiptId.getAndIncrement().toString() }
-        val receiptFrame = async { waitForReceipt(receiptId) }
-        webSocketSession.send(frame.toBytes())
-        receiptFrame.await()
     }
 
     private suspend fun waitForReceipt(receiptId: String): StompFrame.Receipt {
@@ -171,7 +179,7 @@ class StompSession(
         val subscribeFrame = StompFrame.Subscribe(StompSubscribeHeaders(destination = destination, id = id))
         sendStompFrame(subscribeFrame)
         return KrossbowEngineSubscription(id) {
-            sendStompFrameWithoutReceipt(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = id)))
+            sendStompFrameAsIs(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = id)))
             subscriptionsById.remove(id)
         }
     }
@@ -199,7 +207,8 @@ class StompSession(
      */
     suspend fun disconnect() {
         if (config.gracefulDisconnect) {
-            sendStompFrameWithReceipt(StompFrame.Disconnect(StompDisconnectHeaders()))
+            val frame = StompFrame.Disconnect(StompDisconnectHeaders(nextReceiptId.getStringAndInc()))
+            sendStompFrame(frame)
         }
         webSocketSession.close()
     }

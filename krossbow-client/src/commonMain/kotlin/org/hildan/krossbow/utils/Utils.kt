@@ -11,3 +11,5 @@ class SuspendingAtomicInt(private var value: Int = 0) {
     // https://kotlinlang.org/docs/reference/coroutines/shared-mutable-state-and-concurrency.html#actors
     suspend fun getAndIncrement(): Int = mutex.withLock { value++ }
 }
+
+suspend fun SuspendingAtomicInt.getStringAndInc() = getAndIncrement().toString()
