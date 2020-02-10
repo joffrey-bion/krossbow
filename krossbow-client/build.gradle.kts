@@ -7,6 +7,8 @@ plugins {
 
 description = "A Kotlin multiplatform STOMP client with JVM and JS support"
 
+val coroutinesVersion = "1.3.1"
+val jacksonVersion = "2.9.9"
 val serializationVersion = "0.14.0"
 
 kotlin {
@@ -19,8 +21,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                api(project(":krossbow-engine-api"))
-
+                api(project(":krossbow-websocket-api"))
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
             }
         }
@@ -33,10 +35,8 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                implementation(project(":krossbow-engine-spring"))
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
-
-                val jacksonVersion = "2.9.9"
                 implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
                 implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
             }
@@ -51,7 +51,7 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
-                implementation(project(":krossbow-engine-webstompjs"))
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
             }
         }
@@ -65,9 +65,9 @@ kotlin {
 
 tasks.dokka {
     dependsOn(
-        ":krossbow-engine-api:dokka",
-        ":krossbow-engine-spring:dokka",
-        ":krossbow-engine-webstompjs:dokka"
+        ":krossbow-websocket-api:dokka",
+        ":krossbow-websocket-spring:dokka",
+        ":krossbow-websocket-ktor:dokka"
     )
     //    outputFormat = "javadoc"
     multiplatform {

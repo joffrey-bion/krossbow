@@ -2,7 +2,8 @@ package org.hildan.krossbow.client.converters
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.hildan.krossbow.engines.MessageHeaders
+import org.hildan.krossbow.stomp.MessageHeaders
+import org.hildan.krossbow.stomp.headers.StompHeaders
 import kotlin.reflect.KClass
 
 /**
@@ -15,7 +16,7 @@ class JacksonConverter(
     private val objectMapper: ObjectMapper = jacksonObjectMapper()
 ) : SimpleStringMessageConverter {
 
-    override fun <T : Any> convertFromString(headers: MessageHeaders, payload: String, clazz: KClass<T>): T {
+    override fun <T : Any> convertFromString(headers: StompHeaders, payload: String, clazz: KClass<T>): T {
         return objectMapper.readValue(payload, clazz.java)
     }
 
