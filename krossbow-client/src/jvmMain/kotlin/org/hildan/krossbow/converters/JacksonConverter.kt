@@ -1,8 +1,7 @@
-package org.hildan.krossbow.client.converters
+package org.hildan.krossbow.converters
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.hildan.krossbow.stomp.MessageHeaders
 import org.hildan.krossbow.stomp.headers.StompHeaders
 import kotlin.reflect.KClass
 
