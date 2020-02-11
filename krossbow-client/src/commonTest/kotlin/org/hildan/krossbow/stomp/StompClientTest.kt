@@ -1,13 +1,13 @@
-package org.hildan.krossbow.client
+package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.Serializable
-import org.hildan.krossbow.client.converters.KotlinxSerialization
+import org.hildan.krossbow.converters.KotlinxSerialization
 import org.hildan.krossbow.testutils.runAsyncTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class KrossbowClientTest {
+class StompClientTest {
 
     private val testUrl = "http://seven-wonders-online.herokuapp.com/seven-wonders-websocket"
 
@@ -25,7 +25,7 @@ class KrossbowClientTest {
 
     @Test
     fun basicConnect() = runAsyncTest {
-        val client = KrossbowClient {
+        val client = StompClient.withSockJS {
             messageConverter = KotlinxSerialization.JsonConverter()
         }
         client.useSession(testUrl) {

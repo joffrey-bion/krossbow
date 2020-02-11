@@ -3,6 +3,8 @@ package org.hildan.krossbow.stomp
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.websocket.KWebSocketClient
+import org.hildan.krossbow.websocket.defaultSockJSClient
+import org.hildan.krossbow.websocket.defaultWebSocketClient
 
 /**
  * A STOMP client based on the given web socket implementation.
@@ -10,9 +12,17 @@ import org.hildan.krossbow.websocket.KWebSocketClient
  * Then, most of the STOMP interactions are done through the [StompSession].
  */
 class StompClient(
-    private val config: StompConfig,
-    private val webSocketClient: KWebSocketClient
+    private val webSocketClient: KWebSocketClient,
+    private val config: StompConfig
 ) {
+    constructor(
+        webSocketClient: KWebSocketClient = defaultWebSocketClient(),
+        configure: StompConfig.() -> Unit
+    ) : this(
+        webSocketClient = webSocketClient,
+        config = StompConfig().apply{ configure() }
+    )
+
     /**
      * Connects to the given WebSocket [url] and to the STOMP session, and returns after receiving the CONNECTED frame.
      */
@@ -33,6 +43,11 @@ class StompClient(
     }
 
     private fun extractHost(url: String) = url.substringAfter("://").substringBefore("/").substringBefore(":")
+
+    companion object {
+
+        fun withSockJS(configure: StompConfig.() -> Unit) = StompClient(defaultSockJSClient(), configure)
+    }
 }
 
 /**

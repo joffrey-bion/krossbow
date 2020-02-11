@@ -35,6 +35,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
+                implementation(project(":krossbow-websocket-spring"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
                 implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")

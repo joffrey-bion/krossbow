@@ -1,15 +1,19 @@
-package org.hildan.krossbow.client
+package org.hildan.krossbow.websocket
 
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
-import org.hildan.krossbow.client.converters.JacksonConverter
-import org.hildan.krossbow.engines.spring.SpringKrossbowEngine
+import org.hildan.krossbow.converters.JacksonConverter
+import org.hildan.krossbow.stomp.StompClient
+import org.hildan.krossbow.stomp.send
+import org.hildan.krossbow.stomp.subscribe
+import org.hildan.krossbow.stomp.useSession
 import org.hildan.krossbow.testutils.runAsyncTest
+import org.hildan.krossbow.websocket.spring.SpringDefaultWebSocketClient
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class JvmDefaultEngineKtTest {
+class JvmDefaultWebSocketClientsTest {
 
     private val testUrl = "http://seven-wonders-online.herokuapp.com/seven-wonders-websocket"
 
@@ -29,12 +33,12 @@ class JvmDefaultEngineKtTest {
 
     @Test
     fun defaultEngineTest() {
-        assertEquals(SpringKrossbowEngine, defaultEngine())
+        assertEquals(SpringDefaultWebSocketClient, defaultWebSocketClient())
     }
 
     @Test
     fun basicConnect() = runAsyncTest {
-        val client = KrossbowClient {
+        val client = StompClient.withSockJS {
             messageConverter = JacksonConverter()
         }
         client.useSession(testUrl) {
