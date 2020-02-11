@@ -11,6 +11,7 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.StompParser
+import org.hildan.krossbow.stomp.frame.format
 import org.hildan.krossbow.stomp.headers.HeaderKeys
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
@@ -150,7 +151,10 @@ class StompSession(
     }
 
     private suspend fun sendStompFrameAsIs(frame: StompFrame) {
-        webSocketSession.send(frame.toBytes())
+        when (frame.body) {
+            is FrameBody.Binary -> webSocketSession.sendBinary(frame.toBytes())
+            is FrameBody.Text -> webSocketSession.sendText(frame.format())
+        }
     }
 
     private suspend fun waitForReceipt(receiptId: String): StompFrame.Receipt {

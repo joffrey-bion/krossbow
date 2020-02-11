@@ -66,7 +66,11 @@ class JsWebSocketSession(private val ws: WebSocket) : KWebSocketSession {
 
     override var listener: KWebSocketListener = NoopWebSocketListener
 
-    override suspend fun send(frameData: ByteArray) {
+    override suspend fun sendText(frameText: String) {
+        ws.send(frameText)
+    }
+
+    override suspend fun sendBinary(frameData: ByteArray) {
         ws.send(frameData.toArrayBuffer())
     }
 

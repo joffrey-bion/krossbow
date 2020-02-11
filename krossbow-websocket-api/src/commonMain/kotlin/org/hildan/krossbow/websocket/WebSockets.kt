@@ -12,7 +12,9 @@ interface KWebSocketSession {
 
     var listener: KWebSocketListener
 
-    suspend fun send(frameData: ByteArray)
+    suspend fun sendText(frameText: String)
+
+    suspend fun sendBinary(frameData: ByteArray)
 
     suspend fun close()
 }

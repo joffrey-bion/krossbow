@@ -49,7 +49,7 @@ class KtorWebSocketTest {
     @Test
     fun test() = runSuspendingTest {
         val session = KtorWebSocket().connect("ws://demos.kaazing.com/echo")
-        session.send("hello".encodeToByteArray())
+        session.sendBinary("hello".encodeToByteArray())
         session.listener = object : KWebSocketListener {
             override suspend fun onBinaryMessage(bytes: ByteArray) {
                 assertEquals("hello", bytes.decodeToString())

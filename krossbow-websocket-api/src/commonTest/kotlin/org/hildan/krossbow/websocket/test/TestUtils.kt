@@ -26,7 +26,7 @@ fun testKaazingEchoWs(websocketClient: KWebSocketClient, protocol: String) = run
         }
         override suspend fun onClose() {}
     }
-    session.send("hello".encodeToByteArray())
+    session.sendBinary("hello".encodeToByteArray())
     val message = withTimeout(1000) { messageChannel.receive() }
     assertEquals("hello", message)
     session.close()

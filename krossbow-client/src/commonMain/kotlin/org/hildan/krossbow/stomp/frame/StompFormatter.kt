@@ -2,6 +2,7 @@ package org.hildan.krossbow.stomp.frame
 
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 
+// TODO align API with StompFrame.toBytes() (we want them to look similar)
 fun StompFrame.format(): String = """
 $command
 $formattedHeaders

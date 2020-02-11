@@ -127,8 +127,12 @@ class KtorWebSocketSessionAdapter(private val wsSession: DefaultClientWebSocketS
         }
     }
 
-    override suspend fun send(frameData: ByteArray) {
-        wsSession.outgoing.send(Frame.Binary(false, frameData))
+    override suspend fun sendText(frameText: String) {
+        wsSession.outgoing.send(Frame.Text(frameText))
+    }
+
+    override suspend fun sendBinary(frameData: ByteArray) {
+        wsSession.outgoing.send(Frame.Binary(fin = true, data = frameData))
     }
 
     override suspend fun close() {

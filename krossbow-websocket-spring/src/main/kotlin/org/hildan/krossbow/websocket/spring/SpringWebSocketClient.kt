@@ -82,7 +82,13 @@ open class SpringWebSocketClientAdapter(private val client: WebSocketClient) : K
 class SpringWebSocketSession(private val session: WebSocketSession) : KWebSocketSession {
     override var listener: KWebSocketListener = NoopWebSocketListener
 
-    override suspend fun send(frameData: ByteArray) {
+    override suspend fun sendText(frameText: String) {
+        withContext(Dispatchers.IO) {
+            session.sendMessage(TextMessage(frameText))
+        }
+    }
+
+    override suspend fun sendBinary(frameData: ByteArray) {
         withContext(Dispatchers.IO) {
             session.sendMessage(BinaryMessage(frameData))
         }
