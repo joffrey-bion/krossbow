@@ -48,12 +48,10 @@ object StompParser {
             // used as the value of header entry. Subsequent values are only used to maintain a history of state changes
             // of the header and MAY be ignored.
             // https://stomp.github.io/stomp-specification-1.2.html#Repeated_Header_Entries
-            headersMap.putIfAbsent(key, value)
+            if (!headersMap.containsKey(key)) {
+                headersMap[key] = value
+            }
         }
         return headersMap.asStompHeaders()
     }
-}
-
-private fun MutableMap<String, String>.putIfAbsent(key: String, value: String) {
-    getOrPut(key) { value }
 }
