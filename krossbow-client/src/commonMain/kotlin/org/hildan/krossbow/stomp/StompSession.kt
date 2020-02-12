@@ -151,9 +151,12 @@ class StompSession(
     }
 
     private suspend fun sendStompFrameAsIs(frame: StompFrame) {
-        when (frame.body) {
-            is FrameBody.Binary -> webSocketSession.sendBinary(frame.toBytes())
-            is FrameBody.Text -> webSocketSession.sendText(frame.format())
+        if (frame.body is FrameBody.Binary) {
+            webSocketSession.sendBinary(frame.toBytes())
+        } else {
+            // frames without payloads are also sent as text because the headers are always textual
+            // Also, some sockJS implementations don't support binary frames
+            webSocketSession.sendText(frame.format())
         }
     }
 

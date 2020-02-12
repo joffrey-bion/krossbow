@@ -1,6 +1,5 @@
 package org.hildan.krossbow.stomp.frame
 
-import org.hildan.krossbow.stomp.headers.HeaderKeys
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
