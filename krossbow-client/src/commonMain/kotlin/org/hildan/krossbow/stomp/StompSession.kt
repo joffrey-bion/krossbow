@@ -109,8 +109,9 @@ class StompSession(
      *
      * If receipts are not enabled, this method sends the frame and immediately returns null.
      */
+    @UseExperimental(ExperimentalStdlibApi::class)
     suspend fun send(headers: StompSendHeaders, body: ByteArray?): KrossbowReceipt? {
-        val sendFrame = StompFrame.Send(headers, body?.let { FrameBody.Binary(it) })
+        val sendFrame = StompFrame.Send(headers, body?.let { FrameBody.Text(it.decodeToString()) })
         return sendStompFrame(sendFrame)
     }
 
