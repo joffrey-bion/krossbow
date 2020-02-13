@@ -8,7 +8,7 @@ $command
 $formattedHeaders
 
 ${body ?: ""}
-""".trimIndent()
+""".trimIndent() + "\u0000"
 
 private val StompFrame.formattedHeaders: String
     get() = headers.entries.joinToString("\n") {
