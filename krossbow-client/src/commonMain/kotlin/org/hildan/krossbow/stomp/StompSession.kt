@@ -11,7 +11,8 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.StompParser
-import org.hildan.krossbow.stomp.frame.format
+import org.hildan.krossbow.stomp.frame.encodeToBytes
+import org.hildan.krossbow.stomp.frame.encodeToText
 import org.hildan.krossbow.stomp.headers.HeaderKeys
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
@@ -153,11 +154,11 @@ class StompSession(
 
     private suspend fun sendStompFrameAsIs(frame: StompFrame) {
         if (frame.body is FrameBody.Binary) {
-            webSocketSession.sendBinary(frame.toBytes())
+            webSocketSession.sendBinary(frame.encodeToBytes())
         } else {
             // frames without payloads are also sent as text because the headers are always textual
             // Also, some sockJS implementations don't support binary frames
-            webSocketSession.sendText(frame.format())
+            webSocketSession.sendText(frame.encodeToText())
         }
     }
 

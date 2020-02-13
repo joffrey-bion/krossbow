@@ -74,12 +74,6 @@ sealed class StompFrame(
     ) : StompFrame(StompCommand.MESSAGE, headers, body) {
         val message: String = headers.message ?: (body as? FrameBody.Text)?.text ?: "(binary error message)"
     }
-
-    @UseExperimental(ExperimentalStdlibApi::class)
-    fun toBytes(): ByteArray {
-        // TODO make this more efficient
-        return format().encodeToByteArray()
-    }
 }
 
 sealed class FrameBody(open val rawBytes: ByteArray) {
