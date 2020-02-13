@@ -1,10 +1,22 @@
 package org.hildan.krossbow.stomp
 
+import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import kotlin.reflect.KClass
 
 /**
- * Sends a SEND frame to the server at the given [destination] with the given [body].
+ * Sends a SEND frame to the server at the given [destination] with no payload.
+ *
+ * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received from the server and returns a
+ * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
+ * [LostReceiptException] is thrown.
+ *
+ * If receipts are not enabled, this method sends the frame and immediately returns null.
+ */
+suspend fun StompSession.send(destination: String): KrossbowReceipt? = send(StompSendHeaders(destination), null)
+
+/**
+ * Sends a SEND frame to the server at the given [destination] with the given binary [body].
  *
  * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received form the server and returns a
  * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
@@ -12,8 +24,20 @@ import kotlin.reflect.KClass
  *
  * If receipts are not enabled, this method sends the frame and immediately returns null.
  */
-suspend fun StompSession.send(destination: String, body: ByteArray?): KrossbowReceipt? =
-        send(StompSendHeaders(destination), body)
+suspend fun StompSession.sendBinary(destination: String, body: ByteArray?): KrossbowReceipt? =
+        send(StompSendHeaders(destination), body?.let { FrameBody.Binary(it) })
+
+/**
+ * Sends a SEND frame to the server at the given [destination] with the given textual [body].
+ *
+ * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received form the server and returns a
+ * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
+ * [LostReceiptException] is thrown.
+ *
+ * If receipts are not enabled, this method sends the frame and immediately returns null.
+ */
+suspend fun StompSession.sendText(destination: String, body: String?): KrossbowReceipt? =
+        send(StompSendHeaders(destination), body?.let { FrameBody.Text(it) })
 
 /**
  * Sends a SEND frame to the server at the given [destination] with the given [payload].
@@ -38,17 +62,6 @@ suspend fun <T : Any> StompSession.send(destination: String, payload: T? = null,
  */
 suspend inline fun <reified T : Any> StompSession.send(destination: String, payload: T?): KrossbowReceipt? =
         send(destination, payload, T::class)
-
-/**
- * Sends a SEND frame to the server at the given [destination] with no payload.
- *
- * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received from the server and returns a
- * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
- * [LostReceiptException] is thrown.
- *
- * If receipts are not enabled, this method sends the frame and immediately returns null.
- */
-suspend fun StompSession.send(destination: String): KrossbowReceipt? = send(destination, null, Any::class)
 
 
 /**

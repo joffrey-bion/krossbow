@@ -7,6 +7,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.coroutineScope
 import org.hildan.krossbow.converters.MessageConverter
+import org.hildan.krossbow.converters.StringMessageConverter
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -110,10 +111,8 @@ class StompSession(
      *
      * If receipts are not enabled, this method sends the frame and immediately returns null.
      */
-    @UseExperimental(ExperimentalStdlibApi::class)
-    suspend fun send(headers: StompSendHeaders, body: ByteArray?): KrossbowReceipt? {
-        val sendFrame = StompFrame.Send(headers, body?.let { FrameBody.Text(it.decodeToString()) })
-        return sendStompFrame(sendFrame)
+    suspend fun send(headers: StompSendHeaders, body: FrameBody?): KrossbowReceipt? {
+        return sendStompFrame(StompFrame.Send(headers, body))
     }
 
     /**
@@ -122,13 +121,23 @@ class StompSession(
      *
      * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received from the server and returns a
      * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
-     * [LostReceiptException][org.hildan.krossbow.engines.LostReceiptException] is thrown.
+     * [LostReceiptException] is thrown.
      *
      * If receipts are not enabled, this method sends the frame and immediately returns null.
      */
     suspend fun <T : Any> send(headers: StompSendHeaders, payload: T? = null, payloadType: KClass<T>): KrossbowReceipt? {
-        val bytesBody = payload?.let { config.messageConverter.convertToBytes(it, payloadType) }
+        val bytesBody = convertFrameBody(payload, payloadType)
         return send(headers, bytesBody)
+    }
+
+    private fun <T : Any> convertFrameBody(payload: T?, payloadType: KClass<T>): FrameBody? {
+        if (payload == null) {
+            return null
+        }
+        return when (val converter = config.messageConverter) {
+            is StringMessageConverter -> FrameBody.Text(converter.convertToString(payload, payloadType))
+            else -> FrameBody.Binary(converter.convertToBytes(payload, payloadType))
+        }
     }
 
     private suspend fun sendStompFrame(frame: StompFrame): KrossbowReceipt? {
