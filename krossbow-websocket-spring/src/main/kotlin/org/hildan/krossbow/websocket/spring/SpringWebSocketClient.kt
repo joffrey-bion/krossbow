@@ -1,6 +1,7 @@
 package org.hildan.krossbow.websocket.spring
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.hildan.krossbow.websocket.KWebSocketClient
@@ -20,8 +21,6 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.sockjs.client.SockJsClient
 import org.springframework.web.socket.sockjs.client.Transport
 import org.springframework.web.socket.sockjs.client.WebSocketTransport
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 object SpringDefaultWebSocketClient : SpringWebSocketClientAdapter(StandardWebSocketClient())
 
@@ -31,55 +30,53 @@ private fun defaultWsTransports(): List<Transport> = listOf(WebSocketTransport(S
 
 open class SpringWebSocketClientAdapter(private val client: WebSocketClient) : KWebSocketClient {
 
-    override suspend fun connect(url: String): KWebSocketSession {
-        return suspendCoroutine { cont ->
-            val handler = object : WebSocketHandler {
+    override suspend fun connect(url: String): KWebSocketSession =
+            client.doHandshake(SpringWebSocketHandler, url).completable().await().krossbowWrapper
+}
 
-                private var WebSocketSession.krossbowWrapper: KWebSocketSession
-                    get() = attributes["krossbowSession"] as KWebSocketSession
-                    set(value) {
-                        attributes["krossbowSession"] = value
-                    }
+private var WebSocketSession.krossbowWrapper: KWebSocketSession
+    get() = attributes["krossbowSession"] as KWebSocketSession
+    set(value) {
+        attributes["krossbowSession"] = value
+    }
 
-                override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
-                    runBlocking {
-                        session.krossbowWrapper.listener.onError(exception)
-                    }
-                }
+object SpringWebSocketHandler : WebSocketHandler {
 
-                override fun afterConnectionClosed(session: WebSocketSession, closeStatus: CloseStatus) {
-                    runBlocking {
-                        session.krossbowWrapper.listener.onClose()
-                    }
-                }
+    override fun afterConnectionEstablished(session: WebSocketSession) {
+        val krossbowSession = SpringWebSocketSession(session)
+        session.krossbowWrapper = krossbowSession
+    }
 
-                override fun handleMessage(session: WebSocketSession, message: WebSocketMessage<*>) {
-                    val listener = session.krossbowWrapper.listener
-                    runBlocking {
-                        when (message) {
-                            is PingMessage -> Unit
-                            is PongMessage -> Unit
-                            is BinaryMessage -> listener.onBinaryMessage(message.payload.array())
-                            is TextMessage -> listener.onTextMessage(message.payload)
-                            else -> error("Unsupported Spring websocket message type: ${message.javaClass}")
-                        }
-                    }
-                }
-
-                override fun afterConnectionEstablished(session: WebSocketSession) {
-                    val krossbowSession = SpringWebSocketSession(session)
-                    session.krossbowWrapper = krossbowSession
-                    cont.resume(krossbowSession)
-                }
-
-                override fun supportsPartialMessages(): Boolean = false
+    override fun handleMessage(session: WebSocketSession, message: WebSocketMessage<*>) {
+        val listener = session.krossbowWrapper.listener
+        runBlocking {
+            when (message) {
+                is PingMessage -> Unit
+                is PongMessage -> Unit
+                is BinaryMessage -> listener.onBinaryMessage(message.payload.array())
+                is TextMessage -> listener.onTextMessage(message.payload)
+                else -> error("Unsupported Spring websocket message type: ${message.javaClass}")
             }
-            client.doHandshake(handler, url)
         }
     }
+
+    override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
+        runBlocking {
+            session.krossbowWrapper.listener.onError(exception)
+        }
+    }
+
+    override fun afterConnectionClosed(session: WebSocketSession, closeStatus: CloseStatus) {
+        runBlocking {
+            session.krossbowWrapper.listener.onClose()
+        }
+    }
+
+    override fun supportsPartialMessages(): Boolean = false
 }
 
 class SpringWebSocketSession(private val session: WebSocketSession) : KWebSocketSession {
+
     override var listener: KWebSocketListener = NoopWebSocketListener
 
     override suspend fun sendText(frameText: String) {
