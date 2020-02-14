@@ -181,6 +181,7 @@ internal class InternalStompSession(
             // TODO reduce timeout and allow lost receipt for disconnect (see connection lingering in spec)
             sendStompFrame(frame)
         }
+        nonMsgFrames.cancel()
         webSocketSession.close()
     }
 }
