@@ -31,12 +31,12 @@ class StompClientTest {
             messageConverter = KotlinxSerialization.JsonConverter()
         }
         client.useSession(testUrl) {
-            val (messages) = subscribe<ServerPlayerData>("/user/queue/nameChoice")
+            val nameSub = subscribe<ServerPlayerData>("/user/queue/nameChoice")
 
             val chooseNameAction = ChooseNameAction("Bob")
             send("/app/chooseName", chooseNameAction)
 
-            val response = withTimeout(30000) { messages.receive() }
+            val response = withTimeout(30000) { nameSub.messages.receive() }
             val expected = ServerPlayerData(
                 username = "forced",
                 displayName = "Bob",

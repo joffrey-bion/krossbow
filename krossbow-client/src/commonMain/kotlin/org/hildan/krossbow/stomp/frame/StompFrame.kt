@@ -79,7 +79,7 @@ sealed class StompFrame(
 sealed class FrameBody(open val rawBytes: ByteArray) {
 
     @UseExperimental(ExperimentalStdlibApi::class)
-    data class Text(val text: String) : FrameBody(text.encodeToByteArray())
+    data class Text(val text: String) : FrameBody(text.encodeToByteArray()) // TODO make that lazy
 
     data class Binary(override val rawBytes: ByteArray) : FrameBody(rawBytes) {
         override fun equals(other: Any?): Boolean {
@@ -97,4 +97,11 @@ sealed class FrameBody(open val rawBytes: ByteArray) {
             return rawBytes.contentHashCode()
         }
     }
+}
+
+@UseExperimental(ExperimentalStdlibApi::class)
+fun FrameBody?.asText(): String? = when (this) {
+    is FrameBody.Text -> text
+    is FrameBody.Binary -> rawBytes.decodeToString()
+    null -> null
 }

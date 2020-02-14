@@ -42,16 +42,16 @@ class JvmDefaultWebSocketClientsTest {
             messageConverter = JacksonConverter()
         }
         client.useSession(testUrl) {
-            val (errors) = subscribe<ErrorMessage>("/user/queue/errors")
-            val (messages) = subscribe<PlayerDataJackson>("/user/queue/nameChoice")
+            val errorsSub = subscribe<ErrorMessage>("/user/queue/errors")
+            val nameSub = subscribe<PlayerDataJackson>("/user/queue/nameChoice")
 
             val chooseNameAction = ChooseNameAction("Bob")
             send("/app/chooseName", chooseNameAction)
 
-            val error = withTimeoutOrNull(100) { errors.receive() }
+            val error = withTimeoutOrNull(100) { errorsSub.messages.receive() }
             assertNull(error)
 
-            val response = withTimeout(2000) { messages.receive() }
+            val response = withTimeout(2000) { nameSub.messages.receive() }
             val expected = PlayerDataJackson(
                 username = "ignored",
                 displayName = "Bob",

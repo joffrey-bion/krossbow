@@ -1,6 +1,6 @@
 package org.hildan.krossbow.stomp
 
-import org.hildan.krossbow.stomp.headers.StompHeaders
+import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 
 /**
  * A STOMP receipt description, as specified in the STOMP specification.
@@ -23,7 +23,7 @@ data class KrossbowMessage<out T>(
     /**
      * The headers of the message.
      */
-    val headers: StompHeaders
+    val headers: StompMessageHeaders
 )
 
 /**

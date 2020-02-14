@@ -5,77 +5,55 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.modules.getContextualOrDefault
 import org.hildan.krossbow.stomp.KrossbowMessage
-import org.hildan.krossbow.stomp.headers.StompHeaders
-import org.hildan.krossbow.stomp.map
+import org.hildan.krossbow.stomp.frame.FrameBody
+import org.hildan.krossbow.stomp.frame.StompFrame
+import org.hildan.krossbow.stomp.frame.asText
+import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import kotlin.reflect.KClass
 
 /**
- * Defines conversion of message payloads from byte arrays to Kotlin classes, and vice versa.
+ * Defines conversions between frames and typed messages.
  */
 interface MessageConverter {
 
     /**
-     * Converts the given binary [message] into an instance of the given [clazz].
+     * Converts the given MESSAGE [frame] into a [KrossbowMessage] with a payload of the given [clazz].
      */
-    fun <T : Any> convertFromBytes(message: KrossbowMessage<ByteArray>, clazz: KClass<T>): KrossbowMessage<T>
+    fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): KrossbowMessage<T>
 
     /**
-     * Converts the given [value] of the given [clazz] into a [ByteArray].
+     * Converts the given [value] of the given [clazz] into a [FrameBody].
      */
-    fun <T : Any> convertToBytes(value: T, clazz: KClass<T>): ByteArray
+    fun <T : Any> serialize(value: T?, clazz: KClass<T>): FrameBody?
 }
 
 /**
- * A [MessageConverter] extension that pre-converts binary messages to strings, and allows implementations to only
- * specify string message conversions.
+ * A [MessageConverter] that pre-converts binary messages to strings, and allows implementations to only specify
+ * text conversions.
  */
-@UseExperimental(ExperimentalStdlibApi::class)
-interface StringMessageConverter : MessageConverter {
+interface TextMessageConverter : MessageConverter {
 
-    override fun <T : Any> convertFromBytes(message: KrossbowMessage<ByteArray>, clazz: KClass<T>): KrossbowMessage<T> {
+    override fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): KrossbowMessage<T> {
         // TODO use encoding from headers (Content type/Mime type)
-        return convertFromString(message.map { it.decodeToString() }, clazz)
+        // but double check if text isn't forced to be UTF-8 because of underlying websocket specification
+        val payloadText = frame.body.asText()
+        return convertFromString(frame.headers, payloadText, clazz)
     }
 
     /**
-     * Converts the given text [message] into an instance of the given [clazz].
+     * Converts the given text [payload] into a [KrossbowMessage] with a payload of the given [clazz].
      */
-    fun <T : Any> convertFromString(message: KrossbowMessage<String>, clazz: KClass<T>): KrossbowMessage<T>
+    fun <T : Any> convertFromString(headers: StompMessageHeaders, payload: String?, clazz: KClass<T>): KrossbowMessage<T>
 
-    override fun <T : Any> convertToBytes(value: T, clazz: KClass<T>): ByteArray =
-            convertToString(value, clazz).encodeToByteArray()
+    override fun <T : Any> serialize(value: T?, clazz: KClass<T>): FrameBody? {
+        val text = convertToString(value, clazz)
+        return text?.let { FrameBody.Text(it) }
+    }
 
     /**
      * Converts the given [value] of the given [clazz] into a string.
      */
-    fun <T : Any> convertToString(value: T, clazz: KClass<T>): String
-}
-
-/**
- * A [MessageConverter] extension that pre-converts binary messages to strings, and allows implementations to only
- * specify string message conversions. This is a simpler version of [StringMessageConverter] which does not allow to
- * modify the message headers, but provides a simpler API to implement.
- */
-@UseExperimental(ExperimentalStdlibApi::class)
-interface SimpleStringMessageConverter : MessageConverter {
-
-    override fun <T : Any> convertFromBytes(message: KrossbowMessage<ByteArray>, clazz: KClass<T>): KrossbowMessage<T> {
-        // TODO use encoding from headers (Content type/Mime type)
-        return message.map { convertFromString(message.headers, it.decodeToString(), clazz) }
-    }
-
-    /**
-     * Converts the given text [payload] into an instance of the given [clazz].
-     */
-    fun <T : Any> convertFromString(headers: StompHeaders, payload: String, clazz: KClass<T>): T
-
-    override fun <T : Any> convertToBytes(value: T, clazz: KClass<T>): ByteArray =
-            convertToString(value, clazz).encodeToByteArray()
-
-    /**
-     * Converts the given [value] of the given [clazz] into a string.
-     */
-    fun <T : Any> convertToString(value: T, clazz: KClass<T>): String
+    fun <T : Any> convertToString(value: T?, clazz: KClass<T>): String?
 }
 
 /**
@@ -89,14 +67,24 @@ class KotlinxSerialization {
      */
     class JsonConverter(
         private val json: Json = Json(JsonConfiguration.Stable)
-    ) : SimpleStringMessageConverter {
+    ) : TextMessageConverter {
 
-        override fun <T : Any> convertFromString(headers: StompHeaders, payload: String, clazz: KClass<T>): T {
+        override fun <T : Any> convertFromString(
+            headers: StompMessageHeaders,
+            payload: String?,
+            clazz: KClass<T>
+        ): KrossbowMessage<T> {
+            if (payload == null) {
+                throw RuntimeException("Cannot create object of type $clazz from a MESSAGE frame without body")
+            }
             val serializer = json.context.getContextualOrDefault(clazz)
-            return json.parse(serializer, payload)
+            return KrossbowMessage(json.parse(serializer, payload), headers)
         }
 
-        override fun <T : Any> convertToString(value: T, clazz: KClass<T>): String {
+        override fun <T : Any> convertToString(value: T?, clazz: KClass<T>): String? {
+            if (value == null) {
+                return null
+            }
             val serializer = json.context.getContextualOrDefault(clazz)
             return json.stringify(serializer, value)
         }

@@ -4,15 +4,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope
-import org.hildan.krossbow.converters.MessageConverter
-import org.hildan.krossbow.converters.StringMessageConverter
-import org.hildan.krossbow.stomp.KrossbowEngineSubscription
 import org.hildan.krossbow.stomp.KrossbowMessage
 import org.hildan.krossbow.stomp.KrossbowReceipt
-import org.hildan.krossbow.stomp.KrossbowSubscription
-import org.hildan.krossbow.stomp.SubscriptionCallbacks
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -44,7 +39,7 @@ internal class InternalStompSession(
 
     private val nextReceiptId = SuspendingAtomicInt(0)
 
-    private val subscriptionsById: MutableMap<String, SubscriptionCallbacks<ByteArray>> = mutableMapOf()
+    private val subscriptionsById: MutableMap<String, InternalStompSubscription<*>> = mutableMapOf()
 
     private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.BUFFERED)
 
@@ -75,9 +70,7 @@ internal class InternalStompSession(
     }
 
     private suspend fun onMessageFrameReceived(frame: StompFrame.Message) {
-        val payload = frame.body?.rawBytes ?: ByteArray(0)
-        val message = KrossbowMessage(payload, frame.headers)
-        subscriptionsById.getValue(frame.headers.subscription).onReceive(message)
+        subscriptionsById.getValue(frame.headers.subscription).onMessage(frame)
     }
 
     internal suspend fun connect(headers: StompConnectHeaders): StompFrame.Connected = coroutineScope {
@@ -115,18 +108,8 @@ internal class InternalStompSession(
         payload: T?,
         payloadType: KClass<T>
     ): KrossbowReceipt? {
-        val bytesBody = convertFrameBody(payload, payloadType)
-        return send(headers, bytesBody)
-    }
-
-    private fun <T : Any> convertFrameBody(payload: T?, payloadType: KClass<T>): FrameBody? {
-        if (payload == null) {
-            return null
-        }
-        return when (val converter = config.messageConverter) {
-            is StringMessageConverter -> FrameBody.Text(converter.convertToString(payload, payloadType))
-            else -> FrameBody.Binary(converter.convertToBytes(payload, payloadType))
-        }
+        val body = config.messageConverter.serialize(payload, payloadType)
+        return send(headers, body)
     }
 
     private suspend fun sendStompFrame(frame: StompFrame): KrossbowReceipt? {
@@ -142,14 +125,6 @@ internal class InternalStompSession(
         return KrossbowReceipt(receiptId)
     }
 
-    private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
-        coroutineScope {
-            val receiptFrame = async { waitForReceipt(receiptId) }
-            sendStompFrameAsIs(frame)
-            receiptFrame.await()
-        }
-    }
-
     private suspend fun sendStompFrameAsIs(frame: StompFrame) {
         if (frame.body is FrameBody.Binary) {
             webSocketSession.sendBinary(frame.encodeToBytes())
@@ -160,40 +135,39 @@ internal class InternalStompSession(
         }
     }
 
+    private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
+        coroutineScope {
+            val receiptFrame = async { waitForReceipt(receiptId) }
+            sendStompFrameAsIs(frame)
+            receiptFrame.await()
+        }
+    }
+
     private suspend fun waitForReceipt(receiptId: String): StompFrame.Receipt {
         return waitForTypedFrame { it.headers.receiptId == receiptId }
     }
 
-    override suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): KrossbowSubscription<T> {
-        val converter = config.messageConverter
-        val channel = Channel<KrossbowMessage<T>>()
-        val callbacks = CallbacksAdapter(converter, clazz, channel)
-        val sub = subscribe(destination, callbacks)
-        return KrossbowSubscription(sub.id, sub.unsubscribe, channel)
-    }
+    override suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): StompSubscription<T> =
+            subscribe(destination) { config.messageConverter.deserialize(it, clazz) }
 
-    override suspend fun subscribeNoPayload(destination: String): KrossbowSubscription<Unit> {
-        val channel = Channel<KrossbowMessage<Unit>>()
-        val sub = subscribe(destination, object : SubscriptionCallbacks<ByteArray> {
-            override suspend fun onReceive(message: KrossbowMessage<ByteArray>) =
-                    channel.send(KrossbowMessage(Unit, message.headers))
+    override suspend fun subscribeNoPayload(destination: String): StompSubscription<Unit> =
+            subscribe(destination) { KrossbowMessage(Unit, it.headers) }
 
-            override fun onError(throwable: Throwable) {
-                channel.close(throwable)
-            }
-        })
-        return KrossbowSubscription(sub.id, sub.unsubscribe, channel)
-    }
-
-    private suspend fun subscribe(destination: String, callbacks: SubscriptionCallbacks<ByteArray>): KrossbowEngineSubscription {
+    private suspend fun <T> subscribe(
+        destination: String,
+        convertPayload: (StompFrame.Message) -> KrossbowMessage<T>
+    ): StompSubscription<T> {
         val id = nextSubscriptionId.getAndIncrement().toString()
-        subscriptionsById[id] = callbacks
+        val sub = InternalStompSubscription(id, convertPayload, this)
+        subscriptionsById[id] = sub
         val subscribeFrame = StompFrame.Subscribe(StompSubscribeHeaders(destination = destination, id = id))
         sendStompFrame(subscribeFrame)
-        return KrossbowEngineSubscription(id) {
-            sendStompFrameAsIs(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = id)))
-            subscriptionsById.remove(id)
-        }
+        return sub
+    }
+
+    internal suspend fun unsubscribe(subscriptionId: String) {
+        sendStompFrameAsIs(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
+        subscriptionsById.remove(subscriptionId)
     }
 
     override suspend fun disconnect() {
@@ -205,17 +179,32 @@ internal class InternalStompSession(
     }
 }
 
-private class CallbacksAdapter<T : Any>(
-    private val messageConverter: MessageConverter,
-    private val clazz: KClass<T>,
-    private val channel: SendChannel<KrossbowMessage<T>>
-) : SubscriptionCallbacks<ByteArray> {
+/**
+ * Represents a STOMP subscription to receive messages of a single type [T].
+ */
+private class InternalStompSubscription<out T>(
+    /**
+     * The subscription ID.
+     */
+    override val id: String,
+    private val convertPayload: (StompFrame.Message) -> KrossbowMessage<T>,
+    private val internalSession: InternalStompSession
+) : StompSubscription<T> {
 
-    override suspend fun onReceive(message: KrossbowMessage<ByteArray>) {
-        channel.send(messageConverter.convertFromBytes(message, clazz))
+    private val internalMsgChannel: Channel<KrossbowMessage<T>> = Channel()
+
+    override val messages: ReceiveChannel<KrossbowMessage<T>> get() = internalMsgChannel
+
+    suspend fun onMessage(message: StompFrame.Message) {
+        internalMsgChannel.send(convertPayload(message))
     }
 
-    override fun onError(throwable: Throwable) {
-        channel.close(throwable)
+    fun onError(error: StompFrame.Error) {
+        internalMsgChannel.close(StompErrorFrameReceived(error))
+    }
+
+    override suspend fun unsubscribe() {
+        internalSession.unsubscribe(id)
+        internalMsgChannel.close()
     }
 }
