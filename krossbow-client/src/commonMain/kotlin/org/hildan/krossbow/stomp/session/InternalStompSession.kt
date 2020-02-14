@@ -1,11 +1,13 @@
 package org.hildan.krossbow.stomp.session
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.stomp.KrossbowMessage
 import org.hildan.krossbow.stomp.KrossbowReceipt
 import org.hildan.krossbow.stomp.config.StompConfig
@@ -139,7 +141,11 @@ internal class InternalStompSession(
         coroutineScope {
             val receiptFrame = async { waitForReceipt(receiptId) }
             sendStompFrameAsIs(frame)
-            receiptFrame.await()
+            try {
+                withTimeout(config.receiptTimeLimit) { receiptFrame.await() }
+            } catch (e: TimeoutCancellationException) {
+                throw LostReceiptException(receiptId)
+            }
         }
     }
 
@@ -173,6 +179,7 @@ internal class InternalStompSession(
     override suspend fun disconnect() {
         if (config.gracefulDisconnect) {
             val frame = StompFrame.Disconnect(StompDisconnectHeaders(nextReceiptId.getStringAndInc()))
+            // TODO reduce timeout and allow lost receipt for disconnect (see connection lingering in spec)
             sendStompFrame(frame)
         }
         webSocketSession.close()

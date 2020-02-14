@@ -9,6 +9,9 @@ import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import kotlin.reflect.KClass
 
+/**
+ * A coroutine-based STOMP session.
+ */
 interface StompSession {
 
     /**
@@ -51,7 +54,8 @@ interface StompSession {
     suspend fun subscribeNoPayload(destination: String): StompSubscription<Unit>
 
     /**
-     * Sends a DISCONNECT frame to close the session, and closes the connection.
+     * If graceful disconnect is enabled (which is the default), sends a DISCONNECT frame to close the session, and
+     * closes the connection. Otherwise, force-closes the connection.
      */
     suspend fun disconnect()
 }
@@ -126,7 +130,14 @@ suspend inline fun <reified T : Any> StompSession.send(destination: String, payl
 suspend inline fun <reified T : Any> StompSession.subscribe(destination: String): StompSubscription<T> =
         subscribe(destination, T::class)
 
+/**
+ * Exception thrown when the websocket connection + STOMP connection takes too much time.
+ */
+class ConnectionTimeout(message: String, cause: Exception) : Exception(message, cause)
 
+/**
+ * Exception thrown when a STOMP error frame is received.
+ */
 class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception("STOMP ERROR frame received: ${frame.message}")
 
 /**

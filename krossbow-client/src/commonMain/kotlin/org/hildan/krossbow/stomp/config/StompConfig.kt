@@ -2,6 +2,7 @@ package org.hildan.krossbow.stomp.config
 
 import org.hildan.krossbow.converters.KotlinxSerialization
 import org.hildan.krossbow.converters.MessageConverter
+import org.hildan.krossbow.stomp.session.LostReceiptException
 
 /**
  * Configuration for the STOMP protocol.
@@ -23,11 +24,15 @@ data class StompConfig(
      */
     var gracefulDisconnect: Boolean = true,
     /**
-     * Defines how long to wait for a RECEIPT frame from the server before throwing an exception.
+     * Defines how long to wait for a RECEIPT frame from the server before throwing a [LostReceiptException].
      * Only crashes when a `receipt` header was actually present in the sent frame (and thus a RECEIPT was expected).
      * Such header is always present if [autoReceipt] is enabled.
      */
     var receiptTimeLimit: Long = 15000,
+    /**
+     * Defines how long to wait for the websocket+STOMP connection to be established before throwing an exception.
+     */
+    var connectionTimeoutMillis: Long = 15000,
     /**
      * Used for conversion of message payloads to Kotlin objects. Defaults to JSON conversion using Kotlinx
      * Serialization.
