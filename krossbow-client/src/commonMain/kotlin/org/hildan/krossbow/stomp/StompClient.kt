@@ -2,6 +2,8 @@ package org.hildan.krossbow.stomp
 
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
+import org.hildan.krossbow.stomp.session.InternalStompSession
+import org.hildan.krossbow.stomp.session.StompSession
 import org.hildan.krossbow.websocket.KWebSocketClient
 import org.hildan.krossbow.websocket.defaultSockJSClient
 import org.hildan.krossbow.websocket.defaultWebSocketClient
@@ -29,11 +31,14 @@ class StompClient(
     suspend fun connect(url: String, login: String?, passcode: String?): StompSession {
         try {
             val wsSession = webSocketClient.connect(url)
-            val krossbowSession = StompSession(config, wsSession)
+            val krossbowSession = InternalStompSession(config, wsSession)
             // connect at STOMP protocol level
             val host = extractHost(url)
             val connectHeaders = StompConnectHeaders(
-                host = host, login = login, passcode = passcode, heartBeat = config.heartBeat
+                host = host,
+                login = login,
+                passcode = passcode,
+                heartBeat = config.heartBeat
             )
             krossbowSession.connect(connectHeaders)
             return krossbowSession

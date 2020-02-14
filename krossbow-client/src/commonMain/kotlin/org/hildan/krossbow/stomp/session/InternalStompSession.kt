@@ -1,4 +1,4 @@
-package org.hildan.krossbow.stomp
+package org.hildan.krossbow.stomp.session
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -8,6 +8,11 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.coroutineScope
 import org.hildan.krossbow.converters.MessageConverter
 import org.hildan.krossbow.converters.StringMessageConverter
+import org.hildan.krossbow.stomp.KrossbowEngineSubscription
+import org.hildan.krossbow.stomp.KrossbowMessage
+import org.hildan.krossbow.stomp.KrossbowReceipt
+import org.hildan.krossbow.stomp.KrossbowSubscription
+import org.hildan.krossbow.stomp.SubscriptionCallbacks
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -31,10 +36,9 @@ import kotlin.reflect.KClass
  * A coroutine-based STOMP session API.
  */
 @UseExperimental(ExperimentalCoroutinesApi::class) // for broadcast channel
-class StompSession(
-    private val config: StompConfig,
-    private val webSocketSession: KWebSocketSession
-) : KWebSocketListener {
+internal class InternalStompSession(
+    private val config: StompConfig, private val webSocketSession: KWebSocketSession
+) : StompSession, KWebSocketListener {
 
     private val nextSubscriptionId = SuspendingAtomicInt(0)
 
@@ -102,30 +106,15 @@ class StompSession(
         throw IllegalStateException("Connection closed unexpectedly while expecting frame of type ${T::class}")
     }
 
-    /**
-     * Sends a SEND frame to the server with the given [headers] and the given [body].
-     *
-     * If auto-receipt is enabled or if a `receipt` header is provided, this method suspends until a RECEIPT
-     * frame is received from the server and returns a [KrossbowReceipt]. If no RECEIPT frame is received from the
-     * server in the configured time limit, a [LostReceiptException] is thrown.
-     *
-     * If receipts are not enabled, this method sends the frame and immediately returns null.
-     */
-    suspend fun send(headers: StompSendHeaders, body: FrameBody?): KrossbowReceipt? {
+    override suspend fun send(headers: StompSendHeaders, body: FrameBody?): KrossbowReceipt? {
         return sendStompFrame(StompFrame.Send(headers, body))
     }
 
-    /**
-     * Sends a SEND frame to the server with the given [headers] and the given [payload] (converted via the configured
-     * [MessageConverter]).
-     *
-     * If auto-receipt is enabled, this method suspends until a RECEIPT frame is received from the server and returns a
-     * [KrossbowReceipt]. If no RECEIPT frame is received from the server in the configured time limit, a
-     * [LostReceiptException] is thrown.
-     *
-     * If receipts are not enabled, this method sends the frame and immediately returns null.
-     */
-    suspend fun <T : Any> send(headers: StompSendHeaders, payload: T? = null, payloadType: KClass<T>): KrossbowReceipt? {
+    override suspend fun <T : Any> send(
+        headers: StompSendHeaders,
+        payload: T?,
+        payloadType: KClass<T>
+    ): KrossbowReceipt? {
         val bytesBody = convertFrameBody(payload, payloadType)
         return send(headers, bytesBody)
     }
@@ -175,19 +164,24 @@ class StompSession(
         return waitForTypedFrame { it.headers.receiptId == receiptId }
     }
 
-    /**
-     * Subscribes to the given [destination], expecting objects of type [T]. The returned [KrossbowSubscription]
-     * can be used to access the channel of received objects.
-     *
-     * The configured [MessageConverter] is used to create instances of the given type from the body of every message
-     * received on the created subscription. If no payload is received in a message, an exception is thrown, unless
-     * [T] is [Unit].
-     */
-    suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): KrossbowSubscription<T> {
+    override suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): KrossbowSubscription<T> {
         val converter = config.messageConverter
         val channel = Channel<KrossbowMessage<T>>()
         val callbacks = CallbacksAdapter(converter, clazz, channel)
         val sub = subscribe(destination, callbacks)
+        return KrossbowSubscription(sub.id, sub.unsubscribe, channel)
+    }
+
+    override suspend fun subscribeNoPayload(destination: String): KrossbowSubscription<Unit> {
+        val channel = Channel<KrossbowMessage<Unit>>()
+        val sub = subscribe(destination, object : SubscriptionCallbacks<ByteArray> {
+            override suspend fun onReceive(message: KrossbowMessage<ByteArray>) =
+                    channel.send(KrossbowMessage(Unit, message.headers))
+
+            override fun onError(throwable: Throwable) {
+                channel.close(throwable)
+            }
+        })
         return KrossbowSubscription(sub.id, sub.unsubscribe, channel)
     }
 
@@ -202,28 +196,7 @@ class StompSession(
         }
     }
 
-    /**
-     * Subscribes to the given [destination], expecting empty payloads.
-     */
-    suspend fun subscribeNoPayload(destination: String): KrossbowSubscription<Unit> {
-        val channel = Channel<KrossbowMessage<Unit>>()
-        val sub = subscribeNoPayload(destination, EmptyPayloadCallbacks(channel))
-        return KrossbowSubscription(sub.id, sub.unsubscribe, channel)
-    }
-
-    private suspend fun subscribeNoPayload(destination: String, callbacks: SubscriptionCallbacks<Unit>): KrossbowEngineSubscription {
-        return subscribe(destination, object : SubscriptionCallbacks<ByteArray> {
-            override suspend fun onReceive(message: KrossbowMessage<ByteArray>) =
-                    callbacks.onReceive(KrossbowMessage(Unit, message.headers))
-
-            override fun onError(throwable: Throwable) = callbacks.onError(throwable)
-        })
-    }
-
-    /**
-     * Sends a DISCONNECT frame to close the session, and closes the connection.
-     */
-    suspend fun disconnect() {
+    override suspend fun disconnect() {
         if (config.gracefulDisconnect) {
             val frame = StompFrame.Disconnect(StompDisconnectHeaders(nextReceiptId.getStringAndInc()))
             sendStompFrame(frame)
@@ -231,8 +204,6 @@ class StompSession(
         webSocketSession.close()
     }
 }
-
-class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception("STOMP ERROR frame received: ${frame.message}")
 
 private class CallbacksAdapter<T : Any>(
     private val messageConverter: MessageConverter,
@@ -248,26 +219,3 @@ private class CallbacksAdapter<T : Any>(
         channel.close(throwable)
     }
 }
-
-private class EmptyPayloadCallbacks(
-    private val channel: SendChannel<KrossbowMessage<Unit>>
-) : SubscriptionCallbacks<Unit> {
-
-    override suspend fun onReceive(message: KrossbowMessage<Unit>) {
-        channel.send(message)
-    }
-
-    override fun onError(throwable: Throwable) {
-        channel.close(throwable)
-    }
-}
-
-/**
- * An exception thrown when a RECEIPT frame was expected from the server, but not received in the configured time limit.
- */
-class LostReceiptException(
-    /**
-     * The value of the receipt header sent to the server, and expected in a RECEIPT frame.
-     */
-    val receiptId: String
-) : Exception("No RECEIPT frame received for receiptId '$receiptId' within the configured time limit")
