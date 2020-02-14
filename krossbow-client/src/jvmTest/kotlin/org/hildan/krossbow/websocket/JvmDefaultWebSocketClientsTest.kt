@@ -4,8 +4,8 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.converters.JacksonConverter
 import org.hildan.krossbow.stomp.StompClient
-import org.hildan.krossbow.stomp.session.send
-import org.hildan.krossbow.stomp.session.subscribe
+import org.hildan.krossbow.stomp.send
+import org.hildan.krossbow.stomp.subscribe
 import org.hildan.krossbow.stomp.useSession
 import org.hildan.krossbow.testutils.runAsyncTest
 import org.hildan.krossbow.websocket.spring.SpringDefaultWebSocketClient

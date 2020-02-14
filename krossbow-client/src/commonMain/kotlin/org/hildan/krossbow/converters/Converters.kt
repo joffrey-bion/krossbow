@@ -4,7 +4,7 @@ import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.modules.getContextualOrDefault
-import org.hildan.krossbow.stomp.KrossbowMessage
+import org.hildan.krossbow.stomp.StompMessage
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.asText
@@ -17,9 +17,9 @@ import kotlin.reflect.KClass
 interface MessageConverter {
 
     /**
-     * Converts the given MESSAGE [frame] into a [KrossbowMessage] with a payload of the given [clazz].
+     * Converts the given MESSAGE [frame] into a [StompMessage] with a payload of the given [clazz].
      */
-    fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): KrossbowMessage<T>
+    fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): StompMessage<T>
 
     /**
      * Converts the given [value] of the given [clazz] into a [FrameBody].
@@ -33,7 +33,7 @@ interface MessageConverter {
  */
 interface TextMessageConverter : MessageConverter {
 
-    override fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): KrossbowMessage<T> {
+    override fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): StompMessage<T> {
         // TODO use encoding from headers (Content type/Mime type)
         // but double check if text isn't forced to be UTF-8 because of underlying websocket specification
         val payloadText = frame.body.asText()
@@ -41,9 +41,9 @@ interface TextMessageConverter : MessageConverter {
     }
 
     /**
-     * Converts the given text [payload] into a [KrossbowMessage] with a payload of the given [clazz].
+     * Converts the given text [payload] into a [StompMessage] with a payload of the given [clazz].
      */
-    fun <T : Any> convertFromString(headers: StompMessageHeaders, payload: String?, clazz: KClass<T>): KrossbowMessage<T>
+    fun <T : Any> convertFromString(headers: StompMessageHeaders, payload: String?, clazz: KClass<T>): StompMessage<T>
 
     override fun <T : Any> serialize(value: T?, clazz: KClass<T>): FrameBody? {
         val text = convertToString(value, clazz)
@@ -73,12 +73,12 @@ class KotlinxSerialization {
             headers: StompMessageHeaders,
             payload: String?,
             clazz: KClass<T>
-        ): KrossbowMessage<T> {
+        ): StompMessage<T> {
             if (payload == null) {
                 throw RuntimeException("Cannot create object of type $clazz from a MESSAGE frame without body")
             }
             val serializer = json.context.getContextualOrDefault(clazz)
-            return KrossbowMessage(json.parse(serializer, payload), headers)
+            return StompMessage(json.parse(serializer, payload), headers)
         }
 
         override fun <T : Any> convertToString(value: T?, clazz: KClass<T>): String? {

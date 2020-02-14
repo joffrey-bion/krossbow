@@ -2,7 +2,7 @@ package org.hildan.krossbow.stomp.config
 
 import org.hildan.krossbow.converters.KotlinxSerialization
 import org.hildan.krossbow.converters.MessageConverter
-import org.hildan.krossbow.stomp.session.LostReceiptException
+import org.hildan.krossbow.stomp.LostReceiptException
 
 /**
  * Configuration for the STOMP protocol.

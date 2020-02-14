@@ -3,8 +3,6 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.Serializable
 import org.hildan.krossbow.converters.KotlinxSerialization
-import org.hildan.krossbow.stomp.session.send
-import org.hildan.krossbow.stomp.session.subscribe
 import org.hildan.krossbow.testutils.runAsyncTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
