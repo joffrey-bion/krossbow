@@ -14,19 +14,9 @@ fun StompFrame.encodeToBytes(): ByteArray {
 
 fun StompFrame.encodeToText(): String = "$encodedPreamble${body.encodeToText()}\u0000"
 
-@UseExperimental(ExperimentalStdlibApi::class)
-private fun FrameBody?.encodeToBytes(): ByteArray = when(this) {
-    is FrameBody.Text -> text.encodeToByteArray()
-    is FrameBody.Binary -> rawBytes
-    null -> ByteArray(0)
-}
+private fun FrameBody?.encodeToBytes(): ByteArray = asBytes() ?: ByteArray(0)
 
-@UseExperimental(ExperimentalStdlibApi::class)
-private fun FrameBody?.encodeToText(): String = when(this) {
-    is FrameBody.Text -> text
-    is FrameBody.Binary -> rawBytes.decodeToString()
-    null -> ""
-}
+private fun FrameBody?.encodeToText(): String = asText() ?: ""
 
 private val StompFrame.encodedPreamble: String
     get() {

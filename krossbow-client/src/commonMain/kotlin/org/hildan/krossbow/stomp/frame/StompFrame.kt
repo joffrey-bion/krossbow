@@ -76,25 +76,25 @@ sealed class StompFrame(
     }
 }
 
-sealed class FrameBody(open val rawBytes: ByteArray) {
+sealed class FrameBody {
 
     @UseExperimental(ExperimentalStdlibApi::class)
-    data class Text(val text: String) : FrameBody(text.encodeToByteArray()) // TODO make that lazy
+    data class Text(val text: String) : FrameBody()
 
-    data class Binary(override val rawBytes: ByteArray) : FrameBody(rawBytes) {
+    data class Binary(val bytes: ByteArray) : FrameBody() {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
 
             other as Binary
 
-            if (!rawBytes.contentEquals(other.rawBytes)) return false
+            if (!bytes.contentEquals(other.bytes)) return false
 
             return true
         }
 
         override fun hashCode(): Int {
-            return rawBytes.contentHashCode()
+            return bytes.contentHashCode()
         }
     }
 }
@@ -102,6 +102,13 @@ sealed class FrameBody(open val rawBytes: ByteArray) {
 @UseExperimental(ExperimentalStdlibApi::class)
 fun FrameBody?.asText(): String? = when (this) {
     is FrameBody.Text -> text
-    is FrameBody.Binary -> rawBytes.decodeToString()
+    is FrameBody.Binary -> bytes.decodeToString()
+    null -> null
+}
+
+@UseExperimental(ExperimentalStdlibApi::class)
+fun FrameBody?.asBytes(): ByteArray? = when (this) {
+    is FrameBody.Text -> text.encodeToByteArray()
+    is FrameBody.Binary -> bytes
     null -> null
 }
