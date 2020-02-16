@@ -1,5 +1,10 @@
 package org.hildan.krossbow.stomp.frame
 
+import kotlinx.io.core.IoBuffer
+import kotlinx.io.core.readBytes
+import kotlinx.io.core.readUTF8Line
+import kotlinx.io.core.readUntilDelimiter
+import kotlinx.io.core.writeFully
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.stomp.headers.StompErrorHeaders
@@ -10,12 +15,49 @@ import org.hildan.krossbow.stomp.headers.asStompHeaders
 
 object StompParser {
 
-    @UseExperimental(ExperimentalStdlibApi::class)
     fun parse(frameBytes: ByteArray): StompFrame {
-        // TODO handle binary body properly (scan the bytes progressively to avoid decoding the body)
-        // TODO handle content-length header to read bodies with null bytes
-        // TODO handle content-type header and respect mime type to decode the text or keep the binary blob
-        return parse(frameBytes.decodeToString())
+        val buffer = IoBuffer.Pool.borrow()
+        buffer.writeFully(frameBytes)
+
+        val command = buffer.readStompCommand()
+        val headers = buffer.readStompHeaders(command.supportsHeaderEscapes)
+        val body = buffer.readBinaryBody(headers.contentLength)
+
+        buffer.release(IoBuffer.Pool)
+        return createFrame(command, headers, body)
+    }
+
+    private fun IoBuffer.readStompCommand(): StompCommand {
+        val firstLine = readUTF8Line(estimate = 16) ?: error("Missing command in STOMP frame")
+        return StompCommand.parse(firstLine)
+    }
+
+    private fun IoBuffer.readStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders =
+            utf8LineSequence()
+                .takeWhile { it.isNotEmpty() }
+                .asIterable()
+                .parseLinesAsStompHeaders(shouldUnescapeHeaders)
+
+    private fun IoBuffer.utf8LineSequence(): Sequence<String> = sequence {
+        while (true) {
+            val line = readUTF8Line(estimate = 16) ?: error("Unexpected end of input")
+            yield(line)
+        }
+    }
+
+    private fun IoBuffer.readBinaryBody(contentLength: Int?) = when (contentLength) {
+        0 -> null
+        null -> FrameBody.Binary(readUpToNullCharacter())
+        else -> FrameBody.Binary(readBytes(contentLength))
+    }
+
+    private fun IoBuffer.readUpToNullCharacter(): ByteArray {
+        val outBuffer = IoBuffer.Pool.borrow()
+        outBuffer.resetForWrite()
+        readUntilDelimiter(0.toByte(), outBuffer)
+        val readBytes = outBuffer.readBytes()
+        outBuffer.release(IoBuffer.Pool)
+        return readBytes
     }
 
     fun parse(frameText: String): StompFrame {
@@ -23,24 +65,45 @@ object StompParser {
         val lines = frameText.lines()
         val command = StompCommand.parse(lines[0])
 
-        val headerLines = lines.drop(1).takeWhile { it.isNotEmpty() }
-        val headers = parseHeaders(headerLines, command.supportsHeaderEscapes)
-
-        val bodyLines = lines.drop(2 + headerLines.size).takeIf { it.isNotEmpty() }
-        val body = bodyLines?.joinToString("\n")?.let { FrameBody.Text(it) }
-
-        return when (command) {
-            StompCommand.CONNECTED -> StompFrame.Connected(StompConnectedHeaders(headers))
-            StompCommand.MESSAGE -> StompFrame.Message(StompMessageHeaders(headers), body)
-            StompCommand.RECEIPT -> StompFrame.Receipt(StompReceiptHeaders(headers))
-            StompCommand.ERROR -> StompFrame.Error(StompErrorHeaders(headers), body)
-            else -> error("Unsupported server frame command '$command'")
+        val emptyLineIndex = lines.indexOf("")
+        if (emptyLineIndex == -1) {
+            error("Malformed frame, expected empty line to separate headers from body")
         }
+
+        val headers = lines.subList(1, emptyLineIndex).parseLinesAsStompHeaders(command.supportsHeaderEscapes)
+
+        // TODO stop at content-length if specified in the headers
+        val bodyLines = lines.subList(emptyLineIndex + 1, lines.size)
+        val body = createBody(bodyLines)
+
+        return createFrame(command, headers, body)
     }
 
-    private fun parseHeaders(headerLines: List<String>, shouldUnescapeHeaders: Boolean): StompHeaders {
+    private fun createBody(bodyLines: List<String>): FrameBody.Text? {
+        // the frame must be ended by a NULL octet, and may contain optional new lines
+        // https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames
+        return bodyLines.takeIf { it.isNotEmpty() }
+            ?.joinToString("\n")
+            ?.trimEnd { it == '\n' || it == '\r' }
+            ?.trimEnd { it == '\u0000' }
+            ?.let { FrameBody.Text(it) }
+    }
+
+    private fun createFrame(
+        command: StompCommand,
+        headers: StompHeaders,
+        body: FrameBody?
+    ): StompFrame = when (command) {
+        StompCommand.CONNECTED -> StompFrame.Connected(StompConnectedHeaders(headers))
+        StompCommand.MESSAGE -> StompFrame.Message(StompMessageHeaders(headers), body)
+        StompCommand.RECEIPT -> StompFrame.Receipt(StompReceiptHeaders(headers))
+        StompCommand.ERROR -> StompFrame.Error(StompErrorHeaders(headers), body)
+        else -> error("Unsupported server frame command '$command'")
+    }
+
+    private fun Iterable<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders {
         val headersMap = mutableMapOf<String, String>()
-        headerLines.forEach { line ->
+        forEach { line ->
             val (rawKey, rawValue) = line.split(':', ignoreCase = false, limit = 2)
             val key = if (shouldUnescapeHeaders) HeaderEscaper.unescape(rawKey) else rawKey
             val value = if (shouldUnescapeHeaders) HeaderEscaper.unescape(rawValue) else rawValue

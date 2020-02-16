@@ -23,6 +23,7 @@ object HeaderKeys {
     const val ACCEPT_VERSION = "accept-version"
     const val ACK = "ack"
     const val CONTENT_LENGTH = "content-length"
+    const val CONTENT_TYPE = "content-type"
     const val DESTINATION = "destination"
     const val HEART_BEAT = "heart-beat"
     const val HOST = "host"
@@ -51,6 +52,9 @@ enum class AckMode(val headerValue: String) {
 }
 
 interface StompHeaders : Map<String, String> {
+
+    val contentLength: Int?
+        get() = get(HeaderKeys.CONTENT_LENGTH)?.toInt()
 
     fun setReceipt(receiptId: String)
 }
@@ -84,13 +88,6 @@ internal fun headersOf(
     }
     headersMap.putAll(customHeaders)
     return headersMap.asStompHeaders()
-}
-
-// TODO do something with this
-interface StandardHeaders : StompHeaders {
-    val contentLength: Long?
-    val contentType: String?
-    val receipt: String?
 }
 
 class StompConnectHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
@@ -219,7 +216,7 @@ class StompAbortHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
 }
 
-class StompMessageHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompMessageHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val destination: String by header()
     val messageId: String by header(MESSAGE_ID)
     val subscription: String by header()

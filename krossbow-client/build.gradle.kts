@@ -10,6 +10,7 @@ description = "A Kotlin multiplatform STOMP client with JVM and JS support"
 val coroutinesVersion = "1.3.1"
 val jacksonVersion = "2.9.9"
 val serializationVersion = "0.14.0"
+val kotlinxIOVersion = "0.1.16"
 
 kotlin {
     jvm()
@@ -22,6 +23,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 api(project(":krossbow-websocket-api"))
+                implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinxIOVersion")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
             }
@@ -36,6 +38,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 implementation(project(":krossbow-websocket-spring"))
+                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinxIOVersion")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
                 implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
@@ -52,6 +55,7 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
+                implementation("org.jetbrains.kotlinx:kotlinx-io-js:$kotlinxIOVersion")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
             }
