@@ -5,6 +5,7 @@ import org.hildan.krossbow.stomp.headers.HeaderEscaper
 
 @UseExperimental(ExperimentalStdlibApi::class)
 fun StompFrame.encodeToBytes(): ByteArray {
+    // TODO add content-length header
     val os = ByteArrayOutputStream()
     os.write(encodedPreamble.encodeToByteArray())
     os.write(body.encodeToBytes())
@@ -12,6 +13,7 @@ fun StompFrame.encodeToBytes(): ByteArray {
     return os.toByteArray()
 }
 
+// TODO add content-length header
 fun StompFrame.encodeToText(): String = "$encodedPreamble${body.encodeToText()}\u0000"
 
 private fun FrameBody?.encodeToBytes(): ByteArray = asBytes() ?: ByteArray(0)

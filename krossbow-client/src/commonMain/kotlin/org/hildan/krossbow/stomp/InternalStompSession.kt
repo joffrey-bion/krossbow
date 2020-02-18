@@ -14,13 +14,11 @@ import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.StompParser
 import org.hildan.krossbow.stomp.frame.encodeToBytes
 import org.hildan.krossbow.stomp.frame.encodeToText
-import org.hildan.krossbow.stomp.headers.HeaderKeys
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
-import org.hildan.krossbow.stomp.headers.ensureReceiptHeader
 import org.hildan.krossbow.utils.SuspendingAtomicInt
 import org.hildan.krossbow.utils.getStringAndInc
 import org.hildan.krossbow.websocket.KWebSocketListener
@@ -114,16 +112,22 @@ internal class InternalStompSession(
     }
 
     private suspend fun sendStompFrame(frame: StompFrame): StompReceipt? {
-        if (config.autoReceipt) {
-            frame.headers.ensureReceiptHeader { nextReceiptId.getStringAndInc() }
-        }
-        val receiptId = frame.headers[HeaderKeys.RECEIPT]
+        val receiptId = getReceiptAndMaybeSetAuto(frame)
         if (receiptId == null) {
             sendStompFrameAsIs(frame)
             return null
         }
         sendAndWaitForReceipt(receiptId, frame)
         return StompReceipt(receiptId)
+    }
+
+    private suspend fun getReceiptAndMaybeSetAuto(frame: StompFrame): String? {
+        if (config.autoReceipt) {
+            if (frame.headers.receipt == null) {
+                frame.headers.receipt = nextReceiptId.getStringAndInc()
+            }
+        }
+        return frame.headers.receipt
     }
 
     private suspend fun sendStompFrameAsIs(frame: StompFrame) {

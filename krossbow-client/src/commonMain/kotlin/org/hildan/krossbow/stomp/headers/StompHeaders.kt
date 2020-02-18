@@ -3,6 +3,8 @@ package org.hildan.krossbow.stomp.headers
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.headers.HeaderKeys.ACCEPT_VERSION
 import org.hildan.krossbow.stomp.headers.HeaderKeys.ACK
+import org.hildan.krossbow.stomp.headers.HeaderKeys.CONTENT_LENGTH
+import org.hildan.krossbow.stomp.headers.HeaderKeys.CONTENT_TYPE
 import org.hildan.krossbow.stomp.headers.HeaderKeys.DESTINATION
 import org.hildan.krossbow.stomp.headers.HeaderKeys.HEART_BEAT
 import org.hildan.krossbow.stomp.headers.HeaderKeys.HOST
@@ -53,25 +55,46 @@ enum class AckMode(val headerValue: String) {
 
 interface StompHeaders : Map<String, String> {
 
-    val contentLength: Int?
-        get() = get(HeaderKeys.CONTENT_LENGTH)?.toInt()
+    var contentLength: Int?
 
-    fun setReceipt(receiptId: String)
-}
+    var contentType: String?
 
-inline fun StompHeaders.ensureReceiptHeader(generateReceiptId: () -> String) {
-    if (!containsKey(RECEIPT)) {
-        setReceipt(generateReceiptId())
-    }
+    var receipt: String?
 }
 
 internal data class SimpleStompHeaders(
     private val headers: MutableMap<String, String>
 ) : StompHeaders, Map<String, String> by headers {
 
-    override fun setReceipt(receiptId: String) {
-        headers[RECEIPT] = receiptId
-    }
+    override var contentLength: Int?
+        get() = get(CONTENT_LENGTH)?.toInt()
+        set(value) {
+            if (value != null) {
+                headers[CONTENT_LENGTH] = value.toString()
+            } else {
+                headers.remove(CONTENT_LENGTH)
+            }
+        }
+
+    override var contentType: String?
+        get() = get(CONTENT_TYPE)
+        set(value) {
+            if (value != null) {
+                headers[CONTENT_TYPE] = value
+            } else {
+                headers.remove(CONTENT_TYPE)
+            }
+        }
+
+    override var receipt: String?
+        get() = get(HeaderKeys.RECEIPT)
+        set(receiptId) {
+            if (receiptId != null) {
+                headers[RECEIPT] = receiptId
+            } else {
+                headers.remove(RECEIPT)
+            }
+        }
 }
 
 internal fun MutableMap<String, String>.asStompHeaders(): StompHeaders = SimpleStompHeaders(this)
@@ -156,13 +179,11 @@ class StompSubscribeHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeade
     val destination: String by header()
     val id: String by header()
     val ack: AckMode by optionalHeader(default = AckMode.AUTO) { AckMode.fromHeader(it) }
-    val receipt: String? by optionalHeader()
 
     constructor(
         destination: String,
         id: String,
-        ack: AckMode = AckMode.AUTO,
-        receipt: String? = null
+        ack: AckMode = AckMode.AUTO
     ) : this(
         headersOf(
             DESTINATION to destination,
@@ -179,7 +200,6 @@ class StompUnsubscribeHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHea
 }
 
 class StompDisconnectHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val receipt: String? by optionalHeader()
 
     constructor(receipt: String? = null) : this(headersOf(RECEIPT to receipt))
 }
