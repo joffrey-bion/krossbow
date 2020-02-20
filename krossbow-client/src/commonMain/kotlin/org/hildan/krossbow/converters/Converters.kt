@@ -6,8 +6,9 @@ import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.modules.getContextualOrDefault
 import org.hildan.krossbow.stomp.StompMessage
 import org.hildan.krossbow.stomp.frame.FrameBody
+import org.hildan.krossbow.stomp.frame.FrameBody.Binary
+import org.hildan.krossbow.stomp.frame.FrameBody.Text
 import org.hildan.krossbow.stomp.frame.StompFrame
-import org.hildan.krossbow.stomp.frame.asText
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import kotlin.reflect.KClass
 
@@ -33,10 +34,19 @@ interface MessageConverter {
  */
 interface TextMessageConverter : MessageConverter {
 
+    @UseExperimental(ExperimentalStdlibApi::class)
     override fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): StompMessage<T> {
-        // TODO use encoding from headers (Content type/Mime type)
-        // but double check if text isn't forced to be UTF-8 because of underlying websocket specification
-        val payloadText = frame.body.asText()
+        // TODO use encoding from headers (Content type/Mime type) instead of forcing UTF-8
+        // WebSocket text frames are supposed to use UTF8, but binary frames are free of constraints and should be
+        // decoded at application level (in our case, STOMP)
+        // https://stackoverflow.com/questions/43529031/websockets-and-text-encoding
+        // A TextMessageConverter is supposed to handle text, but that doesn't exclude text sent over binary WS frames
+        val payloadText = frame.body?.let {
+            when(it) {
+                is Binary -> it.bytes.decodeToString(throwOnInvalidSequence = true)
+                is Text -> it.text
+            }
+        }
         return convertFromString(frame.headers, payloadText, clazz)
     }
 

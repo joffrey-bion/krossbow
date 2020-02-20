@@ -76,12 +76,23 @@ sealed class StompFrame(
     }
 }
 
+@UseExperimental(ExperimentalStdlibApi::class)
 sealed class FrameBody {
 
-    @UseExperimental(ExperimentalStdlibApi::class)
-    data class Text(val text: String) : FrameBody()
+    abstract val bytes: ByteArray
 
-    data class Binary(val bytes: ByteArray) : FrameBody() {
+    data class Text(
+        val text: String
+    ) : FrameBody() {
+        // Text frames must be encoded using UTF-8 as per WebSocket specification
+        // If other encodings are needed, the application must use binary frames with relevant content-type header
+        override val bytes by lazy { text.encodeToByteArray() }
+    }
+
+    data class Binary(
+        override val bytes: ByteArray
+    ) : FrameBody() {
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
@@ -97,18 +108,4 @@ sealed class FrameBody {
             return bytes.contentHashCode()
         }
     }
-}
-
-@UseExperimental(ExperimentalStdlibApi::class)
-fun FrameBody?.asText(): String? = when (this) {
-    is FrameBody.Text -> text
-    is FrameBody.Binary -> bytes.decodeToString()
-    null -> null
-}
-
-@UseExperimental(ExperimentalStdlibApi::class)
-fun FrameBody?.asBytes(): ByteArray? = when (this) {
-    is FrameBody.Text -> text.encodeToByteArray()
-    is FrameBody.Binary -> bytes
-    null -> null
 }

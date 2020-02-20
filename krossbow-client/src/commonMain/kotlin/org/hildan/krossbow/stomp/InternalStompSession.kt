@@ -99,6 +99,9 @@ internal class InternalStompSession(
     }
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
+        if (headers.contentLength == null) {
+            headers.contentLength = body?.bytes?.size ?: 0
+        }
         return sendStompFrame(StompFrame.Send(headers, body))
     }
 
