@@ -75,7 +75,7 @@ class KotlinxSerialization {
             clazz: KClass<T>
         ): StompMessage<T> {
             if (payload == null) {
-                throw RuntimeException("Cannot create object of type $clazz from a MESSAGE frame without body")
+                throw MessageConversionException("Cannot create object of type $clazz from a MESSAGE frame without body")
             }
             val serializer = json.context.getContextualOrDefault(clazz)
             return StompMessage(json.parse(serializer, payload), headers)
@@ -90,3 +90,5 @@ class KotlinxSerialization {
         }
     }
 }
+
+class MessageConversionException(message: String): Exception(message)
