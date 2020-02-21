@@ -64,37 +64,13 @@ interface StompHeaders : Map<String, String> {
 
 internal data class SimpleStompHeaders(
     private val headers: MutableMap<String, String>
-) : StompHeaders, Map<String, String> by headers {
+) : StompHeaders, MutableMap<String, String> by headers {
 
-    override var contentLength: Int?
-        get() = get(CONTENT_LENGTH)?.toInt()
-        set(value) {
-            if (value != null) {
-                headers[CONTENT_LENGTH] = value.toString()
-            } else {
-                headers.remove(CONTENT_LENGTH)
-            }
-        }
+    override var contentLength: Int? by mutableOptionalIntHeader(CONTENT_LENGTH)
 
-    override var contentType: String?
-        get() = get(CONTENT_TYPE)
-        set(value) {
-            if (value != null) {
-                headers[CONTENT_TYPE] = value
-            } else {
-                headers.remove(CONTENT_TYPE)
-            }
-        }
+    override var contentType: String? by mutableOptionalHeader(CONTENT_TYPE)
 
-    override var receipt: String?
-        get() = get(HeaderKeys.RECEIPT)
-        set(receiptId) {
-            if (receiptId != null) {
-                headers[RECEIPT] = receiptId
-            } else {
-                headers.remove(RECEIPT)
-            }
-        }
+    override var receipt: String? by mutableOptionalHeader(RECEIPT)
 }
 
 internal fun MutableMap<String, String>.asStompHeaders(): StompHeaders = SimpleStompHeaders(this)
@@ -276,6 +252,18 @@ class StompErrorHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
             MESSAGE to message,
             customHeaders = customHeaders
         )
+    )
+}
+
+internal fun StompHeaders.acceptVersionHeader() = header(HeaderKeys.ACCEPT_VERSION) { it.split(',') }
+
+internal fun StompHeaders.heartBeatHeader() = optionalHeader(HeaderKeys.HEART_BEAT) { it.toHeartBeat() }
+
+internal fun String.toHeartBeat(): HeartBeat {
+    val (minSendPeriod, expectedReceivePeriod) = split(',')
+    return HeartBeat(
+        minSendPeriodMillis = minSendPeriod.toInt(),
+        expectedPeriodMillis = expectedReceivePeriod.toInt()
     )
 }
 
