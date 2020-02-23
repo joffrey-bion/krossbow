@@ -243,13 +243,16 @@ class StompReceiptHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders
 
 class StompErrorHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val message: String? by optionalHeader()
+    val receiptId: String? by optionalHeader(RECEIPT_ID)
 
     constructor(
         message: String? = null,
+        receiptId: String? = null,
         customHeaders: Map<String, String> = emptyMap()
     ) : this(
         headersOf(
             MESSAGE to message,
+            RECEIPT_ID to receiptId,
             customHeaders = customHeaders
         )
     )
