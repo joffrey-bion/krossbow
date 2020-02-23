@@ -63,13 +63,23 @@ internal class InternalStompSession(
     private suspend fun onFrameReceived(frame: StompFrame) {
         when (frame) {
             is StompFrame.Message -> onMessageFrameReceived(frame)
-            // TODO handle global error frames without duplicating the ones associated with a subscription/receipt
+            is StompFrame.Error -> {
+                nonMsgFrames.send(frame)
+                onErrorFrameReceived(frame)
+            }
             else -> nonMsgFrames.send(frame)
         }
     }
 
     private suspend fun onMessageFrameReceived(frame: StompFrame.Message) {
-        subscriptionsById.getValue(frame.headers.subscription).onMessage(frame)
+        val subId = frame.headers.subscription
+        val sub = subscriptionsById[subId] ?: error("no active subscription with ID $subId")
+        sub.onMessage(frame)
+    }
+
+    private fun onErrorFrameReceived(frame: StompFrame.Error) {
+        // error on all subscriptions
+        subscriptionsById.values.forEach { it.onError(frame) }
     }
 
     internal suspend fun connect(headers: StompConnectHeaders): StompFrame.Connected = coroutineScope {
