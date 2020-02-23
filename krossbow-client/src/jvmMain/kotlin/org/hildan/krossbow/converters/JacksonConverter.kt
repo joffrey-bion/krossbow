@@ -20,10 +20,10 @@ class JacksonConverter(
 
     override fun <T : Any> convertFromString(
         headers: StompMessageHeaders,
-        payload: String?,
+        body: String?,
         clazz: KClass<T>
     ): StompMessage<T> {
-        return StompMessage(objectMapper.readValue(payload, clazz.java), headers)
+        return StompMessage(objectMapper.readValue(body, clazz.java), headers)
     }
 
     override fun <T : Any> convertToString(value: T?, clazz: KClass<T>): String? {

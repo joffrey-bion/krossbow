@@ -20,11 +20,18 @@ interface MessageConverter {
 
     /**
      * Converts the given MESSAGE [frame] into a [StompMessage] with a payload of the given [clazz].
+     *
+     * Headers can be added or modified, or simply passed on as-is.
      */
     fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): StompMessage<T>
 
     /**
      * Converts the given [value] of the given [clazz] into a [FrameContent].
+     *
+     * Content-related headers and custom headers can be provided in the returned value.
+     *
+     * If the returned body is of binary type, the frame will be sent as binary on the underlying web socket connection.
+     * Please note that not all web socket implementations support binary (SockJS doesn't).
      */
     fun <T : Any> serialize(value: T?, clazz: KClass<T>): FrameContent
 }
@@ -32,16 +39,18 @@ interface MessageConverter {
 /**
  * A [MessageConverter] that handles text content of a single MIME type.
  *
- * If a received frame is of binary type at WebSocket level, it is first decoded to text, and implementations only
+ * If a received frame is of binary type at web socket level, it is first decoded to text, and implementations only
  * need to specify text to object deserialization. At the moment, this pre-decoding only supports UTF-8 and ignores the
  * content-type header. If other encodings need to be supported, the converter should implement [MessageConverter]
  * directly.
  */
 interface TextMessageConverter : MessageConverter {
 
+    /**
+     * The MIME type that this converter produces and reads.
+     */
     val mimeType: String
 
-    // TODO use encoding from headers (Content type/Mime type) instead of forcing UTF-8
     @UseExperimental(ExperimentalStdlibApi::class)
     override fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): StompMessage<T> {
         val payloadText = frame.body?.let {
@@ -54,9 +63,9 @@ interface TextMessageConverter : MessageConverter {
     }
 
     /**
-     * Converts the given text [payload] into a [StompMessage] with a payload of the given [clazz].
+     * Converts the given text [body] into a [StompMessage] with a payload of the given [clazz].
      */
-    fun <T : Any> convertFromString(headers: StompMessageHeaders, payload: String?, clazz: KClass<T>): StompMessage<T>
+    fun <T : Any> convertFromString(headers: StompMessageHeaders, body: String?, clazz: KClass<T>): StompMessage<T>
 
     override fun <T : Any> serialize(value: T?, clazz: KClass<T>): FrameContent {
         val text = convertToString(value, clazz) ?: return FrameContent.withoutBody()
@@ -87,14 +96,14 @@ class KotlinxSerialization {
 
         override fun <T : Any> convertFromString(
             headers: StompMessageHeaders,
-            payload: String?,
+            body: String?,
             clazz: KClass<T>
         ): StompMessage<T> {
-            if (payload == null) {
+            if (body == null) {
                 throw MessageConversionException("Cannot create object of type $clazz from a MESSAGE frame without body")
             }
             val serializer = json.context.getContextualOrDefault(clazz)
-            return StompMessage(json.parse(serializer, payload), headers)
+            return StompMessage(json.parse(serializer, body), headers)
         }
 
         override fun <T : Any> convertToString(value: T?, clazz: KClass<T>): String? {
