@@ -16,6 +16,8 @@ class JacksonConverter(
     private val objectMapper: ObjectMapper = jacksonObjectMapper()
 ) : TextMessageConverter {
 
+    override val mimeType: String = "application/json"
+
     override fun <T : Any> convertFromString(
         headers: StompMessageHeaders,
         payload: String?,

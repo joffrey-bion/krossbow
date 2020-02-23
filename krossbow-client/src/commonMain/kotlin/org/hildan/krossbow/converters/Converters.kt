@@ -4,6 +4,7 @@ import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.modules.getContextualOrDefault
+import org.hildan.krossbow.stomp.FrameContent
 import org.hildan.krossbow.stomp.StompMessage
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.FrameBody.Binary
@@ -23,24 +24,26 @@ interface MessageConverter {
     fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): StompMessage<T>
 
     /**
-     * Converts the given [value] of the given [clazz] into a [FrameBody].
+     * Converts the given [value] of the given [clazz] into a [FrameContent].
      */
-    fun <T : Any> serialize(value: T?, clazz: KClass<T>): FrameBody?
+    fun <T : Any> serialize(value: T?, clazz: KClass<T>): FrameContent
 }
 
 /**
- * A [MessageConverter] that pre-converts binary messages to strings, and allows implementations to only specify
- * text conversions.
+ * A [MessageConverter] that handles text content of a single MIME type.
+ *
+ * If a received frame is of binary type at WebSocket level, it is first decoded to text, and implementations only
+ * need to specify text to object deserialization. At the moment, this pre-decoding only supports UTF-8 and ignores the
+ * content-type header. If other encodings need to be supported, the converter should implement [MessageConverter]
+ * directly.
  */
 interface TextMessageConverter : MessageConverter {
 
+    val mimeType: String
+
+    // TODO use encoding from headers (Content type/Mime type) instead of forcing UTF-8
     @UseExperimental(ExperimentalStdlibApi::class)
     override fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): StompMessage<T> {
-        // TODO use encoding from headers (Content type/Mime type) instead of forcing UTF-8
-        // WebSocket text frames are supposed to use UTF8, but binary frames are free of constraints and should be
-        // decoded at application level (in our case, STOMP)
-        // https://stackoverflow.com/questions/43529031/websockets-and-text-encoding
-        // A TextMessageConverter is supposed to handle text, but that doesn't exclude text sent over binary WS frames
         val payloadText = frame.body?.let {
             when(it) {
                 is Binary -> it.bytes.decodeToString(throwOnInvalidSequence = true)
@@ -55,9 +58,10 @@ interface TextMessageConverter : MessageConverter {
      */
     fun <T : Any> convertFromString(headers: StompMessageHeaders, payload: String?, clazz: KClass<T>): StompMessage<T>
 
-    override fun <T : Any> serialize(value: T?, clazz: KClass<T>): FrameBody? {
-        val text = convertToString(value, clazz)
-        return text?.let { FrameBody.Text(it) }
+    override fun <T : Any> serialize(value: T?, clazz: KClass<T>): FrameContent {
+        val text = convertToString(value, clazz) ?: return FrameContent.withoutBody()
+        val body = text.let { FrameBody.Text(it) }
+        return FrameContent.withBody(body, mimeType)
     }
 
     /**
@@ -69,7 +73,7 @@ interface TextMessageConverter : MessageConverter {
 /**
  * A container class for [MessageConverter] implementations using Kotlinx Serialization.
  */
-@UseExperimental(ImplicitReflectionSerializer::class, ExperimentalStdlibApi::class)
+@UseExperimental(ImplicitReflectionSerializer::class)
 class KotlinxSerialization {
 
     /**
@@ -78,6 +82,8 @@ class KotlinxSerialization {
     class JsonConverter(
         private val json: Json = Json(JsonConfiguration.Stable)
     ) : TextMessageConverter {
+
+        override val mimeType: String = "application/json"
 
         override fun <T : Any> convertFromString(
             headers: StompMessageHeaders,

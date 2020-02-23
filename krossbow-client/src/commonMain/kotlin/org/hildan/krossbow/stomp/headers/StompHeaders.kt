@@ -53,7 +53,7 @@ enum class AckMode(val headerValue: String) {
     }
 }
 
-interface StompHeaders : Map<String, String> {
+interface StompHeaders : MutableMap<String, String> {
 
     var contentLength: Int?
 
@@ -62,7 +62,7 @@ interface StompHeaders : Map<String, String> {
     var receipt: String?
 }
 
-internal data class SimpleStompHeaders(
+data class SimpleStompHeaders internal constructor(
     private val headers: MutableMap<String, String>
 ) : StompHeaders, MutableMap<String, String> by headers {
 

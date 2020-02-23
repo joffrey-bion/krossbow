@@ -110,8 +110,11 @@ internal class InternalStompSession(
         payload: T?,
         payloadType: KClass<T>
     ): StompReceipt? {
-        val body = config.messageConverter.serialize(payload, payloadType)
-        return send(headers, body)
+        val frameContent = config.messageConverter.serialize(payload, payloadType)
+        headers.contentType = headers.contentType ?: frameContent.contentType
+        headers.contentLength = headers.contentLength ?: frameContent.contentLength
+        headers.putAll(frameContent.customHeaders)
+        return send(headers, frameContent.body)
     }
 
     private suspend fun sendStompFrame(frame: StompFrame): StompReceipt? {
