@@ -3,6 +3,7 @@ package org.hildan.krossbow.engines.mpp.js
 import SockJS
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.hildan.krossbow.websocket.KWebSocketClient
 import org.hildan.krossbow.websocket.KWebSocketListener
 import org.hildan.krossbow.websocket.KWebSocketSession
@@ -14,7 +15,6 @@ import org.w3c.dom.ARRAYBUFFER
 import org.w3c.dom.BinaryType
 import org.w3c.dom.WebSocket
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * Default WebSocket found in the browser. Not supported in NodeJS environment.
@@ -29,7 +29,7 @@ object SockJSWebSocketClient: JsWebSocketClientAdapter({ url -> SockJS(url) })
 open class JsWebSocketClientAdapter(val newWebSocket: (String) -> WebSocket): KWebSocketClient {
 
     override suspend fun connect(url: String): KWebSocketSession {
-        return suspendCoroutine { cont ->
+        return suspendCancellableCoroutine { cont ->
             val ws = newWebSocket(url)
             ws.binaryType = BinaryType.ARRAYBUFFER // to receive arraybuffer instead of blob
             val wsSession = JsWebSocketSession(ws)
