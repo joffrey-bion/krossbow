@@ -71,7 +71,7 @@ sealed class StompFrame(
     data class Error(
         override val headers: StompErrorHeaders,
         override val body: FrameBody?
-    ) : StompFrame(StompCommand.MESSAGE, headers, body) {
+    ) : StompFrame(StompCommand.ERROR, headers, body) {
         val message: String = headers.message ?: (body as? FrameBody.Text)?.text ?: "(binary error message)"
     }
 }
