@@ -54,7 +54,7 @@ interface TextMessageConverter : MessageConverter {
     @UseExperimental(ExperimentalStdlibApi::class)
     override fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): StompMessage<T> {
         val payloadText = frame.body?.let {
-            when(it) {
+            when (it) {
                 is Binary -> it.bytes.decodeToString(throwOnInvalidSequence = true)
                 is Text -> it.text
             }
@@ -116,4 +116,4 @@ class KotlinxSerialization {
     }
 }
 
-class MessageConversionException(message: String): Exception(message)
+class MessageConversionException(message: String) : Exception(message)

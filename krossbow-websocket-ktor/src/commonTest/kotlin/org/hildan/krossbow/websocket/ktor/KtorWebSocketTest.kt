@@ -5,14 +5,15 @@ import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.webSocket
 import io.ktor.http.cio.websocket.close
 import io.ktor.http.cio.websocket.send
+import io.ktor.util.KtorExperimentalAPI
 import org.hildan.krossbow.websocket.KWebSocketListener
 import org.hildan.krossbow.websocket.test.runSuspendingTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@UseExperimental(KtorExperimentalAPI::class, ExperimentalStdlibApi::class)
 class KtorWebSocketTest {
 
-    @UseExperimental(ExperimentalStdlibApi::class)
     @Test
     fun test_ktor_pure() = runSuspendingTest {
         val client = HttpClient { install(WebSockets) }
@@ -23,7 +24,6 @@ class KtorWebSocketTest {
         }
     }
 
-    @UseExperimental(ExperimentalStdlibApi::class)
     @Test
     fun test_ktor_explicit() = runSuspendingTest {
         val client = HttpClient { install(WebSockets) }
@@ -34,7 +34,6 @@ class KtorWebSocketTest {
         }
     }
 
-    @UseExperimental(ExperimentalStdlibApi::class)
     @Test
     fun test_ktor_simple() = runSuspendingTest {
         val client = HttpClient { install(WebSockets) }
@@ -45,11 +44,9 @@ class KtorWebSocketTest {
         session.close()
     }
 
-    @UseExperimental(ExperimentalStdlibApi::class)
     @Test
     fun test() = runSuspendingTest {
         val session = KtorWebSocket().connect("ws://demos.kaazing.com/echo")
-        session.sendBinary("hello".encodeToByteArray())
         session.listener = object : KWebSocketListener {
             override suspend fun onBinaryMessage(bytes: ByteArray) {
                 assertEquals("hello", bytes.decodeToString())
@@ -60,12 +57,13 @@ class KtorWebSocketTest {
             }
 
             override suspend fun onError(error: Throwable) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                TODO("not implemented")
             }
 
             override suspend fun onClose() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                TODO("not implemented")
             }
         }
+        session.sendBinary("hello".encodeToByteArray())
     }
 }

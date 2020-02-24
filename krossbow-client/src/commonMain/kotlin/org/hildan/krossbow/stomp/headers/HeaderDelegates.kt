@@ -63,7 +63,7 @@ internal class MutableHeaderDelegate<T>(
     private val customName: String? = null,
     getTransform: (String?, String) -> T,
     private val setTransform: (T) -> String?
-): HeaderDelegate<T>(rawHeaders, customName, getTransform) {
+) : HeaderDelegate<T>(rawHeaders, customName, getTransform) {
 
     operator fun setValue(thisRef: StompHeaders, property: KProperty<*>, value: T) {
         val headerName = customName ?: property.name
