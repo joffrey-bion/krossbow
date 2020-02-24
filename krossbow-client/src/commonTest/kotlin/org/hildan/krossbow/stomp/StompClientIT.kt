@@ -7,7 +7,7 @@ import org.hildan.krossbow.testutils.runAsyncTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class StompClientTest {
+class StompClientIT {
 
     private val testUrl = "http://seven-wonders-online.herokuapp.com/seven-wonders-websocket"
 
