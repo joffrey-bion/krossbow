@@ -20,16 +20,16 @@ class StompClient(
 ) {
     constructor(
         webSocketClient: KWebSocketClient = defaultWebSocketClient(),
-        configure: StompConfig.() -> Unit
+        configure: StompConfig.() -> Unit = {}
     ) : this(
         webSocketClient = webSocketClient,
-        config = StompConfig().apply{ configure() }
+        config = StompConfig().apply { configure() }
     )
 
     /**
      * Connects to the given WebSocket [url] and to the STOMP session, and returns after receiving the CONNECTED frame.
      */
-    suspend fun connect(url: String, login: String?, passcode: String?): StompSession {
+    suspend fun connect(url: String, login: String? = null, passcode: String? = null): StompSession {
         try {
             return withTimeout(config.connectionTimeoutMillis) {
                 val wsSession = webSocketClient.connect(url)
