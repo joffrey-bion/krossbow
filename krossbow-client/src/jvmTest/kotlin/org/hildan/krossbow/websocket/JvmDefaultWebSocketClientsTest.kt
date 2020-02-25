@@ -7,7 +7,7 @@ import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.send
 import org.hildan.krossbow.stomp.subscribe
 import org.hildan.krossbow.stomp.useSession
-import org.hildan.krossbow.testutils.runAsyncTest
+import org.hildan.krossbow.test.runAsyncTest
 import org.hildan.krossbow.websocket.spring.SpringDefaultWebSocketClient
 import kotlin.test.Test
 import kotlin.test.Ignore

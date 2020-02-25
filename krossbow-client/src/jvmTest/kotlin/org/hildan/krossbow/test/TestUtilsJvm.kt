@@ -1,4 +1,4 @@
-package org.hildan.krossbow.testutils
+package org.hildan.krossbow.test
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking

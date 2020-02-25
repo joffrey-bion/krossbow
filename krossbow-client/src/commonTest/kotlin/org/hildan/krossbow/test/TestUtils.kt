@@ -1,7 +1,8 @@
-package org.hildan.krossbow.testutils
+package org.hildan.krossbow.test
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.websocket.KWebSocketClient
 import org.hildan.krossbow.websocket.KWebSocketListener
 import org.hildan.krossbow.websocket.KWebSocketSession
@@ -9,6 +10,12 @@ import org.hildan.krossbow.websocket.NoopWebSocketListener
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+
+fun <T> runAsyncTestWithTimeout(millis: Long = 1000, block: suspend CoroutineScope.() -> T) = runAsyncTest {
+    withTimeout(millis) {
+        block()
+    }
+}
 
 expect fun <T> runAsyncTest(block: suspend CoroutineScope.() -> T)
 
@@ -32,7 +39,9 @@ class ManuallyConnectingWebSocketClient : KWebSocketClient {
             sessionContinuation ?: error("No connect() call has been issued, cannot simulate connection success")
 }
 
-class ImmediatelySucceedingWebSocketClient(private val session: MockWebSocketSession) : KWebSocketClient {
+class ImmediatelySucceedingWebSocketClient(
+    private val session: MockWebSocketSession = MockWebSocketSession()
+) : KWebSocketClient {
 
     override suspend fun connect(url: String): KWebSocketSession = suspendCancellableCoroutine { cont ->
         cont.resume(session)
