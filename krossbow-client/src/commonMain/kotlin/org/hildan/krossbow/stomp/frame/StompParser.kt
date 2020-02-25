@@ -12,6 +12,7 @@ import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompHeaders
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
+import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.asStompHeaders
 
 object StompParser {
@@ -99,6 +100,7 @@ object StompParser {
         StompCommand.CONNECTED -> StompFrame.Connected(StompConnectedHeaders(headers))
         StompCommand.MESSAGE -> StompFrame.Message(StompMessageHeaders(headers), body)
         StompCommand.RECEIPT -> StompFrame.Receipt(StompReceiptHeaders(headers))
+        StompCommand.SEND -> StompFrame.Send(StompSendHeaders(headers), body)
         StompCommand.ERROR -> StompFrame.Error(StompErrorHeaders(headers), body)
         else -> error("Unsupported server frame command '$command'")
     }
