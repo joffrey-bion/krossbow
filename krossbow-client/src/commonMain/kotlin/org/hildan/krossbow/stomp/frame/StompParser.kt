@@ -6,6 +6,7 @@ import kotlinx.io.core.readUTF8Line
 import kotlinx.io.core.readUntilDelimiter
 import kotlinx.io.core.writeFully
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
+import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompHeaders
@@ -94,6 +95,7 @@ object StompParser {
         headers: StompHeaders,
         body: FrameBody?
     ): StompFrame = when (command) {
+        StompCommand.CONNECT -> StompFrame.Connect(StompConnectHeaders(headers))
         StompCommand.CONNECTED -> StompFrame.Connected(StompConnectedHeaders(headers))
         StompCommand.MESSAGE -> StompFrame.Message(StompMessageHeaders(headers), body)
         StompCommand.RECEIPT -> StompFrame.Receipt(StompReceiptHeaders(headers))

@@ -1,20 +1,21 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
+import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
-import org.hildan.krossbow.stomp.frame.encodeToText
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
-import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.test.ImmediatelyFailingWebSocketClient
 import org.hildan.krossbow.test.ImmediatelySucceedingWebSocketClient
 import org.hildan.krossbow.test.ManuallyConnectingWebSocketClient
-import org.hildan.krossbow.test.MockWebSocketSession
+import org.hildan.krossbow.test.WebSocketSessionMock
 import org.hildan.krossbow.test.runAsyncTest
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
+import org.hildan.krossbow.test.simulateErrorFrameReceived
+import org.hildan.krossbow.test.simulateTextStompFrameReceived
+import org.hildan.krossbow.test.waitAndAssertSentFrame
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -29,16 +30,16 @@ class StompClientConnectionTests {
         val stompClient = StompClient(wsClient)
 
         val deferredStompSession = async { stompClient.connect("dummy") }
-        delay(1) // allows async call to reach suspension
+        wsClient.waitForConnectCall()
         assertFalse(deferredStompSession.isCompleted, "connect() call should wait for web socket connection")
 
-        val wsSession = MockWebSocketSession()
-        wsClient.simulateConnectionSuccess(wsSession)
-        delay(1)
+        val wsSession = WebSocketSessionMock()
+        wsClient.simulateSuccessfulConnection(wsSession)
+        wsSession.waitAndAssertSentFrame(StompCommand.CONNECT)
         assertFalse(deferredStompSession.isCompleted, "connect() call should wait for STOMP connection")
 
-        val dummyConnectedFrame = StompFrame.Connected(StompConnectedHeaders("1.2"))
-        wsSession.listener.onTextMessage(dummyConnectedFrame.encodeToText())
+        val connectedFrame = StompFrame.Connected(StompConnectedHeaders("1.2"))
+        wsSession.simulateTextStompFrameReceived(connectedFrame)
 
         val awaitedSession = withTimeoutOrNull(1000) { deferredStompSession.await() }
         assertNotNull(awaitedSession, "connect() call should finish after receiving CONNECTED frame")
@@ -86,18 +87,16 @@ class StompClientConnectionTests {
     @Test
     fun connect_failsIfErrorFrameReceived() = runAsyncTestWithTimeout {
         supervisorScope { // prevents the async connect() exception from failing the test
-            val wsSession = MockWebSocketSession()
+            val wsSession = WebSocketSessionMock()
             val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession))
 
             val stompSession = async { stompClient.connect("dummy") }
-            delay(1) // allows async call to reach suspension
-
-            val errorFrame = StompFrame.Error(StompErrorHeaders("connection failed"), null)
+            wsSession.waitAndAssertSentFrame(StompCommand.CONNECT)
 
             // This method call should not fail because calling this listener is the responsibility of the web socket
             // implementation, and is only meant to inform the STOMP implementation about that received frame, so we
             // don't want that to fail. What we do want to fail is the pending client calls (like connect in this case)
-            wsSession.listener.onTextMessage(errorFrame.encodeToText())
+            wsSession.simulateErrorFrameReceived("connection failed")
 
             val exception = assertFailsWith(ConnectionException::class) {
                 stompSession.await()
