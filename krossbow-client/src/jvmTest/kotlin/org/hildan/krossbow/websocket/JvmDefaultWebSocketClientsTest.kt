@@ -10,6 +10,7 @@ import org.hildan.krossbow.stomp.useSession
 import org.hildan.krossbow.testutils.runAsyncTest
 import org.hildan.krossbow.websocket.spring.SpringDefaultWebSocketClient
 import kotlin.test.Test
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -36,6 +37,9 @@ class JvmDefaultWebSocketClientsTest {
         assertEquals(SpringDefaultWebSocketClient, defaultWebSocketClient())
     }
 
+    // Ignored for CI as long as it requires an internet connection
+    // In the future, the goal is to spawn a local STOMP server for unit tests and interact with it
+    @Ignore
     @Test
     fun basicConnect() = runAsyncTest {
         val client = StompClient.withSockJS {

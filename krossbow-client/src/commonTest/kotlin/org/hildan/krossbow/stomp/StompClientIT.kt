@@ -4,6 +4,7 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.Serializable
 import org.hildan.krossbow.converters.KotlinxSerialization
 import org.hildan.krossbow.testutils.runAsyncTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -23,6 +24,9 @@ class StompClientIT {
         val user: Boolean
     )
 
+    // Ignored for CI as long as it requires an internet connection
+    // In the future, the goal is to spawn a local STOMP server for unit tests and interact with it
+    @Ignore
     @Test
     fun basicConnect() = runAsyncTest {
         val client = StompClient.withSockJS {
