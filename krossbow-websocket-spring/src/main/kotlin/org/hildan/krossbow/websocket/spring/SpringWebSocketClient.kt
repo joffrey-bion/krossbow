@@ -43,8 +43,7 @@ private var WebSocketSession.krossbowWrapper: KWebSocketSession
 object SpringWebSocketHandler : WebSocketHandler {
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        val krossbowSession = SpringWebSocketSession(session)
-        session.krossbowWrapper = krossbowSession
+        session.krossbowWrapper = SpringWebSocketSession(session)
     }
 
     override fun handleMessage(session: WebSocketSession, message: WebSocketMessage<*>) {
