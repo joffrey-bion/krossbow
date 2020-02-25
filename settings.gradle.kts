@@ -16,7 +16,6 @@ rootProject.name = "krossbow"
 
 include("krossbow-client")
 include("krossbow-websocket-api")
-include("krossbow-websocket-ktor")
 include("krossbow-websocket-spring")
 
 enableFeaturePreview("GRADLE_METADATA")

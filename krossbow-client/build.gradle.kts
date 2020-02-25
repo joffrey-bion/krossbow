@@ -71,8 +71,7 @@ kotlin {
 tasks.dokka {
     dependsOn(
         ":krossbow-websocket-api:dokka",
-        ":krossbow-websocket-spring:dokka",
-        ":krossbow-websocket-ktor:dokka"
+        ":krossbow-websocket-spring:dokka"
     )
     //    outputFormat = "javadoc"
     multiplatform {
