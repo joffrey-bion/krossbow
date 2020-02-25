@@ -6,6 +6,7 @@ import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.StompParser
 import org.hildan.krossbow.stomp.frame.encodeToBytes
 import org.hildan.krossbow.stomp.frame.encodeToText
+import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.websocket.KWebSocketListener
 import org.hildan.krossbow.websocket.KWebSocketSession
@@ -63,6 +64,11 @@ suspend fun WebSocketSessionMock.simulateErrorFrameReceived(errorMessage: String
     val errorFrame = StompFrame.Error(StompErrorHeaders(errorMessage), null)
     simulateTextStompFrameReceived(errorFrame)
     return errorFrame
+}
+
+suspend fun WebSocketSessionMock.simulateConnectedFrameReceived() {
+    val connectedFrame = StompFrame.Connected(StompConnectedHeaders("1.2"))
+    simulateTextStompFrameReceived(connectedFrame)
 }
 
 suspend fun WebSocketSessionMock.waitAndAssertSentFrame(expectedCommand: StompCommand) {
