@@ -3,17 +3,20 @@ package org.hildan.krossbow.websocket.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.websocket.KWebSocketClient
 import org.hildan.krossbow.websocket.KWebSocketListener
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 expect fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit)
 
 @UseExperimental(ExperimentalStdlibApi::class)
 fun testKaazingEchoWs(websocketClient: KWebSocketClient, protocol: String) = runSuspendingTest {
-    val session = withTimeout(1000) {
+    val session = withTimeoutOrNull(1000) {
         websocketClient.connect("$protocol://demos.kaazing.com/echo")
     }
+    assertNotNull(session, "connection timeout")
     val messageChannel = Channel<String>()
     session.listener = object : KWebSocketListener {
         override suspend fun onBinaryMessage(bytes: ByteArray) {
