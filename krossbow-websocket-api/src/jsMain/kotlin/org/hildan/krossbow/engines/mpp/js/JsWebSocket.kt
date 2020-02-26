@@ -19,14 +19,14 @@ import kotlin.coroutines.resume
 /**
  * Default WebSocket found in the browser. Not supported in NodeJS environment.
  */
-object BrowserWebSocketClient: JsWebSocketClientAdapter({ url -> WebSocket(url) })
+object BrowserWebSocketClient : JsWebSocketClientAdapter({ url -> WebSocket(url) })
 
 /**
  * SockJS WebSocket client, compatible with browsers and NodeJS, but requires a SockJS-compliant server.
  */
-object SockJSWebSocketClient: JsWebSocketClientAdapter({ url -> SockJS(url) })
+object SockJSWebSocketClient : JsWebSocketClientAdapter({ url -> SockJS(url) })
 
-open class JsWebSocketClientAdapter(val newWebSocket: (String) -> WebSocket): KWebSocketClient {
+open class JsWebSocketClientAdapter(val newWebSocket: (String) -> WebSocket) : KWebSocketClient {
 
     override suspend fun connect(url: String): KWebSocketSession {
         return suspendCancellableCoroutine { cont ->
