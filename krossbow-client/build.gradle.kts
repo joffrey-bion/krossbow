@@ -58,6 +58,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-io-js:$kotlinxIOVersion")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
+                implementation(npm("text-encoding", "0.7.0")) // seems required by kotlinx-io-js
             }
         }
         val jsTest by getting {
