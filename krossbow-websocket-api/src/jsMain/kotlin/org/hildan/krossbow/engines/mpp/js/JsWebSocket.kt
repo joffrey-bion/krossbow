@@ -15,6 +15,7 @@ import org.w3c.dom.ARRAYBUFFER
 import org.w3c.dom.BinaryType
 import org.w3c.dom.WebSocket
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * Default WebSocket found in the browser. Not supported in NodeJS environment.
@@ -30,33 +31,40 @@ open class JsWebSocketClientAdapter(val newWebSocket: (String) -> WebSocket) : K
 
     override suspend fun connect(url: String): KWebSocketSession {
         return suspendCancellableCoroutine { cont ->
-            val ws = newWebSocket(url)
-            ws.binaryType = BinaryType.ARRAYBUFFER // to receive arraybuffer instead of blob
-            val wsSession = JsWebSocketSession(ws)
-            ws.onopen = {
-                cont.resume(wsSession)
-            }
-            ws.onclose = {
-                GlobalScope.promise {
-                    wsSession.listener.onClose()
+            try {
+                val ws = newWebSocket(url)
+                ws.binaryType = BinaryType.ARRAYBUFFER // to receive arraybuffer instead of blob
+                val wsSession = JsWebSocketSession(ws)
+                ws.onopen = {
+                    cont.resume(wsSession)
                 }
-            }
-            ws.onerror = { errEvent ->
-                // TODO maybe handle connection failure via continuation here (check whether already successfully open)
-                GlobalScope.promise {
-                    wsSession.listener.onError(Exception("WebSocket error: $errEvent"))
-                }
-            }
-            ws.onmessage = { event ->
-                GlobalScope.promise {
-                    // TODO check the possible types here
-                    when (val body = event.data) {
-                        is String -> wsSession.listener.onTextMessage(body)
-                        is ArrayBuffer -> wsSession.listener.onBinaryMessage(body.toByteArray())
-                        null -> wsSession.listener.onBinaryMessage(ByteArray(0))
-                        else -> error("Unknown socket frame body type: ${body::class.js}")
+                ws.onclose = {
+                    GlobalScope.promise {
+                        wsSession.listener.onClose()
                     }
                 }
+                ws.onerror = { errEvent ->
+                    if (ws.readyState == WebSocket.CONNECTING) {
+                        cont.resumeWithException(Exception("$errEvent"))
+                    } else {
+                        GlobalScope.promise {
+                            wsSession.listener.onError(Exception("WebSocket error: $errEvent"))
+                        }
+                    }
+                }
+                ws.onmessage = { event ->
+                    GlobalScope.promise {
+                        // TODO check the possible types here
+                        when (val body = event.data) {
+                            is String -> wsSession.listener.onTextMessage(body)
+                            is ArrayBuffer -> wsSession.listener.onBinaryMessage(body.toByteArray())
+                            null -> wsSession.listener.onBinaryMessage(ByteArray(0))
+                            else -> error("Unknown socket frame body type: ${body::class.js}")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                cont.resumeWithException(e)
             }
         }
     }
