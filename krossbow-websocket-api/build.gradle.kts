@@ -37,7 +37,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation(project(":krossbow-websocket-spring"))
             }
         }
         val jsMain by getting {
