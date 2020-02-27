@@ -1,6 +1,7 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -12,7 +13,6 @@ import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateConnectedFrameReceived
 import org.hildan.krossbow.test.simulateTextStompFrameReceived
 import org.hildan.krossbow.test.waitAndAssertSentFrame
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -21,21 +21,19 @@ import kotlin.test.assertTrue
 
 class StompSessionTest {
 
-    private lateinit var wsSession: WebSocketSessionMock
-    private lateinit var stompSession: StompSession
-
-    @BeforeTest
-    fun setup() = runAsyncTestWithTimeout {
-        wsSession = WebSocketSessionMock()
+    private suspend fun connectToMock(): Pair<WebSocketSessionMock, StompSession> = coroutineScope {
+        val wsSession = WebSocketSessionMock()
         val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession))
         val session = async { stompClient.connect("dummy URL") }
         wsSession.waitAndAssertSentFrame(StompCommand.CONNECT)
         wsSession.simulateConnectedFrameReceived()
-        stompSession = session.await()
+        val stompSession = session.await()
+        Pair(wsSession, stompSession)
     }
 
     @Test
     fun send_doesntWaitIfNoReceipt() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectToMock()
         val receipt = async {
             stompSession.send("/destination")
         }
@@ -47,6 +45,7 @@ class StompSessionTest {
 
     @Test
     fun send_waitsIfReceipt() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectToMock()
         val receipt = async {
             val headers = StompSendHeaders(destination = "/destination")
             headers.receipt = "something"
