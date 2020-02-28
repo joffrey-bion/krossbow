@@ -6,36 +6,38 @@ import org.w3c.dom.events.Event
 @JsModule("sockjs-client")
 external object SockJS {
     @nativeInvoke
-    operator fun invoke(url: String, _reserved: Any? = definedExternally, options: dynamic = definedExternally): WebSocket
+    operator fun invoke(url: String, _reserved: Any? = definedExternally, options: Options = definedExternally): WebSocket
     var prototype: WebSocket
     var CONNECTING: String /* 0 */
     var OPEN: String /* 1 */
     var CLOSING: String /* 2 */
     var CLOSED: String /* 3 */
-}
 
-external interface BaseEvent : Event {
-    override var type: String
-}
+    interface BaseEvent : Event {
+        override var type: String
+    }
 
-external interface CloseEvent : BaseEvent {
-    var code: Number
-    var reason: String
-    var wasClean: Boolean
-}
+    interface OpenEvent : BaseEvent
 
-external interface MessageEvent : BaseEvent {
-    var data: String
-}
+    interface CloseEvent : BaseEvent {
+        var code: Number
+        var reason: String
+        var wasClean: Boolean
+    }
 
-// external interface Options {
-//    var server: String?
-//        get() = definedExternally
-//        set(value) = definedExternally
-//    var sessionId: dynamic /* Number | SessionGenerator */
-//        get() = definedExternally
-//        set(value) = definedExternally
-//    var transports: dynamic /* String | Array<String> */
-//        get() = definedExternally
-//        set(value) = definedExternally
-// }
+    interface MessageEvent : BaseEvent {
+        var data: String
+    }
+
+    interface Options {
+        var server: String?
+            get() = definedExternally
+            set(value) = definedExternally
+        var sessionId: dynamic /* Number | SessionGenerator */
+            get() = definedExternally
+            set(value) = definedExternally
+        var transports: dynamic /* String | Array<String> */
+            get() = definedExternally
+            set(value) = definedExternally
+    }
+}

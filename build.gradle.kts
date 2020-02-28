@@ -52,6 +52,9 @@ subprojects {
     // https://github.com/pinterest/ktlint/issues/527
     extensions.configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
         disabledRules.set(setOf("import-ordering"))
+        filter {
+            exclude("sockjs-client.kt")
+        }
     }
 
     afterEvaluate {

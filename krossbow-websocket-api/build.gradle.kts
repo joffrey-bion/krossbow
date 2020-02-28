@@ -43,7 +43,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-js"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
-                implementation(npm("sockjs-client", "1.1.4")) // TODO: 1.4.0 with proper types
+                implementation(npm("sockjs-client", "1.4.0"))
             }
         }
         val jsTest by getting {
