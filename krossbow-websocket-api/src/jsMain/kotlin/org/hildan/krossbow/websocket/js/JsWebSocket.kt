@@ -1,4 +1,4 @@
-package org.hildan.krossbow.engines.mpp.js
+package org.hildan.krossbow.websocket.js
 
 import SockJS
 import kotlinx.coroutines.GlobalScope

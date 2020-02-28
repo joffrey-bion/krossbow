@@ -1,7 +1,7 @@
 package org.hildan.krossbow.websocket
 
-import org.hildan.krossbow.engines.mpp.js.BrowserWebSocketClient
-import org.hildan.krossbow.engines.mpp.js.SockJSWebSocketClient
+import org.hildan.krossbow.websocket.js.BrowserWebSocketClient
+import org.hildan.krossbow.websocket.js.SockJSWebSocketClient
 
 actual fun defaultWebSocketClient(): KWebSocketClient = BrowserWebSocketClient
 
