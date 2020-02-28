@@ -29,7 +29,7 @@ tasks.dokka {
             packageListUrl = URL(url, "package-list")
         }
         // externalDocumentationLink {
-        //     url = URL("file://${project(":krossbow-engine-api").buildDir}/dokka/krossbow-engine-api/")
+        //     url = URL("file://${project(":krossbow-websocket-api").buildDir}/dokka/krossbow-websocket-api/")
         //     packageListUrl = URL(url, "package-list")
         // }
     }

@@ -53,3 +53,9 @@ kotlin {
         }
     }
 }
+
+// Disabled because of this Dokka bug for the JS target's npm dependencies:
+// https://github.com/Kotlin/dokka/issues/537
+tasks.dokka {
+    enabled = false
+}

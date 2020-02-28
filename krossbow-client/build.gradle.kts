@@ -77,10 +77,10 @@ tasks.dokka {
     //    outputFormat = "javadoc"
     multiplatform {
         val global by creating {
-            externalDocumentationLink {
-                url = URL("file://${project(":krossbow-websocket-api").buildDir}/dokka/krossbow-websocket-api/")
-                packageListUrl = URL(url, "package-list")
-            }
+//            externalDocumentationLink {
+//                url = URL("file://${project(":krossbow-websocket-api").buildDir}/dokka/krossbow-websocket-api/")
+//                packageListUrl = URL(url, "package-list")
+//            }
         }
         val jvm by creating {
             externalDocumentationLink {
