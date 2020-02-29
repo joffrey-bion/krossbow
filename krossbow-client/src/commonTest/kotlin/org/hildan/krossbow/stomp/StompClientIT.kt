@@ -3,7 +3,7 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.Serializable
 import org.hildan.krossbow.converters.KotlinxSerialization
-import org.hildan.krossbow.test.runAsyncTest
+import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -28,9 +28,10 @@ class StompClientIT {
     // TODO spawn a local STOMP server for unit tests and interact with it
     @Ignore
     @Test
-    fun basicConnect() = runAsyncTest {
+    fun basicConnect() = runAsyncTestWithTimeout(60000) {
         val client = StompClient.withSockJS {
             messageConverter = KotlinxSerialization.JsonConverter()
+            connectionTimeoutMillis = 40000
         }
         client.useSession(testUrl) {
             val nameSub = subscribe<ServerPlayerData>("/user/queue/nameChoice")
