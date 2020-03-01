@@ -22,10 +22,12 @@ class WebSocketSessionMock : KWebSocketSession {
     var closed = false
 
     override suspend fun sendText(frameText: String) {
+        // decoding the sent frame to check the validity and perform further assertions later
         sentFrames.send(StompParser.parse(frameText))
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
+        // decoding the sent frame to check the validity and perform further assertions later
         sentFrames.send(StompParser.parse(frameData))
     }
 
@@ -33,7 +35,12 @@ class WebSocketSessionMock : KWebSocketSession {
         closed = true
     }
 
-    suspend fun simulateSendCompletion(): StompFrame = sentFrames.receive()
+    /**
+     * Waits for a web socket frame to be sent, unblocking any send call.
+     *
+     * @returns the parsed stomp frame that was sent to allow further assertions
+     */
+    suspend fun waitForSendAndSimulateCompletion(): StompFrame = sentFrames.receive()
 
     suspend fun simulateTextFrameReceived(text: String) {
         listener.onTextMessage(text)
@@ -71,8 +78,8 @@ suspend fun WebSocketSessionMock.simulateConnectedFrameReceived() {
     simulateTextStompFrameReceived(connectedFrame)
 }
 
-suspend fun WebSocketSessionMock.waitAndAssertSentFrame(expectedCommand: StompCommand): StompFrame {
-    val frame = simulateSendCompletion()
-    assertEquals(expectedCommand, frame.command)
+suspend fun WebSocketSessionMock.waitForSendAndSimulateCompletion(expectedCommand: StompCommand): StompFrame {
+    val frame = waitForSendAndSimulateCompletion()
+    assertEquals(expectedCommand, frame.command, "the next sent frame should be a $expectedCommand STOMP frame")
     return frame
 }
