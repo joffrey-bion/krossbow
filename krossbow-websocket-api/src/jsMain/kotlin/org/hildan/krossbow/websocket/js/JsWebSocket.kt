@@ -29,7 +29,7 @@ object BrowserWebSocketClient : JsWebSocketClientAdapter({ url -> WebSocket(url)
  */
 object SockJSWebSocketClient : JsWebSocketClientAdapter({ url -> SockJS(url) })
 
-open class JsWebSocketClientAdapter(val newWebSocket: (String) -> WebSocket) : WebSocketClient {
+open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSocket) : WebSocketClient {
 
     override suspend fun connect(url: String): WebSocketSession {
         return suspendCancellableCoroutine { cont ->
