@@ -9,8 +9,9 @@ import org.hildan.krossbow.stomp.subscribe
 import org.hildan.krossbow.stomp.useSession
 import org.hildan.krossbow.test.runAsyncTest
 import org.hildan.krossbow.websocket.spring.SpringDefaultWebSocketClient
-import kotlin.test.Test
+import org.hildan.krossbow.websocket.spring.SpringSockJSWebSocketClient
 import kotlin.test.Ignore
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -33,8 +34,13 @@ class JvmDefaultWebSocketClientsTest {
     )
 
     @Test
-    fun defaultEngineTest() {
+    fun defaultClientTest() {
         assertEquals(SpringDefaultWebSocketClient, defaultWebSocketClient())
+    }
+
+    @Test
+    fun defaultSockJsClientTest() {
+        assertEquals(SpringSockJSWebSocketClient, defaultSockJSClient())
     }
 
     // Ignored for CI as long as it requires an internet connection
