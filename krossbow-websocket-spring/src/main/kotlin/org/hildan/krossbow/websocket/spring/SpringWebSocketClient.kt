@@ -71,7 +71,7 @@ object KrossbowToSpringHandlerAdapter : WebSocketHandler {
 
     override fun afterConnectionClosed(session: SpringWebSocketSession, closeStatus: CloseStatus) {
         runBlocking {
-            session.krossbowWrapper.listener.onClose()
+            session.krossbowWrapper.listener.onClose(closeStatus.code, closeStatus.reason)
         }
     }
 
@@ -84,19 +84,19 @@ class SpringToKrossbowSessionAdapter(private val session: SpringWebSocketSession
 
     override suspend fun sendText(frameText: String) {
         withContext(Dispatchers.IO) {
-            session.sendMessage(TextMessage(frameText))
+            session.sendMessage(TextMessage(frameText, true))
         }
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
         withContext(Dispatchers.IO) {
-            session.sendMessage(BinaryMessage(frameData))
+            session.sendMessage(BinaryMessage(frameData, true))
         }
     }
 
-    override suspend fun close() {
+    override suspend fun close(code: Int, reason: String?) {
         withContext(Dispatchers.IO) {
-            session.close()
+            session.close(CloseStatus(code, reason))
         }
     }
 }

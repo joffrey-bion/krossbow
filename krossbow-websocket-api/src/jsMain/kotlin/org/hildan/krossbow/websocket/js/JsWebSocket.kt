@@ -13,7 +13,9 @@ import org.khronos.webgl.Int8Array
 import org.khronos.webgl.get
 import org.w3c.dom.ARRAYBUFFER
 import org.w3c.dom.BinaryType
+import org.w3c.dom.CloseEvent
 import org.w3c.dom.WebSocket
+import org.w3c.dom.events.Event
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -38,9 +40,10 @@ open class JsWebSocketClientAdapter(val newWebSocket: (String) -> WebSocket) : W
                 ws.onopen = {
                     cont.resume(wsSession)
                 }
-                ws.onclose = {
+                ws.onclose = { event: Event ->
+                    val closeEvent = event as CloseEvent
                     GlobalScope.promise {
-                        wsSession.listener.onClose()
+                        wsSession.listener.onClose(closeEvent.code.toInt(), closeEvent.reason)
                     }
                 }
                 ws.onerror = { errEvent ->
@@ -82,8 +85,8 @@ class JsWebSocketSession(private val ws: WebSocket) : WebSocketSession {
         ws.send(frameData.toArrayBuffer())
     }
 
-    override suspend fun close() {
-        ws.close()
+    override suspend fun close(code: Int, reason: String?) {
+        ws.close(code.toShort(), reason ?: "")
     }
 }
 

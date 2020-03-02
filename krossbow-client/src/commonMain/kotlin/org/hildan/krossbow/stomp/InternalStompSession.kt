@@ -55,7 +55,7 @@ internal class InternalStompSession(
         throw IllegalStateException("Error at WebSocket level: ${error.message}", error)
     }
 
-    override suspend fun onClose() {
+    override suspend fun onClose(code: Int, reason: String?) {
         // TODO allow user to set a global onClose listener?
         println("Underlying WebSocket connection closed")
     }

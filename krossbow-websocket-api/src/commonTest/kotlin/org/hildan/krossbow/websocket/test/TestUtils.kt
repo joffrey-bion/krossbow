@@ -28,7 +28,7 @@ fun testKaazingEchoWs(websocketClient: WebSocketClient, protocol: String) = runS
         override suspend fun onError(error: Throwable) {
             throw RuntimeException("onError:", error)
         }
-        override suspend fun onClose() {}
+        override suspend fun onClose(code: Int, reason: String?) {}
     }
     session.sendBinary("hello".encodeToByteArray())
     val message = withTimeout(1000) { messageChannel.receive() }

@@ -16,7 +16,7 @@ interface WebSocketSession {
 
     suspend fun sendBinary(frameData: ByteArray)
 
-    suspend fun close()
+    suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
 }
 
 interface WebSocketListener {
@@ -27,12 +27,12 @@ interface WebSocketListener {
 
     suspend fun onError(error: Throwable)
 
-    suspend fun onClose()
+    suspend fun onClose(code: Int, reason: String?)
 }
 
 object NoopWebSocketListener : WebSocketListener {
     override suspend fun onBinaryMessage(bytes: ByteArray) = Unit
     override suspend fun onTextMessage(text: String) = Unit
     override suspend fun onError(error: Throwable) = Unit
-    override suspend fun onClose() = Unit
+    override suspend fun onClose(code: Int, reason: String?) = Unit
 }

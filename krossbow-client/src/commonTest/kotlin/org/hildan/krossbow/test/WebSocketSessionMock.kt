@@ -31,7 +31,7 @@ class WebSocketSessionMock : WebSocketSession {
         sentFrames.send(StompParser.parse(frameData))
     }
 
-    override suspend fun close() {
+    override suspend fun close(code: Int, reason: String?) {
         closed = true
     }
 
@@ -54,8 +54,8 @@ class WebSocketSessionMock : WebSocketSession {
         listener.onError(Exception(message))
     }
 
-    suspend fun simulateClose() {
-        listener.onClose()
+    suspend fun simulateClose(code: Int, reason: String?) {
+        listener.onClose(code, reason)
     }
 }
 
