@@ -76,24 +76,24 @@ Unfortunately, they are not yet available on npm.
 
 ```kotlin
 // common source set
-implementation("org.hildan.krossbow:krossbow-client-metadata:$krossbowVersion")
+implementation("org.hildan.krossbow:krossbow-stomp-metadata:$krossbowVersion")
 
 // jvm source set
-implementation("org.hildan.krossbow:krossbow-client-jvm:$krossbowVersion")
+implementation("org.hildan.krossbow:krossbow-stomp-jvm:$krossbowVersion")
 implementation("org.hildan.krossbow:krossbow-websocket-spring:$krossbowVersion") // soon not necessary on JDK11
 
 // js source set
-implementation("org.hildan.krossbow:krossbow-client-js:$krossbowVersion")
+implementation("org.hildan.krossbow:krossbow-stomp-js:$krossbowVersion")
 ```
 
 ## Project structure
  
 This project contains the following modules:
-- `krossbow-client`: the multiplatform STOMP client to use as a STOMP library in common, JVM or JS projects. It
+- `krossbow-stomp`: the multiplatform STOMP client to use as a STOMP library in common, JVM or JS projects. It
  implements the STOMP 1.2 protocol on top of a websocket API defined by the `krossbow-websocket-api` module.
 - `krossbow-websocket-api`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
  WebSocket clients. This also provides some default client implementations:
-    - an implementation using the Browser's native WebSocket
-    - an implementation using the `sockjs-client` library (requires a SockJS server counterpart)
+    - a JS implementation using the Browser's native WebSocket
+    - a JS implementation using the `sockjs-client` library (requires a SockJS server counterpart)
     - *Coming soon*: an implementation using JDK11's built-in WebSocket API
 - `krossbow-websocket-spring`: a JVM implementation of the web socket API using Spring's WebSocketClient

@@ -14,7 +14,7 @@ pluginManagement {
 
 rootProject.name = "krossbow"
 
-include("krossbow-client")
+include("krossbow-stomp")
 include("krossbow-websocket-api")
 include("krossbow-websocket-spring")
 
