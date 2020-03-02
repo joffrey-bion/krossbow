@@ -13,6 +13,7 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.WebSocketMessage
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
+import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport
 import org.springframework.web.socket.sockjs.client.SockJsClient
 import org.springframework.web.socket.sockjs.client.Transport
 import org.springframework.web.socket.sockjs.client.WebSocketTransport
@@ -26,7 +27,10 @@ object SpringDefaultWebSocketClient : SpringWebSocketClientAdapter(StandardWebSo
 
 object SpringSockJSWebSocketClient : SpringWebSocketClientAdapter(SockJsClient(defaultWsTransports()))
 
-private fun defaultWsTransports(): List<Transport> = listOf(WebSocketTransport(StandardWebSocketClient()))
+private fun defaultWsTransports(): List<Transport> = listOf(
+    WebSocketTransport(StandardWebSocketClient()),
+    RestTemplateXhrTransport()
+)
 
 open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClient) : KrossbowWebSocketClient {
 
