@@ -96,3 +96,9 @@ class SpringToKrossbowSessionAdapter(private val session: SpringWebSocketSession
         }
     }
 }
+
+// FIXME Use a single coroutine or a concurrent wrapper for sending WS frames with Spring.
+//  From Spring docs on sendMessage():
+//  The underlying standard WebSocket session (JSR-356) does not allow concurrent sending.
+//  Therefore sending must be synchronized.
+//  To ensure that, one option is to wrap the WebSocketSession with the ConcurrentWebSocketSessionDecorator.
