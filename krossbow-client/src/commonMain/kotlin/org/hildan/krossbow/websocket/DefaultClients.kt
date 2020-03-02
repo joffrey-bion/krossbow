@@ -1,5 +1,5 @@
 package org.hildan.krossbow.websocket
 
-expect fun defaultWebSocketClient(): KWebSocketClient
+expect fun defaultWebSocketClient(): WebSocketClient
 
-expect fun defaultSockJSClient(): KWebSocketClient
+expect fun defaultSockJSClient(): WebSocketClient

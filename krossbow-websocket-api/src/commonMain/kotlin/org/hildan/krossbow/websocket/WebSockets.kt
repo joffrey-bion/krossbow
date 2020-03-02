@@ -1,16 +1,16 @@
 package org.hildan.krossbow.websocket
 
-interface KWebSocketClient {
+interface WebSocketClient {
 
     /**
      * Opens a web socket connection and suspends until the connection is OPEN.
      */
-    suspend fun connect(url: String): KWebSocketSession
+    suspend fun connect(url: String): WebSocketSession
 }
 
-interface KWebSocketSession {
+interface WebSocketSession {
 
-    var listener: KWebSocketListener
+    var listener: WebSocketListener
 
     suspend fun sendText(frameText: String)
 
@@ -19,7 +19,7 @@ interface KWebSocketSession {
     suspend fun close()
 }
 
-interface KWebSocketListener {
+interface WebSocketListener {
 
     suspend fun onBinaryMessage(bytes: ByteArray)
 
@@ -30,7 +30,7 @@ interface KWebSocketListener {
     suspend fun onClose()
 }
 
-object NoopWebSocketListener : KWebSocketListener {
+object NoopWebSocketListener : WebSocketListener {
     override suspend fun onBinaryMessage(bytes: ByteArray) = Unit
     override suspend fun onTextMessage(text: String) = Unit
     override suspend fun onError(error: Throwable) = Unit

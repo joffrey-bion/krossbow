@@ -4,9 +4,9 @@ import SockJS
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 import kotlinx.coroutines.suspendCancellableCoroutine
-import org.hildan.krossbow.websocket.KWebSocketClient
-import org.hildan.krossbow.websocket.KWebSocketListener
-import org.hildan.krossbow.websocket.KWebSocketSession
+import org.hildan.krossbow.websocket.WebSocketClient
+import org.hildan.krossbow.websocket.WebSocketListener
+import org.hildan.krossbow.websocket.WebSocketSession
 import org.hildan.krossbow.websocket.NoopWebSocketListener
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.Int8Array
@@ -27,9 +27,9 @@ object BrowserWebSocketClient : JsWebSocketClientAdapter({ url -> WebSocket(url)
  */
 object SockJSWebSocketClient : JsWebSocketClientAdapter({ url -> SockJS(url) })
 
-open class JsWebSocketClientAdapter(val newWebSocket: (String) -> WebSocket) : KWebSocketClient {
+open class JsWebSocketClientAdapter(val newWebSocket: (String) -> WebSocket) : WebSocketClient {
 
-    override suspend fun connect(url: String): KWebSocketSession {
+    override suspend fun connect(url: String): WebSocketSession {
         return suspendCancellableCoroutine { cont ->
             try {
                 val ws = newWebSocket(url)
@@ -70,9 +70,9 @@ open class JsWebSocketClientAdapter(val newWebSocket: (String) -> WebSocket) : K
     }
 }
 
-class JsWebSocketSession(private val ws: WebSocket) : KWebSocketSession {
+class JsWebSocketSession(private val ws: WebSocket) : WebSocketSession {
 
-    override var listener: KWebSocketListener = NoopWebSocketListener
+    override var listener: WebSocketListener = NoopWebSocketListener
 
     override suspend fun sendText(frameText: String) {
         ws.send(frameText)

@@ -4,9 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.hildan.krossbow.websocket.KWebSocketClient
-import org.hildan.krossbow.websocket.KWebSocketListener
-import org.hildan.krossbow.websocket.KWebSocketSession
 import org.hildan.krossbow.websocket.NoopWebSocketListener
 import org.springframework.web.socket.BinaryMessage
 import org.springframework.web.socket.CloseStatus
@@ -15,12 +12,15 @@ import org.springframework.web.socket.PongMessage
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.WebSocketMessage
-import org.springframework.web.socket.WebSocketSession
-import org.springframework.web.socket.client.WebSocketClient
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.sockjs.client.SockJsClient
 import org.springframework.web.socket.sockjs.client.Transport
 import org.springframework.web.socket.sockjs.client.WebSocketTransport
+import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
+import org.hildan.krossbow.websocket.WebSocketListener as KrossbowWebSocketListener
+import org.hildan.krossbow.websocket.WebSocketSession as KrossbowWebSocketSession
+import org.springframework.web.socket.WebSocketSession as SpringWebSocketSession
+import org.springframework.web.socket.client.WebSocketClient as SpringWebSocketClient
 
 object SpringDefaultWebSocketClient : SpringWebSocketClientAdapter(StandardWebSocketClient())
 
@@ -28,25 +28,25 @@ object SpringSockJSWebSocketClient : SpringWebSocketClientAdapter(SockJsClient(d
 
 private fun defaultWsTransports(): List<Transport> = listOf(WebSocketTransport(StandardWebSocketClient()))
 
-open class SpringWebSocketClientAdapter(private val client: WebSocketClient) : KWebSocketClient {
+open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClient) : KrossbowWebSocketClient {
 
-    override suspend fun connect(url: String): KWebSocketSession =
-            client.doHandshake(SpringWebSocketHandler, url).completable().await().krossbowWrapper
+    override suspend fun connect(url: String): KrossbowWebSocketSession =
+            client.doHandshake(KrossbowToSpringHandlerAdapter, url).completable().await().krossbowWrapper
 }
 
-private var WebSocketSession.krossbowWrapper: KWebSocketSession
-    get() = attributes["krossbowSession"] as KWebSocketSession
+private var SpringWebSocketSession.krossbowWrapper: KrossbowWebSocketSession
+    get() = attributes["krossbowSession"] as KrossbowWebSocketSession
     set(value) {
         attributes["krossbowSession"] = value
     }
 
-object SpringWebSocketHandler : WebSocketHandler {
+object KrossbowToSpringHandlerAdapter : WebSocketHandler {
 
-    override fun afterConnectionEstablished(session: WebSocketSession) {
-        session.krossbowWrapper = SpringWebSocketSession(session)
+    override fun afterConnectionEstablished(session: SpringWebSocketSession) {
+        session.krossbowWrapper = SpringToKrossbowSessionAdapter(session)
     }
 
-    override fun handleMessage(session: WebSocketSession, message: WebSocketMessage<*>) {
+    override fun handleMessage(session: SpringWebSocketSession, message: WebSocketMessage<*>) {
         val listener = session.krossbowWrapper.listener
         runBlocking {
             when (message) {
@@ -59,13 +59,13 @@ object SpringWebSocketHandler : WebSocketHandler {
         }
     }
 
-    override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
+    override fun handleTransportError(session: SpringWebSocketSession, exception: Throwable) {
         runBlocking {
             session.krossbowWrapper.listener.onError(exception)
         }
     }
 
-    override fun afterConnectionClosed(session: WebSocketSession, closeStatus: CloseStatus) {
+    override fun afterConnectionClosed(session: SpringWebSocketSession, closeStatus: CloseStatus) {
         runBlocking {
             session.krossbowWrapper.listener.onClose()
         }
@@ -74,9 +74,9 @@ object SpringWebSocketHandler : WebSocketHandler {
     override fun supportsPartialMessages(): Boolean = false
 }
 
-class SpringWebSocketSession(private val session: WebSocketSession) : KWebSocketSession {
+class SpringToKrossbowSessionAdapter(private val session: SpringWebSocketSession) : KrossbowWebSocketSession {
 
-    override var listener: KWebSocketListener = NoopWebSocketListener
+    override var listener: KrossbowWebSocketListener = NoopWebSocketListener
 
     override suspend fun sendText(frameText: String) {
         withContext(Dispatchers.IO) {

@@ -21,8 +21,8 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.utils.SuspendingAtomicInt
 import org.hildan.krossbow.utils.getStringAndInc
-import org.hildan.krossbow.websocket.KWebSocketListener
-import org.hildan.krossbow.websocket.KWebSocketSession
+import org.hildan.krossbow.websocket.WebSocketListener
+import org.hildan.krossbow.websocket.WebSocketSession
 import kotlin.reflect.KClass
 
 /**
@@ -31,8 +31,8 @@ import kotlin.reflect.KClass
 @UseExperimental(ExperimentalCoroutinesApi::class) // for broadcast channel
 internal class InternalStompSession(
     private val config: StompConfig,
-    private val webSocketSession: KWebSocketSession
-) : StompSession, KWebSocketListener {
+    private val webSocketSession: WebSocketSession
+) : StompSession, WebSocketListener {
 
     private val nextSubscriptionId = SuspendingAtomicInt(0)
 

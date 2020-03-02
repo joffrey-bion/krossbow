@@ -4,8 +4,8 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
-import org.hildan.krossbow.websocket.KWebSocketClient
-import org.hildan.krossbow.websocket.KWebSocketSession
+import org.hildan.krossbow.websocket.WebSocketClient
+import org.hildan.krossbow.websocket.WebSocketSession
 import org.hildan.krossbow.websocket.defaultSockJSClient
 import org.hildan.krossbow.websocket.defaultWebSocketClient
 
@@ -15,11 +15,11 @@ import org.hildan.krossbow.websocket.defaultWebSocketClient
  * Then, most of the STOMP interactions are done through the [StompSession].
  */
 class StompClient(
-    private val webSocketClient: KWebSocketClient,
+    private val webSocketClient: WebSocketClient,
     private val config: StompConfig
 ) {
     constructor(
-        webSocketClient: KWebSocketClient = defaultWebSocketClient(),
+        webSocketClient: WebSocketClient = defaultWebSocketClient(),
         configure: StompConfig.() -> Unit = {}
     ) : this(
         webSocketClient = webSocketClient,
@@ -45,7 +45,7 @@ class StompClient(
         }
     }
 
-    private suspend fun KWebSocketSession.stompConnect(url: String, login: String?, passcode: String?): StompSession {
+    private suspend fun WebSocketSession.stompConnect(url: String, login: String?, passcode: String?): StompSession {
         val host = extractHost(url)
         val connectHeaders = StompConnectHeaders(
             host = host,
