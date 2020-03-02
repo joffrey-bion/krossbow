@@ -6,21 +6,21 @@
 
 A coroutine-based Kotlin multiplatform [STOMP 1.2](https://stomp.github.io/index.html) client over websockets.
 
-***This project should be considered very beta, it's still in its early development stage.***
+***This project is experimental, it's still in its early development stage.***
 
 ## Usage
 
 This is how to create a client and interact with it (the verbose way):
 
 ```kotlin
-val client = KrossbowClient()
+val client = StompClient()
 val session = client.connect(url) // optional login/passcode can be provided here
 
 try {
     session.send("/some/destination", MyPojo("Custom", 42)) 
 
-    val subscription = session.subscribe<Message>("/some/topic/destination")
-    val firstMessage = subscription.messages.receive()
+    val subscription = session.subscribe<MyMessage>("/some/topic/destination")
+    val firstMessage: MyMessage = subscription.messages.receive()
 
     println("Received: $firstMessage")
     subscription.unsubscribe()
@@ -29,12 +29,8 @@ try {
 }
 ```
 
-We can make things simpler, though:
-
-- To get the `disconnect()` automatically, you can use `useSession` (similar to `Closeable.use()`)
-- If `unsubscribe()` is not essential, you can actually destructure the `Subscription` object
-
-Here's how it looks now:
+If the STOMP session is only used in one place like this, we can `disconnect()` automatically by calling `useSession` 
+(similar to `Closeable.use()`):
 
 ```kotlin
 KrossbowClient().useSession(url) { // this: KrossbowSession
@@ -55,7 +51,7 @@ By default, Kotlinx Serialization is used (because cross-platform), but it can b
 For instance, on the JVM, you can use the `JacksonConverter` this way:
 
 ```kotlin
-val client = KrossbowClient {
+val client = StompClient {
     messageConverter = JacksonConverter()
 }
 ```
@@ -64,13 +60,12 @@ You can use it with your own `ObjectMapper` this way:
 
 ```kotlin
 val objectMapper = jacksonObjectMapper().enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-val client = KrossbowClient {
+val client = StompClient {
     messageConverter = JacksonConverter(objectMapper)
 }
 ```
 
-You can also implement your own `MessageConverter` or `StringMessageConverter`, by implementing these interfaces
- yourself.
+You can also implement your own `MessageConverter` yourself, and pass it when configuring the client.
 
 ## Adding the dependency
 
@@ -85,25 +80,20 @@ implementation("org.hildan.krossbow:krossbow-client-metadata:$krossbowVersion")
 
 // jvm source set
 implementation("org.hildan.krossbow:krossbow-client-jvm:$krossbowVersion")
+implementation("org.hildan.krossbow:krossbow-websocket-spring:$krossbowVersion") // soon not necessary on JDK11
 
 // js source set
 implementation("org.hildan.krossbow:krossbow-client-js:$krossbowVersion")
 ```
 
 ## Project structure
-
-The current implementation simply defines a common API for the STOMP client, as well as adapter interfaces to plug in
- a platform-specific STOMP implementation.
-
-In the long run, it would be nice to 
-[write the complete STOMP implementation in common code](https://github.com/joffrey-bion/krossbow/issues/5), and simply abstract the
- websocket API, so that it can be plugged into anything, including Ktor's websocket API.
- If you'd like to see it happen, don't hesitate to upvote the issue.
  
 This project contains the following modules:
-- `krossbow-client`: the multiplatform client to use as a STOMP library in common, JVM or JS projects. It basically
- acts as a facade on top of other modules, for easier dependency declaration.
-- `krossbow-engine-api`: the API that engines must conform to in order to be used by the multiplatform client
-- `krossbow-engine-spring`: a JVM implementation of the engine API using Spring's WebsocketStompClient as backend
-- `krossbow-engine-webstompjs`: a JavaScript implementation of the engine API using 
-[webstomp-client](https://github.com/JSteunou/webstomp-client) as backend
+- `krossbow-client`: the multiplatform STOMP client to use as a STOMP library in common, JVM or JS projects. It
+ implements the STOMP 1.2 protocol on top of a websocket API defined by the `krossbow-websocket-api` module.
+- `krossbow-websocket-api`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
+ WebSocket clients. This also provides some default client implementations:
+    - an implementation using the Browser's native WebSocket
+    - an implementation using the `sockjs-client` library (requires a SockJS server counterpart)
+    - *Coming soon*: an implementation using JDK11's built-in WebSocket API
+- `krossbow-websocket-spring`: a JVM implementation of the web socket API using Spring's WebSocketClient
