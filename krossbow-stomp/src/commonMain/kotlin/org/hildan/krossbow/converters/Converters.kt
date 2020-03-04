@@ -51,7 +51,7 @@ interface TextMessageConverter : MessageConverter {
      */
     val mimeType: String
 
-    @UseExperimental(ExperimentalStdlibApi::class)
+    @OptIn(ExperimentalStdlibApi::class)
     override fun <T : Any> deserialize(frame: StompFrame.Message, clazz: KClass<T>): StompMessage<T> {
         val payloadText = frame.body?.let {
             when (it) {
@@ -82,7 +82,7 @@ interface TextMessageConverter : MessageConverter {
 /**
  * A container class for [MessageConverter] implementations using Kotlinx Serialization.
  */
-@UseExperimental(ImplicitReflectionSerializer::class)
+@OptIn(ImplicitReflectionSerializer::class)
 class KotlinxSerialization {
 
     /**

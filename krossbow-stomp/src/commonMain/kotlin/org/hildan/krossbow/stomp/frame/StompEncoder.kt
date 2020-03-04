@@ -3,7 +3,7 @@ package org.hildan.krossbow.stomp.frame
 import kotlinx.io.ByteArrayOutputStream
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 
-@UseExperimental(ExperimentalStdlibApi::class)
+@OptIn(ExperimentalStdlibApi::class)
 internal fun StompFrame.encodeToBytes(): ByteArray {
     val os = ByteArrayOutputStream()
     os.write(encodedPreamble.encodeToByteArray())

@@ -4,7 +4,7 @@ import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@UseExperimental(ExperimentalStdlibApi::class)
+@OptIn(ExperimentalStdlibApi::class)
 class StompParserTest {
     private val nullChar = '\u0000'
 

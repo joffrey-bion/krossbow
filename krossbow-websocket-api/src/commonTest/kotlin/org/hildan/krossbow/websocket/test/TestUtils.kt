@@ -11,7 +11,7 @@ import kotlin.test.assertNotNull
 
 expect fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit)
 
-@UseExperimental(ExperimentalStdlibApi::class)
+@OptIn(ExperimentalStdlibApi::class)
 fun testKaazingEchoWs(websocketClient: WebSocketClient, protocol: String) = runSuspendingTest {
     val session = withTimeoutOrNull(1000) {
         websocketClient.connect("$protocol://demos.kaazing.com/echo")

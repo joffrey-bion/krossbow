@@ -76,7 +76,7 @@ sealed class StompFrame(
     }
 }
 
-@UseExperimental(ExperimentalStdlibApi::class)
+@OptIn(ExperimentalStdlibApi::class)
 sealed class FrameBody {
 
     abstract val bytes: ByteArray

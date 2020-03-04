@@ -24,6 +24,9 @@ dependencies {
 tasks.dokka {
     dependsOn(":krossbow-websocket-api:dokka")
     configuration {
+        // Required since Kotlin 1.3.70 because of missing package-list (404) (Dokka or Kotlin bug? Not sure)
+        // https://github.com/Kotlin/dokka/issues/709
+        noStdlibLink = true
         externalDocumentationLink {
             url = URL("https://docs.spring.io/spring/docs/current/javadoc-api/")
             packageListUrl = URL(url, "package-list")

@@ -2,7 +2,7 @@ import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayExtension.*
 
 plugins {
-    val kotlinVersion = "1.3.61"
+    val kotlinVersion = "1.3.70"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
@@ -44,7 +44,10 @@ subprojects {
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
-        kotlinOptions.freeCompilerArgs = listOf("-Xuse-experimental=kotlin.Experimental")
+        kotlinOptions.freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
+    }
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile> {
+        kotlinOptions.freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
 
     // The import ordering expected by ktlint is alphabetical, which doesn't match IDEA's formatter.

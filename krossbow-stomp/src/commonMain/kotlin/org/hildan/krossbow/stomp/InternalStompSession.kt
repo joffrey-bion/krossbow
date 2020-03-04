@@ -28,7 +28,7 @@ import kotlin.reflect.KClass
 /**
  * A coroutine-based STOMP session API.
  */
-@UseExperimental(ExperimentalCoroutinesApi::class) // for broadcast channel
+@OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
 internal class InternalStompSession(
     private val config: StompConfig,
     private val webSocketSession: WebSocketSession
