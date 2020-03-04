@@ -6,7 +6,6 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketSession
-import org.hildan.krossbow.websocket.defaultSockJSClient
 import org.hildan.krossbow.websocket.defaultWebSocketClient
 
 /**
@@ -59,11 +58,6 @@ class StompClient(
     }
 
     private fun extractHost(url: String) = url.substringAfter("://").substringBefore("/").substringBefore(":")
-
-    companion object {
-
-        fun withSockJS(configure: StompConfig.() -> Unit) = StompClient(defaultSockJSClient(), configure)
-    }
 }
 
 /**

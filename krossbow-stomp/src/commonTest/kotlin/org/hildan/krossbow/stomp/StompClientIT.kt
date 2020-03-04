@@ -4,6 +4,7 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.Serializable
 import org.hildan.krossbow.converters.KotlinxSerialization
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
+import org.hildan.krossbow.websocket.sockjs.SockJSClient
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,7 +30,7 @@ class StompClientIT {
     @Ignore
     @Test
     fun basicConnect() = runAsyncTestWithTimeout(60000) {
-        val client = StompClient.withSockJS {
+        val client = StompClient(SockJSClient()) {
             messageConverter = KotlinxSerialization.JsonConverter()
             connectionTimeoutMillis = 40000
         }

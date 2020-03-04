@@ -32,6 +32,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation(project(":krossbow-websocket-sockjs"))
             }
         }
         val jvmMain by getting {

@@ -1,6 +1,5 @@
 package org.hildan.krossbow.websocket.js
 
-import SockJS
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -23,11 +22,6 @@ import kotlin.coroutines.resumeWithException
  * Default WebSocket found in the browser. Not supported in NodeJS environment.
  */
 object BrowserWebSocketClient : JsWebSocketClientAdapter({ url -> WebSocket(url) })
-
-/**
- * SockJS WebSocket client, compatible with browsers and NodeJS, but requires a SockJS-compliant server.
- */
-object SockJSWebSocketClient : JsWebSocketClientAdapter({ url -> SockJS(url) })
 
 open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSocket) : WebSocketClient {
 

@@ -8,8 +8,8 @@ import org.hildan.krossbow.stomp.send
 import org.hildan.krossbow.stomp.subscribe
 import org.hildan.krossbow.stomp.useSession
 import org.hildan.krossbow.test.runAsyncTest
+import org.hildan.krossbow.websocket.sockjs.SockJSClient
 import org.hildan.krossbow.websocket.spring.SpringDefaultWebSocketClient
-import org.hildan.krossbow.websocket.spring.SpringSockJSWebSocketClient
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -38,17 +38,12 @@ class JvmDefaultWebSocketClientsTest {
         assertEquals(SpringDefaultWebSocketClient, defaultWebSocketClient())
     }
 
-    @Test
-    fun defaultSockJsClientTest() {
-        assertEquals(SpringSockJSWebSocketClient, defaultSockJSClient())
-    }
-
     // Ignored for CI as long as it requires an internet connection
     // TODO spawn a local STOMP server for unit tests and interact with it
     @Ignore
     @Test
     fun basicConnect() = runAsyncTest {
-        val client = StompClient.withSockJS {
+        val client = StompClient(SockJSClient()) {
             messageConverter = JacksonConverter()
         }
         client.useSession(testUrl) {
