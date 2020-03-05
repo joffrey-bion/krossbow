@@ -38,12 +38,12 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                implementation(project(":krossbow-websocket-spring"))
+                api(project(":krossbow-websocket-spring"))
                 implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinxIOVersion")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
-                implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
-                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+                api("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+                api("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
             }
         }
         val jvmTest by getting {
@@ -78,10 +78,10 @@ tasks.dokka {
     //    outputFormat = "javadoc"
     multiplatform {
         val global by creating {
-//            externalDocumentationLink {
-//                url = URL("file://${project(":krossbow-websocket-api").buildDir}/dokka/krossbow-websocket-api/")
-//                packageListUrl = URL(url, "package-list")
-//            }
+            externalDocumentationLink {
+                url = URL("file://${project(":krossbow-websocket-api").buildDir}/dokka/krossbow-websocket-api/")
+                packageListUrl = URL(url, "package-list")
+            }
         }
         val jvm by creating {
             externalDocumentationLink {

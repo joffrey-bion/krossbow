@@ -14,7 +14,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     // For Spring's WebSocket clients
-    implementation("org.springframework:spring-websocket:5.2.3.RELEASE")
+    api("org.springframework:spring-websocket:5.2.3.RELEASE")
 
     // JSR 356 - Java API for WebSocket (reference implementation)
     // Low-level implementation required by Spring's client
