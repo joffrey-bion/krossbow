@@ -25,7 +25,7 @@ import kotlin.test.assertTrue
 
 private const val TEST_RECEIPT_TIMEOUT: Long = 10
 
-class StompSessionTest {
+class StompSessionReceiptTests {
 
     private suspend fun connectToMock(
         configure: StompConfig.() -> Unit = {}
@@ -112,6 +112,72 @@ class StompSessionTest {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
 
             assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSend.await() }
+        }
+    }
+
+    @Test
+    fun subscribe_doesntWaitIfNoReceipt() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectToMock()
+        val deferredSub = async { stompSession.subscribe<String>("/destination") }
+        assertFalse(deferredSub.isCompleted, "subscribe() should wait for the websocket to actually send the frame")
+        wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
+        assertTrue(deferredSub.isCompleted, "subscribe() should resume immediately after the SUBSCRIBE frame is sent")
+    }
+
+    @Test
+    fun subscribe_autoReceipt_waitsUntilReceipt() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectToMock {
+            autoReceipt = true
+        }
+        val deferredSub = async { stompSession.subscribe<String>("/destination") }
+        val subscribeFrame = wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
+        val receiptId = subscribeFrame.headers.receipt
+        assertNotNull(receiptId, "receipt header should be auto-populated")
+        assertFalse(deferredSub.isCompleted, "subscribe() should wait until receipt is received")
+        wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders(receiptId)))
+        assertCompletesSoon(deferredSub, "send() should resume soon after correct RECEIPT frame is received")
+    }
+
+    @Test
+    fun subscribe_autoReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectToMock {
+            autoReceipt = true
+            receiptTimeLimit = TEST_RECEIPT_TIMEOUT
+        }
+        // prevents the async send() exception from failing the test
+        supervisorScope {
+            val deferredSend = async { stompSession.subscribe<String>("/destination") }
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
+
+            assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSend.await() }
+        }
+    }
+
+    @Test
+    fun subscribe_manualReceipt_waitsForCorrectReceipt() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectToMock()
+        val manualReceiptId = "my-receipt"
+        val deferredSub = async { stompSession.subscribe<String>("/destination", manualReceiptId) }
+        assertFalse(deferredSub.isCompleted, "subscribe() should wait until ws send finishes")
+        wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
+        assertFalse(deferredSub.isCompleted, "subscribe() should wait until receipt is received")
+        wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders("other-receipt")))
+        assertFalse(deferredSub.isCompleted, "subscribe() should not resume on other receipts")
+        wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders(manualReceiptId)))
+        assertCompletesSoon(deferredSub, "subscribe() should resume soon after correct RECEIPT frame is received")
+    }
+
+    @Test
+    fun subscribe_manualReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectToMock {
+            receiptTimeLimit = TEST_RECEIPT_TIMEOUT
+        }
+        // prevents the async send() exception from failing the test
+        supervisorScope {
+            val deferredSub = async { stompSession.subscribe<String>("/destination", "my-receipt") }
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
+
+            assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSub.await() }
         }
     }
 }
