@@ -8,11 +8,14 @@ import kotlinx.io.core.writeFully
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
+import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
 import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompHeaders
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
+import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
+import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.stomp.headers.asStompHeaders
 
 object StompParser {
@@ -101,8 +104,15 @@ object StompParser {
         StompCommand.MESSAGE -> StompFrame.Message(StompMessageHeaders(headers), body)
         StompCommand.RECEIPT -> StompFrame.Receipt(StompReceiptHeaders(headers))
         StompCommand.SEND -> StompFrame.Send(StompSendHeaders(headers), body)
+        StompCommand.SUBSCRIBE -> StompFrame.Subscribe(StompSubscribeHeaders(headers))
+        StompCommand.UNSUBSCRIBE -> StompFrame.Unsubscribe(StompUnsubscribeHeaders(headers))
+        StompCommand.ACK -> TODO()
+        StompCommand.NACK -> TODO()
+        StompCommand.BEGIN -> TODO()
+        StompCommand.COMMIT -> TODO()
+        StompCommand.ABORT -> TODO()
+        StompCommand.DISCONNECT -> StompFrame.Disconnect(StompDisconnectHeaders(headers))
         StompCommand.ERROR -> StompFrame.Error(StompErrorHeaders(headers), body)
-        else -> error("Unsupported server frame command '$command'")
     }
 
     private fun Iterable<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders {
