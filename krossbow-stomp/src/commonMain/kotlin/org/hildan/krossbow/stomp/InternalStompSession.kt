@@ -172,20 +172,25 @@ internal class InternalStompSession(
         return waitForTypedFrame { it.headers.receiptId == receiptId }
     }
 
-    override suspend fun <T : Any> subscribe(destination: String, clazz: KClass<T>): StompSubscription<T> =
-            subscribe(destination) { config.messageConverter.deserialize(it, clazz) }
+    override suspend fun <T : Any> subscribe(
+        destination: String,
+        clazz: KClass<T>,
+        receiptId: String?
+    ): StompSubscription<T> = subscribe(destination, receiptId) { config.messageConverter.deserialize(it, clazz) }
 
-    override suspend fun subscribeNoPayload(destination: String): StompSubscription<Unit> =
-            subscribe(destination) { StompMessage(Unit, it.headers) }
+    override suspend fun subscribeNoPayload(destination: String, receiptId: String?): StompSubscription<Unit> =
+            subscribe(destination, receiptId) { StompMessage(Unit, it.headers) }
 
     private suspend fun <T> subscribe(
         destination: String,
+        receiptId: String?,
         convertPayload: (StompFrame.Message) -> StompMessage<T>
     ): StompSubscription<T> {
         val id = nextSubscriptionId.getAndIncrement().toString()
         val sub = Subscription(id, convertPayload, this)
         subscriptionsById[id] = sub
-        val subscribeFrame = StompFrame.Subscribe(StompSubscribeHeaders(destination = destination, id = id))
+        val headers = StompSubscribeHeaders(destination = destination, id = id).apply { receipt = receiptId }
+        val subscribeFrame = StompFrame.Subscribe(headers)
         sendStompFrame(subscribeFrame)
         return sub
     }
@@ -197,9 +202,9 @@ internal class InternalStompSession(
 
     override suspend fun disconnect() {
         if (config.gracefulDisconnect) {
-            val frame = StompFrame.Disconnect(StompDisconnectHeaders(nextReceiptId.getStringAndInc()))
+            val disconnectFrame = StompFrame.Disconnect(StompDisconnectHeaders(nextReceiptId.getStringAndInc()))
             // TODO reduce timeout and allow lost receipt for disconnect (see connection lingering in spec)
-            sendStompFrame(frame)
+            sendStompFrame(disconnectFrame)
         }
         nonMsgFrames.cancel()
         webSocketSession.close()
