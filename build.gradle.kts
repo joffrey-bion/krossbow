@@ -50,13 +50,14 @@ subprojects {
         kotlinOptions.freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
 
-    // The import ordering expected by ktlint is alphabetical, which doesn't match IDEA's formatter.
-    // Since it is not configurable, we have to disable the rule.
-    // https://github.com/pinterest/ktlint/issues/527
     extensions.configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        // The import ordering expected by ktlint is alphabetical, which doesn't match IDEA's formatter.
+        // Since it is not configurable, we have to disable the rule.
+        // https://github.com/pinterest/ktlint/issues/527
+        // https://youtrack.jetbrains.com/issue/KT-10974
         disabledRules.set(setOf("import-ordering"))
         filter {
-            exclude("sockjs-client.kt")
+            exclude("sockjs-client.kt") // mostly generated, and cannot easily be adjusted to match the style
         }
     }
 
