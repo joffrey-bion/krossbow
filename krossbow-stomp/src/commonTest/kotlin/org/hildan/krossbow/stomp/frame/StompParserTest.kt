@@ -18,12 +18,31 @@ class StompParserTest {
         The body of the message.$nullChar
     """.trimIndent()
 
+    private val frameText2WithoutBodyContentLength0 = """
+        MESSAGE
+        destination:test
+        message-id:123
+        subscription:42
+        content-length:0
+        
+        $nullChar
+    """.trimIndent()
+
     private val headers1 = StompMessageHeaders(
         destination = "test",
         messageId = "123",
-        subscription = "42",
-        customHeaders = mapOf("content-length" to "24")
-    )
+        subscription = "42"
+    ).apply {
+        contentLength = 24
+    }
+
+    private val headers2 = StompMessageHeaders(
+        destination = "test",
+        messageId = "123",
+        subscription = "42"
+    ).apply {
+        contentLength = 0
+    }
 
     data class Expectation(val frameText: String, val expectedTextFrame: StompFrame, val expectedBinFrame: StompFrame)
 
@@ -32,6 +51,11 @@ class StompParserTest {
             frameText1,
             StompFrame.Message(headers1, FrameBody.Text("The body of the message.")),
             StompFrame.Message(headers1, FrameBody.Binary("The body of the message.".encodeToByteArray()))
+        ),
+        Expectation(
+            frameText2WithoutBodyContentLength0,
+            StompFrame.Message(headers2, null),
+            StompFrame.Message(headers2, null)
         )
     )
 

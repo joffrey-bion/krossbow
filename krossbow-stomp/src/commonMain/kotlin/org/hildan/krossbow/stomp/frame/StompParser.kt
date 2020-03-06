@@ -22,7 +22,7 @@ object StompParser {
 
     fun parse(frameBytes: ByteArray): StompFrame {
         val buffer = IoBuffer.Pool.borrow()
-        buffer.writeFully(frameBytes)
+        buffer.writeFully(frameBytes) // FIXME can't we avoid a full copy?
 
         val command = buffer.readStompCommand()
         val headers = buffer.readStompHeaders(command.supportsHeaderEscapes)
@@ -87,10 +87,10 @@ object StompParser {
     private fun createBody(bodyLines: List<String>): FrameBody.Text? {
         // the frame must be ended by a NULL octet, and may contain optional new lines
         // https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames
-        return bodyLines.takeIf { it.isNotEmpty() }
-            ?.joinToString("\n")
-            ?.trimEnd { it == '\n' || it == '\r' }
-            ?.trimEnd { it == '\u0000' }
+        return bodyLines.joinToString("\n")
+            .trimEnd { it == '\n' || it == '\r' }
+            .trimEnd { it == '\u0000' }
+            .takeIf { it.isNotEmpty() } // empty body text is considered as no body at all
             ?.let { FrameBody.Text(it) }
     }
 
