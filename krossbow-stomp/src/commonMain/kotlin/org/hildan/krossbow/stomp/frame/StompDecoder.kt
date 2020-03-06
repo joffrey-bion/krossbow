@@ -18,7 +18,7 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.stomp.headers.asStompHeaders
 
-object StompParser {
+object StompDecoder {
 
     fun parse(frameBytes: ByteArray): StompFrame {
         val buffer = IoBuffer.Pool.borrow()

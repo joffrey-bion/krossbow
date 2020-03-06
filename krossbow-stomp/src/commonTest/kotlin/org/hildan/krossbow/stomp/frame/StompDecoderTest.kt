@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalStdlibApi::class)
-class StompParserTest {
+class StompDecoderTest {
     private val nullChar = '\u0000'
 
     private val frameText1 = """
@@ -62,7 +62,7 @@ class StompParserTest {
     @Test
     fun testParseText() {
         for (e in expectations) {
-            val actualFrame = StompParser.parse(e.frameText)
+            val actualFrame = StompDecoder.parse(e.frameText)
             assertEquals(e.expectedTextFrame, actualFrame)
         }
     }
@@ -70,7 +70,7 @@ class StompParserTest {
     @Test
     fun testParseBytes() {
         for (e in expectations) {
-            val actualFrame = StompParser.parse(e.frameText.encodeToByteArray())
+            val actualFrame = StompDecoder.parse(e.frameText.encodeToByteArray())
             assertEquals(e.expectedBinFrame, actualFrame)
         }
     }
