@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withTimeout
+import org.hildan.krossbow.converters.MessageConversionException
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompDecoder
@@ -46,17 +47,21 @@ internal class InternalStompSession(
         webSocketSession.listener = this
     }
 
+    // FIXME never fail in listener methods, but dispatch the decoding errors to waiting channels
     override suspend fun onTextMessage(text: String) = onFrameReceived(StompDecoder.decode(text))
 
+    // FIXME never fail in listener methods, but dispatch the decoding errors to waiting channels
     override suspend fun onBinaryMessage(bytes: ByteArray) = onFrameReceived(StompDecoder.decode(bytes))
 
     override suspend fun onError(error: Throwable) {
         // TODO allow user to set a global onError listener?
+        // FIXME never fail in listener methods, but dispatch the error to waiting channels
         throw IllegalStateException("Error at WebSocket level: ${error.message}", error)
     }
 
     override suspend fun onClose(code: Int, reason: String?) {
         // TODO allow user to set a global onClose listener?
+        // FIXME dispatch the close event to waiting channels
         println("Underlying WebSocket connection closed")
     }
 
@@ -222,7 +227,11 @@ private class Subscription<out T>(
     override val messages: ReceiveChannel<StompMessage<T>> get() = internalMsgChannel
 
     suspend fun onMessage(message: StompFrame.Message) {
-        internalMsgChannel.send(convertPayload(message))
+        try {
+            internalMsgChannel.send(convertPayload(message))
+        } catch (e: MessageConversionException) {
+            internalMsgChannel.close(e)
+        }
     }
 
     fun onError(error: StompFrame.Error) {
