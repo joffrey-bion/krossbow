@@ -102,6 +102,7 @@ class KotlinxSerialization {
             if (body == null) {
                 throw MessageConversionException("Cannot create object of type $clazz from a MESSAGE frame without body")
             }
+            // FIXME this doesn't seem to work with generic types (e.g. List<String>)
             val serializer = json.context.getContextualOrDefault(clazz)
             return StompMessage(json.parse(serializer, body), headers)
         }
