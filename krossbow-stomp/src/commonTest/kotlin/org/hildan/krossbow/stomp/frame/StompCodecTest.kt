@@ -3,9 +3,10 @@ package org.hildan.krossbow.stomp.frame
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalStdlibApi::class)
-class StompDecoderTest {
+class StompCodecTest {
     private val nullChar = '\u0000'
 
     private val frameText1 = """
@@ -60,7 +61,7 @@ class StompDecoderTest {
     )
 
     @Test
-    fun testParseText() {
+    fun testDecodeText() {
         for (e in expectations) {
             val actualFrame = StompDecoder.decode(e.frameText)
             assertEquals(e.expectedTextFrame, actualFrame)
@@ -68,10 +69,24 @@ class StompDecoderTest {
     }
 
     @Test
-    fun testParseBytes() {
+    fun testDecodeBytes() {
         for (e in expectations) {
             val actualFrame = StompDecoder.decode(e.frameText.encodeToByteArray())
             assertEquals(e.expectedBinFrame, actualFrame)
+        }
+    }
+
+    @Test
+    fun testEncodeToText() {
+        for (e in expectations) {
+            assertEquals(e.frameText, e.expectedTextFrame.encodeToText())
+        }
+    }
+
+    @Test
+    fun testEncodeToBytes() {
+        for (e in expectations) {
+            assertTrue(e.frameText.encodeToByteArray().contentEquals(e.expectedTextFrame.encodeToBytes()))
         }
     }
 }
