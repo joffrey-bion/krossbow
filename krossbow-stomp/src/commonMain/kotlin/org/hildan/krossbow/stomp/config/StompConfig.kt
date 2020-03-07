@@ -3,6 +3,7 @@ package org.hildan.krossbow.stomp.config
 import org.hildan.krossbow.converters.KotlinxSerialization
 import org.hildan.krossbow.converters.MessageConverter
 import org.hildan.krossbow.stomp.LostReceiptException
+import org.hildan.krossbow.stomp.StompSession
 
 /**
  * Configuration for the STOMP protocol.
@@ -17,18 +18,28 @@ data class StompConfig(
      */
     var autoReceipt: Boolean = false,
     /**
-     * As suggested by the specification, when disconnecting from the server, the client should first send a
-     * DISCONNECT frame with a `receipt` header, and then wait for a RECEIPT frame before closing the connection.
-     * If this graceful shutdown is disabled, then there is no guarantee that the server received all previous messages.
-     * More info: https://stomp.github.io/stomp-specification-1.2.html#DISCONNECT
+     * Enables [graceful disconnect](https://stomp.github.io/stomp-specification-1.2.html#DISCONNECT):
+     * when disconnecting from the server, the client should first send a DISCONNECT frame with a `receipt` header,
+     * and then wait for a RECEIPT frame before closing the connection.
+     * If this graceful disconnect is disabled, then no DISCONNECT frame is sent when calling [StompSession.disconnect],
+     * and the connection is closed immediately. In this case, there is no guarantee that the server received all
+     * previous messages.
      */
     var gracefulDisconnect: Boolean = true,
     /**
      * Defines how long to wait for a RECEIPT frame from the server before throwing a [LostReceiptException].
      * Only crashes when a `receipt` header was actually present in the sent frame (and thus a RECEIPT was expected).
      * Such header is always present if [autoReceipt] is enabled.
+     * Note that this doesn't apply to the DISCONNECT frames, use [disconnectTimeoutMillis] instead for that.
      */
-    var receiptTimeLimit: Long = 15000,
+    var receiptTimeoutMillis: Long = 500,
+    /**
+     * Like [receiptTimeoutMillis] but only for the DISCONNECT frame. This is ignored if [gracefulDisconnect] is disabled.
+     * Note that if this timeout expires, the [StompSession.disconnect] call doesn't throw an exception. This is to
+     * allow servers to close the connection quickly (sometimes too quick for sending a RECEIPT/ERROR) as
+     * [mentioned in the specification](http://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
+     */
+    var disconnectTimeoutMillis: Long = 200,
     /**
      * Defines how long to wait for the websocket+STOMP connection to be established before throwing an exception.
      */

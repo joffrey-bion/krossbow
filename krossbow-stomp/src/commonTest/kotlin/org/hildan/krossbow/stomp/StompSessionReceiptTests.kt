@@ -69,7 +69,7 @@ class StompSessionReceiptTests {
     fun send_autoReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectToMock {
             autoReceipt = true
-            receiptTimeLimit = TEST_RECEIPT_TIMEOUT
+            receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
         // prevents the async send() exception from failing the test
         supervisorScope {
@@ -101,7 +101,7 @@ class StompSessionReceiptTests {
     @Test
     fun send_manualReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectToMock {
-            receiptTimeLimit = TEST_RECEIPT_TIMEOUT
+            receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
         // prevents the async send() exception from failing the test
         supervisorScope {
@@ -142,7 +142,7 @@ class StompSessionReceiptTests {
     fun subscribe_autoReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectToMock {
             autoReceipt = true
-            receiptTimeLimit = TEST_RECEIPT_TIMEOUT
+            receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
         // prevents the async send() exception from failing the test
         supervisorScope {
@@ -170,7 +170,7 @@ class StompSessionReceiptTests {
     @Test
     fun subscribe_manualReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectToMock {
-            receiptTimeLimit = TEST_RECEIPT_TIMEOUT
+            receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
         // prevents the async send() exception from failing the test
         supervisorScope {

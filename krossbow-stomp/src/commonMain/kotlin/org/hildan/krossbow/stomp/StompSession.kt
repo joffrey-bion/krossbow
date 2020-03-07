@@ -26,7 +26,7 @@ import kotlin.reflect.KClass
  *
  * When a receipt header is present (automatically added or manually provided), all [send] and [subscribe] overloads
  * suspend until the relevant RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
- * in the configured [time limit][StompConfig.receiptTimeLimit], a [LostReceiptException] is thrown.
+ * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
  *
  * If no receipt is provided and auto-receipt is disabled, the [send] and [subscribe] methods return immediately
  * after the underlying web socket implementation has returned.
@@ -61,7 +61,7 @@ interface StompSession {
      *
      * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
      * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
-     * in the configured [time limit][StompConfig.receiptTimeLimit], a [LostReceiptException] is thrown.
+     * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
      *
      * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
      */
@@ -76,7 +76,7 @@ interface StompSession {
      *
      * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
      * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
-     * in the configured [time limit][StompConfig.receiptTimeLimit], a [LostReceiptException] is thrown.
+     * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
      *
      * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
      */
@@ -86,6 +86,9 @@ interface StompSession {
      * If [graceful disconnect][StompConfig.gracefulDisconnect] is enabled (which is the default), sends a DISCONNECT
      * frame to close the session, waits for the relevant RECEIPT frame, and then closes the connection. Otherwise,
      * force-closes the connection.
+     *
+     * If a RECEIPT frame is not received within the [configured time][StompConfig.disconnectTimeoutMillis], this
+     * function doesn't throw an exception, it returns normally.
      */
     suspend fun disconnect()
 }
@@ -174,8 +177,10 @@ class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception("STOMP ER
  * An exception thrown when a RECEIPT frame was expected from the server, but not received in the configured time limit.
  */
 class LostReceiptException(
-    /**
-     * The value of the receipt header sent to the server, and expected in a RECEIPT frame.
-     */
-    val receiptId: String
-) : Exception("No RECEIPT frame received for receiptId '$receiptId' within the configured time limit")
+    /** The value of the receipt header sent to the server, and expected in a RECEIPT frame. */
+    val receiptId: String,
+    /** THe configured timeout which has expired. */
+    val configuredTimeoutMillis: Long,
+    /** The frame which did not get acknowledged by the server. */
+    val frame: StompFrame
+) : Exception("No RECEIPT frame received for receiptId '$receiptId' (in ${frame.command} frame) within ${configuredTimeoutMillis}ms")

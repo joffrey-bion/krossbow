@@ -11,6 +11,7 @@ import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.converters.MessageConversionException
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
+import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompDecoder
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.encodeToBytes
@@ -166,16 +167,22 @@ internal class InternalStompSession(
             val receiptFrame = async { waitForReceipt(receiptId) }
             sendStompFrameAsIs(frame)
             try {
-                withTimeout(config.receiptTimeLimit) { receiptFrame.await() }
+                withTimeout(frame.receiptTimeout) { receiptFrame.await() }
             } catch (e: TimeoutCancellationException) {
-                throw LostReceiptException(receiptId)
+                throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
             }
         }
     }
 
-    private suspend fun waitForReceipt(receiptId: String): StompFrame.Receipt {
-        return waitForTypedFrame { it.headers.receiptId == receiptId }
-    }
+    private suspend fun waitForReceipt(receiptId: String): StompFrame.Receipt =
+            waitForTypedFrame { it.headers.receiptId == receiptId }
+
+    private val StompFrame.receiptTimeout: Long
+        get() = if (command == StompCommand.DISCONNECT) {
+            config.disconnectTimeoutMillis
+        } else {
+            config.receiptTimeoutMillis
+        }
 
     override suspend fun <T : Any> subscribe(
         destination: String,
@@ -207,12 +214,21 @@ internal class InternalStompSession(
 
     override suspend fun disconnect() {
         if (config.gracefulDisconnect) {
-            val disconnectFrame = StompFrame.Disconnect(StompDisconnectHeaders(nextReceiptId.getStringAndInc()))
-            // TODO reduce timeout and allow lost receipt for disconnect (see connection lingering in spec)
-            sendStompFrame(disconnectFrame)
+            sendDisconnectFrameAndWaitForReceipt()
         }
         nonMsgFrames.cancel()
         webSocketSession.close()
+    }
+
+    private suspend fun sendDisconnectFrameAndWaitForReceipt() {
+        try {
+            val receiptId = nextReceiptId.getStringAndInc()
+            val disconnectFrame = StompFrame.Disconnect(StompDisconnectHeaders(receiptId))
+            sendAndWaitForReceipt(receiptId, disconnectFrame)
+        } catch (e: LostReceiptException) {
+            // Sometimes the server closes the connection too quickly to send a RECEIPT, which is not really an error
+            // http://stomp.github.io/stomp-specification-1.2.html#Connection_Lingering
+        }
     }
 }
 
