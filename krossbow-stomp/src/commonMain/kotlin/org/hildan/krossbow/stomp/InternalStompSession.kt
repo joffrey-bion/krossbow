@@ -10,8 +10,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
-import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.StompDecoder
+import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.encodeToBytes
 import org.hildan.krossbow.stomp.frame.encodeToText
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
@@ -46,9 +46,9 @@ internal class InternalStompSession(
         webSocketSession.listener = this
     }
 
-    override suspend fun onTextMessage(text: String) = onFrameReceived(StompDecoder.parse(text))
+    override suspend fun onTextMessage(text: String) = onFrameReceived(StompDecoder.decode(text))
 
-    override suspend fun onBinaryMessage(bytes: ByteArray) = onFrameReceived(StompDecoder.parse(bytes))
+    override suspend fun onBinaryMessage(bytes: ByteArray) = onFrameReceived(StompDecoder.decode(bytes))
 
     override suspend fun onError(error: Throwable) {
         // TODO allow user to set a global onError listener?

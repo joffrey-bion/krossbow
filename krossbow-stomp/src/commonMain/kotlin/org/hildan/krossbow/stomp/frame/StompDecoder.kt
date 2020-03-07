@@ -1,10 +1,12 @@
 package org.hildan.krossbow.stomp.frame
 
-import kotlinx.io.core.IoBuffer
+import kotlinx.io.core.ByteReadPacket
+import kotlinx.io.core.Input
+import kotlinx.io.core.buildPacket
 import kotlinx.io.core.readBytes
 import kotlinx.io.core.readUTF8Line
 import kotlinx.io.core.readUntilDelimiter
-import kotlinx.io.core.writeFully
+import kotlinx.io.core.use
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
@@ -20,53 +22,47 @@ import org.hildan.krossbow.stomp.headers.asStompHeaders
 
 object StompDecoder {
 
-    fun parse(frameBytes: ByteArray): StompFrame {
-        val buffer = IoBuffer.Pool.borrow()
-        buffer.writeFully(frameBytes) // FIXME can't we avoid a full copy?
+    private const val NULL_BYTE = 0.toByte()
 
-        val command = buffer.readStompCommand()
-        val headers = buffer.readStompHeaders(command.supportsHeaderEscapes)
-        val body = buffer.readBinaryBody(headers.contentLength)
+    private val MAX_COMMAND_LENGTH = StompCommand.values().map { it.text.length }.max()!!
 
-        buffer.release(IoBuffer.Pool)
+    fun decode(frameBytes: ByteArray): StompFrame = ByteReadPacket(frameBytes).use { it.readStompFrame() }
+
+    private fun Input.readStompFrame(): StompFrame {
+        val command = readStompCommand()
+        val headers = readStompHeaders(command.supportsHeaderEscapes)
+        val body = readBinaryBody(headers.contentLength)
         return createFrame(command, headers, body)
     }
 
-    private fun IoBuffer.readStompCommand(): StompCommand {
-        val firstLine = readUTF8Line(estimate = 16) ?: error("Missing command in STOMP frame")
+    private fun Input.readStompCommand(): StompCommand {
+        val firstLine = readUTF8Line(estimate = MAX_COMMAND_LENGTH) ?: error("Missing command in STOMP frame")
         return StompCommand.parse(firstLine)
     }
 
-    private fun IoBuffer.readStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders =
+    private fun Input.readStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders =
             utf8LineSequence()
-                .takeWhile { it.isNotEmpty() }
+                .takeWhile { it.isNotEmpty() } // empty line marks end of headers
                 .asIterable()
                 .parseLinesAsStompHeaders(shouldUnescapeHeaders)
 
-    private fun IoBuffer.utf8LineSequence(): Sequence<String> = sequence {
+    private fun Input.utf8LineSequence(): Sequence<String> = sequence {
         while (true) {
             val line = readUTF8Line(estimate = 16) ?: error("Unexpected end of input")
             yield(line)
         }
     }
 
-    private fun IoBuffer.readBinaryBody(contentLength: Int?) = when (contentLength) {
+    private fun Input.readBinaryBody(contentLength: Int?) = when (contentLength) {
         0 -> null
         null -> FrameBody.Binary(readUpToNullCharacter())
         else -> FrameBody.Binary(readBytes(contentLength))
     }
 
-    private fun IoBuffer.readUpToNullCharacter(): ByteArray {
-        val outBuffer = IoBuffer.Pool.borrow()
-        outBuffer.resetForWrite()
-        readUntilDelimiter(0.toByte(), outBuffer)
-        val readBytes = outBuffer.readBytes()
-        outBuffer.release(IoBuffer.Pool)
-        return readBytes
-    }
+    private fun Input.readUpToNullCharacter(): ByteArray =
+            buildPacket { readUntilDelimiter(NULL_BYTE, this) }.readBytes()
 
-    fun parse(frameText: String): StompFrame {
-
+    fun decode(frameText: String): StompFrame {
         val lines = frameText.lines()
         val command = StompCommand.parse(lines[0])
 
@@ -78,20 +74,14 @@ object StompDecoder {
         val headers = lines.subList(1, emptyLineIndex).parseLinesAsStompHeaders(command.supportsHeaderEscapes)
 
         // TODO stop at content-length if specified in the headers
-        val bodyLines = lines.subList(emptyLineIndex + 1, lines.size)
-        val body = createBody(bodyLines)
+        val restOfTheFrame = lines.subList(emptyLineIndex + 1, lines.size).joinToString("\n")
+
+        // the frame must be ended by a NULL octet, which may be followed by optional new lines
+        // https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames
+        val bodyText = restOfTheFrame.trimEnd { it == '\n' || it == '\r' }.trimEnd { it == '\u0000' }
+        val body = bodyText.ifEmpty { null }?.let { FrameBody.Text(it) }
 
         return createFrame(command, headers, body)
-    }
-
-    private fun createBody(bodyLines: List<String>): FrameBody.Text? {
-        // the frame must be ended by a NULL octet, and may contain optional new lines
-        // https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames
-        return bodyLines.joinToString("\n")
-            .trimEnd { it == '\n' || it == '\r' }
-            .trimEnd { it == '\u0000' }
-            .takeIf { it.isNotEmpty() } // empty body text is considered as no body at all
-            ?.let { FrameBody.Text(it) }
     }
 
     private fun createFrame(

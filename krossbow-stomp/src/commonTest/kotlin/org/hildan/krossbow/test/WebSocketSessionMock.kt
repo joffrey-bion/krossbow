@@ -2,15 +2,15 @@ package org.hildan.krossbow.test
 
 import kotlinx.coroutines.channels.Channel
 import org.hildan.krossbow.stomp.frame.StompCommand
-import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.StompDecoder
+import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.encodeToBytes
 import org.hildan.krossbow.stomp.frame.encodeToText
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.stomp.headers.StompErrorHeaders
+import org.hildan.krossbow.websocket.NoopWebSocketListener
 import org.hildan.krossbow.websocket.WebSocketListener
 import org.hildan.krossbow.websocket.WebSocketSession
-import org.hildan.krossbow.websocket.NoopWebSocketListener
 import kotlin.test.assertEquals
 
 class WebSocketSessionMock : WebSocketSession {
@@ -23,12 +23,12 @@ class WebSocketSessionMock : WebSocketSession {
 
     override suspend fun sendText(frameText: String) {
         // decoding the sent frame to check the validity and perform further assertions later
-        sentFrames.send(StompDecoder.parse(frameText))
+        sentFrames.send(StompDecoder.decode(frameText))
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
         // decoding the sent frame to check the validity and perform further assertions later
-        sentFrames.send(StompDecoder.parse(frameData))
+        sentFrames.send(StompDecoder.decode(frameData))
     }
 
     override suspend fun close(code: Int, reason: String?) {

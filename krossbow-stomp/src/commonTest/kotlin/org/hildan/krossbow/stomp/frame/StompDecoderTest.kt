@@ -62,7 +62,7 @@ class StompDecoderTest {
     @Test
     fun testParseText() {
         for (e in expectations) {
-            val actualFrame = StompDecoder.parse(e.frameText)
+            val actualFrame = StompDecoder.decode(e.frameText)
             assertEquals(e.expectedTextFrame, actualFrame)
         }
     }
@@ -70,7 +70,7 @@ class StompDecoderTest {
     @Test
     fun testParseBytes() {
         for (e in expectations) {
-            val actualFrame = StompDecoder.parse(e.frameText.encodeToByteArray())
+            val actualFrame = StompDecoder.decode(e.frameText.encodeToByteArray())
             assertEquals(e.expectedBinFrame, actualFrame)
         }
     }
