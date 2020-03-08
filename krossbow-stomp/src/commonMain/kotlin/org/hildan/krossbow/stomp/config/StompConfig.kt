@@ -1,7 +1,5 @@
 package org.hildan.krossbow.stomp.config
 
-import org.hildan.krossbow.converters.KotlinxSerialization
-import org.hildan.krossbow.converters.MessageConverter
 import org.hildan.krossbow.stomp.LostReceiptException
 import org.hildan.krossbow.stomp.StompSession
 
@@ -43,12 +41,7 @@ data class StompConfig(
     /**
      * Defines how long to wait for the websocket+STOMP connection to be established before throwing an exception.
      */
-    var connectionTimeoutMillis: Long = 15000,
-    /**
-     * Used for conversion of message payloads to Kotlin objects. Defaults to JSON conversion using Kotlinx
-     * Serialization.
-     */
-    var messageConverter: MessageConverter = KotlinxSerialization.JsonConverter()
+    var connectionTimeoutMillis: Long = 15000
 )
 
 /**

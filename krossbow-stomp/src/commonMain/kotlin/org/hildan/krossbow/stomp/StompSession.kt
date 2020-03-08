@@ -1,21 +1,14 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.channels.ReceiveChannel
-import org.hildan.krossbow.converters.MessageConverter
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
+import org.hildan.krossbow.stomp.frame.asText
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
-import kotlin.reflect.KClass
 
 /**
  * A coroutine-based STOMP session.
- *
- * ### Message conversion
- *
- * The [send] and [subscribe] methods have some overloads allowing arbitrary payload types to be sent/received. When
- * using these overloads, the configured [message converter][StompConfig.messageConverter] is used to convert between
- * objects and frame payloads.
  *
  * ### Suspension & Receipts
  *
@@ -42,22 +35,11 @@ interface StompSession {
     suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt?
 
     /**
-     * Sends a SEND frame to the server with the given [headers] and the given [payload]. The payload will be converted
-     * via the configured [MessageConverter].
-     *
-     * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise this method
-     * suspends until the relevant RECEIPT frame is received from the server, and then returns a [StompReceipt].
-     */
-    suspend fun <T : Any> send(headers: StompSendHeaders, payload: T? = null, payloadType: KClass<T>): StompReceipt?
-
-    /**
-     * Subscribes to the given [destination], expecting objects of type [T]. The returned [StompSubscription]
+     * Subscribes to the given [destination], producing objects of type [T]. The returned [StompSubscription]
      * can be used to access the channel of received objects and unsubscribe.
      *
-     * The configured [MessageConverter] is used to create instances of the given type from the body of every message
-     * received on the created subscription. If no payload is received in a message, it's up to the implementation of
-     * the [MessageConverter] to decide what to do. If you want to bypass the type converter completely for this
-     * subscription, use [subscribeNoPayload] instead.
+     * The given [convertBody] function is used to create instances of the given type from the body of every message
+     * received on the created subscription.
      *
      * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
      * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
@@ -65,22 +47,11 @@ interface StompSession {
      *
      * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
      */
-    suspend fun <T : Any> subscribe(
+    suspend fun <T> subscribe(
         destination: String,
-        clazz: KClass<T>,
-        receiptId: String? = null
+        receiptId: String? = null,
+        convertBody: (StompFrame.Message) -> StompMessage<T>
     ): StompSubscription<T>
-
-    /**
-     * Subscribes to the given [destination], ignoring message payloads.
-     *
-     * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
-     * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
-     * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
-     *
-     * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
-     */
-    suspend fun subscribeNoPayload(destination: String, receiptId: String? = null): StompSubscription<Unit>
 
     /**
      * If [graceful disconnect][StompConfig.gracefulDisconnect] is enabled (which is the default), sends a DISCONNECT
@@ -101,10 +72,12 @@ interface StompSubscription<out T> {
      * The subscription ID used by the STOMP protocol.
      */
     val id: String
+
     /**
      * The subscription messages channel, to read incoming messages from.
      */
     val messages: ReceiveChannel<StompMessage<T>>
+
     /**
      * Unsubscribes from this subscription to stop receive messages. This closes the [messages] channel, so that any
      * loop on it stops as well.
@@ -129,39 +102,82 @@ suspend fun StompSession.sendText(destination: String, body: String?): StompRece
         send(StompSendHeaders(destination), body?.let { FrameBody.Text(it) })
 
 /**
- * Sends a SEND frame to the server at the given [destination] with no payload.
+ * Sends a SEND frame to the server at the given [destination] without body.
  *
  * Please refer to [StompSession.send] for details about how receipts are handled.
  */
-suspend fun StompSession.send(destination: String): StompReceipt? = send(StompSendHeaders(destination), null)
+suspend fun StompSession.sendEmptyMsg(destination: String): StompReceipt? = send(StompSendHeaders(destination), null)
 
 /**
- * Sends a SEND frame to the server at the given [destination] with the given [payload].
+ * Subscribes to the given [destination], with raw message bodies. The returned [StompSubscription]
+ * can be used to access the channel of received messages and unsubscribe.
  *
- * Please refer to [StompSession.send] for details about how receipts are handled.
- */
-suspend fun <T : Any> StompSession.send(destination: String, payload: T? = null, payloadType: KClass<T>): StompReceipt? =
-    send(StompSendHeaders(destination), payload, payloadType)
-
-/**
- * Sends a SEND frame to the server at the given [destination] with the given [payload].
+ * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
+ * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
+ * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
  *
- * Please refer to [StompSession.send] for details about how receipts are handled.
+ * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
  */
-suspend inline fun <reified T : Any> StompSession.send(destination: String, payload: T?): StompReceipt? =
-        send(destination, payload, T::class)
-
-/**
- * Subscribes to the given [destination], expecting objects of type [T]. The returned [StompSubscription]
- * can be used to access the channel of received objects.
- *
- * A platform-specific deserializer is used to create instances of the given type from the body of every message
- * received on the created subscription.
- */
-suspend inline fun <reified T : Any> StompSession.subscribe(
+suspend fun StompSession.subscribeRaw(
     destination: String,
     receiptId: String? = null
-): StompSubscription<T> = subscribe(destination, T::class, receiptId)
+): StompSubscription<FrameBody?> = subscribe(destination, receiptId) { StompMessage(it.body, it.headers) }
+
+/**
+ * Subscribes to the given [destination], expecting text message bodies. The returned [StompSubscription]
+ * can be used to access the channel of received messages and unsubscribe.
+ *
+ * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
+ * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
+ * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
+ *
+ * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+ */
+suspend fun StompSession.subscribeText(
+    destination: String,
+    receiptId: String? = null
+): StompSubscription<String?> = subscribe(destination, receiptId) { StompMessage(it.body?.asText(), it.headers) }
+
+/**
+ * Subscribes to the given [destination], expecting raw binary message bodies. The returned [StompSubscription]
+ * can be used to access the channel of received messages and unsubscribe.
+ *
+ * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
+ * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
+ * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
+ *
+ * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+ */
+suspend fun StompSession.subscribeBinary(
+    destination: String,
+    receiptId: String? = null
+): StompSubscription<ByteArray?> = subscribe(destination, receiptId) { StompMessage(it.body?.bytes, it.headers) }
+
+/**
+ * Subscribes to the given [destination], ignoring the body of the received messages.
+ *
+ * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
+ * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
+ * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
+ *
+ * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+ */
+suspend fun StompSession.subscribeEmptyMsg(
+    destination: String,
+    receiptId: String? = null
+): StompSubscription<Unit> = subscribe(destination, receiptId) { StompMessage(Unit, it.headers) }
+
+/**
+ * Executes the given block on this [StompSession], and [disconnects][StompSession.disconnect] from the session whether
+ * the block terminated normally or exceptionally.
+ */
+suspend fun <S : StompSession, T> S.use(block: suspend S.() -> T): T {
+    try {
+        return block()
+    } finally {
+        disconnect()
+    }
+}
 
 /**
  * Exception thrown when the websocket connection + STOMP connection takes too much time.

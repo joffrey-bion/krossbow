@@ -36,8 +36,7 @@ class StompClient(
             }
         } catch (te: TimeoutCancellationException) {
             throw ConnectionTimeout(
-                "Timeout of ${config.connectionTimeoutMillis}ms exceeded when connecting to $url",
-                te
+                "Timeout of ${config.connectionTimeoutMillis}ms exceeded when connecting to $url", te
             )
         } catch (e: Exception) {
             throw ConnectionException("Couldn't connect to STOMP server at $url", e)
@@ -64,21 +63,3 @@ class StompClient(
  * An exception thrown when something went wrong during the connection.
  */
 class ConnectionException(message: String, cause: Throwable) : Exception(message, cause)
-
-/**
- * Connects to the given [url] and executes the given [block] with the created session. The session is then
- * automatically closed at the end of the block.
- */
-suspend fun StompClient.useSession(
-    url: String,
-    login: String? = null,
-    passcode: String? = null,
-    block: suspend StompSession.() -> Unit
-) {
-    val session = connect(url, login, passcode)
-    try {
-        session.block()
-    } finally {
-        session.disconnect()
-    }
-}

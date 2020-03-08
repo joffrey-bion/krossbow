@@ -11,49 +11,93 @@ A coroutine-based Kotlin multiplatform WebSocket client and [STOMP 1.2](https://
 
 ## Usage
 
+### Raw STOMP usage (without conversions)
+
 This is how to create a client and interact with it (the verbose way):
 
 ```kotlin
+import org.hildan.krossbow.stomp.sendText
+import org.hildan.krossbow.stomp.StompClient
+import org.hildan.krossbow.stomp.StompSession
+
 val client = StompClient() // custom WebSocketClient and other config can be passed in here
-val session = client.connect(url) // optional login/passcode can be provided here
+val session: StompSession = client.connect(url) // optional login/passcode can be provided here
 
 try {
-    session.send("/some/destination", MyPojo("Custom", 42)) 
+    session.sendText("/some/destination", "Basic text message") 
 
-    val subscription = session.subscribe<MyMessage>("/some/topic/destination")
-    val firstMessage: MyMessage = subscription.messages.receive()
+    val subscription = session.subscribeText("/some/topic/destination")
+    val firstMessage: StompMessage<String?> = subscription.messages.receive()
+
+    println("Received: ${firstMessage.body}")
+    subscription.unsubscribe()
+} finally {
+    jsonStompSession.disconnect()
+}
+```
+
+If the STOMP session is only used in one place like this, we can get rid of the `try`/`catch`, and `disconnect()` 
+automatically by calling `StompSession.use()` (similar to `Closeable.use()`):
+
+```kotlin
+import org.hildan.krossbow.stomp.sendText
+import org.hildan.krossbow.stomp.StompClient
+
+StompClient().connect(url).use { // this: StompSessionWithKxSerialization
+    session.sendText("/some/destination", "Basic text message") 
+
+    val subscription = session.subscribeText("/some/topic/destination")
+    val firstMessage: StompMessage<String?> = subscription.messages.receive()
+
+    println("Received: ${firstMessage.body}")
+    subscription.unsubscribe()
+}
+```
+
+### Using body conversions
+
+Usually STOMP is used in conjonction with JSON bodies that are converted back and forth between objects.
+Krossbow comes with built-in support for Kotlinx Serialization in order to support multiplatform conversions.
+
+Call `withJsonConversions` to add conversions capabilities to your `StompSession`.
+Then, use `convertAndSend` and `subscribe` overloads with serializers to use these conversions:
+
+```kotlin
+import org.hildan.krossbow.stomp.StompClient
+import org.hildan.krossbow.stomp.conversions.kxserialization.convertAndSend
+import org.hildan.krossbow.stomp.conversions.kxserialization.subscribe
+import org.hildan.krossbow.stomp.conversions.kxserialization.withJsonConversions
+
+val session = StompClient().connect(url)
+val jsonStompSession = session.withJsonConversions() // adds convenience methods for kotlinx.serialization's conversions
+
+jsonStompSession.use {
+    convertAndSend("/some/destination", MyPojo("Custom", 42), MyPojo.serializer()) 
+
+    val subscription = subscribe("/some/topic/destination", MyMessage.serializer())
+    val firstMessage: MyMessage = subscription.messages.receive().body
 
     println("Received: $firstMessage")
     subscription.unsubscribe()
-} finally {
-    session.disconnect()
 }
 ```
 
-If the STOMP session is only used in one place like this, we can get rid of the `try`/`catch` and `disconnect()` 
-automatically by calling `useSession` (similar to `Closeable.use()`):
+Note that `withJsonConversions()` takes an optional `Json` argument to customize the serialization configuration.
 
+#### Using Jackson on the JVM
+
+If you're only targeting the JVM, you can use Jackson instead of Kotlinx Serialization to use reflection instead of
+ manually provided serializers:
+ 
 ```kotlin
-KrossbowClient().useSession(url) { // this: KrossbowSession
+StompClient().connect(url).withJacksonConversions().use {
+    convertAndSend("/some/destination", MyPojo("Custom", 42)) 
 
-    send("/some/destination", CustomObject("Typed values", 42))
+    val subscription = subscribe<MyMessage>("/some/topic/destination")
+    val firstMessage: MyMessage = subscription.messages.receive().body
 
-    val (messages) = subscribe<Message>("/some/topic/destination")
-
-    val firstMessage = messages.receive()
     println("Received: $firstMessage")
-}
-```
-
-### Message payload conversion
-
-By default, Kotlinx Serialization is used (because cross-platform), but it can be customized.
-
-For instance, on the JVM, you can use the `JacksonConverter` this way:
-
-```kotlin
-val client = StompClient {
-    messageConverter = JacksonConverter()
+    subscription.unsubscribe()
 }
 ```
 
@@ -61,12 +105,8 @@ You can use it with your own `ObjectMapper` this way:
 
 ```kotlin
 val objectMapper = jacksonObjectMapper().enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-val client = StompClient {
-    messageConverter = JacksonConverter(objectMapper)
-}
+val session = StompClient().connect(url).withJacksonConversions(objectMapper)
 ```
-
-You can also implement your own `MessageConverter` yourself, and pass it when configuring the client.
 
 ## Adding the dependency
 

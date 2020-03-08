@@ -2,11 +2,11 @@ package org.hildan.krossbow.websocket
 
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
-import org.hildan.krossbow.converters.JacksonConverter
+import org.hildan.krossbow.stomp.conversions.withJacksonConversions
 import org.hildan.krossbow.stomp.StompClient
-import org.hildan.krossbow.stomp.send
-import org.hildan.krossbow.stomp.subscribe
-import org.hildan.krossbow.stomp.useSession
+import org.hildan.krossbow.stomp.conversions.convertAndSend
+import org.hildan.krossbow.stomp.conversions.subscribe
+import org.hildan.krossbow.stomp.use
 import org.hildan.krossbow.test.runAsyncTest
 import org.hildan.krossbow.websocket.sockjs.SockJSClient
 import org.hildan.krossbow.websocket.spring.SpringDefaultWebSocketClient
@@ -43,15 +43,13 @@ class JvmDefaultWebSocketClientsTest {
     @Ignore
     @Test
     fun basicConnect() = runAsyncTest {
-        val client = StompClient(SockJSClient()) {
-            messageConverter = JacksonConverter()
-        }
-        client.useSession(testUrl) {
+        val client = StompClient(SockJSClient())
+        client.connect(testUrl).withJacksonConversions().use {
             val errorsSub = subscribe<ErrorMessage>("/user/queue/errors")
             val nameSub = subscribe<PlayerDataJackson>("/user/queue/nameChoice")
 
             val chooseNameAction = ChooseNameAction("Bob")
-            send("/app/chooseName", chooseNameAction)
+            convertAndSend("/app/chooseName", chooseNameAction)
 
             val error = withTimeoutOrNull(100) { errorsSub.messages.receive() }
             assertNull(error)
@@ -64,7 +62,7 @@ class JvmDefaultWebSocketClientsTest {
                 gameOwner = false,
                 user = true
             )
-            assertEquals(expected, response.payload.copy(username = "ignored"))
+            assertEquals(expected, response.body.copy(username = "ignored"))
         }
     }
 }

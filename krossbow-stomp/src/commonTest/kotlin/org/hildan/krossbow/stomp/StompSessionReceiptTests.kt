@@ -42,7 +42,7 @@ class StompSessionReceiptTests {
     @Test
     fun send_doesntWaitIfNoReceipt() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectToMock()
-        val deferredSend = async { stompSession.send("/destination") }
+        val deferredSend = async { stompSession.sendEmptyMsg("/destination") }
         assertFalse(deferredSend.isCompleted, "send() should wait for the websocket to actually send the frame")
         wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
         assertTrue(deferredSend.isCompleted, "send() should resume immediately after the SEND frame is sent")
@@ -54,7 +54,7 @@ class StompSessionReceiptTests {
         val (wsSession, stompSession) = connectToMock {
             autoReceipt = true
         }
-        val deferredSend = async { stompSession.send("/destination") }
+        val deferredSend = async { stompSession.sendEmptyMsg("/destination") }
         val sendFrame = wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
         val receiptId = sendFrame.headers.receipt
         assertNotNull(receiptId, "receipt header should be auto-populated")
@@ -73,7 +73,7 @@ class StompSessionReceiptTests {
         }
         // prevents the async send() exception from failing the test
         supervisorScope {
-            val deferredSend = async { stompSession.send("/destination") }
+            val deferredSend = async { stompSession.sendEmptyMsg("/destination") }
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
 
             assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSend.await() }
@@ -118,7 +118,7 @@ class StompSessionReceiptTests {
     @Test
     fun subscribe_doesntWaitIfNoReceipt() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectToMock()
-        val deferredSub = async { stompSession.subscribe<String>("/destination") }
+        val deferredSub = async { stompSession.subscribeRaw("/destination") }
         assertFalse(deferredSub.isCompleted, "subscribe() should wait for the websocket to actually send the frame")
         wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
         assertTrue(deferredSub.isCompleted, "subscribe() should resume immediately after the SUBSCRIBE frame is sent")
@@ -129,7 +129,7 @@ class StompSessionReceiptTests {
         val (wsSession, stompSession) = connectToMock {
             autoReceipt = true
         }
-        val deferredSub = async { stompSession.subscribe<String>("/destination") }
+        val deferredSub = async { stompSession.subscribeRaw("/destination") }
         val subscribeFrame = wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
         val receiptId = subscribeFrame.headers.receipt
         assertNotNull(receiptId, "receipt header should be auto-populated")
@@ -146,7 +146,7 @@ class StompSessionReceiptTests {
         }
         // prevents the async send() exception from failing the test
         supervisorScope {
-            val deferredSend = async { stompSession.subscribe<String>("/destination") }
+            val deferredSend = async { stompSession.subscribeRaw("/destination") }
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
 
             assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSend.await() }
@@ -157,7 +157,7 @@ class StompSessionReceiptTests {
     fun subscribe_manualReceipt_waitsForCorrectReceipt() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectToMock()
         val manualReceiptId = "my-receipt"
-        val deferredSub = async { stompSession.subscribe<String>("/destination", manualReceiptId) }
+        val deferredSub = async { stompSession.subscribeRaw("/destination", manualReceiptId) }
         assertFalse(deferredSub.isCompleted, "subscribe() should wait until ws send finishes")
         wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
         assertFalse(deferredSub.isCompleted, "subscribe() should wait until receipt is received")
@@ -174,7 +174,7 @@ class StompSessionReceiptTests {
         }
         // prevents the async send() exception from failing the test
         supervisorScope {
-            val deferredSub = async { stompSession.subscribe<String>("/destination", "my-receipt") }
+            val deferredSub = async { stompSession.subscribeRaw("/destination", "my-receipt") }
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
 
             assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSub.await() }

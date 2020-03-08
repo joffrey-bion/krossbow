@@ -8,7 +8,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withTimeout
-import org.hildan.krossbow.converters.MessageConversionException
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -25,11 +24,7 @@ import org.hildan.krossbow.utils.SuspendingAtomicInt
 import org.hildan.krossbow.utils.getStringAndInc
 import org.hildan.krossbow.websocket.WebSocketListener
 import org.hildan.krossbow.websocket.WebSocketSession
-import kotlin.reflect.KClass
 
-/**
- * A coroutine-based STOMP session API.
- */
 @OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
 internal class InternalStompSession(
     private val config: StompConfig,
@@ -118,22 +113,10 @@ internal class InternalStompSession(
         if (headers.contentLength == null) {
             headers.contentLength = body?.bytes?.size ?: 0
         }
-        return sendStompFrame(StompFrame.Send(headers, body))
+        return prepareAndSendFrame(StompFrame.Send(headers, body))
     }
 
-    override suspend fun <T : Any> send(
-        headers: StompSendHeaders,
-        payload: T?,
-        payloadType: KClass<T>
-    ): StompReceipt? {
-        val frameContent = config.messageConverter.serialize(payload, payloadType)
-        headers.contentType = headers.contentType ?: frameContent.contentType
-        headers.contentLength = headers.contentLength ?: frameContent.contentLength
-        headers.putAll(frameContent.customHeaders)
-        return send(headers, frameContent.body)
-    }
-
-    private suspend fun sendStompFrame(frame: StompFrame): StompReceipt? {
+    private suspend fun prepareAndSendFrame(frame: StompFrame): StompReceipt? {
         val receiptId = getReceiptAndMaybeSetAuto(frame)
         if (receiptId == null) {
             sendStompFrameAsIs(frame)
@@ -144,10 +127,8 @@ internal class InternalStompSession(
     }
 
     private suspend fun getReceiptAndMaybeSetAuto(frame: StompFrame): String? {
-        if (config.autoReceipt) {
-            if (frame.headers.receipt == null) {
-                frame.headers.receipt = nextReceiptId.getStringAndInc()
-            }
+        if (config.autoReceipt && frame.headers.receipt == null) {
+            frame.headers.receipt = nextReceiptId.getStringAndInc()
         }
         return frame.headers.receipt
     }
@@ -156,7 +137,7 @@ internal class InternalStompSession(
         if (frame.body is FrameBody.Binary) {
             webSocketSession.sendBinary(frame.encodeToBytes())
         } else {
-            // frames without payloads are also sent as text because the headers are always textual
+            // frames without body are also sent as text because the headers are always textual
             // Also, some sockJS implementations don't support binary frames
             webSocketSession.sendText(frame.encodeToText())
         }
@@ -184,26 +165,17 @@ internal class InternalStompSession(
             config.receiptTimeoutMillis
         }
 
-    override suspend fun <T : Any> subscribe(
-        destination: String,
-        clazz: KClass<T>,
-        receiptId: String?
-    ): StompSubscription<T> = subscribe(destination, receiptId) { config.messageConverter.deserialize(it, clazz) }
-
-    override suspend fun subscribeNoPayload(destination: String, receiptId: String?): StompSubscription<Unit> =
-            subscribe(destination, receiptId) { StompMessage(Unit, it.headers) }
-
-    private suspend fun <T> subscribe(
+    override suspend fun <T> subscribe(
         destination: String,
         receiptId: String?,
-        convertPayload: (StompFrame.Message) -> StompMessage<T>
+        convertBody: (StompFrame.Message) -> StompMessage<T>
     ): StompSubscription<T> {
         val id = nextSubscriptionId.getAndIncrement().toString()
-        val sub = Subscription(id, convertPayload, this)
+        val sub = Subscription(id, convertBody, this)
         subscriptionsById[id] = sub
         val headers = StompSubscribeHeaders(destination = destination, id = id).apply { receipt = receiptId }
         val subscribeFrame = StompFrame.Subscribe(headers)
-        sendStompFrame(subscribeFrame)
+        prepareAndSendFrame(subscribeFrame)
         return sub
     }
 
@@ -234,7 +206,7 @@ internal class InternalStompSession(
 
 private class Subscription<out T>(
     override val id: String,
-    private val convertPayload: (StompFrame.Message) -> StompMessage<T>,
+    private val convertBody: (StompFrame.Message) -> StompMessage<T>,
     private val internalSession: InternalStompSession
 ) : StompSubscription<T> {
 
@@ -244,7 +216,7 @@ private class Subscription<out T>(
 
     suspend fun onMessage(message: StompFrame.Message) {
         try {
-            internalMsgChannel.send(convertPayload(message))
+            internalMsgChannel.send(convertBody(message))
         } catch (e: MessageConversionException) {
             internalMsgChannel.close(e)
         }
@@ -259,3 +231,5 @@ private class Subscription<out T>(
         internalMsgChannel.close()
     }
 }
+
+class MessageConversionException(message: String) : Exception(message)
