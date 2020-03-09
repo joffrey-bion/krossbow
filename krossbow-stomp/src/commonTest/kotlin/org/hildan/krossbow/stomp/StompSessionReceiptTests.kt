@@ -1,19 +1,15 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.supervisorScope
-import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
-import org.hildan.krossbow.test.ImmediatelySucceedingWebSocketClient
-import org.hildan.krossbow.test.WebSocketSessionMock
 import org.hildan.krossbow.test.assertCompletesSoon
 import org.hildan.krossbow.test.assertTimesOutWith
+import org.hildan.krossbow.test.connectWithMocks
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
-import org.hildan.krossbow.test.simulateConnectedFrameReceived
 import org.hildan.krossbow.test.simulateTextStompFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import kotlin.test.Test
@@ -27,21 +23,9 @@ private const val TEST_RECEIPT_TIMEOUT: Long = 10
 
 class StompSessionReceiptTests {
 
-    private suspend fun connectToMock(
-        configure: StompConfig.() -> Unit = {}
-    ): Pair<WebSocketSessionMock, StompSession> = coroutineScope {
-        val wsSession = WebSocketSessionMock()
-        val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession), configure)
-        val session = async { stompClient.connect("dummy URL") }
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
-        wsSession.simulateConnectedFrameReceived()
-        val stompSession = session.await()
-        Pair(wsSession, stompSession)
-    }
-
     @Test
     fun send_doesntWaitIfNoReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock()
+        val (wsSession, stompSession) = connectWithMocks()
         val deferredSend = async { stompSession.sendEmptyMsg("/destination") }
         assertFalse(deferredSend.isCompleted, "send() should wait for the websocket to actually send the frame")
         wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
@@ -51,7 +35,7 @@ class StompSessionReceiptTests {
 
     @Test
     fun send_autoReceipt_waitsUntilReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock {
+        val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
         }
         val deferredSend = async { stompSession.sendEmptyMsg("/destination") }
@@ -67,7 +51,7 @@ class StompSessionReceiptTests {
 
     @Test
     fun send_autoReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock {
+        val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
             receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
@@ -82,7 +66,7 @@ class StompSessionReceiptTests {
 
     @Test
     fun send_manualReceipt_waitsForCorrectReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock()
+        val (wsSession, stompSession) = connectWithMocks()
         val manualReceiptId = "my-receipt"
         val headers = StompSendHeaders(destination = "/destination")
         headers.receipt = manualReceiptId
@@ -100,7 +84,7 @@ class StompSessionReceiptTests {
 
     @Test
     fun send_manualReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock {
+        val (wsSession, stompSession) = connectWithMocks {
             receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
         // prevents the async send() exception from failing the test
@@ -117,7 +101,7 @@ class StompSessionReceiptTests {
 
     @Test
     fun subscribe_doesntWaitIfNoReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock()
+        val (wsSession, stompSession) = connectWithMocks()
         val deferredSub = async { stompSession.subscribeRaw("/destination") }
         assertFalse(deferredSub.isCompleted, "subscribe() should wait for the websocket to actually send the frame")
         wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
@@ -126,7 +110,7 @@ class StompSessionReceiptTests {
 
     @Test
     fun subscribe_autoReceipt_waitsUntilReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock {
+        val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
         }
         val deferredSub = async { stompSession.subscribeRaw("/destination") }
@@ -140,7 +124,7 @@ class StompSessionReceiptTests {
 
     @Test
     fun subscribe_autoReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock {
+        val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
             receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
@@ -155,7 +139,7 @@ class StompSessionReceiptTests {
 
     @Test
     fun subscribe_manualReceipt_waitsForCorrectReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock()
+        val (wsSession, stompSession) = connectWithMocks()
         val manualReceiptId = "my-receipt"
         val deferredSub = async { stompSession.subscribeRaw("/destination", manualReceiptId) }
         assertFalse(deferredSub.isCompleted, "subscribe() should wait until ws send finishes")
@@ -169,7 +153,7 @@ class StompSessionReceiptTests {
 
     @Test
     fun subscribe_manualReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectToMock {
+        val (wsSession, stompSession) = connectWithMocks {
             receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
         // prevents the async send() exception from failing the test

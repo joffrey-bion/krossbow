@@ -1,8 +1,25 @@
 package org.hildan.krossbow.test
 
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
+import org.hildan.krossbow.stomp.StompClient
+import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.config.StompConfig
+import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketSession
+
+suspend fun connectWithMocks(configure: StompConfig.() -> Unit = {}): Pair<WebSocketSessionMock, StompSession> =
+        coroutineScope {
+            val wsSession = WebSocketSessionMock()
+            val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession), configure)
+            val session = async { stompClient.connect("dummy URL") }
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+            wsSession.simulateConnectedFrameReceived()
+            val stompSession = session.await()
+            Pair(wsSession, stompSession)
+        }
 
 class ImmediatelySucceedingWebSocketClient(
     private val session: WebSocketSessionMock = WebSocketSessionMock()
