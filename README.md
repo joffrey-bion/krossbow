@@ -27,9 +27,9 @@ try {
     session.sendText("/some/destination", "Basic text message") 
 
     val subscription = session.subscribeText("/some/topic/destination")
-    val firstMessage: StompMessage<String?> = subscription.messages.receive()
+    val firstMessage: String? = subscription.messages.receive()
 
-    println("Received: ${firstMessage.body}")
+    println("Received: $firstMessage")
     subscription.unsubscribe()
 } finally {
     jsonStompSession.disconnect()
@@ -47,9 +47,9 @@ StompClient().connect(url).use { // this: StompSessionWithKxSerialization
     session.sendText("/some/destination", "Basic text message") 
 
     val subscription = session.subscribeText("/some/topic/destination")
-    val firstMessage: StompMessage<String?> = subscription.messages.receive()
+    val firstMessage: String? = subscription.messages.receive()
 
-    println("Received: ${firstMessage.body}")
+    println("Received: $firstMessage")
     subscription.unsubscribe()
 }
 ```
@@ -75,7 +75,7 @@ jsonStompSession.use {
     convertAndSend("/some/destination", MyPojo("Custom", 42), MyPojo.serializer()) 
 
     val subscription = subscribe("/some/topic/destination", MyMessage.serializer())
-    val firstMessage: MyMessage = subscription.messages.receive().body
+    val firstMessage: MyMessage = subscription.messages.receive()
 
     println("Received: $firstMessage")
     subscription.unsubscribe()
@@ -94,7 +94,7 @@ StompClient().connect(url).withJacksonConversions().use {
     convertAndSend("/some/destination", MyPojo("Custom", 42)) 
 
     val subscription = subscribe<MyMessage>("/some/topic/destination")
-    val firstMessage: MyMessage = subscription.messages.receive().body
+    val firstMessage: MyMessage = subscription.messages.receive()
 
     println("Received: $firstMessage")
     subscription.unsubscribe()

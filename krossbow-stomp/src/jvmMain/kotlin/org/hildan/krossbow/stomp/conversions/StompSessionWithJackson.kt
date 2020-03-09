@@ -2,7 +2,6 @@ package org.hildan.krossbow.stomp.conversions
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.hildan.krossbow.stomp.StompMessage
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.StompSubscription
@@ -23,7 +22,9 @@ internal class StompSessionWithJackson(
 ) : StompSession by session, StompSessionWithReflection {
 
     override suspend fun <T : Any> convertAndSend(
-        headers: StompSendHeaders, body: T?, bodyType: KClass<T>
+        headers: StompSendHeaders,
+        body: T?,
+        bodyType: KClass<T>
     ): StompReceipt? {
         if (headers.contentType == null) {
             headers.contentType = "application/json"
@@ -32,10 +33,25 @@ internal class StompSessionWithJackson(
     }
 
     override suspend fun <T : Any> subscribe(
-        destination: String, clazz: KClass<T>, receiptId: String?
+        destination: String,
+        clazz: KClass<T>,
+        receiptId: String?
     ): StompSubscription<T> = subscribe(destination, receiptId) { msg ->
-        // TODO maybe handle null bodies more cleanly
-        // TODO factor common parts with KxSerialization out?
-        StompMessage(objectMapper.readValue(msg.body?.asText(), clazz.java), msg.headers)
+        requireNotNull(msg.body) {
+            "Empty messages are not allowed in this subscription, please use subscribeOptional instead"
+        }
+        objectMapper.readValue(msg.body.asText(), clazz.java)
+    }
+
+    override suspend fun <T : Any> subscribeOptional(
+        destination: String,
+        clazz: KClass<T>,
+        receiptId: String?
+    ): StompSubscription<T?> = subscribe(destination, receiptId) { msg ->
+        if (msg.body == null) {
+            null
+        } else {
+            objectMapper.readValue(msg.body.asText(), clazz.java)
+        }
     }
 }

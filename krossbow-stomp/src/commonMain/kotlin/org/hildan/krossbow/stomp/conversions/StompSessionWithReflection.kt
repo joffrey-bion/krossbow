@@ -27,8 +27,9 @@ interface StompSessionWithReflection : StompSession {
     ): StompReceipt?
 
     /**
-     * Subscribes to the given [destination], converting received messages into objects of type [T]. The returned
-     * [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+     * Subscribes to the given [destination], converting received messages into objects of type [T].
+     * Empty messages are not allowed and result in an exception in the messages channel.
+     * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
      *
      * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
      * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
@@ -41,6 +42,23 @@ interface StompSessionWithReflection : StompSession {
         clazz: KClass<T>,
         receiptId: String? = null
     ): StompSubscription<T>
+
+    /**
+     * Subscribes to the given [destination], converting received messages into objects of type [T].
+     * In this variant, empty messages are allowed and result in a null value in the messages channel.
+     * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+     *
+     * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
+     * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
+     * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
+     *
+     * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+     */
+    suspend fun <T : Any> subscribeOptional(
+        destination: String,
+        clazz: KClass<T>,
+        receiptId: String? = null
+    ): StompSubscription<T?>
 }
 
 /**

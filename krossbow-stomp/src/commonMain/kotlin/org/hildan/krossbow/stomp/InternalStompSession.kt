@@ -168,10 +168,10 @@ internal class InternalStompSession(
     override suspend fun <T> subscribe(
         destination: String,
         receiptId: String?,
-        convertBody: (StompFrame.Message) -> StompMessage<T>
+        convertMessage: (StompFrame.Message) -> T
     ): StompSubscription<T> {
         val id = nextSubscriptionId.getAndIncrement().toString()
-        val sub = Subscription(id, convertBody, this)
+        val sub = Subscription(id, convertMessage, this)
         subscriptionsById[id] = sub
         val headers = StompSubscribeHeaders(destination = destination, id = id).apply { receipt = receiptId }
         val subscribeFrame = StompFrame.Subscribe(headers)
@@ -206,17 +206,17 @@ internal class InternalStompSession(
 
 private class Subscription<out T>(
     override val id: String,
-    private val convertBody: (StompFrame.Message) -> StompMessage<T>,
+    private val convertMessage: (StompFrame.Message) -> T,
     private val internalSession: InternalStompSession
 ) : StompSubscription<T> {
 
-    private val internalMsgChannel: Channel<StompMessage<T>> = Channel()
+    private val internalMsgChannel: Channel<T> = Channel()
 
-    override val messages: ReceiveChannel<StompMessage<T>> get() = internalMsgChannel
+    override val messages: ReceiveChannel<T> get() = internalMsgChannel
 
     suspend fun onMessage(message: StompFrame.Message) {
         try {
-            internalMsgChannel.send(convertBody(message))
+            internalMsgChannel.send(convertMessage(message))
         } catch (e: MessageConversionException) {
             internalMsgChannel.close(e)
         }

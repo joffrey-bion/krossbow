@@ -38,8 +38,8 @@ interface StompSession {
      * Subscribes to the given [destination], producing objects of type [T]. The returned [StompSubscription]
      * can be used to access the channel of received objects and unsubscribe.
      *
-     * The given [convertBody] function is used to create instances of the given type from the body of every message
-     * received on the created subscription.
+     * The given [convertMessage] function is used to create instances of the given type from the messages received
+     * on the created subscription.
      *
      * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
      * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
@@ -50,7 +50,7 @@ interface StompSession {
     suspend fun <T> subscribe(
         destination: String,
         receiptId: String? = null,
-        convertBody: (StompFrame.Message) -> StompMessage<T>
+        convertMessage: (StompFrame.Message) -> T
     ): StompSubscription<T>
 
     /**
@@ -65,6 +65,16 @@ interface StompSession {
 }
 
 /**
+ * A STOMP receipt description, as specified in the STOMP specification.
+ */
+data class StompReceipt(
+    /**
+     * The value of the receipt header sent to the server, and returned in a RECEIPT frame.
+     */
+    val id: String
+)
+
+/**
  * A subscription to a STOMP destination, streaming messages of type [T].
  */
 interface StompSubscription<out T> {
@@ -76,7 +86,7 @@ interface StompSubscription<out T> {
     /**
      * The subscription messages channel, to read incoming messages from.
      */
-    val messages: ReceiveChannel<StompMessage<T>>
+    val messages: ReceiveChannel<T>
 
     /**
      * Unsubscribes from this subscription to stop receive messages. This closes the [messages] channel, so that any
@@ -121,7 +131,7 @@ suspend fun StompSession.sendEmptyMsg(destination: String): StompReceipt? = send
 suspend fun StompSession.subscribeRaw(
     destination: String,
     receiptId: String? = null
-): StompSubscription<FrameBody?> = subscribe(destination, receiptId) { StompMessage(it.body, it.headers) }
+): StompSubscription<StompFrame.Message> = subscribe(destination, receiptId) { it }
 
 /**
  * Subscribes to the given [destination], expecting text message bodies. The returned [StompSubscription]
@@ -136,7 +146,7 @@ suspend fun StompSession.subscribeRaw(
 suspend fun StompSession.subscribeText(
     destination: String,
     receiptId: String? = null
-): StompSubscription<String?> = subscribe(destination, receiptId) { StompMessage(it.body?.asText(), it.headers) }
+): StompSubscription<String?> = subscribe(destination, receiptId) { it.body?.asText() }
 
 /**
  * Subscribes to the given [destination], expecting raw binary message bodies. The returned [StompSubscription]
@@ -151,7 +161,7 @@ suspend fun StompSession.subscribeText(
 suspend fun StompSession.subscribeBinary(
     destination: String,
     receiptId: String? = null
-): StompSubscription<ByteArray?> = subscribe(destination, receiptId) { StompMessage(it.body?.bytes, it.headers) }
+): StompSubscription<ByteArray?> = subscribe(destination, receiptId) { it.body?.bytes }
 
 /**
  * Subscribes to the given [destination], ignoring the body of the received messages.
@@ -165,7 +175,7 @@ suspend fun StompSession.subscribeBinary(
 suspend fun StompSession.subscribeEmptyMsg(
     destination: String,
     receiptId: String? = null
-): StompSubscription<Unit> = subscribe(destination, receiptId) { StompMessage(Unit, it.headers) }
+): StompSubscription<Unit> = subscribe(destination, receiptId) { Unit }
 
 /**
  * Executes the given block on this [StompSession], and [disconnects][StompSession.disconnect] from the session whether

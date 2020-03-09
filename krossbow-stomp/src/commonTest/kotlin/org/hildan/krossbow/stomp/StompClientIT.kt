@@ -51,7 +51,7 @@ class StompClientIT {
                 gameOwner = false,
                 user = true
             )
-            assertEquals(expected, response.body.copy(username = "forced"))
+            assertEquals(expected, response.copy(username = "forced"))
         }
     }
 }

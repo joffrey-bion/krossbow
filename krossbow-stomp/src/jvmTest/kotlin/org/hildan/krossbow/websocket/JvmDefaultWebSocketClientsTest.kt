@@ -62,7 +62,7 @@ class JvmDefaultWebSocketClientsTest {
                 gameOwner = false,
                 user = true
             )
-            assertEquals(expected, response.body.copy(username = "ignored"))
+            assertEquals(expected, response.copy(username = "ignored"))
         }
     }
 }

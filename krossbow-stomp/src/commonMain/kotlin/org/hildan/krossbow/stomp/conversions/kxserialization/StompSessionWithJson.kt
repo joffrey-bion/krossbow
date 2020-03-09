@@ -5,7 +5,6 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.modules.SerialModule
-import org.hildan.krossbow.stomp.StompMessage
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.StompSubscription
@@ -47,12 +46,10 @@ internal class StompSessionWithJson(
         deserializer: DeserializationStrategy<T>,
         receiptId: String?
     ): StompSubscription<T> = subscribe(destination, receiptId) { msg ->
-        if (msg.body == null) {
-            error("Cannot deserialize object of type ${deserializer.descriptor.name} from null body")
-        } else {
-            val payload = msg.body.deserialize(deserializer)
-            StompMessage(payload, msg.headers)
+        requireNotNull(msg.body) {
+            "Cannot deserialize object of type ${deserializer.descriptor.name} from null body"
         }
+        msg.body.deserialize(deserializer)
     }
 
     override suspend fun <T : Any> subscribeOptional(
@@ -61,10 +58,9 @@ internal class StompSessionWithJson(
         receiptId: String?
     ): StompSubscription<T?> = subscribe(destination, receiptId) { msg ->
         if (msg.body == null) {
-            StompMessage(null, msg.headers)
+            null
         } else {
-            val payload = msg.body.deserialize(deserializer)
-            StompMessage(payload, msg.headers)
+            msg.body.deserialize(deserializer)
         }
     }
 
