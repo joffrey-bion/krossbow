@@ -217,8 +217,8 @@ private class Subscription<out T>(
     suspend fun onMessage(message: StompFrame.Message) {
         try {
             internalMsgChannel.send(convertMessage(message))
-        } catch (e: MessageConversionException) {
-            internalMsgChannel.close(e)
+        } catch (e: Exception) {
+            internalMsgChannel.close(MessageConversionException(e))
         }
     }
 
@@ -232,4 +232,4 @@ private class Subscription<out T>(
     }
 }
 
-class MessageConversionException(message: String) : Exception(message)
+class MessageConversionException(cause: Throwable) : Exception(cause.message, cause)
