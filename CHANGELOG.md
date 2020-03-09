@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.10.0](https://github.com/joffrey-bion/krossbow/tree/0.10.0) (2020-03-09)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.4.2...0.10.0)
+
+**Implemented enhancements:**
+
+- Allow custom WS client/transports in SpringKrossbowEngine [\#21](https://github.com/joffrey-bion/krossbow/issues/21)
+- Add support for custom headers [\#16](https://github.com/joffrey-bion/krossbow/issues/16)
+- Implement pure Kotlin STOMP protocol in common code [\#5](https://github.com/joffrey-bion/krossbow/issues/5)
+
 ## [0.4.2](https://github.com/joffrey-bion/krossbow/tree/0.4.2) (2020-01-23)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.4.1...0.4.2)
 
