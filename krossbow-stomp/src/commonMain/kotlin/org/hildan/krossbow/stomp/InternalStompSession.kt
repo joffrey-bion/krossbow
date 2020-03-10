@@ -1,5 +1,6 @@
 package org.hildan.krossbow.stomp
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
@@ -43,22 +44,28 @@ internal class InternalStompSession(
         webSocketSession.listener = this
     }
 
-    // FIXME never fail in listener methods, but dispatch the decoding errors to waiting channels
-    override suspend fun onTextMessage(text: String) = onFrameReceived(StompDecoder.decode(text))
+    override suspend fun onTextMessage(text: String) {
+        try {
+            onFrameReceived(StompDecoder.decode(text))
+        } catch (e: Exception) {
+            closeAllSubscriptionsAndShutdown(e)
+        }
+    }
 
-    // FIXME never fail in listener methods, but dispatch the decoding errors to waiting channels
-    override suspend fun onBinaryMessage(bytes: ByteArray) = onFrameReceived(StompDecoder.decode(bytes))
+    override suspend fun onBinaryMessage(bytes: ByteArray) {
+        try {
+            onFrameReceived(StompDecoder.decode(bytes))
+        } catch (e: Exception) {
+            closeAllSubscriptionsAndShutdown(e)
+        }
+    }
 
     override suspend fun onError(error: Throwable) {
-        // TODO allow user to set a global onError listener?
-        // FIXME never fail in listener methods, but dispatch the error to waiting channels
-        throw IllegalStateException("Error at WebSocket level: ${error.message}", error)
+        closeAllSubscriptionsAndShutdown(WebSocketError(error))
     }
 
     override suspend fun onClose(code: Int, reason: String?) {
-        // TODO allow user to set a global onClose listener?
-        // FIXME dispatch the close event to waiting channels
-        println("Underlying WebSocket connection closed")
+        closeAllSubscriptionsAndShutdown(WebSocketClosedUnexpectedly(code, reason))
     }
 
     private suspend fun onFrameReceived(frame: StompFrame) {
@@ -66,7 +73,7 @@ internal class InternalStompSession(
             is StompFrame.Message -> onMessageFrameReceived(frame)
             is StompFrame.Error -> {
                 nonMsgFrames.send(frame)
-                onErrorFrameReceived(frame)
+                closeAllSubscriptionsAndShutdown(StompErrorFrameReceived(frame))
             }
             else -> nonMsgFrames.send(frame)
         }
@@ -74,13 +81,8 @@ internal class InternalStompSession(
 
     private suspend fun onMessageFrameReceived(frame: StompFrame.Message) {
         val subId = frame.headers.subscription
-        val sub = subscriptionsById[subId] ?: error("no active subscription with ID $subId")
-        sub.onMessage(frame)
-    }
-
-    private fun onErrorFrameReceived(frame: StompFrame.Error) {
-        // error on all subscriptions
-        subscriptionsById.values.forEach { it.onError(frame) }
+        // ignore if subscription not found, maybe we just unsubscribed and received one more msg
+        subscriptionsById[subId]?.onMessage(frame)
     }
 
     internal suspend fun connect(headers: StompConnectHeaders): StompFrame.Connected = coroutineScope {
@@ -106,7 +108,7 @@ internal class InternalStompSession(
         } finally {
             frameSubscription.cancel()
         }
-        throw IllegalStateException("Connection closed unexpectedly while expecting frame of type ${T::class}")
+        throw IllegalStateException("Frames channel closed unexpectedly while expecting a frame of type ${T::class}")
     }
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
@@ -188,7 +190,7 @@ internal class InternalStompSession(
         if (config.gracefulDisconnect) {
             sendDisconnectFrameAndWaitForReceipt()
         }
-        nonMsgFrames.cancel()
+        closeAllSubscriptionsAndShutdown()
         webSocketSession.close()
     }
 
@@ -201,6 +203,12 @@ internal class InternalStompSession(
             // Sometimes the server closes the connection too quickly to send a RECEIPT, which is not really an error
             // http://stomp.github.io/stomp-specification-1.2.html#Connection_Lingering
         }
+    }
+
+    private fun closeAllSubscriptionsAndShutdown(cause: Throwable? = null) {
+        subscriptionsById.values.forEach { it.close(cause) }
+        subscriptionsById.clear()
+        nonMsgFrames.cancel(CancellationException("Shutting down STOMP session", cause))
     }
 }
 
@@ -222,8 +230,8 @@ private class Subscription<out T>(
         }
     }
 
-    fun onError(error: StompFrame.Error) {
-        internalMsgChannel.close(StompErrorFrameReceived(error))
+    fun close(cause: Throwable?) {
+        internalMsgChannel.close(cause)
     }
 
     override suspend fun unsubscribe() {
@@ -233,3 +241,10 @@ private class Subscription<out T>(
 }
 
 class MessageConversionException(cause: Throwable) : Exception(cause.message, cause)
+
+class WebSocketError(cause: Throwable) : Exception(cause.message, cause)
+
+class WebSocketClosedUnexpectedly(
+    val code: Int,
+    val reason: String?
+) : Exception("the WebSocket was closed while subscriptions were still active. Code: $code Reason: $reason")

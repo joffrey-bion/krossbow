@@ -36,9 +36,11 @@ enum class StompCommand(
     companion object {
         private val valuesByText = values().associateBy { it.text }
 
-        fun parse(text: String) = valuesByText[text] ?: error("Unknown STOMP command $text")
+        fun parse(text: String) = valuesByText[text] ?: throw InvalidStompCommandException("Unknown STOMP command $text")
     }
 }
+
+class InvalidStompCommandException(val invalidText: String) : Exception("Unknown STOMP command '$invalidText'")
 
 sealed class StompFrame(
     val command: StompCommand,

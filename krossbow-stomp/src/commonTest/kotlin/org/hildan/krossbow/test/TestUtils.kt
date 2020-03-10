@@ -20,6 +20,8 @@ fun <T> runAsyncTestWithTimeout(millis: Long = 1000, block: suspend CoroutineSco
 
 expect fun <T> runAsyncTest(block: suspend CoroutineScope.() -> T)
 
+expect fun getCause(exception: Exception): Throwable?
+
 suspend fun <T> assertCompletesSoon(deferred: Deferred<T>, message: String, timeoutMillis: Long = 20): T =
         try {
             withTimeout(timeoutMillis) { deferred.await() }
@@ -31,7 +33,7 @@ suspend inline fun <T : Throwable> assertTimesOutWith(
     expectedExceptionClass: KClass<T>,
     expectedTimeoutMillis: Long,
     message: String = "expected time out under ${expectedTimeoutMillis}ms, with ${expectedExceptionClass.simpleName}",
-    timeoutMarginMillis: Long = 20,
+    timeoutMarginMillis: Long = 30,
     crossinline block: suspend () -> Unit
 ): T {
     val result = withTimeoutOrNull(expectedTimeoutMillis + timeoutMarginMillis) {

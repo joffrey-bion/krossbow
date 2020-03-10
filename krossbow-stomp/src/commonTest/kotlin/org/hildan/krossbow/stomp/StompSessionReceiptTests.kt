@@ -1,7 +1,8 @@
 package org.hildan.krossbow.stomp
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
-import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
@@ -9,17 +10,21 @@ import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.test.assertCompletesSoon
 import org.hildan.krossbow.test.assertTimesOutWith
 import org.hildan.krossbow.test.connectWithMocks
+import org.hildan.krossbow.test.getCause
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
+import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.simulateTextStompFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
+import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-private const val TEST_RECEIPT_TIMEOUT: Long = 10
+private const val TEST_RECEIPT_TIMEOUT: Long = 20
 
 class StompSessionReceiptTests {
 
@@ -55,13 +60,63 @@ class StompSessionReceiptTests {
             autoReceipt = true
             receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
-        // prevents the async send() exception from failing the test
-        supervisorScope {
-            val deferredSend = async { stompSession.sendEmptyMsg("/destination") }
+        launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
-
-            assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSend.await() }
         }
+        assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
+            stompSession.sendEmptyMsg("/destination")
+        }
+    }
+
+    @Test
+    fun send_autoReceipt_failsOnStompErrorFrame() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectWithMocks {
+            autoReceipt = true
+        }
+        launch {
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
+            wsSession.simulateErrorFrameReceived("some error")
+        }
+        val exception = assertFailsWith(CancellationException::class) {
+            stompSession.sendEmptyMsg("/destination")
+        }
+        val cause = getCause(exception)
+        assertNotNull(cause)
+        assertEquals(StompErrorFrameReceived::class, cause::class)
+    }
+
+    @Test
+    fun send_autoReceipt_failsOnWebSocketError() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectWithMocks {
+            autoReceipt = true
+        }
+        launch {
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
+            wsSession.simulateError("some error")
+        }
+        val exception = assertFailsWith(CancellationException::class) {
+            stompSession.sendEmptyMsg("/destination")
+        }
+        val cause = getCause(exception)
+        assertNotNull(cause)
+        assertEquals(WebSocketError::class, cause::class)
+    }
+
+    @Test
+    fun send_autoReceipt_failsOnWebSocketClosed() = runAsyncTestWithTimeout {
+        val (wsSession, stompSession) = connectWithMocks {
+            autoReceipt = true
+        }
+        launch {
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
+            wsSession.simulateClose(WebSocketCloseCodes.NORMAL_CLOSURE, "because why not")
+        }
+        val exception = assertFailsWith(CancellationException::class) {
+            stompSession.sendEmptyMsg("/destination")
+        }
+        val cause = getCause(exception)
+        assertNotNull(cause)
+        assertEquals(WebSocketClosedUnexpectedly::class, cause::class)
     }
 
     @Test
@@ -87,15 +142,14 @@ class StompSessionReceiptTests {
         val (wsSession, stompSession) = connectWithMocks {
             receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
-        // prevents the async send() exception from failing the test
-        supervisorScope {
-            val headers = StompSendHeaders(destination = "/destination")
-            headers.receipt = "my-receipt"
-            val deferredSend = async { stompSession.send(headers, null) }
-
+        launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
+        }
+        val headers = StompSendHeaders(destination = "/destination")
+        headers.receipt = "my-receipt"
 
-            assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSend.await() }
+        assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
+            stompSession.send(headers, null)
         }
     }
 
@@ -128,12 +182,11 @@ class StompSessionReceiptTests {
             autoReceipt = true
             receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
-        // prevents the async send() exception from failing the test
-        supervisorScope {
-            val deferredSend = async { stompSession.subscribeRaw("/destination") }
+        launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
-
-            assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSend.await() }
+        }
+        assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
+            stompSession.subscribeRaw("/destination")
         }
     }
 
@@ -156,12 +209,11 @@ class StompSessionReceiptTests {
         val (wsSession, stompSession) = connectWithMocks {
             receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
-        // prevents the async send() exception from failing the test
-        supervisorScope {
-            val deferredSub = async { stompSession.subscribeRaw("/destination", "my-receipt") }
+        launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
-
-            assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) { deferredSub.await() }
+        }
+        assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
+            stompSession.subscribeRaw("/destination", "my-receipt")
         }
     }
 }

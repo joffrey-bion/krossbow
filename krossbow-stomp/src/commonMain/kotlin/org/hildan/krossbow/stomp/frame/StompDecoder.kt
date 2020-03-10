@@ -29,10 +29,14 @@ object StompDecoder {
     fun decode(frameBytes: ByteArray): StompFrame = ByteReadPacket(frameBytes).use { it.readStompFrame() }
 
     private fun Input.readStompFrame(): StompFrame {
-        val command = readStompCommand()
-        val headers = readStompHeaders(command.supportsHeaderEscapes)
-        val body = readBinaryBody(headers.contentLength)
-        return createFrame(command, headers, body)
+        try {
+            val command = readStompCommand()
+            val headers = readStompHeaders(command.supportsHeaderEscapes)
+            val body = readBinaryBody(headers.contentLength)
+            return createFrame(command, headers, body)
+        } catch (e: Exception) {
+            throw InvalidStompFrameException(e)
+        }
     }
 
     private fun Input.readStompCommand(): StompCommand {
@@ -63,25 +67,29 @@ object StompDecoder {
             buildPacket { readUntilDelimiter(NULL_BYTE, this) }.readBytes()
 
     fun decode(frameText: String): StompFrame {
-        val lines = frameText.lines()
-        val command = StompCommand.parse(lines[0])
+        try {
+            val lines = frameText.lines()
+            val command = StompCommand.parse(lines[0])
 
-        val emptyLineIndex = lines.indexOf("")
-        if (emptyLineIndex == -1) {
-            error("Malformed frame, expected empty line to separate headers from body")
+            val emptyLineIndex = lines.indexOf("")
+            if (emptyLineIndex == -1) {
+                error("Malformed frame, expected empty line to separate headers from body")
+            }
+
+            val headers = lines.subList(1, emptyLineIndex).parseLinesAsStompHeaders(command.supportsHeaderEscapes)
+
+            // TODO stop at content-length if specified in the headers
+            val restOfTheFrame = lines.subList(emptyLineIndex + 1, lines.size).joinToString("\n")
+
+            // the frame must be ended by a NULL octet, which may be followed by optional new lines
+            // https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames
+            val bodyText = restOfTheFrame.trimEnd { it == '\n' || it == '\r' }.trimEnd { it == '\u0000' }
+            val body = bodyText.ifEmpty { null }?.let { FrameBody.Text(it) }
+
+            return createFrame(command, headers, body)
+        } catch (e: Exception) {
+            throw InvalidStompFrameException(e)
         }
-
-        val headers = lines.subList(1, emptyLineIndex).parseLinesAsStompHeaders(command.supportsHeaderEscapes)
-
-        // TODO stop at content-length if specified in the headers
-        val restOfTheFrame = lines.subList(emptyLineIndex + 1, lines.size).joinToString("\n")
-
-        // the frame must be ended by a NULL octet, which may be followed by optional new lines
-        // https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames
-        val bodyText = restOfTheFrame.trimEnd { it == '\n' || it == '\r' }.trimEnd { it == '\u0000' }
-        val body = bodyText.ifEmpty { null }?.let { FrameBody.Text(it) }
-
-        return createFrame(command, headers, body)
     }
 
     private fun createFrame(
@@ -122,3 +130,5 @@ object StompDecoder {
         return headersMap.asStompHeaders()
     }
 }
+
+class InvalidStompFrameException(cause: Throwable) : Exception("Failed to decode invalid STOMP frame", cause)
