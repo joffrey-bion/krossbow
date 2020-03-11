@@ -36,3 +36,10 @@ object NoopWebSocketListener : WebSocketListener {
     override suspend fun onError(error: Throwable) = Unit
     override suspend fun onClose(code: Int, reason: String?) = Unit
 }
+
+class WebSocketConnectionClosedException(
+    val code: Int,
+    val reason: String?
+) : Exception("The server closed the connection. Code: $code Reason: $reason")
+
+class WebSocketException(message: String) : Exception(message)

@@ -1,18 +1,21 @@
 package org.hildan.krossbow.websocket.js
 
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.promise
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.hildan.krossbow.websocket.WebSocketConnectionClosedException
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketListener
 import org.hildan.krossbow.websocket.WebSocketSession
 import org.hildan.krossbow.websocket.NoopWebSocketListener
+import org.hildan.krossbow.websocket.WebSocketException
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.get
 import org.w3c.dom.ARRAYBUFFER
 import org.w3c.dom.BinaryType
 import org.w3c.dom.CloseEvent
+import org.w3c.dom.ErrorEvent
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
 import kotlin.coroutines.resume
@@ -30,27 +33,37 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
             try {
                 val ws = newWebSocket(url)
                 ws.binaryType = BinaryType.ARRAYBUFFER // to receive arraybuffer instead of blob
+                var pendingConnect = true
                 val wsSession = JsWebSocketSession(ws)
                 ws.onopen = {
+                    pendingConnect = false
                     cont.resume(wsSession)
                 }
                 ws.onclose = { event: Event ->
-                    val closeEvent = event as CloseEvent
-                    GlobalScope.promise {
-                        wsSession.listener.onClose(closeEvent.code.toInt(), closeEvent.reason)
+                    val closeEvent: CloseEvent = event.unsafeCast<CloseEvent>()
+                    val code = closeEvent.code.toInt()
+                    if (pendingConnect) {
+                        pendingConnect = false
+                        cont.resumeWithException(WebSocketConnectionClosedException(code, closeEvent.reason))
+                    } else {
+                        GlobalScope.launch {
+                            wsSession.listener.onClose(code, closeEvent.reason)
+                        }
                     }
                 }
-                ws.onerror = { errEvent ->
-                    if (ws.readyState == WebSocket.CONNECTING) {
-                        cont.resumeWithException(Exception("$errEvent"))
+                ws.onerror = { event ->
+                    val errorEvent: ErrorEvent = event.unsafeCast<ErrorEvent>()
+                    if (pendingConnect) {
+                        pendingConnect = false
+                        cont.resumeWithException(WebSocketException(errorEvent.message))
                     } else {
-                        GlobalScope.promise {
-                            wsSession.listener.onError(Exception("WebSocket error: $errEvent"))
+                        GlobalScope.launch {
+                            wsSession.listener.onError(WebSocketException(errorEvent.message))
                         }
                     }
                 }
                 ws.onmessage = { event ->
-                    GlobalScope.promise {
+                    GlobalScope.launch {
                         // TODO check the possible types here
                         when (val body = event.data) {
                             is String -> wsSession.listener.onTextMessage(body)
@@ -61,6 +74,7 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
                     }
                 }
             } catch (e: Exception) {
+                console.error("Exception in WebSocket setup: ${e.message}")
                 cont.resumeWithException(e)
             }
         }
