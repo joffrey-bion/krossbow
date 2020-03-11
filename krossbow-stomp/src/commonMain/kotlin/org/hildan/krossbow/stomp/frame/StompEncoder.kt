@@ -1,17 +1,19 @@
 package org.hildan.krossbow.stomp.frame
 
-import kotlinx.io.ByteArrayOutputStream
+import kotlinx.io.charsets.Charsets
+import kotlinx.io.core.Output
+import kotlinx.io.core.buildPacket
+import kotlinx.io.core.readBytes
+import kotlinx.io.core.writeFully
+import kotlinx.io.core.writeText
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 
-@OptIn(ExperimentalStdlibApi::class)
-internal fun StompFrame.encodeToBytes(): ByteArray {
-    val os = ByteArrayOutputStream()
-    os.write(encodedPreamble.encodeToByteArray())
+internal fun StompFrame.encodeToBytes(): ByteArray = buildPacket { writeStompFrame(this@encodeToBytes) }.readBytes()
 
-    body?.bytes?.let { os.write(it) }
-
-    os.write(0)
-    return os.toByteArray()
+private fun Output.writeStompFrame(stompFrame: StompFrame) {
+    writeText(stompFrame.encodedPreamble, charset = Charsets.UTF_8)
+    stompFrame.body?.bytes?.let { writeFully(it) }
+    writeByte(0)
 }
 
 internal fun StompFrame.encodeToText(): String = "$encodedPreamble${body.encodeToText()}\u0000"
