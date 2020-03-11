@@ -33,7 +33,7 @@ suspend inline fun <T : Throwable> assertTimesOutWith(
     expectedExceptionClass: KClass<T>,
     expectedTimeoutMillis: Long,
     message: String = "expected time out under ${expectedTimeoutMillis}ms, with ${expectedExceptionClass.simpleName}",
-    timeoutMarginMillis: Long = 30,
+    timeoutMarginMillis: Long = 40,
     crossinline block: suspend () -> Unit
 ): T {
     val result = withTimeoutOrNull(expectedTimeoutMillis + timeoutMarginMillis) {

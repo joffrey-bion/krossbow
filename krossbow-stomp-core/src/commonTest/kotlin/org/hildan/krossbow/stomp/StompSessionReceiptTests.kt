@@ -24,7 +24,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-private const val TEST_RECEIPT_TIMEOUT: Long = 20
+private const val TEST_RECEIPT_TIMEOUT: Long = 30
 
 class StompSessionReceiptTests {
 
