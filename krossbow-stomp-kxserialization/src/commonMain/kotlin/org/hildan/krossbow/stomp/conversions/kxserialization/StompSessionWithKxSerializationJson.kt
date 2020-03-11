@@ -46,10 +46,11 @@ internal class StompSessionWithKxSerializationJson(
         deserializer: DeserializationStrategy<T>,
         receiptId: String?
     ): StompSubscription<T> = subscribe(destination, receiptId) { msg ->
-        requireNotNull(msg.body) {
+        val body = msg.body
+        requireNotNull(body) {
             "Cannot deserialize object of type ${deserializer.descriptor.name} from null body"
         }
-        msg.body.deserialize(deserializer)
+        body.deserialize(deserializer)
     }
 
     override suspend fun <T : Any> subscribeOptional(
@@ -57,11 +58,7 @@ internal class StompSessionWithKxSerializationJson(
         deserializer: DeserializationStrategy<T>,
         receiptId: String?
     ): StompSubscription<T?> = subscribe(destination, receiptId) { msg ->
-        if (msg.body == null) {
-            null
-        } else {
-            msg.body.deserialize(deserializer)
-        }
+        msg.body?.deserialize(deserializer)
     }
 
     private fun <T : Any> FrameBody.deserialize(deserializer: DeserializationStrategy<T>) =

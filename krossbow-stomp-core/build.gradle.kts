@@ -5,11 +5,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
 }
 
-description = "A Kotlin multiplatform STOMP client with JVM and JS support"
+description = "A Kotlin multiplatform STOMP client with JVM, Browser, and NodeJS support"
 
-val coroutinesVersion = "1.3.1"
-val jacksonVersion = "2.9.9"
-val serializationVersion = "0.14.0"
+val coroutinesVersion = "1.3.3"
 val kotlinxIOVersion = "0.1.16"
 
 kotlin {
@@ -23,15 +21,15 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 api(project(":krossbow-websocket-api"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinxIOVersion")
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation(project(":krossbow-stomp-kxserialization"))
                 implementation(project(":krossbow-websocket-sockjs"))
             }
         }
@@ -39,17 +37,15 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 api(project(":krossbow-websocket-spring"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinxIOVersion")
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
-                api("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
-                api("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
             }
         }
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
+                implementation(project(":krossbow-stomp-jackson"))
                 implementation("uk.org.lidalia:slf4j-test:1.1.0")
             }
         }
@@ -57,8 +53,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-js"))
                 implementation("org.jetbrains.kotlinx:kotlinx-io-js:$kotlinxIOVersion")
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
                 implementation(npm("text-encoding", "0.7.0")) // seems required by kotlinx-io-js
             }
         }

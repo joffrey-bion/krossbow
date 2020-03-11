@@ -113,7 +113,7 @@ sealed class FrameBody {
 }
 
 @OptIn(ExperimentalStdlibApi::class)
-internal fun FrameBody.asText() = when (this) {
+fun FrameBody.asText() = when (this) {
     is FrameBody.Binary -> bytes.decodeToString(throwOnInvalidSequence = true)
     is FrameBody.Text -> text
 }
