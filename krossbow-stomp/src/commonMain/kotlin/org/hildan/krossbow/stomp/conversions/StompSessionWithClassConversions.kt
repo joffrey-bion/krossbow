@@ -9,10 +9,9 @@ import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import kotlin.reflect.KClass
 
 /**
- * An extended [StompSession] that provides methods to serialize/deserialize message bodies using class-based
- * reflection.
+ * A [StompSession] with additional methods to serialize/deserialize message bodies based on a [KClass].
  */
-interface StompSessionWithReflection : StompSession {
+interface StompSessionWithClassConversions : StompSession {
 
     /**
      * Sends a SEND frame to the server with the given [headers] and the given [body], converted appropriately.
@@ -66,7 +65,7 @@ interface StompSessionWithReflection : StompSession {
  *
  * Please refer to [StompSession.send] for details about how receipts are handled.
  */
-suspend fun <T : Any> StompSessionWithReflection.convertAndSend(
+suspend fun <T : Any> StompSessionWithClassConversions.convertAndSend(
     destination: String,
     body: T? = null,
     bodyType: KClass<T>
@@ -77,14 +76,14 @@ suspend fun <T : Any> StompSessionWithReflection.convertAndSend(
  *
  * Please refer to [StompSession.send] for details about how receipts are handled.
  */
-suspend inline fun <reified T : Any> StompSessionWithReflection.convertAndSend(destination: String, body: T?): StompReceipt? =
+suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAndSend(destination: String, body: T?): StompReceipt? =
         convertAndSend(destination, body, T::class)
 
 /**
  * Subscribes to the given [destination], expecting objects of type [T]. The returned [StompSubscription]
  * can be used to access the channel of received objects.
  */
-suspend inline fun <reified T : Any> StompSessionWithReflection.subscribe(
+suspend inline fun <reified T : Any> StompSessionWithClassConversions.subscribe(
     destination: String,
     receiptId: String? = null
 ): StompSubscription<T> = subscribe(destination, T::class, receiptId)

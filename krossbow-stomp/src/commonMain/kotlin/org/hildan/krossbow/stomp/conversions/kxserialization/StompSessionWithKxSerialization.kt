@@ -13,7 +13,7 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 
 /**
- * An extended [StompSession] that provides methods to serialize/deserialize message bodies using Kotlinx Serialization.
+ * A [StompSession] with additional methods to serialize/deserialize message bodies using Kotlinx Serialization.
  */
 interface StompSessionWithKxSerialization : StompSession {
 
