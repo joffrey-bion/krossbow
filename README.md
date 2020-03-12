@@ -1,6 +1,6 @@
 # Krossbow
 
-[![Bintray Download](https://img.shields.io/bintray/v/joffrey-bion/maven/krossbow-stomp.svg?label=bintray)](https://bintray.com/joffrey-bion/maven/krossbow-stomp/_latestVersion)
+[![Bintray Download](https://img.shields.io/bintray/v/joffrey-bion/maven/krossbow-stomp-core.svg?label=bintray)](https://bintray.com/joffrey-bion/maven/krossbow-stomp-core/_latestVersion)
 [![Travis Build](https://img.shields.io/travis/joffrey-bion/krossbow/master.svg)](https://travis-ci.org/joffrey-bion/krossbow)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/joffrey-bion/krossbow/blob/master/LICENSE)
 
