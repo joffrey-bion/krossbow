@@ -35,11 +35,9 @@ class StompClient(
                 wsSession.stompConnect(url, login, passcode)
             }
         } catch (te: TimeoutCancellationException) {
-            throw ConnectionTimeout(
-                "Timeout of ${config.connectionTimeoutMillis}ms exceeded when connecting to $url", te
-            )
+            throw ConnectionTimeout(config.connectionTimeoutMillis, url, te)
         } catch (e: Exception) {
-            throw ConnectionException("Couldn't connect to STOMP server at $url", e)
+            throw ConnectionException(url, cause = e)
         }
     }
 
@@ -60,6 +58,19 @@ class StompClient(
 }
 
 /**
+ * Exception thrown when the websocket connection + STOMP connection takes too much time.
+ */
+class ConnectionTimeout(
+    val timeoutMillis: Long,
+    url: String,
+    cause: Exception
+) : ConnectionException(url, "Timeout of ${timeoutMillis}ms exceeded when connecting to $url", cause)
+
+/**
  * An exception thrown when something went wrong during the connection.
  */
-class ConnectionException(message: String, cause: Throwable) : Exception(message, cause)
+open class ConnectionException(
+    val url: String,
+    message: String = "Couldn't connect to STOMP server at $url",
+    cause: Throwable?
+) : Exception(message, cause)

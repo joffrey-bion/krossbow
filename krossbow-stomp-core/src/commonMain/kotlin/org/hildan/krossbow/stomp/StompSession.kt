@@ -190,11 +190,6 @@ suspend fun <S : StompSession, T> S.use(block: suspend S.() -> T): T {
 }
 
 /**
- * Exception thrown when the websocket connection + STOMP connection takes too much time.
- */
-class ConnectionTimeout(message: String, cause: Exception) : Exception(message, cause)
-
-/**
  * Exception thrown when a STOMP error frame is received.
  */
 class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception("STOMP ERROR frame received: ${frame.message}")
