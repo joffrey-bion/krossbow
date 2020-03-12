@@ -1,5 +1,18 @@
 # Change Log
 
+## [0.10.1](https://github.com/joffrey-bion/krossbow/tree/0.10.1) (2020-03-12)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.0...0.10.1)
+
+**Fixed bugs:**
+
+- ClassCastException in Javascript websocket onclose [\#30](https://github.com/joffrey-bion/krossbow/issues/30)
+- JavaScript WebSocket adapter doesn't fail the connection with onclose [\#29](https://github.com/joffrey-bion/krossbow/issues/29)
+
+**Implemented enhancements:**
+
+- Extract Jackson and Kotlinx Serialization as separate artifacts [\#28](https://github.com/joffrey-bion/krossbow/issues/28)
+- Improve error handling [\#26](https://github.com/joffrey-bion/krossbow/issues/26)
+
 ## [0.10.0](https://github.com/joffrey-bion/krossbow/tree/0.10.0) (2020-03-09)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.4.2...0.10.0)
 
