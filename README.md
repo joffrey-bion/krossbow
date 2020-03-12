@@ -59,6 +59,9 @@ StompClient().connect(url).use { // this: StompSessionWithKxSerialization
 Usually STOMP is used in conjonction with JSON bodies that are converted back and forth between objects.
 Krossbow comes with built-in support for Kotlinx Serialization in order to support multiplatform conversions.
 
+You will need to use the `krossbow-stomp-kxserialization` module to add these capabilities (you don't need the core
+ module anymore as it is transitively brought by this one).
+
 Call `withJsonConversions` to add conversions capabilities to your `StompSession`.
 Then, use `convertAndSend` and `subscribe` overloads with serializers to use these conversions:
 
@@ -87,8 +90,11 @@ Note that `withJsonConversions()` takes an optional `Json` argument to customize
 #### Using Jackson on the JVM
 
 If you're only targeting the JVM, you can use Jackson instead of Kotlinx Serialization to use reflection instead of
- manually provided serializers:
+ manually provided serializers.
  
+You will need to use the `krossbow-stomp-jackson` module to add these capabilities (you don't need the core
+ module anymore as it is transitively brought by this one).
+
 ```kotlin
 StompClient().connect(url).withJacksonConversions().use {
     convertAndSend("/some/destination", MyPojo("Custom", 42)) 
@@ -117,20 +123,23 @@ They are not yet available on npm yet.
 
 ```kotlin
 // common source set
-implementation("org.hildan.krossbow:krossbow-stomp-metadata:$krossbowVersion")
+implementation("org.hildan.krossbow:krossbow-stomp-core:$krossbowVersion")
 
 // jvm source set
-implementation("org.hildan.krossbow:krossbow-stomp-jvm:$krossbowVersion")
+implementation("org.hildan.krossbow:krossbow-stomp-core-jvm:$krossbowVersion")
 
 // js source set
-implementation("org.hildan.krossbow:krossbow-stomp-js:$krossbowVersion")
+implementation("org.hildan.krossbow:krossbow-stomp-core-js:$krossbowVersion")
 ```
 
 ## Project structure
  
 This project contains the following modules:
-- `krossbow-stomp`: the multiplatform STOMP client to use as a STOMP library in common, JVM or JS projects. It
+- `krossbow-stomp-core`: the multiplatform STOMP client to use as a STOMP library in common, JVM or JS projects. It
  implements the STOMP 1.2 protocol on top of a websocket API defined by the `krossbow-websocket-api` module.
+- `krossbow-stomp-jackson`: a superset of `krossbow-stomp-core` adding conversion fearues using Jackson
+- `krossbow-stomp-kxserialization`: a superset of `krossbow-stomp-core` adding conversion fearues using Kotlinx
+ Serialization library
 - `krossbow-websocket-api`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
  WebSocket clients. This also provides a default JS client implementations using the Browser's native WebSocket.
 - `krossbow-websocket-sockjs`: a multiplatform `WebSocketClient` implementation for use with SockJS servers. It uses
