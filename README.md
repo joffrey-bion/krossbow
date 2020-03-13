@@ -4,12 +4,12 @@
 [![Travis Build](https://img.shields.io/travis/joffrey-bion/krossbow/master.svg)](https://travis-ci.org/joffrey-bion/krossbow)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/joffrey-bion/krossbow/blob/master/LICENSE)
 
-A coroutine-based Kotlin multiplatform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
+A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
  over web sockets.
 
-***This project is experimental, it's still in its early development stage.***
+***This project is experimental, meaning that there is no guarantee of backwards compatibility.***
 
-## Usage
+## STOMP Usage
 
 ### Raw STOMP usage (without conversions)
 
@@ -114,6 +114,22 @@ val objectMapper = jacksonObjectMapper().enable(SerializationFeature.WRITE_DATES
 val session = StompClient().connect(url).withJacksonConversions(objectMapper)
 ```
 
+## Picking a web socket implementation
+
+The `krossbow-websocket-api` defines a general web socket API, and provides a basic JS implementation using the
+ Browser's native web socket.
+Other artifacts provide more implementations supporting more platforms by depending on third party libraries:
+
+| Artifact                    |           Browser          |           NodeJS           |                JVM8+ (blocking)               | JVM11+ (async) | Dependencies                                                                                                                                                                                   |
+|-----------------------------|:--------------------------:|:--------------------------:|:---------------------------------------------:|:--------------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `krossbow-websocket-api`    |     :white_check_mark:     |                            |                                               |                |                                                                                                                                                                                                |
+| `krossbow-websocket-sockjs` | :eight_pointed_black_star: | :eight_pointed_black_star: |           :eight_pointed_black_star:          |                | [sockjs-client](https://github.com/sockjs/sockjs-client), [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) |
+| `krossbow-websocket-spring` |                            |                            | :white_check_mark: :eight_pointed_black_star: |                | [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html)                                                           |
+
+:white_check_mark: supported with native web socket transport
+
+:eight_pointed_black_star: supported using [SockJS](https://github.com/sockjs/sockjs-client) protocol (requires a SockJS server)
+
 ## Adding the dependency
 
 All the dependencies are currently published to Bintray JCenter.
@@ -137,8 +153,8 @@ implementation("org.hildan.krossbow:krossbow-stomp-core-js:$krossbowVersion")
 This project contains the following modules:
 - `krossbow-stomp-core`: the multiplatform STOMP client to use as a STOMP library in common, JVM or JS projects. It
  implements the STOMP 1.2 protocol on top of a websocket API defined by the `krossbow-websocket-api` module.
-- `krossbow-stomp-jackson`: a superset of `krossbow-stomp-core` adding conversion fearues using Jackson
-- `krossbow-stomp-kxserialization`: a superset of `krossbow-stomp-core` adding conversion fearues using Kotlinx
+- `krossbow-stomp-jackson`: a superset of `krossbow-stomp-core` adding conversion features using Jackson
+- `krossbow-stomp-kxserialization`: a superset of `krossbow-stomp-core` adding conversion features using Kotlinx
  Serialization library
 - `krossbow-websocket-api`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
  WebSocket clients. This also provides a default JS client implementations using the Browser's native WebSocket.
