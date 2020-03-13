@@ -22,28 +22,30 @@ import org.hildan.krossbow.stomp.headers.StompSendHeaders
  * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
  *
  * If no receipt is provided and auto-receipt is disabled, the [send] and [subscribe] methods return immediately
- * after the underlying web socket implementation has returned.
+ * after the underlying web socket implementation has returned from sending the frame.
  */
 interface StompSession {
 
     /**
      * Sends a SEND frame to the server with the given [headers] and the given [body].
      *
-     * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise this method
-     * suspends until the relevant RECEIPT frame is received from the server, and then returns a [StompReceipt].
+     * @return null right after sending the frame if auto-receipt is disabled and no receipt header is provided.
+     * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+     * a [StompReceipt].
+     * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+     * a [LostReceiptException] is thrown.
      */
     suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt?
 
     /**
-     * Subscribes to the given [destination], producing objects of type [T]. The returned [StompSubscription]
-     * can be used to access the channel of received objects and unsubscribe.
-     *
-     * The given [convertMessage] function is used to create instances of the given type from the messages received
-     * on the created subscription.
+     * Subscribes to the given [destination], converting received messages into objects of type [T] using
+     * [convertMessage].
+     * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
      *
      * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
-     * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
-     * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
+     * RECEIPT frame is received from the server.
+     * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+     * a [LostReceiptException] is thrown.
      *
      * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
      */
@@ -65,7 +67,8 @@ interface StompSession {
 }
 
 /**
- * A STOMP receipt description, as specified in the STOMP specification.
+ * A STOMP receipt, as
+ * [defined in the STOMP specification](https://stomp.github.io/stomp-specification-1.2.html#RECEIPT).
  */
 data class StompReceipt(
     /**
@@ -98,7 +101,11 @@ interface StompSubscription<out T> {
 /**
  * Sends a SEND frame to the server at the given [destination] with the given binary [body].
  *
- * Please refer to [StompSession.send] for details about how receipts are handled.
+ * @return null right after sending the frame if auto-receipt is disabled.
+ * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+ * a [StompReceipt].
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
  */
 suspend fun StompSession.sendBinary(destination: String, body: ByteArray?): StompReceipt? =
         send(StompSendHeaders(destination), body?.let { FrameBody.Binary(it) })
@@ -106,7 +113,11 @@ suspend fun StompSession.sendBinary(destination: String, body: ByteArray?): Stom
 /**
  * Sends a SEND frame to the server at the given [destination] with the given textual [body].
  *
- * Please refer to [StompSession.send] for details about how receipts are handled.
+ * @return null right after sending the frame if auto-receipt is disabled.
+ * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+ * a [StompReceipt].
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
  */
 suspend fun StompSession.sendText(destination: String, body: String?): StompReceipt? =
         send(StompSendHeaders(destination), body?.let { FrameBody.Text(it) })
@@ -114,17 +125,22 @@ suspend fun StompSession.sendText(destination: String, body: String?): StompRece
 /**
  * Sends a SEND frame to the server at the given [destination] without body.
  *
- * Please refer to [StompSession.send] for details about how receipts are handled.
+ * @return null right after sending the frame if auto-receipt is disabled.
+ * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+ * a [StompReceipt].
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
  */
 suspend fun StompSession.sendEmptyMsg(destination: String): StompReceipt? = send(StompSendHeaders(destination), null)
 
 /**
- * Subscribes to the given [destination], with raw message bodies. The returned [StompSubscription]
- * can be used to access the channel of received messages and unsubscribe.
+ * Subscribes to the given [destination], expecting raw message frames.
+ * The returned [StompSubscription] can be used to access the channel of received messages and unsubscribe.
  *
  * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
- * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
+ * RECEIPT frame is received from the server.
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
  *
  * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
  */
@@ -134,12 +150,14 @@ suspend fun StompSession.subscribeRaw(
 ): StompSubscription<StompFrame.Message> = subscribe(destination, receiptId) { it }
 
 /**
- * Subscribes to the given [destination], expecting text message bodies. The returned [StompSubscription]
- * can be used to access the channel of received messages and unsubscribe.
+ * Subscribes to the given [destination], expecting text message bodies.
+ * The returned [StompSubscription] can be used to access the channel of received messages and unsubscribe.
+ * Frames without a body are seen as a null value in the messages channel of the subscription.
  *
  * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
- * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
+ * RECEIPT frame is received from the server.
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
  *
  * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
  */
@@ -149,12 +167,14 @@ suspend fun StompSession.subscribeText(
 ): StompSubscription<String?> = subscribe(destination, receiptId) { it.body?.asText() }
 
 /**
- * Subscribes to the given [destination], expecting raw binary message bodies. The returned [StompSubscription]
- * can be used to access the channel of received messages and unsubscribe.
+ * Subscribes to the given [destination], expecting binary message bodies.
+ * The returned [StompSubscription] can be used to access the channel of received messages and unsubscribe.
+ * Frames without a body are seen as a null value in the messages channel of the subscription.
  *
  * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
- * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
+ * RECEIPT frame is received from the server.
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
  *
  * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
  */
@@ -167,8 +187,9 @@ suspend fun StompSession.subscribeBinary(
  * Subscribes to the given [destination], ignoring the body of the received messages.
  *
  * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server. If no RECEIPT frame is received from the server
- * in the configured [time limit][StompConfig.receiptTimeoutMillis], a [LostReceiptException] is thrown.
+ * RECEIPT frame is received from the server.
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
  *
  * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
  */

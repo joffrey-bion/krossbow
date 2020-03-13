@@ -30,7 +30,7 @@ interface TextMessageConverter {
     fun <T : Any> convertToString(body: T, bodyType: KClass<T>): String
 
     /**
-     * Converts the given [body] string into a object of type [bodyType].
+     * Converts the given [body] string into an object of type [bodyType].
      */
     fun <T : Any> convertFromString(body: String, bodyType: KClass<T>): T
 }

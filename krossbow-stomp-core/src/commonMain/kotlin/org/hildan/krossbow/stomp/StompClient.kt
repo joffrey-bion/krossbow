@@ -9,9 +9,15 @@ import org.hildan.krossbow.websocket.WebSocketSession
 import org.hildan.krossbow.websocket.defaultWebSocketClient
 
 /**
- * A STOMP client based on the given web socket implementation.
+ * A STOMP 1.2 client based on web sockets.
+ * A custom web socket implementation can be passed in as a constructor parameter.
+ *
  * The client is used to connect to the server and create a [StompSession].
- * Then, most of the STOMP interactions are done through the [StompSession].
+ * Then, most of the STOMP interactions are done through the [StompSession] until it is
+ * [disconnected][StompSession.disconnect].
+ *
+ * The same client can be reused to start multiple sessions in general, unless a particular limitation from the
+ * underlying web socket implementation prevents this.
  */
 class StompClient(
     private val webSocketClient: WebSocketClient,
@@ -27,6 +33,10 @@ class StompClient(
 
     /**
      * Connects to the given WebSocket [url] and to the STOMP session, and returns after receiving the CONNECTED frame.
+     *
+     * @throws ConnectionTimeout if this method takes longer than the configured
+     * [timeout][StompConfig.connectionTimeoutMillis] (as a whole for both WS connect and STOMP connect)
+     * @throws ConnectionException if anything else goes wrong during the connection process
      */
     suspend fun connect(url: String, login: String? = null, passcode: String? = null): StompSession {
         try {

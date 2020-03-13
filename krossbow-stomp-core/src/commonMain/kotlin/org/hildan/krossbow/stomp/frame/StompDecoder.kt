@@ -20,7 +20,7 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.stomp.headers.asStompHeaders
 
-object StompDecoder {
+internal object StompDecoder {
 
     private const val NULL_BYTE = 0.toByte()
 

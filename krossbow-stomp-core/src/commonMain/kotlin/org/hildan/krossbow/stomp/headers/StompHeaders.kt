@@ -62,7 +62,7 @@ interface StompHeaders : MutableMap<String, String> {
     var receipt: String?
 }
 
-data class SimpleStompHeaders internal constructor(
+private data class SimpleStompHeaders(
     private val headers: MutableMap<String, String>
 ) : StompHeaders, MutableMap<String, String> by headers {
 

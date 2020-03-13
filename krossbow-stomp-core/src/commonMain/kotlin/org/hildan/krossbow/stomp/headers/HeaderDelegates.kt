@@ -12,13 +12,13 @@ internal inline fun <T> StompHeaders.optionalHeader(
     crossinline transform: (String) -> T
 ): HeaderDelegate<T?> = optionalHeader(customKey, null, transform)
 
-internal fun SimpleStompHeaders.mutableOptionalHeader(
+internal fun StompHeaders.mutableOptionalHeader(
     customKey: String? = null,
     default: String? = null
 ): MutableHeaderDelegate<String?> =
         mutableOptionalHeader(customKey, default, { it }, { it })
 
-internal fun SimpleStompHeaders.mutableOptionalIntHeader(
+internal fun StompHeaders.mutableOptionalIntHeader(
     customKey: String? = null,
     default: Int? = null
 ): MutableHeaderDelegate<Int?> =
@@ -35,7 +35,7 @@ internal inline fun <T> StompHeaders.optionalHeader(
     crossinline transform: (String) -> T
 ): HeaderDelegate<T> = HeaderDelegate(this, customKey) { value, _ -> value?.let(transform) ?: default }
 
-internal inline fun <T> SimpleStompHeaders.mutableOptionalHeader(
+internal inline fun <T> StompHeaders.mutableOptionalHeader(
     customKey: String? = null,
     default: T,
     crossinline getTransform: (String) -> T,
@@ -59,7 +59,7 @@ internal open class HeaderDelegate<T>(
 }
 
 internal class MutableHeaderDelegate<T>(
-    private val rawHeaders: SimpleStompHeaders,
+    private val rawHeaders: StompHeaders,
     private val customName: String? = null,
     getTransform: (String?, String) -> T,
     private val setTransform: (T) -> String?
