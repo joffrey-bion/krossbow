@@ -1,10 +1,12 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -27,12 +29,18 @@ import org.hildan.krossbow.utils.SuspendingAtomicInt
 import org.hildan.krossbow.utils.getStringAndInc
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketSession
+import kotlin.coroutines.CoroutineContext
 
 @OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
 internal class InternalStompSession(
     private val config: StompConfig,
     private val webSocketSession: WebSocketSession
-) : StompSession {
+) : StompSession, CoroutineScope {
+
+    private val job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = job
 
     private val nextSubscriptionId = SuspendingAtomicInt(0)
 
@@ -43,8 +51,7 @@ internal class InternalStompSession(
     private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.BUFFERED)
 
     init {
-        // TODO use structured concurrency
-        GlobalScope.launch {
+        launch {
             try {
                 for (f in webSocketSession.incomingFrames) {
                     onWebSocketFrameReceived(f)
@@ -200,10 +207,11 @@ internal class InternalStompSession(
         }
     }
 
-    private fun closeAllSubscriptionsAndShutdown(cause: Throwable? = null) {
+    private suspend fun closeAllSubscriptionsAndShutdown(cause: Throwable? = null) {
         subscriptionsById.values.forEach { it.close(cause) }
         subscriptionsById.clear()
         nonMsgFrames.cancel(CancellationException("Shutting down STOMP session", cause))
+        job.cancelAndJoin()
     }
 }
 
