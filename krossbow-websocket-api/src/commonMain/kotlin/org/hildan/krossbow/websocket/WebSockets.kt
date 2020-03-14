@@ -1,5 +1,13 @@
 package org.hildan.krossbow.websocket
 
+/**
+ * A web socket client.
+ *
+ * The client is used to connect to the server and create a [WebSocketSession].
+ * Then, most of the interactions are done through the [WebSocketSession] until it is [closed][WebSocketSession.close].
+ *
+ * The same client can be reused to start multiple sessions, unless specified otherwise by the implementation.
+ */
 interface WebSocketClient {
 
     /**
@@ -8,6 +16,9 @@ interface WebSocketClient {
     suspend fun connect(url: String): WebSocketSession
 }
 
+/**
+ * A session to interact with another endpoint via a web socket.
+ */
 interface WebSocketSession {
 
     var listener: WebSocketListener
@@ -37,9 +48,27 @@ object NoopWebSocketListener : WebSocketListener {
     override suspend fun onClose(code: Int, reason: String?) = Unit
 }
 
+/**
+ * An exception thrown when something went wrong at web socket level.
+ */
+open class WebSocketException(message: String, cause: Throwable? = null) : Exception(message, cause)
+
+/**
+ * An exception thrown when something went wrong during the web socket connection.
+ */
+open class WebSocketConnectionException(
+    val url: String,
+    message: String = "Couldn't connect to web socket at $url",
+    cause: Throwable? = null
+) : WebSocketException(message, cause)
+
+/**
+ * An exception thrown when the server closed the connection unexpectedly.
+ */
 class WebSocketConnectionClosedException(
+    url: String,
     val code: Int,
     val reason: String?
-) : Exception("The server closed the connection. Code: $code Reason: $reason")
-
-class WebSocketException(message: String) : Exception(message)
+) : WebSocketConnectionException(url,
+    "Couldn't connect to web socket at $url. The server closed the connection. Code: $code Reason: $reason"
+)

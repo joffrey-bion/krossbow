@@ -9,6 +9,7 @@ import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.websocket.NoopWebSocketListener
 import org.hildan.krossbow.websocket.WebSocketClient
+import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketListener
 import org.hildan.krossbow.websocket.WebSocketSession
 import java.net.URI
@@ -28,9 +29,13 @@ class Jdk11WebSocketClient(
     }
 
     override suspend fun connect(url: String): WebSocketSession {
-        val jdk11WebSocketListener = Jdk11WebSocketListener()
-        webSocketBuilder.buildAsync(URI(url), jdk11WebSocketListener).await()
-        return jdk11WebSocketListener.session
+        try {
+            val jdk11WebSocketListener = Jdk11WebSocketListener()
+            webSocketBuilder.buildAsync(URI(url), jdk11WebSocketListener).await()
+            return jdk11WebSocketListener.session
+        } catch (e: Exception) {
+            throw WebSocketConnectionException(url, cause = e)
+        }
     }
 }
 

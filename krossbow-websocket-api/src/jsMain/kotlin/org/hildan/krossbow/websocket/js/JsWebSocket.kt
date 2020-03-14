@@ -8,6 +8,7 @@ import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketListener
 import org.hildan.krossbow.websocket.WebSocketSession
 import org.hildan.krossbow.websocket.NoopWebSocketListener
+import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketException
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.Int8Array
@@ -44,7 +45,7 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
                     val code = closeEvent.code.toInt()
                     if (pendingConnect) {
                         pendingConnect = false
-                        cont.resumeWithException(WebSocketConnectionClosedException(code, closeEvent.reason))
+                        cont.resumeWithException(WebSocketConnectionClosedException(url, code, closeEvent.reason))
                     } else {
                         GlobalScope.launch {
                             wsSession.listener.onClose(code, closeEvent.reason)
@@ -55,7 +56,7 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
                     val errorEvent: ErrorEvent = event.unsafeCast<ErrorEvent>()
                     if (pendingConnect) {
                         pendingConnect = false
-                        cont.resumeWithException(WebSocketException(errorEvent.message))
+                        cont.resumeWithException(WebSocketConnectionException(url, errorEvent.message))
                     } else {
                         GlobalScope.launch {
                             wsSession.listener.onError(WebSocketException(errorEvent.message))
