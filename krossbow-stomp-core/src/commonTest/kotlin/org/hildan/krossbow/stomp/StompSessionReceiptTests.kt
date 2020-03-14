@@ -16,6 +16,7 @@ import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.simulateTextStompFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
+import org.hildan.krossbow.websocket.WebSocketException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -99,7 +100,7 @@ class StompSessionReceiptTests {
         }
         val cause = getCause(exception)
         assertNotNull(cause)
-        assertEquals(WebSocketError::class, cause::class)
+        assertEquals(WebSocketException::class, cause::class)
     }
 
     @Test

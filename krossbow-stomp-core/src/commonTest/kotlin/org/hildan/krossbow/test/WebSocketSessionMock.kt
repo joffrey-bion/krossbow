@@ -10,14 +10,15 @@ import org.hildan.krossbow.stomp.frame.encodeToText
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
-import org.hildan.krossbow.websocket.NoopWebSocketListener
-import org.hildan.krossbow.websocket.WebSocketListener
+import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketSession
 import kotlin.test.assertEquals
 
 class WebSocketSessionMock : WebSocketSession {
 
-    override var listener: WebSocketListener = NoopWebSocketListener
+    private val listener = WebSocketListenerChannelAdapter()
+
+    override val incomingFrames = listener.incomingFrames
 
     private val sentFrames = Channel<StompFrame>()
 

@@ -2,12 +2,14 @@ package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
@@ -23,14 +25,14 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.utils.SuspendingAtomicInt
 import org.hildan.krossbow.utils.getStringAndInc
-import org.hildan.krossbow.websocket.WebSocketListener
+import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketSession
 
 @OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
 internal class InternalStompSession(
     private val config: StompConfig,
     private val webSocketSession: WebSocketSession
-) : StompSession, WebSocketListener {
+) : StompSession {
 
     private val nextSubscriptionId = SuspendingAtomicInt(0)
 
@@ -41,34 +43,27 @@ internal class InternalStompSession(
     private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.BUFFERED)
 
     init {
-        webSocketSession.listener = this
-    }
-
-    override suspend fun onTextMessage(text: String) {
-        try {
-            onFrameReceived(StompDecoder.decode(text))
-        } catch (e: Exception) {
-            closeAllSubscriptionsAndShutdown(e)
+        // TODO use structured concurrency
+        GlobalScope.launch {
+            try {
+                for (f in webSocketSession.incomingFrames) {
+                    onWebSocketFrameReceived(f)
+                }
+            } catch (e: Exception) {
+                closeAllSubscriptionsAndShutdown(e)
+            }
         }
     }
 
-    override suspend fun onBinaryMessage(bytes: ByteArray) {
-        try {
-            onFrameReceived(StompDecoder.decode(bytes))
-        } catch (e: Exception) {
-            closeAllSubscriptionsAndShutdown(e)
+    private suspend fun onWebSocketFrameReceived(f: WebSocketFrame) {
+        when (f) {
+            is WebSocketFrame.Text -> onStompFrameReceived(StompDecoder.decode(f.text))
+            is WebSocketFrame.Binary -> onStompFrameReceived(StompDecoder.decode(f.bytes))
+            is WebSocketFrame.Close -> closeAllSubscriptionsAndShutdown(WebSocketClosedUnexpectedly(f.code, f.reason))
         }
     }
 
-    override suspend fun onError(error: Throwable) {
-        closeAllSubscriptionsAndShutdown(WebSocketError(error))
-    }
-
-    override suspend fun onClose(code: Int, reason: String?) {
-        closeAllSubscriptionsAndShutdown(WebSocketClosedUnexpectedly(code, reason))
-    }
-
-    private suspend fun onFrameReceived(frame: StompFrame) {
+    private suspend fun onStompFrameReceived(frame: StompFrame) {
         when (frame) {
             is StompFrame.Message -> onMessageFrameReceived(frame)
             is StompFrame.Error -> {
@@ -241,8 +236,6 @@ private class Subscription<out T>(
 }
 
 class MessageConversionException(cause: Throwable) : Exception(cause.message, cause)
-
-class WebSocketError(cause: Throwable) : Exception(cause.message, cause)
 
 class WebSocketClosedUnexpectedly(
     val code: Int,

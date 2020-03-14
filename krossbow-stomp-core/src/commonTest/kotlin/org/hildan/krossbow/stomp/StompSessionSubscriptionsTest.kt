@@ -11,6 +11,7 @@ import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.simulateMessageFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
+import org.hildan.krossbow.websocket.WebSocketException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -61,7 +62,7 @@ class StompSessionSubscriptionsTest {
         }
 
         val sub = stompSession.subscribeText("/dest")
-        val exception = assertFailsWith(WebSocketError::class) {
+        val exception = assertFailsWith(WebSocketException::class) {
             sub.messages.receive()
         }
         assertEquals(errorMessage, exception.message)

@@ -4,13 +4,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.future.await
-import kotlinx.coroutines.launch
-import org.hildan.krossbow.websocket.NoopWebSocketListener
+import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnectionException
-import org.hildan.krossbow.websocket.WebSocketListener
+import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketSession
 import java.net.URI
 import java.net.http.HttpClient
@@ -30,55 +30,56 @@ class Jdk11WebSocketClient(
 
     override suspend fun connect(url: String): WebSocketSession {
         try {
-            val jdk11WebSocketListener = Jdk11WebSocketListener()
-            webSocketBuilder.buildAsync(URI(url), jdk11WebSocketListener).await()
-            return jdk11WebSocketListener.session
+            val listener = WebSocketListenerChannelAdapter()
+            val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
+            val webSocket = webSocketBuilder.buildAsync(URI(url), jdk11WebSocketListener).await()
+            return Jdk11WebSocketSession(webSocket, listener.incomingFrames, jdk11WebSocketListener::stop)
         } catch (e: Exception) {
             throw WebSocketConnectionException(url, cause = e)
         }
     }
 }
 
-class Jdk11WebSocketListener : WebSocket.Listener, CoroutineScope {
+class Jdk11WebSocketListener(
+    private val listener: WebSocketListenerChannelAdapter
+) : WebSocket.Listener, CoroutineScope {
 
     private val job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = job
 
-    lateinit var session: WebSocketSession
-        private set
-
-    override fun onOpen(webSocket: WebSocket) {
-        session = Jdk11WebSocketSession(webSocket, this::stop)
+    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*> {
+        webSocket.request(1)
+        return async { listener.onTextMessage(data.toString()) }.asCompletableFuture()
     }
 
-    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*> =
-            async { session.listener.onTextMessage(data.toString()) }.asCompletableFuture()
+    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*> {
+        webSocket.request(1)
+        val array = ByteArray(data.remaining())
+        data.get(array)
+        return async { listener.onBinaryMessage(array) }.asCompletableFuture()
+    }
 
-    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*> =
-            async { session.listener.onBinaryMessage(data.array()) }.asCompletableFuture()
-
-    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*> =
-            async { session.listener.onClose(statusCode, reason) }.asCompletableFuture()
+    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*> {
+        return async { listener.onClose(statusCode, reason) }.asCompletableFuture()
+    }
 
     override fun onError(webSocket: WebSocket, error: Throwable?) {
-        launch {
-            session.listener.onError(error ?: RuntimeException("onError called without exception"))
-        }
+        listener.onError(error)
+        job.cancel()
     }
 
-    private suspend fun stop() {
+    suspend fun stop() {
         job.cancelAndJoin()
     }
 }
 
 class Jdk11WebSocketSession(
     private val webSocket: WebSocket,
+    override val incomingFrames: ReceiveChannel<WebSocketFrame>,
     private val stopListener: suspend () -> Unit
 ) : WebSocketSession {
-
-    override var listener: WebSocketListener = NoopWebSocketListener
 
     override suspend fun sendText(frameText: String) {
         webSocket.sendText(frameText, true).await()

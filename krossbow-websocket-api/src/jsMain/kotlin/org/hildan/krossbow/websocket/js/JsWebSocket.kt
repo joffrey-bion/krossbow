@@ -1,15 +1,15 @@
 package org.hildan.krossbow.websocket.js
 
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketConnectionClosedException
 import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketListener
 import org.hildan.krossbow.websocket.WebSocketSession
-import org.hildan.krossbow.websocket.NoopWebSocketListener
 import org.hildan.krossbow.websocket.WebSocketConnectionException
-import org.hildan.krossbow.websocket.WebSocketException
+import org.hildan.krossbow.websocket.WebSocketFrame
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.get
@@ -35,7 +35,8 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
                 val ws = newWebSocket(url)
                 ws.binaryType = BinaryType.ARRAYBUFFER // to receive arraybuffer instead of blob
                 var pendingConnect = true
-                val wsSession = JsWebSocketSession(ws)
+                val listener = WebSocketListenerChannelAdapter()
+                val wsSession = JsWebSocketSession(ws, listener.incomingFrames)
                 ws.onopen = {
                     pendingConnect = false
                     cont.resume(wsSession)
@@ -48,7 +49,7 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
                         cont.resumeWithException(WebSocketConnectionClosedException(url, code, closeEvent.reason))
                     } else {
                         GlobalScope.launch {
-                            wsSession.listener.onClose(code, closeEvent.reason)
+                            listener.onClose(code, closeEvent.reason)
                         }
                     }
                 }
@@ -59,7 +60,7 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
                         cont.resumeWithException(WebSocketConnectionException(url, errorEvent.message))
                     } else {
                         GlobalScope.launch {
-                            wsSession.listener.onError(WebSocketException(errorEvent.message))
+                            listener.onError(errorEvent.message)
                         }
                     }
                 }
@@ -67,10 +68,10 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
                     GlobalScope.launch {
                         // TODO check the possible types here
                         when (val body = event.data) {
-                            is String -> wsSession.listener.onTextMessage(body)
-                            is ArrayBuffer -> wsSession.listener.onBinaryMessage(body.toByteArray())
-                            null -> wsSession.listener.onBinaryMessage(ByteArray(0))
-                            else -> error("Unknown socket frame body type: ${body::class.js}")
+                            is String -> listener.onTextMessage(body)
+                            is ArrayBuffer -> listener.onBinaryMessage(body.toByteArray())
+                            null -> listener.onEmptyMessage()
+                            else -> listener.onError("Unknown socket frame body type: ${body::class.js}")
                         }
                     }
                 }
@@ -82,9 +83,10 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
     }
 }
 
-class JsWebSocketSession(private val ws: WebSocket) : WebSocketSession {
-
-    override var listener: WebSocketListener = NoopWebSocketListener
+class JsWebSocketSession(
+    private val ws: WebSocket,
+    override val incomingFrames: ReceiveChannel<WebSocketFrame>
+) : WebSocketSession {
 
     override suspend fun sendText(frameText: String) {
         ws.send(frameText)

@@ -1,5 +1,7 @@
 package org.hildan.krossbow.websocket
 
+import kotlinx.coroutines.channels.ReceiveChannel
+
 /**
  * A web socket client.
  *
@@ -21,31 +23,13 @@ interface WebSocketClient {
  */
 interface WebSocketSession {
 
-    var listener: WebSocketListener
+    val incomingFrames: ReceiveChannel<WebSocketFrame>
 
     suspend fun sendText(frameText: String)
 
     suspend fun sendBinary(frameData: ByteArray)
 
     suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
-}
-
-interface WebSocketListener {
-
-    suspend fun onBinaryMessage(bytes: ByteArray)
-
-    suspend fun onTextMessage(text: String)
-
-    suspend fun onError(error: Throwable)
-
-    suspend fun onClose(code: Int, reason: String?)
-}
-
-object NoopWebSocketListener : WebSocketListener {
-    override suspend fun onBinaryMessage(bytes: ByteArray) = Unit
-    override suspend fun onTextMessage(text: String) = Unit
-    override suspend fun onError(error: Throwable) = Unit
-    override suspend fun onClose(code: Int, reason: String?) = Unit
 }
 
 /**
