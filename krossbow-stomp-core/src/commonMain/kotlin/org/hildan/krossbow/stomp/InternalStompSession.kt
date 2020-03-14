@@ -1,6 +1,7 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -51,7 +52,7 @@ internal class InternalStompSession(
     private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.BUFFERED)
 
     init {
-        launch {
+        launch(CoroutineName("websocket-frames-listener")) {
             try {
                 for (f in webSocketSession.incomingFrames) {
                     onWebSocketFrameReceived(f)
