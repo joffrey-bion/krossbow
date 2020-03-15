@@ -1,6 +1,5 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -211,7 +210,7 @@ internal class InternalStompSession(
     private suspend fun closeAllSubscriptionsAndShutdown(cause: Throwable? = null) {
         subscriptionsById.values.forEach { it.close(cause) }
         subscriptionsById.clear()
-        nonMsgFrames.cancel(CancellationException("Shutting down STOMP session", cause))
+        nonMsgFrames.close(cause)
         job.cancelAndJoin()
     }
 }

@@ -1,6 +1,5 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -10,7 +9,6 @@ import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.test.assertCompletesSoon
 import org.hildan.krossbow.test.assertTimesOutWith
 import org.hildan.krossbow.test.connectWithMocks
-import org.hildan.krossbow.test.getCause
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.simulateTextStompFrameReceived
@@ -78,12 +76,10 @@ class StompSessionReceiptTests {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
             wsSession.simulateErrorFrameReceived("some error")
         }
-        val exception = assertFailsWith(CancellationException::class) {
+        val exception = assertFailsWith(StompErrorFrameReceived::class) {
             stompSession.sendEmptyMsg("/destination")
         }
-        val cause = getCause(exception)
-        assertNotNull(cause)
-        assertEquals(StompErrorFrameReceived::class, cause::class)
+        assertEquals("some error", exception.frame.message)
     }
 
     @Test
@@ -95,12 +91,10 @@ class StompSessionReceiptTests {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
             wsSession.simulateError("some error")
         }
-        val exception = assertFailsWith(CancellationException::class) {
+        val exception = assertFailsWith(WebSocketException::class) {
             stompSession.sendEmptyMsg("/destination")
         }
-        val cause = getCause(exception)
-        assertNotNull(cause)
-        assertEquals(WebSocketException::class, cause::class)
+        assertEquals("some error", exception.message)
     }
 
     @Test
@@ -112,12 +106,11 @@ class StompSessionReceiptTests {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
             wsSession.simulateClose(WebSocketCloseCodes.NORMAL_CLOSURE, "because why not")
         }
-        val exception = assertFailsWith(CancellationException::class) {
+        val exception = assertFailsWith(WebSocketClosedUnexpectedly::class) {
             stompSession.sendEmptyMsg("/destination")
         }
-        val cause = getCause(exception)
-        assertNotNull(cause)
-        assertEquals(WebSocketClosedUnexpectedly::class, cause::class)
+        assertEquals(WebSocketCloseCodes.NORMAL_CLOSURE, exception.code)
+        assertEquals("because why not", exception.reason)
     }
 
     @Test
