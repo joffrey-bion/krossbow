@@ -13,6 +13,7 @@ import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketSession
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class WebSocketSessionMock : WebSocketSession {
 
@@ -72,7 +73,15 @@ suspend fun WebSocketSessionMock.simulateBinaryStompFrameReceived(frame: StompFr
 
 suspend fun WebSocketSessionMock.simulateErrorFrameReceived(errorMessage: String): StompFrame.Error {
     val errorFrame = StompFrame.Error(StompErrorHeaders(errorMessage), null)
-    simulateTextStompFrameReceived(errorFrame)
+    val result = runCatching {
+        simulateTextStompFrameReceived(errorFrame)
+    }
+    assertTrue(
+        result.isSuccess,
+        "Calling the listener with an error frame is the responsibility of the web " +
+                "socket implementation, and is done from a thread that we don't control, so " +
+                "we don't want that to fail."
+    )
     return errorFrame
 }
 

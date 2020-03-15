@@ -104,12 +104,11 @@ class StompSessionSubscriptionsTest {
     fun receiveSubMessage_conversionError_shouldGiveExceptionInChannel() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectWithMocks()
 
-        val errorMessage = "some error message"
-        val deferredSub = async {
-            stompSession.subscribe<String>("/dest") { throw RuntimeException(errorMessage) }
+        launch {
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
         }
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
-        val sub = deferredSub.await()
+        val errorMessage = "some error message"
+        val sub = stompSession.subscribe<String>("/dest") { throw RuntimeException(errorMessage) }
 
         launch {
             wsSession.simulateMessageFrameReceived(sub.id, "HELLO")

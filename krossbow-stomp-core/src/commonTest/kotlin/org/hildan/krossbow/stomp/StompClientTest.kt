@@ -3,7 +3,6 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -98,7 +97,7 @@ class StompClientTest {
 
             launch { connectCall(stompClient) }
             val frame = wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
-            assertEquals(HashMap(expectedHeaders), HashMap(frame.headers))
+            assertEquals<Map<String, String>>(HashMap(expectedHeaders), HashMap(frame.headers))
             assertNull(frame.body, "connect frame should not have a body")
 
             // just to end the connect call
@@ -141,23 +140,17 @@ class StompClientTest {
 
     @Test
     fun connect_failsIfErrorFrameReceived() = runAsyncTestWithTimeout {
-        // prevents the async connect() exception from failing the test
-        supervisorScope {
-            val wsSession = WebSocketSessionMock()
-            val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession))
+        val wsSession = WebSocketSessionMock()
+        val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession))
 
-            val stompSession = async { stompClient.connect("dummy") }
+        launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
-
-            // This method call should not fail because calling this listener is the responsibility of the web socket
-            // implementation, and is only meant to inform the STOMP implementation about that received frame, so we
-            // don't want that to fail. What we do want to fail is the pending client calls (like connect in this case)
             wsSession.simulateErrorFrameReceived("connection failed")
-
-            val exception = assertFailsWith(ConnectionException::class) {
-                stompSession.await()
-            }
-            assertNotNull(exception.cause, "ConnectException should have original exception as cause")
         }
+
+        val exception = assertFailsWith(ConnectionException::class) {
+            stompClient.connect("dummy")
+        }
+        assertNotNull(exception.cause, "ConnectException should have original exception as cause")
     }
 }
