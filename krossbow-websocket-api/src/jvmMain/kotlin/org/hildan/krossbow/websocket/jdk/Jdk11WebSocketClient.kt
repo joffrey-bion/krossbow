@@ -19,6 +19,9 @@ import java.nio.ByteBuffer
 import java.util.concurrent.CompletionStage
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * A [WebSocketClient] implementation using JDK11's async web socket API.
+ */
 class Jdk11WebSocketClient(
     private val webSocketBuilder: WebSocket.Builder = HttpClient.newHttpClient().newWebSocketBuilder(),
     configure: WebSocket.Builder.() -> Unit = {}
@@ -40,7 +43,7 @@ class Jdk11WebSocketClient(
     }
 }
 
-class Jdk11WebSocketListener(
+private class Jdk11WebSocketListener(
     private val listener: WebSocketListenerChannelAdapter
 ) : WebSocket.Listener, CoroutineScope {
 
@@ -75,6 +78,9 @@ class Jdk11WebSocketListener(
     }
 }
 
+/**
+ * An adapter wrapping JDK11's async [WebSocket] as a [WebSocketSession].
+ */
 class Jdk11WebSocketSession(
     private val webSocket: WebSocket,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>,

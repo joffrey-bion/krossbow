@@ -23,12 +23,24 @@ interface WebSocketClient {
  */
 interface WebSocketSession {
 
+    /**
+     * The channel of incoming web socket frames.
+     */
     val incomingFrames: ReceiveChannel<WebSocketFrame>
 
+    /**
+     * Sends a web socket text frame.
+     */
     suspend fun sendText(frameText: String)
 
+    /**
+     * Sends a web socket binary frame.
+     */
     suspend fun sendBinary(frameData: ByteArray)
 
+    /**
+     * Sends a web socket close frame with the given [code] and [reason], and closes the connection.
+     */
     suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
 }
 

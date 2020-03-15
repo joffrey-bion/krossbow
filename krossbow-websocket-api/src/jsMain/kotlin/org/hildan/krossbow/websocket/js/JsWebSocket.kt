@@ -27,7 +27,15 @@ import kotlin.coroutines.resumeWithException
  */
 object BrowserWebSocketClient : JsWebSocketClientAdapter({ url -> WebSocket(url) })
 
-open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSocket) : WebSocketClient {
+/**
+ * A [WebSocketClient] adapting JavaScript [WebSocket] objects to [WebSocketSession]s.
+ */
+open class JsWebSocketClientAdapter(
+    /**
+     * A function to create [WebSocket] connections from a given URL.
+     */
+    private val newWebSocket: (String) -> WebSocket
+) : WebSocketClient {
 
     override suspend fun connect(url: String): WebSocketSession {
         return suspendCancellableCoroutine { cont ->
@@ -83,6 +91,9 @@ open class JsWebSocketClientAdapter(private val newWebSocket: (String) -> WebSoc
     }
 }
 
+/**
+ * A adapter wrapping a JavaScript [WebSocket] object as a [WebSocketSession].
+ */
 class JsWebSocketSession(
     private val ws: WebSocket,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
