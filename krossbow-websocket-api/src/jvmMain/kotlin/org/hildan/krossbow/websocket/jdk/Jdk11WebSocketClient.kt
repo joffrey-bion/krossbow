@@ -7,10 +7,10 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.future.await
-import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
+import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketSession
 import java.net.URI
 import java.net.http.HttpClient
@@ -52,19 +52,40 @@ private class Jdk11WebSocketListener(
     override val coroutineContext: CoroutineContext
         get() = job
 
-    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*> {
+    private val textAccumulator = StringBuilder()
+
+    private var binaryBuffer = ByteBuffer.allocate(16)
+
+    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? {
         webSocket.request(1)
-        return async { listener.onTextMessage(data.toString()) }.asCompletableFuture()
+        textAccumulator.append(data)
+        if (!last) {
+            return null
+        }
+        val text = textAccumulator.toString()
+        textAccumulator.clear()
+        return async { listener.onTextMessage(text) }.asCompletableFuture()
     }
 
-    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*> {
+    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? {
         webSocket.request(1)
-        val array = ByteArray(data.remaining())
-        data.get(array)
+        ensureCapacityFor(data.remaining())
+        binaryBuffer.put(data)
+        if (!last) {
+            return null
+        }
+        val array = binaryBuffer.toByteArray()
+        binaryBuffer.clear()
         return async { listener.onBinaryMessage(array) }.asCompletableFuture()
     }
 
-    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*> {
+    private fun ensureCapacityFor(nBytes: Int) {
+        if (binaryBuffer.remaining() < nBytes) {
+            binaryBuffer = binaryBuffer.grownBy(nBytes)
+        }
+    }
+
+    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? {
         return async { listener.onClose(statusCode, reason) }.asCompletableFuture()
     }
 
@@ -76,6 +97,19 @@ private class Jdk11WebSocketListener(
     suspend fun stop() {
         job.cancelAndJoin()
     }
+}
+
+private fun ByteBuffer.grownBy(nBytes: Int): ByteBuffer? {
+    val newBuffer = ByteBuffer.allocate(position() + nBytes)
+    newBuffer.put(this)
+    return newBuffer
+}
+
+private fun ByteBuffer.toByteArray(): ByteArray {
+    val array = ByteArray(position())
+    position(0)
+    get(array)
+    return array
 }
 
 /**
