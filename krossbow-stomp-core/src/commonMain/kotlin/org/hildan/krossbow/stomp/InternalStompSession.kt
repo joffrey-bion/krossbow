@@ -13,6 +13,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
+import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -50,6 +51,8 @@ internal class InternalStompSession(
 
     private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.BUFFERED)
 
+    private var heartBeater: HeartBeater? = null
+
     init {
         launch(CoroutineName("websocket-frames-listener")) {
             try {
@@ -63,6 +66,8 @@ internal class InternalStompSession(
     }
 
     private suspend fun onWebSocketFrameReceived(f: WebSocketFrame) {
+        // FIXME maybe handle received WS frames that are just EOL (heart beats) but not valid STOMP frames?
+        heartBeater?.notifyMsgReceived()
         when (f) {
             is WebSocketFrame.Text -> onStompFrameReceived(StompDecoder.decode(f.text))
             is WebSocketFrame.Binary -> onStompFrameReceived(StompDecoder.decode(f.bytes))
@@ -88,12 +93,29 @@ internal class InternalStompSession(
     }
 
     internal suspend fun connect(headers: StompConnectHeaders): StompFrame.Connected = coroutineScope {
-        val connectedFrame = async {
+        val futureConnectedFrame = async {
             waitForTypedFrame<StompFrame.Connected>()
         }
         sendStompFrameAsIs(StompFrame.Connect(headers))
-        connectedFrame.await()
-        // TODO initialize heart beat coroutine if server is ok with it
+        val connectedFrame = futureConnectedFrame.await()
+        initHeartBeats(connectedFrame.headers.heartBeat)
+        connectedFrame
+    }
+
+    private fun initHeartBeats(heartBeat: HeartBeat?) {
+        if (heartBeat == null || (heartBeat.expectedPeriodMillis == 0 && heartBeat.minSendPeriodMillis == 0)) {
+            return // no heart beats to set
+        }
+        heartBeater = HeartBeater(
+            heartBeat = heartBeat,
+            sendHeartBeat = {
+                // if the sender has no real STOMP frame to send, it MUST send an end-of-line (EOL)
+                // https://stomp.github.io/stomp-specification-1.2.html#Heart-beating
+                webSocketSession.sendText("\n")
+            },
+            onMissingHeartBeat = { closeAllSubscriptionsAndShutdown(MissingHeartBeatException()) }
+        )
+        heartBeater?.startIn(this)
     }
 
     private suspend inline fun <reified T : StompFrame> waitForTypedFrame(predicate: (T) -> Boolean = { true }): T {
@@ -145,6 +167,7 @@ internal class InternalStompSession(
             // Also, some sockJS implementations don't support binary frames
             webSocketSession.sendText(frame.encodeToText())
         }
+        heartBeater?.notifyMsgSent()
     }
 
     private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
@@ -244,6 +267,8 @@ private class Subscription<out T>(
 }
 
 class MessageConversionException(cause: Throwable) : Exception(cause.message, cause)
+
+class MissingHeartBeatException : Exception()
 
 class WebSocketClosedUnexpectedly(
     val code: Int,
