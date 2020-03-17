@@ -8,16 +8,7 @@ import kotlinx.io.core.readUTF8Line
 import kotlinx.io.core.readUntilDelimiter
 import kotlinx.io.core.use
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
-import org.hildan.krossbow.stomp.headers.StompConnectHeaders
-import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
-import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
-import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompHeaders
-import org.hildan.krossbow.stomp.headers.StompMessageHeaders
-import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
-import org.hildan.krossbow.stomp.headers.StompSendHeaders
-import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
-import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.stomp.headers.asStompHeaders
 
 internal object StompDecoder {
@@ -26,14 +17,16 @@ internal object StompDecoder {
 
     private val MAX_COMMAND_LENGTH = StompCommand.values().map { it.text.length }.max()!!
 
-    fun decode(frameBytes: ByteArray): StompFrame = ByteReadPacket(frameBytes).use { it.readStompFrame() }
+    fun decode(frameBytes: ByteArray): StompFrame = ByteReadPacket(frameBytes).use { it.readStompFrame(true) }
 
-    private fun Input.readStompFrame(): StompFrame {
+    fun decode(frameText: String): StompFrame = buildPacket { append(frameText) }.use { it.readStompFrame(false) }
+
+    private fun Input.readStompFrame(isBinary: Boolean): StompFrame {
         try {
             val command = readStompCommand()
             val headers = readStompHeaders(command.supportsHeaderEscapes)
-            val body = readBinaryBody(headers.contentLength)
-            return createFrame(command, headers, body)
+            val body = readBodyBytes(headers.contentLength)?.toFrameBody(isBinary)
+            return StompFrame.create(command, headers, body)
         } catch (e: Exception) {
             throw InvalidStompFrameException(e)
         }
@@ -57,60 +50,18 @@ internal object StompDecoder {
         }
     }
 
-    private fun Input.readBinaryBody(contentLength: Int?) = when (contentLength) {
+    private fun Input.readBodyBytes(contentLength: Int?) = when (contentLength) {
         0 -> null
-        null -> FrameBody.Binary(readUpToNullCharacter())
-        else -> FrameBody.Binary(readBytes(contentLength))
+        null -> readUpToNullCharacter()
+        else -> readBytes(contentLength)
     }
 
-    private fun Input.readUpToNullCharacter(): ByteArray =
-            buildPacket { readUntilDelimiter(NULL_BYTE, this) }.readBytes()
+    private fun Input.readUpToNullCharacter() = buildPacket { readUntilDelimiter(NULL_BYTE, this) }.readBytes()
 
-    fun decode(frameText: String): StompFrame {
-        try {
-            val lines = frameText.lines()
-            val command = StompCommand.parse(lines[0])
-
-            val emptyLineIndex = lines.indexOf("")
-            if (emptyLineIndex == -1) {
-                error("Malformed frame, expected empty line to separate headers from body")
-            }
-
-            val headers = lines.subList(1, emptyLineIndex).parseLinesAsStompHeaders(command.supportsHeaderEscapes)
-
-            // TODO stop at content-length if specified in the headers
-            val restOfTheFrame = lines.subList(emptyLineIndex + 1, lines.size).joinToString("\n")
-
-            // the frame must be ended by a NULL octet, which may be followed by optional new lines
-            // https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames
-            val bodyText = restOfTheFrame.trimEnd { it == '\n' || it == '\r' }.trimEnd { it == '\u0000' }
-            val body = bodyText.ifEmpty { null }?.let { FrameBody.Text(it) }
-
-            return createFrame(command, headers, body)
-        } catch (e: Exception) {
-            throw InvalidStompFrameException(e)
-        }
-    }
-
-    private fun createFrame(
-        command: StompCommand,
-        headers: StompHeaders,
-        body: FrameBody?
-    ): StompFrame = when (command) {
-        StompCommand.CONNECT -> StompFrame.Connect(StompConnectHeaders(headers))
-        StompCommand.CONNECTED -> StompFrame.Connected(StompConnectedHeaders(headers))
-        StompCommand.MESSAGE -> StompFrame.Message(StompMessageHeaders(headers), body)
-        StompCommand.RECEIPT -> StompFrame.Receipt(StompReceiptHeaders(headers))
-        StompCommand.SEND -> StompFrame.Send(StompSendHeaders(headers), body)
-        StompCommand.SUBSCRIBE -> StompFrame.Subscribe(StompSubscribeHeaders(headers))
-        StompCommand.UNSUBSCRIBE -> StompFrame.Unsubscribe(StompUnsubscribeHeaders(headers))
-        StompCommand.ACK -> TODO()
-        StompCommand.NACK -> TODO()
-        StompCommand.BEGIN -> TODO()
-        StompCommand.COMMIT -> TODO()
-        StompCommand.ABORT -> TODO()
-        StompCommand.DISCONNECT -> StompFrame.Disconnect(StompDisconnectHeaders(headers))
-        StompCommand.ERROR -> StompFrame.Error(StompErrorHeaders(headers), body)
+    private fun ByteArray.toFrameBody(binary: Boolean) = if (binary) {
+        FrameBody.Binary(this)
+    } else {
+        FrameBody.Text(this)
     }
 
     private fun Iterable<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders {

@@ -76,6 +76,30 @@ sealed class StompFrame(
     ) : StompFrame(StompCommand.ERROR, headers, body) {
         val message: String = headers.message ?: (body as? FrameBody.Text)?.text ?: "(binary error message)"
     }
+
+    companion object {
+
+        fun create(
+            command: StompCommand,
+            headers: StompHeaders,
+            body: FrameBody?
+        ): StompFrame = when (command) {
+            StompCommand.CONNECT -> StompFrame.Connect(StompConnectHeaders(headers))
+            StompCommand.CONNECTED -> StompFrame.Connected(StompConnectedHeaders(headers))
+            StompCommand.MESSAGE -> StompFrame.Message(StompMessageHeaders(headers), body)
+            StompCommand.RECEIPT -> StompFrame.Receipt(StompReceiptHeaders(headers))
+            StompCommand.SEND -> StompFrame.Send(StompSendHeaders(headers), body)
+            StompCommand.SUBSCRIBE -> StompFrame.Subscribe(StompSubscribeHeaders(headers))
+            StompCommand.UNSUBSCRIBE -> StompFrame.Unsubscribe(StompUnsubscribeHeaders(headers))
+            StompCommand.ACK -> TODO()
+            StompCommand.NACK -> TODO()
+            StompCommand.BEGIN -> TODO()
+            StompCommand.COMMIT -> TODO()
+            StompCommand.ABORT -> TODO()
+            StompCommand.DISCONNECT -> StompFrame.Disconnect(StompDisconnectHeaders(headers))
+            StompCommand.ERROR -> StompFrame.Error(StompErrorHeaders(headers), body)
+        }
+    }
 }
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -86,6 +110,8 @@ sealed class FrameBody {
     data class Text(
         val text: String
     ) : FrameBody() {
+        constructor(bytes: ByteArray) : this(bytes.decodeToString())
+
         // Text frames must be encoded using UTF-8 as per WebSocket specification
         // If other encodings are needed, the application must use binary frames with relevant content-type header
         override val bytes by lazy { text.encodeToByteArray() }
