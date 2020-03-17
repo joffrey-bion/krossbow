@@ -116,8 +116,8 @@ val session = StompClient().connect(url).withJacksonConversions(objectMapper)
 
 ## Picking a web socket implementation
 
-The `krossbow-websocket-api` defines a general web socket API, and provides a basic JS implementation using the
- Browser's native web socket.
+The `krossbow-websocket-api` artifact defines a general web socket API, and provides a basic JS implementation using the
+ Browser's native web socket and a basic JVM implementation using Java 11's async WebSocket API.
 Other artifacts provide more implementations supporting more platforms by depending on third party libraries:
 
 | Artifact                    |           Browser          |           NodeJS           |                JVM8+ (blocking)               |   JVM11+ (async)   | Dependencies                                                                                                                                                                                   |
@@ -157,8 +157,9 @@ This project contains the following modules:
 - `krossbow-stomp-kxserialization`: a superset of `krossbow-stomp-core` adding conversion features using Kotlinx
  Serialization library
 - `krossbow-websocket-api`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
- WebSocket clients. This also provides a default JS client implementations using the Browser's native WebSocket.
+ WebSocket clients. This also provides a default JS client implementations using the Browser's native WebSocket, and
+  a JVM 11+ implementation using the async WebSocket API.
 - `krossbow-websocket-sockjs`: a multiplatform `WebSocketClient` implementation for use with SockJS servers. It uses
  Spring's SockJSClient on JVM, and npm `sockjs-client` for JavaScript (NodeJS and browser).
-- `krossbow-websocket-spring`: a JVM implementation of the web socket API using Spring's WebSocketClient. Provides
+- `krossbow-websocket-spring`: a JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides
  both a normal WebSocket client and a SockJS one.
