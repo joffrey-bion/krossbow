@@ -17,8 +17,12 @@ internal class HeartBeater(
     private val incoming = Ticker(heartBeat.expectedPeriodMillis.toLong(), onMissingHeartBeat)
 
     fun startIn(scope: CoroutineScope) {
-        outgoing.startIn(scope)
-        incoming.startIn(scope)
+        if (heartBeat.minSendPeriodMillis > 0) {
+            outgoing.startIn(scope)
+        }
+        if (heartBeat.expectedPeriodMillis > 0) {
+            incoming.startIn(scope)
+        }
     }
 
     suspend fun notifyMsgSent() {
