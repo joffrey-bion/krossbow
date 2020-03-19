@@ -36,7 +36,6 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                api(project(":krossbow-websocket-spring"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinxIOVersion")
             }
@@ -46,6 +45,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
                 implementation(project(":krossbow-stomp-jackson"))
+                implementation(project(":krossbow-websocket-spring"))
                 implementation("uk.org.lidalia:slf4j-test:1.1.0")
             }
         }

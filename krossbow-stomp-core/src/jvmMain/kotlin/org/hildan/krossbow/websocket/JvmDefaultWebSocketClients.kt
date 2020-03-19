@@ -1,5 +1,5 @@
 package org.hildan.krossbow.websocket
 
-import org.hildan.krossbow.websocket.spring.SpringDefaultWebSocketClient
+import org.hildan.krossbow.websocket.jdk.Jdk11WebSocketClient
 
-actual fun defaultWebSocketClient(): WebSocketClient = SpringDefaultWebSocketClient
+actual fun defaultWebSocketClient(): WebSocketClient = Jdk11WebSocketClient()

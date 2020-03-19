@@ -8,6 +8,7 @@ import org.hildan.krossbow.stomp.conversions.convertAndSend
 import org.hildan.krossbow.stomp.conversions.subscribe
 import org.hildan.krossbow.stomp.use
 import org.hildan.krossbow.test.runAsyncTest
+import org.hildan.krossbow.websocket.jdk.Jdk11WebSocketClient
 import org.hildan.krossbow.websocket.sockjs.SockJSClient
 import org.hildan.krossbow.websocket.spring.SpringDefaultWebSocketClient
 import kotlin.test.Ignore
@@ -35,7 +36,7 @@ class JvmDefaultWebSocketClientsTest {
 
     @Test
     fun defaultClientTest() {
-        assertEquals(SpringDefaultWebSocketClient, defaultWebSocketClient())
+        assertTrue(defaultWebSocketClient() is Jdk11WebSocketClient)
     }
 
     // Ignored for CI as long as it requires an internet connection
