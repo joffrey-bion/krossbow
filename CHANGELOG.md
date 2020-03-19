@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.10.2](https://github.com/joffrey-bion/krossbow/tree/0.10.2) (2020-03-19)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.1...0.10.2)
+
+**Implemented enhancements:**
+
+- Change default WebSocket impl on JVM to JDK 11 async client [\#34](https://github.com/joffrey-bion/krossbow/issues/34)
+- Add support for heart beats [\#33](https://github.com/joffrey-bion/krossbow/issues/33)
+- Rework WebSocket API to use a channel instead of a listener [\#32](https://github.com/joffrey-bion/krossbow/issues/32)
+- Add JDK11 async WebSocket bridge [\#27](https://github.com/joffrey-bion/krossbow/issues/27)
+
 ## [0.10.1](https://github.com/joffrey-bion/krossbow/tree/0.10.1) (2020-03-12)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.0...0.10.1)
 
