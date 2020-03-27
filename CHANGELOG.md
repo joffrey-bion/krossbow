@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.10.3](https://github.com/joffrey-bion/krossbow/tree/0.10.3) (2020-03-27)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.2...0.10.3)
+
+**Implemented enhancements:**
+
+- Upgrade Kotlinx.serialization to 0.20.0 [\#39](https://github.com/joffrey-bion/krossbow/issues/39)
+- Upgrade Jackson to 2.10.0 [\#38](https://github.com/joffrey-bion/krossbow/issues/38)
+
 ## [0.10.2](https://github.com/joffrey-bion/krossbow/tree/0.10.2) (2020-03-19)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.1...0.10.2)
 
