@@ -7,7 +7,14 @@
 A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
  over web sockets.
 
-***This project is experimental, meaning that there is no guarantee of backwards compatibility.***
+## Experimental status
+
+***This project is experimental, meaning that there is no guarantee of backwards compatibility.*** 
+Any part of the public API may change until version 1.0.0 is released.
+
+This is mainly due to the fact that the project is young, but also because it has multiple dependencies on
+ experimental libraries like [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) and 
+ [Kotlinx IO](https://github.com/Kotlin/kotlinx-io).
 
 ## STOMP Usage
 
@@ -87,7 +94,7 @@ jsonStompSession.use {
 
 Note that `withJsonConversions()` takes an optional `Json` argument to customize the serialization configuration.
 
-#### Using Jackson on the JVM
+#### Using Jackson conversions (JVM only)
 
 If you're only targeting the JVM, you can use Jackson instead of Kotlinx Serialization to use reflection instead of
  manually provided serializers.
@@ -135,11 +142,15 @@ Other artifacts provide more implementations supporting more platforms by depend
 All the dependencies are currently published to Bintray JCenter.
 They are not yet available on npm yet.
 
+If you are using STOMP and have no special requirement for the web socket implementation, `krossbow-websocket-api` 
+doesn't need to be explicitly declared as dependency because it is transitively pulled by all `krossbow-stomp-xxx` 
+artifacts.
+
 ### Common library
 
 ```kotlin
 // common source set
-implementation("org.hildan.krossbow:krossbow-stomp-core:$krossbowVersion")
+implementation("org.hildan.krossbow:krossbow-stomp-core-metadata:$krossbowVersion")
 
 // jvm source set
 implementation("org.hildan.krossbow:krossbow-stomp-core-jvm:$krossbowVersion")
