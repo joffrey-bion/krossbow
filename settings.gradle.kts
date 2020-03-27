@@ -20,5 +20,3 @@ include("krossbow-stomp-jackson")
 include("krossbow-websocket-api")
 include("krossbow-websocket-sockjs")
 include("krossbow-websocket-spring")
-
-enableFeaturePreview("GRADLE_METADATA")
