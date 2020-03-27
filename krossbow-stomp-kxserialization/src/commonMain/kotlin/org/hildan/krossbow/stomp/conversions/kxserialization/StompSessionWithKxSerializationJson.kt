@@ -48,7 +48,7 @@ internal class StompSessionWithKxSerializationJson(
     ): StompSubscription<T> = subscribe(destination, receiptId) { msg ->
         val body = msg.body
         requireNotNull(body) {
-            "Cannot deserialize object of type ${deserializer.descriptor.name} from null body"
+            "Cannot deserialize object of type ${deserializer.descriptor.serialName} from null body"
         }
         body.deserialize(deserializer)
     }

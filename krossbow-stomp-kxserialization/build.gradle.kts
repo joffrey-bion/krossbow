@@ -7,7 +7,7 @@ plugins {
 
 description = "An extension of Krossbow STOMP client using Kotlinx Serialization for message conversions"
 
-val serializationVersion = "0.14.0"
+val serializationVersion = "0.20.0"
 
 kotlin {
     jvm()
