@@ -1,6 +1,7 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
@@ -40,6 +41,7 @@ private class Ticker(
 ) {
     private val resetter = Channel<Unit>()
 
+    @OptIn(ExperimentalCoroutinesApi::class) // for onTimeout
     fun startIn(scope: CoroutineScope): Job = scope.launch {
         while (isActive) {
             select<Unit> {
