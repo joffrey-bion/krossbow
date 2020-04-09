@@ -6,6 +6,17 @@
 
 A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
  over web sockets.
+ 
+## Supported targets
+
+This project only supports the JVM 8/11 and JavaScript targets as of now, as it was primarily built for applications
+ combining Kotlin/React frontend with Kotlin Spring Boot backend.
+
+This project cannot be used on Android as of now because of its dependency on either Spring (JDK8) or JDK11's API, but
+ this could change if the need arises (please open an issue if you'd like to see it happen).
+Android support could be somewhat easily added by writing an adapter for web sockets on top of OkHttp's web sockets.
+
+Adding support for the Native target may require a bit more effort. Contributions are welcome in this respect, though.
 
 ## Experimental status
 
@@ -20,50 +31,60 @@ This is mainly due to the fact that the project is young, but also because it ha
 
 ### Raw STOMP usage (without conversions)
 
-This is how to create a client and interact with it (the verbose way):
+This is how to create a client and interact with it:
 
 ```kotlin
-import org.hildan.krossbow.stomp.sendText
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.sendText
+import org.hildan.krossbow.stomp.subscribeText
 
 val client = StompClient() // custom WebSocketClient and other config can be passed in here
 val session: StompSession = client.connect(url) // optional login/passcode can be provided here
+
+session.use { // this: StompSession
+    sendText("/some/destination", "Basic text message") 
+
+    val subscription = subscribeText("/some/topic/destination")
+
+    val firstMessage: String? = subscription.messages.receive()
+    println("Received: $firstMessage")
+
+    subscription.unsubscribe()
+}
+```
+
+The `StompSession.use()` method here is similar to `Closeable.use()` and allows to disconnect automatically even in
+ case of error.
+
+If the STOMP session needs to be passed around and cannot be used in one place like this, it is possible to be explicit
+using `try`/`finally`, and `disconnect()` manually:
+
+```kotlin
+import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.sendText
+import org.hildan.krossbow.stomp.subscribeText
+
+val session: StompSession = StompClient().connect(url)
 
 try {
     session.sendText("/some/destination", "Basic text message") 
 
     val subscription = session.subscribeText("/some/topic/destination")
-    val firstMessage: String? = subscription.messages.receive()
 
+    val firstMessage: String? = subscription.messages.receive()
     println("Received: $firstMessage")
+
     subscription.unsubscribe()
 } finally {
-    jsonStompSession.disconnect()
+    session.disconnect()
 }
 ```
 
-If the STOMP session is only used in one place like this, we can get rid of the `try`/`catch`, and `disconnect()` 
-automatically by calling `StompSession.use()` (similar to `Closeable.use()`):
-
-```kotlin
-import org.hildan.krossbow.stomp.sendText
-import org.hildan.krossbow.stomp.StompClient
-
-StompClient().connect(url).use { // this: StompSessionWithKxSerialization
-    session.sendText("/some/destination", "Basic text message") 
-
-    val subscription = session.subscribeText("/some/topic/destination")
-    val firstMessage: String? = subscription.messages.receive()
-
-    println("Received: $firstMessage")
-    subscription.unsubscribe()
-}
-```
 
 ### Using body conversions
 
-Usually STOMP is used in conjonction with JSON bodies that are converted back and forth between objects.
+Usually STOMP is used in conjunction with JSON bodies that are converted back and forth between objects.
 Krossbow comes with built-in support for Kotlinx Serialization in order to support multiplatform conversions.
 
 You will need to use the `krossbow-stomp-kxserialization` module to add these capabilities (you don't need the core
