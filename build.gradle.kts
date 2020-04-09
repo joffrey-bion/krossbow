@@ -42,12 +42,16 @@ subprojects {
         jcenter()
     }
 
+    val compilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
-        kotlinOptions.freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
+        kotlinOptions.freeCompilerArgs = compilerArgs
     }
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile> {
-        kotlinOptions.freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
+        kotlinOptions.freeCompilerArgs = compilerArgs
+    }
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon> {
+        kotlinOptions.freeCompilerArgs = compilerArgs
     }
 
     extensions.configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
