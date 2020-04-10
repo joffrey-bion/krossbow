@@ -53,6 +53,13 @@ subprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon> {
         kotlinOptions.freeCompilerArgs = compilerArgs
     }
+    tasks.withType<AbstractTestTask> {
+        testLogging {
+            events("failed", "standardOut", "standardError")
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+            showStackTraces = true
+        }
+    }
 
     extensions.configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
         // The import ordering expected by ktlint is alphabetical, which doesn't match IDEA's formatter.
