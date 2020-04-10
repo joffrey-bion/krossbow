@@ -48,7 +48,7 @@ class WebSocketChannelTest {
 
         launch { adapter.onError("some error") }
 
-        val ex = assertFailsWith<WebSocketException> { adapter.incomingFrames.receive() }
+        val ex = assertFailsWith(WebSocketException::class) { adapter.incomingFrames.receive() }
         assertEquals("some error", ex.message)
         assertTrue(adapter.incomingFrames.isClosedForReceive)
     }
@@ -60,7 +60,7 @@ class WebSocketChannelTest {
 
         launch { adapter.onError(RuntimeException("some error")) }
 
-        val ex = assertFailsWith<WebSocketException> { adapter.incomingFrames.receive() }
+        val ex = assertFailsWith(WebSocketException::class) { adapter.incomingFrames.receive() }
         assertEquals("some error", ex.message)
         // for some reason, cause is nested twice on JVM (but not on JS targets)
         assertEquals(RuntimeException::class, (ex.cause?.cause ?: ex.cause)!!::class)
