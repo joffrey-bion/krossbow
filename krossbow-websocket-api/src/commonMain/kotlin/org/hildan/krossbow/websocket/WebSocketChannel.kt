@@ -2,9 +2,6 @@ package org.hildan.krossbow.websocket
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.io.core.BytePacketBuilder
-import kotlinx.io.core.readBytes
-import kotlinx.io.core.writeFully
 
 /**
  * Adapter between listener calls and a web socket frames channel.
@@ -18,46 +15,23 @@ class WebSocketListenerChannelAdapter {
 
     private val frames: Channel<WebSocketFrame> = Channel()
 
-    private val textBuilder = StringBuilder()
+    private val partialTextMessageHandler = PartialTextMessageHandler {
+        frames.send(WebSocketFrame.Text(it.toString()))
+    }
 
-    private val bytesBuilder = BytePacketBuilder()
+    private val partialBinaryMessageHandler = PartialBinaryMessageHandler {
+        frames.send(WebSocketFrame.Binary(it))
+    }
 
     suspend fun onBinaryMessage(bytes: ByteArray, isLast: Boolean = true) {
         runCatching {
-            if (bytesBuilder.isEmpty && isLast) {
-                // optimization: do not buffer complete messages
-                frames.send(WebSocketFrame.Binary(bytes))
-            } else {
-                processPartialFrame(bytes, isLast)
-            }
+            partialBinaryMessageHandler.processMessage(bytes, isLast)
         }
     }
 
     suspend fun onTextMessage(text: CharSequence, isLast: Boolean = true) {
         runCatching {
-            if (textBuilder.isEmpty() && isLast) {
-                // optimization: do not buffer complete messages
-                frames.send(WebSocketFrame.Text(text.toString()))
-            } else {
-                processPartialFrame(text, isLast)
-            }
-        }
-    }
-
-    private suspend fun processPartialFrame(bytes: ByteArray, isLast: Boolean) {
-        bytesBuilder.writeFully(bytes)
-        if (isLast) {
-            val wholeFrameBytes = bytesBuilder.build().readBytes()
-            frames.send(WebSocketFrame.Binary(wholeFrameBytes))
-        }
-    }
-
-    private suspend fun processPartialFrame(text: CharSequence, isLast: Boolean) {
-        textBuilder.append(text)
-        if (isLast) {
-            val wholeFrameText = textBuilder.toString()
-            textBuilder.clear()
-            frames.send(WebSocketFrame.Text(wholeFrameText))
+            partialTextMessageHandler.processMessage(text, isLast)
         }
     }
 
