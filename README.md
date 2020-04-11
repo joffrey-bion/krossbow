@@ -1,7 +1,8 @@
 # Krossbow
 
-[![Bintray Download](https://img.shields.io/bintray/v/joffrey-bion/maven/krossbow-stomp-core.svg?label=bintray)](https://bintray.com/joffrey-bion/maven/krossbow-stomp-core/_latestVersion)
-[![Travis Build](https://img.shields.io/travis/joffrey-bion/krossbow/master.svg)](https://travis-ci.org/joffrey-bion/krossbow)
+[![Bintray Download](https://img.shields.io/bintray/v/joffrey-bion/maven/krossbow-stomp-core)](https://bintray.com/joffrey-bion/maven/krossbow-stomp-core/_latestVersion)
+[![Github Build](https://img.shields.io/github/workflow/status/joffrey-bion/krossbow/CI%20Build?label=build&logo=github)](https://github.com/joffrey-bion/krossbow/actions?query=workflow%3A%22CI+Build%22)
+[![Travis Build](https://img.shields.io/travis/joffrey-bion/krossbow/master.svg?label=build&logo=travis)](https://travis-ci.org/joffrey-bion/krossbow)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/joffrey-bion/krossbow/blob/master/LICENSE)
 
 A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
