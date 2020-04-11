@@ -10,7 +10,7 @@ dependencies {
     api(project(":krossbow-websocket-api"))
 
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
 
     api("com.squareup.okhttp3:okhttp:4.5.0")
 }

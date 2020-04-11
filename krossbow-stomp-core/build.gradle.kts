@@ -21,8 +21,8 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 api(project(":krossbow-websocket-api"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinxIOVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-io:${Versions.kotlinxIO}")
             }
         }
         val commonTest by getting {
@@ -36,8 +36,8 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinxIOVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:${Versions.kotlinxIO}")
             }
         }
         val jvmTest by getting {
@@ -52,8 +52,8 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
-                implementation("org.jetbrains.kotlinx:kotlinx-io-js:$kotlinxIOVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${Versions.coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-js:${Versions.kotlinxIO}")
                 implementation(npm("text-encoding", "0.7.0")) // seems required by kotlinx-io-js
             }
         }

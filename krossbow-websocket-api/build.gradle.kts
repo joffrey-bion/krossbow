@@ -4,9 +4,6 @@ plugins {
 
 description = "WebSocket client API used by the Krossbow STOMP client, with a default JS implementation."
 
-val coroutinesVersion = "1.3.3"
-val kotlinxIOVersion = "0.1.16"
-
 kotlin {
     jvm()
     js {
@@ -18,22 +15,22 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinxIOVersion")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-io:${Versions.kotlinxIO}")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}")
             }
         }
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinxIOVersion")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:${Versions.kotlinxIO}")
             }
         }
         val jvmTest by getting {
@@ -46,8 +43,8 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-io-js:$kotlinxIOVersion")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${Versions.coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-js:${Versions.kotlinxIO}")
             }
         }
         val jsTest by getting {
