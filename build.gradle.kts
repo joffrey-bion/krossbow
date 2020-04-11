@@ -10,7 +10,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version kotlinVersion apply false
     id("org.jlleitschuh.gradle.ktlint") version "9.1.1" apply false
     id("org.jetbrains.dokka") version "0.10.1" apply false
-    id("com.jfrog.bintray") version "1.8.4" apply false
+    id("com.jfrog.bintray") version "1.8.5" apply false
     id("org.hildan.github.changelog") version "0.8.0"
 }
 
