@@ -52,38 +52,14 @@ private class Jdk11WebSocketListener(
     override val coroutineContext: CoroutineContext
         get() = job
 
-    private val textAccumulator = StringBuilder()
-
-    private var binaryBuffer = ByteBuffer.allocate(16)
-
     override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? {
         webSocket.request(1)
-        textAccumulator.append(data)
-        if (!last) {
-            return null
-        }
-        val text = textAccumulator.toString()
-        textAccumulator.clear()
-        return async { listener.onTextMessage(text) }.asCompletableFuture()
+        return async { listener.onTextMessage(data, last) }.asCompletableFuture()
     }
 
     override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? {
         webSocket.request(1)
-        ensureCapacityFor(data.remaining())
-        binaryBuffer.put(data)
-        if (!last) {
-            return null
-        }
-        binaryBuffer.flip()
-        val array = binaryBuffer.toByteArray()
-        binaryBuffer.clear()
-        return async { listener.onBinaryMessage(array) }.asCompletableFuture()
-    }
-
-    private fun ensureCapacityFor(nBytes: Int) {
-        if (binaryBuffer.remaining() < nBytes) {
-            binaryBuffer = binaryBuffer.grownBy(nBytes)
-        }
+        return async { listener.onBinaryMessage(data.toByteArray(), last) }.asCompletableFuture()
     }
 
     override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? {
@@ -98,12 +74,6 @@ private class Jdk11WebSocketListener(
     suspend fun stop() {
         job.cancelAndJoin()
     }
-}
-
-private fun ByteBuffer.grownBy(nBytes: Int): ByteBuffer? {
-    val newBuffer = ByteBuffer.allocate(position() + nBytes)
-    newBuffer.put(this)
-    return newBuffer
 }
 
 private fun ByteBuffer.toByteArray(): ByteArray {

@@ -19,7 +19,7 @@ internal object StompDecoder {
 
     fun decode(frameBytes: ByteArray): StompFrame = ByteReadPacket(frameBytes).use { it.readStompFrame(true) }
 
-    fun decode(frameText: String): StompFrame = buildPacket { append(frameText) }.use { it.readStompFrame(false) }
+    fun decode(frameText: CharSequence): StompFrame = buildPacket { append(frameText) }.use { it.readStompFrame(false) }
 
     private fun Input.readStompFrame(isBinary: Boolean): StompFrame {
         try {

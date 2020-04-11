@@ -53,8 +53,8 @@ class KrossbowToSpringHandlerAdapter : WebSocketHandler {
             when (message) {
                 is PingMessage -> Unit
                 is PongMessage -> Unit
-                is BinaryMessage -> channelListener.onBinaryMessage(message.payload.array())
-                is TextMessage -> channelListener.onTextMessage(message.payload)
+                is BinaryMessage -> channelListener.onBinaryMessage(message.payload.array(), message.isLast)
+                is TextMessage -> channelListener.onTextMessage(message.payload, message.isLast)
                 else -> channelListener.onError("Unsupported Spring websocket message type: ${message.javaClass}")
             }
         }
@@ -70,7 +70,7 @@ class KrossbowToSpringHandlerAdapter : WebSocketHandler {
         }
     }
 
-    override fun supportsPartialMessages(): Boolean = false
+    override fun supportsPartialMessages(): Boolean = true
 }
 
 class SpringToKrossbowSessionAdapter(

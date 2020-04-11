@@ -5,6 +5,7 @@ plugins {
 description = "WebSocket client API used by the Krossbow STOMP client, with a default JS implementation."
 
 val coroutinesVersion = "1.3.3"
+val kotlinxIOVersion = "0.1.16"
 
 kotlin {
     jvm()
@@ -18,6 +19,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinxIOVersion")
             }
         }
         val commonTest by getting {
@@ -31,6 +33,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinxIOVersion")
             }
         }
         val jvmTest by getting {
@@ -44,6 +47,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-js"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-js:$kotlinxIOVersion")
             }
         }
         val jsTest by getting {

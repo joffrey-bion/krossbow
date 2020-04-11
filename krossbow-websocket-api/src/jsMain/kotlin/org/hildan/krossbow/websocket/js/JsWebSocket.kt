@@ -78,7 +78,7 @@ open class JsWebSocketClientAdapter(
                         when (val body = event.data) {
                             is String -> listener.onTextMessage(body)
                             is ArrayBuffer -> listener.onBinaryMessage(body.toByteArray())
-                            null -> listener.onEmptyMessage()
+                            null -> listener.onTextMessage("")
                             else -> listener.onError("Unknown socket frame body type: ${body::class.js}")
                         }
                     }
