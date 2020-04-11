@@ -7,9 +7,6 @@ plugins {
 
 description = "A Kotlin multiplatform STOMP client with JVM, Browser, and NodeJS support"
 
-val coroutinesVersion = "1.3.3"
-val kotlinxIOVersion = "0.1.16"
-
 kotlin {
     jvm()
     js {
