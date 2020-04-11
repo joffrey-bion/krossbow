@@ -8,7 +8,7 @@ import kotlin.test.assertNull
 class PartialMessagesTest {
 
     @Test
-    fun test() = runSuspendingTest {
+    fun testTextHandler() = runSuspendingTest {
         var result: String? = null
         val handler = PartialTextMessageHandler { result = it.toString() }
 
@@ -28,5 +28,34 @@ class PartialMessagesTest {
         assertEquals("beginend", result, "handler shouldn't trigger the callback on incomplete msg")
         handler.processMessage("3", isLast = true)
         assertEquals("123", result, "the complete msg should be sent when last part is received")
+    }
+
+    @Test
+    fun testBinaryHandler() = runSuspendingTest {
+        var result: List<Byte>? = null
+        val handler = PartialBinaryMessageHandler { result = it.toList() }
+
+        assertNull(result)
+
+        val zeroOneTwo = listOf<Byte>(0, 1, 2)
+        handler.processMessage(zeroOneTwo.toByteArray(), isLast = true)
+        assertEquals(zeroOneTwo, result)
+
+        val oneTwo = listOf<Byte>(1, 2)
+        val threeFourFive = listOf<Byte>(3, 4, 5)
+        handler.processMessage(oneTwo.toByteArray(), isLast = false)
+        assertEquals(zeroOneTwo, result, "handler shouldn't trigger the callback on incomplete msg")
+        handler.processMessage(threeFourFive.toByteArray(), isLast = true)
+        assertEquals(oneTwo + threeFourFive, result, "the complete msg should be sent when last part is received")
+
+        val one = listOf<Byte>(1)
+        val two = listOf<Byte>(2)
+        val three = listOf<Byte>(3)
+        handler.processMessage(one.toByteArray(), isLast = false)
+        assertEquals(oneTwo + threeFourFive, result, "handler shouldn't trigger the callback on incomplete msg")
+        handler.processMessage(two.toByteArray(), isLast = false)
+        assertEquals(oneTwo + threeFourFive, result, "handler shouldn't trigger the callback on incomplete msg")
+        handler.processMessage(three.toByteArray(), isLast = true)
+        assertEquals(one + two + three, result, "the complete msg should be sent when last part is received")
     }
 }
