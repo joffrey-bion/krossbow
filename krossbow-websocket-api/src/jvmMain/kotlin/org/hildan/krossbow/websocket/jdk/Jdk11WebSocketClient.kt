@@ -74,6 +74,7 @@ private class Jdk11WebSocketListener(
         if (!last) {
             return null
         }
+        binaryBuffer.flip()
         val array = binaryBuffer.toByteArray()
         binaryBuffer.clear()
         return async { listener.onBinaryMessage(array) }.asCompletableFuture()
@@ -106,8 +107,7 @@ private fun ByteBuffer.grownBy(nBytes: Int): ByteBuffer? {
 }
 
 private fun ByteBuffer.toByteArray(): ByteArray {
-    val array = ByteArray(position())
-    position(0)
+    val array = ByteArray(remaining())
     get(array)
     return array
 }
