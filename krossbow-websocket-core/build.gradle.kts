@@ -2,7 +2,7 @@ plugins {
     kotlin("multiplatform")
 }
 
-description = "WebSocket client API used by the Krossbow STOMP client, with a default JS implementation."
+description = "WebSocket client API used by the Krossbow STOMP client, with default JS and JVM implementations."
 
 kotlin {
     jvm()
