@@ -37,6 +37,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
+                implementation("com.pusher:java-websocket:1.4.1")
             }
         }
         val jsMain by getting {

@@ -10,6 +10,6 @@ class JsWebSocketTest {
     @Ignore
     @Test
     fun test_browser() {
-        testKaazingEchoWs(BrowserWebSocketClient, "ws")
+        testEchoWs(BrowserWebSocketClient, "ws://demos.kaazing.com/echo")
     }
 }

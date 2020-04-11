@@ -8,8 +8,8 @@ import kotlin.test.assertTrue
 
 expect fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit)
 
-fun testKaazingEchoWs(websocketClient: WebSocketClient, protocol: String) = runSuspendingTest {
-    val session = websocketClient.connect("$protocol://demos.kaazing.com/echo")
+fun testEchoWs(websocketClient: WebSocketClient, url: String) = runSuspendingTest {
+    val session = websocketClient.connect(url)
 
     session.sendText("hello")
     val helloResponse = session.incomingFrames.receive()
