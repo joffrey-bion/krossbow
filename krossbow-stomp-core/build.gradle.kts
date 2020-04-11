@@ -17,7 +17,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                api(project(":krossbow-websocket-api"))
+                api(project(":krossbow-websocket-core"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io:${Versions.kotlinxIO}")
             }
@@ -64,14 +64,14 @@ kotlin {
 
 tasks.dokka {
     dependsOn(
-        ":krossbow-websocket-api:dokka",
+        ":krossbow-websocket-core:dokka",
         ":krossbow-websocket-spring:dokka"
     )
     //    outputFormat = "javadoc"
     multiplatform {
         val global by creating {
             externalDocumentationLink {
-                url = URL("file://${project(":krossbow-websocket-api").buildDir}/dokka/krossbow-websocket-api/")
+                url = URL("file://${project(":krossbow-websocket-core").buildDir}/dokka/krossbow-websocket-core/")
                 packageListUrl = URL(url, "package-list")
             }
         }

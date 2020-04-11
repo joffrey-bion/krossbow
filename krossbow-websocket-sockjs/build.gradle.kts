@@ -15,7 +15,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                api(project(":krossbow-websocket-api"))
+                api(project(":krossbow-websocket-core"))
             }
         }
         val commonTest by getting {

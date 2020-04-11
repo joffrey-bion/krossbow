@@ -145,15 +145,16 @@ val session = StompClient().connect(url).withJacksonConversions(objectMapper)
 
 ## Picking a web socket implementation
 
-The `krossbow-websocket-api` artifact defines a general web socket API, and provides a basic JS implementation using the
- Browser's native web socket and a basic JVM implementation using Java 11's async WebSocket API.
+The `krossbow-websocket-core` artifact defines a general web socket API, and provides basic JS/JVM implementations
+ without third-party dependencies.
 Other artifacts provide more implementations supporting more platforms by depending on third party libraries:
 
-| Artifact                    |           Browser          |           NodeJS           |                JVM8+ (blocking)               |   JVM11+ (async)   | Dependencies                                                                                                                                                                                   |
-|-----------------------------|:--------------------------:|:--------------------------:|:---------------------------------------------:|:------------------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `krossbow-websocket-api`    |     :white_check_mark:     |                            |                                               | :white_check_mark: |                                                                                                                                                                                                |
+| Artifact                    |           Browser          |           NodeJS           |                JVM8+ (blocking)               |   JVM11+ (async)   | Dependencies |
+|-----------------------------|:--------------------------:|:--------------------------:|:---------------------------------------------:|:------------------:|--------------|
+| `krossbow-websocket-core`   |     :white_check_mark:     |                            |                                               | :white_check_mark: |              |
 | `krossbow-websocket-sockjs` | :eight_pointed_black_star: | :eight_pointed_black_star: |           :eight_pointed_black_star:          |                    | [sockjs-client](https://github.com/sockjs/sockjs-client), [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) |
-| `krossbow-websocket-spring` |                            |                            | :white_check_mark: :eight_pointed_black_star: |                    | [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html)                                                           |
+| `krossbow-websocket-spring` |                            |                            | :white_check_mark: :eight_pointed_black_star: |                    | [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) |
+| `krossbow-websocket-okhttp` |                            |                            |               :white_check_mark:              |                    | [OkHttp](https://square.github.io/okhttp/) |
 
 :white_check_mark: supported with native web socket transport
 
@@ -164,7 +165,7 @@ Other artifacts provide more implementations supporting more platforms by depend
 All the dependencies are currently published to Bintray JCenter.
 They are not yet available on npm yet.
 
-If you are using STOMP and have no special requirement for the web socket implementation, `krossbow-websocket-api` 
+If you are using STOMP and have no special requirement for the web socket implementation, `krossbow-websocket-core` 
 doesn't need to be explicitly declared as dependency because it is transitively pulled by all `krossbow-stomp-xxx` 
 artifacts.
 
@@ -185,11 +186,11 @@ implementation("org.hildan.krossbow:krossbow-stomp-core-js:$krossbowVersion")
  
 This project contains the following modules:
 - `krossbow-stomp-core`: the multiplatform STOMP client to use as a STOMP library in common, JVM or JS projects. It
- implements the STOMP 1.2 protocol on top of a websocket API defined by the `krossbow-websocket-api` module.
+ implements the STOMP 1.2 protocol on top of a websocket API defined by the `krossbow-websocket-core` module.
 - `krossbow-stomp-jackson`: a superset of `krossbow-stomp-core` adding conversion features using Jackson
 - `krossbow-stomp-kxserialization`: a superset of `krossbow-stomp-core` adding conversion features using Kotlinx
  Serialization library
-- `krossbow-websocket-api`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
+- `krossbow-websocket-core`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
  WebSocket clients. This also provides a default JS client implementations using the Browser's native WebSocket, and
   a JVM 11+ implementation using the async WebSocket API.
 - `krossbow-websocket-sockjs`: a multiplatform `WebSocketClient` implementation for use with SockJS servers. It uses

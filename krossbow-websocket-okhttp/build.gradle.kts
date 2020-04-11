@@ -7,7 +7,7 @@ plugins {
 description = "A Krossbow adapter for OkHttp's WebSocket client"
 
 dependencies {
-    api(project(":krossbow-websocket-api"))
+    api(project(":krossbow-websocket-core"))
 
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
@@ -16,10 +16,10 @@ dependencies {
 }
 
 tasks.dokka {
-    dependsOn(":krossbow-websocket-api:dokka")
+    dependsOn(":krossbow-websocket-core:dokka")
     configuration {
         externalDocumentationLink {
-            url = URL("file://${project(":krossbow-websocket-api").buildDir}/dokka/krossbow-websocket-api/")
+            url = URL("file://${project(":krossbow-websocket-core").buildDir}/dokka/krossbow-websocket-core/")
             packageListUrl = URL(url, "package-list")
         }
     }

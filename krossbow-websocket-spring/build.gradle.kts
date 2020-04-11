@@ -7,7 +7,7 @@ plugins {
 description = "A Krossbow adapter for Spring's default WebSocket client and SockJS client"
 
 dependencies {
-    api(project(":krossbow-websocket-api"))
+    api(project(":krossbow-websocket-core"))
 
     api("org.slf4j:slf4j-api:1.7.26")
 
@@ -23,14 +23,14 @@ dependencies {
 }
 
 tasks.dokka {
-    dependsOn(":krossbow-websocket-api:dokka")
+    dependsOn(":krossbow-websocket-core:dokka")
     configuration {
         externalDocumentationLink {
             url = URL("https://docs.spring.io/spring/docs/current/javadoc-api/")
             packageListUrl = URL(url, "package-list")
         }
         externalDocumentationLink {
-            url = URL("file://${project(":krossbow-websocket-api").buildDir}/dokka/krossbow-websocket-api/")
+            url = URL("file://${project(":krossbow-websocket-core").buildDir}/dokka/krossbow-websocket-core/")
             packageListUrl = URL(url, "package-list")
         }
     }
