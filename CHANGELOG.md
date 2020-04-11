@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.11.0](https://github.com/joffrey-bion/krossbow/tree/0.11.0) (2020-04-12)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.3...0.11.0)
+
+**Implemented enhancements:**
+
+- Rename krossbow\-websocket\-api to krossbow\-websocket\-core [\#41](https://github.com/joffrey-bion/krossbow/issues/41)
+- Add OkHttp websocket adapter [\#40](https://github.com/joffrey-bion/krossbow/issues/40)
+- Add support for websocket frame splitting in common code [\#36](https://github.com/joffrey-bion/krossbow/issues/36)
+
 ## [0.10.3](https://github.com/joffrey-bion/krossbow/tree/0.10.3) (2020-03-27)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.2...0.10.3)
 
