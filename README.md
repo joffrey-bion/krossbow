@@ -8,6 +8,15 @@
 A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
  over web sockets.
  
+## Experimental status
+
+***This project is experimental, meaning that there is no guarantee of backwards compatibility.*** 
+Any part of the public API may change until version 1.0.0 is released.
+
+This is mainly due to the fact that the project is young, but also because it has multiple dependencies on
+ experimental libraries like [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) and 
+ [Kotlinx IO](https://github.com/Kotlin/kotlinx-io).
+
 ## Supported targets
 
 This project only supports the JVM 8/11 and JavaScript targets as of now, as it was primarily built for applications
@@ -18,15 +27,6 @@ This project cannot be used on Android as of now because of its dependency on ei
 Android support could be somewhat easily added by writing an adapter for web sockets on top of OkHttp's web sockets.
 
 Adding support for the Native target may require a bit more effort. Contributions are welcome in this respect, though.
-
-## Experimental status
-
-***This project is experimental, meaning that there is no guarantee of backwards compatibility.*** 
-Any part of the public API may change until version 1.0.0 is released.
-
-This is mainly due to the fact that the project is young, but also because it has multiple dependencies on
- experimental libraries like [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) and 
- [Kotlinx IO](https://github.com/Kotlin/kotlinx-io).
 
 ## STOMP Usage
 
