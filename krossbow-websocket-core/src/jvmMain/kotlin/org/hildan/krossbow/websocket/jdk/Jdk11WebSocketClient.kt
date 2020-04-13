@@ -53,13 +53,27 @@ private class Jdk11WebSocketListener(
         get() = job
 
     override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? {
-        webSocket.request(1)
-        return async { listener.onTextMessage(data, last) }.asCompletableFuture()
+        // The completion of the returned CompletionStage is only used to reclaim the CharSequence.
+        // The onText() method itself can be called again as soon as it completes, which can cause concurrency issues.
+        // This re-entrance is however controlled by the invocations counter, in turn controlled the call to request(n).
+        // The call to request(1) located after the message processing thus prevents issues.
+        return async {
+            listener.onTextMessage(data, last)
+            webSocket.request(1)
+        }.asCompletableFuture()
     }
 
     override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? {
-        webSocket.request(1)
-        return async { listener.onBinaryMessage(data.toByteArray(), last) }.asCompletableFuture()
+        // The completion of the returned CompletionStage is only used to reclaim the CharSequence.
+        // The onBinary() method itself can be called again as soon as it completes, which can cause concurrency issues.
+        // This re-entrance is however controlled by the invocations counter, in turn controlled the call to request(n).
+        // The call to request(1) located after the message processing thus prevents issues.
+        return async {
+            listener.onBinaryMessage(data.toByteArray(), last)
+            // calling request(1) here to ensure that onBinary() is not called again
+            // before the (potentially partial) message has been processed
+            webSocket.request(1)
+        }.asCompletableFuture()
     }
 
     override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? {
