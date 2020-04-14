@@ -5,6 +5,7 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.asText
+import org.hildan.krossbow.stomp.headers.AckMode
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 
 /**
@@ -52,6 +53,7 @@ interface StompSession {
     suspend fun <T> subscribe(
         destination: String,
         receiptId: String? = null,
+        ackMode: AckMode? = null,
         convertMessage: (StompFrame.Message) -> T
     ): StompSubscription<T>
 
@@ -146,8 +148,9 @@ suspend fun StompSession.sendEmptyMsg(destination: String): StompReceipt? = send
  */
 suspend fun StompSession.subscribeRaw(
     destination: String,
-    receiptId: String? = null
-): StompSubscription<StompFrame.Message> = subscribe(destination, receiptId) { it }
+    receiptId: String? = null,
+    ackMode: AckMode? = null
+): StompSubscription<StompFrame.Message> = subscribe(destination, receiptId, ackMode) { it }
 
 /**
  * Subscribes to the given [destination], expecting text message bodies.
@@ -163,8 +166,9 @@ suspend fun StompSession.subscribeRaw(
  */
 suspend fun StompSession.subscribeText(
     destination: String,
-    receiptId: String? = null
-): StompSubscription<String?> = subscribe(destination, receiptId) { it.body?.asText() }
+    receiptId: String? = null,
+    ackMode: AckMode? = null
+): StompSubscription<String?> = subscribe(destination, receiptId, ackMode) { it.body?.asText() }
 
 /**
  * Subscribes to the given [destination], expecting binary message bodies.
@@ -180,8 +184,9 @@ suspend fun StompSession.subscribeText(
  */
 suspend fun StompSession.subscribeBinary(
     destination: String,
-    receiptId: String? = null
-): StompSubscription<ByteArray?> = subscribe(destination, receiptId) { it.body?.bytes }
+    receiptId: String? = null,
+    ackMode: AckMode? = null
+): StompSubscription<ByteArray?> = subscribe(destination, receiptId, ackMode) { it.body?.bytes }
 
 /**
  * Subscribes to the given [destination], ignoring the body of the received messages.
@@ -195,8 +200,9 @@ suspend fun StompSession.subscribeBinary(
  */
 suspend fun StompSession.subscribeEmptyMsg(
     destination: String,
-    receiptId: String? = null
-): StompSubscription<Unit> = subscribe(destination, receiptId) { Unit }
+    receiptId: String? = null,
+    ackMode: AckMode? = null
+): StompSubscription<Unit> = subscribe(destination, receiptId, ackMode) { Unit }
 
 /**
  * Executes the given block on this [StompSession], and [disconnects][StompSession.disconnect] from the session whether
