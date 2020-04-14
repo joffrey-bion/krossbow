@@ -1,6 +1,7 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.test.runAsyncTest
 import kotlin.test.Test
@@ -20,6 +21,18 @@ class HeartBeaterTest {
         heartBeater.startIn(this)
         delay(100)
         assertEquals(0, result)
+    }
+
+    @Test
+    fun zeroSendAndReceive_canCallNotifyWithoutEffect() = runAsyncTest {
+        val heartBeater = HeartBeater(
+            heartBeat = HeartBeat(0, 0),
+            sendHeartBeat = { throw IllegalStateException("not expected") },
+            onMissingHeartBeat = { throw IllegalStateException("not expected") }
+        )
+        heartBeater.startIn(this)
+        withTimeout(100) { heartBeater.notifyMsgReceived() }
+        withTimeout(100) { heartBeater.notifyMsgSent() }
     }
 
     @Test
@@ -52,6 +65,19 @@ class HeartBeaterTest {
     }
 
     @Test
+    fun nonZeroSend_zeroReceive_canCallNotifyReceived() = runAsyncTest {
+        val sendPeriod = 60L
+        val heartBeater = HeartBeater(
+            heartBeat = HeartBeat(sendPeriod.toInt(), 0),
+            sendHeartBeat = {},
+            onMissingHeartBeat = { throw IllegalStateException("not expected") }
+        )
+        val job = heartBeater.startIn(this)
+        withTimeout(100) { heartBeater.notifyMsgReceived() }
+        job.cancel()
+    }
+
+    @Test
     fun zeroSend_nonZeroReceive_sends() = runAsyncTest {
         val receivePeriod = 60L
         var result = 0
@@ -77,6 +103,19 @@ class HeartBeaterTest {
         assertEquals(2, result, "should not notify missing heartbeat if a message was received")
         delay(receivePeriod + 20)
         assertEquals(3, result, "should send heartbeat after 1 period of inactivity")
+        job.cancel()
+    }
+
+    @Test
+    fun zeroSend_nonZeroReceive_canCallNotifySent() = runAsyncTest {
+        val receivePeriod = 60L
+        val heartBeater = HeartBeater(
+            heartBeat = HeartBeat(0, receivePeriod.toInt()),
+            sendHeartBeat = { throw IllegalStateException("not expected") },
+            onMissingHeartBeat = {}
+        )
+        val job = heartBeater.startIn(this)
+        withTimeout(100) { heartBeater.notifyMsgSent() }
         job.cancel()
     }
 }

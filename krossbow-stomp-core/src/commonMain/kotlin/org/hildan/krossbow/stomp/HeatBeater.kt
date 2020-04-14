@@ -40,18 +40,26 @@ private class Ticker(
     private val onTick: suspend () -> Unit
 ) {
     private val resetter = Channel<Unit>()
+    private var running = false
 
     @OptIn(ExperimentalCoroutinesApi::class) // for onTimeout
     fun startIn(scope: CoroutineScope): Job = scope.launch {
+        running = true
         while (isActive) {
             select<Unit> {
                 resetter.onReceive { }
                 onTimeout(periodMillis, onTick)
             }
         }
+    }.also {
+        it.invokeOnCompletion {
+            running = false
+        }
     }
 
     suspend fun reset() {
-        resetter.send(Unit)
+        if (running) {
+            resetter.send(Unit)
+        }
     }
 }
