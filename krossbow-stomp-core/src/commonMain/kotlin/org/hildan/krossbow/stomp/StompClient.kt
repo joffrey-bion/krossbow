@@ -33,6 +33,8 @@ class StompClient(
 
     /**
      * Connects to the given WebSocket [url] and to the STOMP session, and returns after receiving the CONNECTED frame.
+     * If [login] and [passcode] are provided, they are used to connect at STOMP level (after the web socket
+     * connection is established).
      *
      * @throws ConnectionTimeout if this method takes longer than the configured
      * [timeout][StompConfig.connectionTimeoutMillis] (as a whole for both WS connect and STOMP connect)
