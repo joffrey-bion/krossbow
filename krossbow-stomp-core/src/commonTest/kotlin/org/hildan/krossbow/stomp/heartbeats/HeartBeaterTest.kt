@@ -37,7 +37,7 @@ class HeartBeaterTest {
 
     @Test
     fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTest {
-        val sendPeriod = 60L
+        val sendPeriod = 100L
         var result = 0
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(sendPeriod.toInt(), 0),
@@ -79,7 +79,7 @@ class HeartBeaterTest {
 
     @Test
     fun zeroSend_nonZeroReceive_sends() = runAsyncTest {
-        val receivePeriod = 60L
+        val receivePeriod = 100L
         var result = 0
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(0, receivePeriod.toInt()),
