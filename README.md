@@ -82,7 +82,6 @@ try {
 }
 ```
 
-
 ### Using body conversions
 
 Usually STOMP is used in conjunction with JSON bodies that are converted back and forth between objects.
@@ -136,11 +135,36 @@ StompClient().connect(url).withJacksonConversions().use {
 }
 ```
 
-You can use it with your own `ObjectMapper` this way:
+#### Using custom text conversions
+
+If you want to use your own text conversion, you can implement `TextMessageConverter` without any additional module
+, and use `withTextConversions` to wrap your `StompSession` into a `StompSessionWithClassToTextConversions`.
+
+**Warning:** reflection-based conversions are very likely to behave poorly on the JS platform. It is usually safer to
+ rely on Kotlinx Serialization for multiplatform conversions.
 
 ```kotlin
-val objectMapper = jacksonObjectMapper().enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-val session = StompClient().connect(url).withJacksonConversions(objectMapper)
+val myConverter = object : TextMessageConverter {
+    override val mimeType: String = "application/json"
+
+    override fun <T : Any> convertToString(body: T, bodyType: KClass<T>): String {
+        TODO("your own object -> text conversion")
+    }
+
+    override fun <T : Any> convertFromString(body: String, bodyType: KClass<T>): T {
+        TODO("your own text -> object conversion")
+    }
+}
+
+StompClient().connect(url).withTextConversions(myConverter).use {
+    convertAndSend("/some/destination", MyPojo("Custom", 42)) 
+
+    val subscription = subscribe<MyMessage>("/some/topic/destination")
+    val firstMessage: MyMessage = subscription.messages.receive()
+
+    println("Received: $firstMessage")
+    subscription.unsubscribe()
+}
 ```
 
 ## Picking a web socket implementation
