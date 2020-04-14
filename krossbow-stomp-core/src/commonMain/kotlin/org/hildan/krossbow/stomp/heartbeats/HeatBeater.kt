@@ -1,4 +1,4 @@
-package org.hildan.krossbow.stomp
+package org.hildan.krossbow.stomp.heartbeats
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

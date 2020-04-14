@@ -27,6 +27,10 @@ import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
+import org.hildan.krossbow.stomp.heartbeats.HeartBeater
+import org.hildan.krossbow.stomp.heartbeats.closeForMissingHeartBeat
+import org.hildan.krossbow.stomp.heartbeats.isHeartBeat
+import org.hildan.krossbow.stomp.heartbeats.sendHeartBeat
 import org.hildan.krossbow.utils.SuspendingAtomicInt
 import org.hildan.krossbow.utils.getStringAndInc
 import org.hildan.krossbow.websocket.WebSocketFrame
@@ -67,8 +71,10 @@ internal class InternalStompSession(
     }
 
     private suspend fun onWebSocketFrameReceived(f: WebSocketFrame) {
-        // FIXME maybe handle received WS frames that are just EOL (heart beats) but not valid STOMP frames?
         heartBeater?.notifyMsgReceived()
+        if (f.isHeartBeat()) {
+            return // not an actual STOMP frame
+        }
         when (f) {
             is WebSocketFrame.Text -> onStompFrameReceived(StompDecoder.decode(f.text))
             is WebSocketFrame.Binary -> onStompFrameReceived(StompDecoder.decode(f.bytes))
@@ -109,12 +115,11 @@ internal class InternalStompSession(
         }
         heartBeater = HeartBeater(
             heartBeat = heartBeat,
-            sendHeartBeat = {
-                // if the sender has no real STOMP frame to send, it MUST send an end-of-line (EOL)
-                // https://stomp.github.io/stomp-specification-1.2.html#Heart-beating
-                webSocketSession.sendText("\n")
-            },
-            onMissingHeartBeat = { closeAllSubscriptionsAndShutdown(MissingHeartBeatException()) }
+            sendHeartBeat = { webSocketSession.sendHeartBeat() },
+            onMissingHeartBeat = {
+                webSocketSession.closeForMissingHeartBeat()
+                closeAllSubscriptionsAndShutdown(MissingHeartBeatException())
+            }
         )
         heartBeater?.startIn(this)
     }
@@ -222,8 +227,8 @@ internal class InternalStompSession(
         if (config.gracefulDisconnect) {
             sendDisconnectFrameAndWaitForReceipt()
         }
-        closeAllSubscriptionsAndShutdown()
         webSocketSession.close()
+        closeAllSubscriptionsAndShutdown()
     }
 
     private suspend fun sendDisconnectFrameAndWaitForReceipt() {
