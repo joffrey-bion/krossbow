@@ -141,7 +141,7 @@ class StompConnectedHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeade
     val heartBeat: HeartBeat? by heartBeatHeader()
 
     constructor(
-        version: String,
+        version: String = "1.2",
         session: String? = null,
         server: String? = null,
         heartBeat: HeartBeat? = null

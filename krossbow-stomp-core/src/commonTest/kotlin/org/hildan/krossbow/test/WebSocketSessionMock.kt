@@ -44,7 +44,7 @@ class WebSocketSessionMock : WebSocketSession {
      *
      * @returns the parsed stomp frame that was sent to allow further assertions
      */
-    suspend fun waitForSendAndSimulateCompletion(): StompFrame = sentFrames.receive()
+    suspend fun waitForSentFrameAndSimulateCompletion(): StompFrame = sentFrames.receive()
 
     suspend fun simulateTextFrameReceived(text: String) {
         listener.onTextMessage(text)
@@ -97,13 +97,21 @@ suspend fun WebSocketSessionMock.simulateMessageFrameReceived(
     return frame
 }
 
-suspend fun WebSocketSessionMock.simulateConnectedFrameReceived() {
-    val connectedFrame = StompFrame.Connected(StompConnectedHeaders("1.2"))
+suspend fun WebSocketSessionMock.simulateConnectedFrameReceived(
+    connectedHeaders: StompConnectedHeaders = StompConnectedHeaders()
+) {
+    val connectedFrame = StompFrame.Connected(connectedHeaders)
     simulateTextStompFrameReceived(connectedFrame)
 }
 
 suspend fun WebSocketSessionMock.waitForSendAndSimulateCompletion(expectedCommand: StompCommand): StompFrame {
-    val frame = waitForSendAndSimulateCompletion()
+    val frame = waitForSentFrameAndSimulateCompletion()
     assertEquals(expectedCommand, frame.command, "the next sent frame should be a $expectedCommand STOMP frame")
+    return frame
+}
+
+suspend fun WebSocketSessionMock.waitForSubscribeAndSimulateCompletion(): StompFrame.Subscribe {
+    val frame = waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
+    assertTrue(frame is StompFrame.Subscribe)
     return frame
 }
