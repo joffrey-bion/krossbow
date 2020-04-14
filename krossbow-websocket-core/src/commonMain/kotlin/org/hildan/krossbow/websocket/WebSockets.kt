@@ -40,6 +40,10 @@ interface WebSocketSession {
 
     /**
      * Sends a web socket close frame with the given [code] and [reason], and closes the connection.
+     *
+     * The [code] can be any of the [WebSocketCloseCodes] defined by the specification.
+     * The [reason] must not be longer that 123 bytes when encoded in UTF-8, due to the limit on control frames
+     * defined by the web socket protocol specification [RFC-6455](https://tools.ietf.org/html/rfc6455#section-5.5).
      */
     suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
 }
