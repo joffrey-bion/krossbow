@@ -45,7 +45,10 @@ class StompClient(
                 wsSession.stompConnect(url, login, passcode)
             }
         } catch (te: TimeoutCancellationException) {
-            throw ConnectionTimeout(config.connectionTimeoutMillis, url, te)
+            // This cancellation can also come from the outside, if connect() is wrapped in withTimeout() with a
+            // smaller timeout than the connectionTimeoutMillis. We can't make assumptions as to where the cancellation
+            // comes from.
+            throw ConnectionTimeout(url, te)
         } catch (e: Exception) {
             throw ConnectionException(url, cause = e)
         }
@@ -71,10 +74,9 @@ class StompClient(
  * Exception thrown when the websocket connection + STOMP connection takes too much time.
  */
 class ConnectionTimeout(
-    val timeoutMillis: Long,
     url: String,
-    cause: Exception
-) : ConnectionException(url, "Timeout of ${timeoutMillis}ms exceeded when connecting to $url", cause)
+    cause: TimeoutCancellationException
+) : ConnectionException(url, "${cause.message} when connecting to $url", cause)
 
 /**
  * An exception thrown when something went wrong during the connection.
