@@ -19,10 +19,10 @@ internal class HeartBeater(
 
     fun startIn(scope: CoroutineScope): Job = scope.launch {
         if (heartBeat.minSendPeriodMillis > 0) {
-            outgoing.startIn(scope)
+            outgoing.startIn(this)
         }
         if (heartBeat.expectedPeriodMillis > 0) {
-            incoming.startIn(scope)
+            incoming.startIn(this)
         }
     }
 
