@@ -28,6 +28,22 @@ Android support could be somewhat easily added by writing an adapter for web soc
 
 Adding support for the Native target may require a bit more effort. Contributions are welcome in this respect, though.
 
+## Supported STOMP features
+
+Here is the list of supported STOMP features:
+
+- All STOMP frames except `ACK`/`NACK` and `BEGIN`/`COMMIT`/`ABORT`
+- Custom headers where the protocol allows them
+- Receipts (waiting for RECEIPT frame based on receipt header)
+- Heart beating (keep alive)
+- Both text and binary body
+- Content-length as defined in the specification
+
+Additional features:
+- Auto-receipts (automatically adds RECEIPT headers when appropriate to ensure no frame is lost)
+- Built-in JSON body conversions (Kotlinx Serialization or Jackson)
+- Possibility to hook custom body converters (for textual or binary bodies)
+
 ## STOMP Usage
 
 ### Raw STOMP usage (without conversions)
