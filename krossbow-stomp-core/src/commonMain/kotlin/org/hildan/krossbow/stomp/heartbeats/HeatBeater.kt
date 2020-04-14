@@ -1,5 +1,6 @@
 package org.hildan.krossbow.stomp.heartbeats
 
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -17,7 +18,7 @@ internal class HeartBeater(
     private val outgoing = Ticker((heartBeat.minSendPeriodMillis * 0.95).toLong(), sendHeartBeat)
     private val incoming = Ticker((heartBeat.expectedPeriodMillis * 1.05).toLong(), onMissingHeartBeat)
 
-    fun startIn(scope: CoroutineScope): Job = scope.launch {
+    fun startIn(scope: CoroutineScope): Job = scope.launch(CoroutineName("stomp-heart-beat")) {
         if (heartBeat.minSendPeriodMillis > 0) {
             outgoing.startIn(this)
         }
