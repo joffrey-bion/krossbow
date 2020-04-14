@@ -14,10 +14,10 @@ internal class HeartBeater(
     val sendHeartBeat: suspend () -> Unit,
     val onMissingHeartBeat: suspend () -> Unit
 ) {
-    private val outgoing = Ticker(heartBeat.minSendPeriodMillis.toLong(), sendHeartBeat)
-    private val incoming = Ticker(heartBeat.expectedPeriodMillis.toLong(), onMissingHeartBeat)
+    private val outgoing = Ticker((heartBeat.minSendPeriodMillis * 0.95).toLong(), sendHeartBeat)
+    private val incoming = Ticker((heartBeat.expectedPeriodMillis * 1.05).toLong(), onMissingHeartBeat)
 
-    fun startIn(scope: CoroutineScope) {
+    fun startIn(scope: CoroutineScope): Job = scope.launch {
         if (heartBeat.minSendPeriodMillis > 0) {
             outgoing.startIn(scope)
         }
