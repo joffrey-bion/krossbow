@@ -13,7 +13,6 @@ import org.hildan.krossbow.test.ManuallyConnectingWebSocketClient
 import org.hildan.krossbow.test.WebSocketSessionMock
 import org.hildan.krossbow.test.assertCompletesSoon
 import org.hildan.krossbow.test.assertTimesOutWith
-import org.hildan.krossbow.test.runAsyncTest
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateConnectedFrameReceived
 import org.hildan.krossbow.test.simulateErrorFrameReceived
@@ -106,7 +105,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_timesOutIfWebSocketDoesNotConnect() = runAsyncTest {
+    fun connect_timesOutIfWebSocketDoesNotConnect() = runAsyncTestWithTimeout {
         // this WS client will suspend on connect() until manually triggered (which is not done during this test)
         val stompClient = StompClient(ManuallyConnectingWebSocketClient()) {
             connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
@@ -117,7 +116,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_timesOutIfConnectedFrameIsNotReceived() = runAsyncTest {
+    fun connect_timesOutIfConnectedFrameIsNotReceived() = runAsyncTestWithTimeout {
         val stompClient = StompClient(ImmediatelySucceedingWebSocketClient()) {
             connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
         }

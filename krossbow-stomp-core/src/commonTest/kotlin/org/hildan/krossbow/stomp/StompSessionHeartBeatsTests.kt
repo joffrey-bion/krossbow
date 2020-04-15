@@ -6,7 +6,6 @@ import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.test.connectWithMocks
-import org.hildan.krossbow.test.runAsyncTest
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateMessageFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
@@ -19,7 +18,7 @@ import kotlin.test.assertTrue
 class StompSessionHeartBeatsTests {
 
     @Test
-    fun wsSessionClosedOnHeartBeatTimeOut() = runAsyncTest {
+    fun wsSessionClosedOnHeartBeatTimeOut() = runAsyncTestWithTimeout {
         val (wsSession, _) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 100))
         )
@@ -50,7 +49,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun receiveSubMessage_failsOnHeartBeatTimeOut() = runAsyncTest {
+    fun receiveSubMessage_failsOnHeartBeatTimeOut() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300))
         )
@@ -66,7 +65,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun receiveSubMessage_succeedsIfKeptAlive() = runAsyncTest {
+    fun receiveSubMessage_succeedsIfKeptAlive() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 150))
         )

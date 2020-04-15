@@ -3,14 +3,14 @@ package org.hildan.krossbow.stomp.heartbeats
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.stomp.config.HeartBeat
-import org.hildan.krossbow.test.runAsyncTest
+import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HeartBeaterTest {
 
     @Test
-    fun zeroSendAndReceive_nothingHappens() = runAsyncTest {
+    fun zeroSendAndReceive_nothingHappens() = runAsyncTestWithTimeout {
         var result = 0
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(0, 0),
@@ -24,7 +24,7 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun zeroSendAndReceive_canCallNotifyWithoutEffect() = runAsyncTest {
+    fun zeroSendAndReceive_canCallNotifyWithoutEffect() = runAsyncTestWithTimeout {
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(0, 0),
             sendHeartBeat = { throw IllegalStateException("not expected") },
@@ -36,7 +36,7 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTest {
+    fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTestWithTimeout {
         val sendPeriod = 100L
         var result = 0
         val heartBeater = HeartBeater(
@@ -65,7 +65,7 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun nonZeroSend_zeroReceive_canCallNotifyReceived() = runAsyncTest {
+    fun nonZeroSend_zeroReceive_canCallNotifyReceived() = runAsyncTestWithTimeout {
         val sendPeriod = 60L
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(sendPeriod.toInt(), 0),
@@ -78,7 +78,7 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun zeroSend_nonZeroReceive_sends() = runAsyncTest {
+    fun zeroSend_nonZeroReceive_sends() = runAsyncTestWithTimeout {
         val receivePeriod = 100L
         var result = 0
         val heartBeater = HeartBeater(
@@ -107,7 +107,7 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun zeroSend_nonZeroReceive_canCallNotifySent() = runAsyncTest {
+    fun zeroSend_nonZeroReceive_canCallNotifySent() = runAsyncTestWithTimeout {
         val receivePeriod = 60L
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(0, receivePeriod.toInt()),
