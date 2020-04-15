@@ -35,8 +35,8 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTestWithTimeout {
-        val sendPeriod = 100L
+    fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTestWithTimeout(1500) {
+        val sendPeriod = 200L
         var result = 0
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(sendPeriod.toInt(), 0),
@@ -45,7 +45,7 @@ class HeartBeaterTest {
         )
         assertEquals(0, result, "shouldn't do anything if not started")
         val job = heartBeater.startIn(this)
-        delay(sendPeriod + 20)
+        delay(sendPeriod + 50)
         assertEquals(1, result, "should send heartbeat after 1 period of inactivity")
         delay(sendPeriod)
         assertEquals(2, result, "should send heartbeat after 2 periods of inactivity")
@@ -58,7 +58,7 @@ class HeartBeaterTest {
         delay(sendPeriod / 2)
         heartBeater.notifyMsgSent()
         assertEquals(2, result, "should not send heartbeat if a message was sent")
-        delay(sendPeriod + 20)
+        delay(sendPeriod + 50)
         assertEquals(3, result, "should send heartbeat after 1 period of inactivity")
         job.cancel()
     }
@@ -77,8 +77,8 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun zeroSend_nonZeroReceive_sends() = runAsyncTestWithTimeout {
-        val receivePeriod = 100L
+    fun zeroSend_nonZeroReceive_sends() = runAsyncTestWithTimeout(1500) {
+        val receivePeriod = 200L
         var result = 0
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(0, receivePeriod.toInt()),
@@ -87,7 +87,7 @@ class HeartBeaterTest {
         )
         assertEquals(0, result, "shouldn't do anything if not started")
         val job = heartBeater.startIn(this)
-        delay(receivePeriod + 20)
+        delay(receivePeriod + 50)
         assertEquals(1, result, "should notify missing heartbeat after 1 period of inactivity")
         delay(receivePeriod)
         assertEquals(2, result, "should notify missing heartbeat after 2 periods of inactivity")
