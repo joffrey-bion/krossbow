@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.11.1](https://github.com/joffrey-bion/krossbow/tree/0.11.1) (2020-04-15)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.11.0...0.11.1)
+
+**Fixed bugs:**
+
+- Heart beats create deadlock [\#46](https://github.com/joffrey-bion/krossbow/issues/46)
+- Receiving EOL \(heart beat\) crashes STOMP decoder [\#43](https://github.com/joffrey-bion/krossbow/issues/43)
+- Race condition issues with Jdk11 partial frames [\#42](https://github.com/joffrey-bion/krossbow/issues/42)
+
 ## [0.11.0](https://github.com/joffrey-bion/krossbow/tree/0.11.0) (2020-04-12)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.3...0.11.0)
 

@@ -1,5 +1,6 @@
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayExtension.*
+import org.hildan.github.changelog.generator.DEFAULT_EXCLUDED_LABELS
 
 plugins {
     val kotlinVersion = "1.3.71"
@@ -16,7 +17,7 @@ plugins {
 
 allprojects {
     group = "org.hildan.krossbow"
-    version = "0.11.0"
+    version = "0.11.1"
 }
 
 val Project.githubUser get() = "joffrey-bion"
@@ -28,7 +29,7 @@ val Project.licenses get() = arrayOf("MIT")
 changelog {
     githubUser = project.githubUser
     futureVersionTag = project.version.toString()
-    excludeLabels = listOf("internal")
+    excludeLabels = listOf("internal") + DEFAULT_EXCLUDED_LABELS
     customTagByIssueNumber = mapOf(6 to "0.1.1", 10 to "0.1.2", 15 to "0.4.0")
 }
 
