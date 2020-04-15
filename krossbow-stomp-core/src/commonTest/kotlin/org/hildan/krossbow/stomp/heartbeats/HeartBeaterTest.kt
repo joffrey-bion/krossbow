@@ -1,7 +1,6 @@
 package org.hildan.krossbow.stomp.heartbeats
 
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import kotlin.test.Test
@@ -31,8 +30,8 @@ class HeartBeaterTest {
             onMissingHeartBeat = { throw IllegalStateException("not expected") }
         )
         heartBeater.startIn(this)
-        withTimeout(100) { heartBeater.notifyMsgReceived() }
-        withTimeout(100) { heartBeater.notifyMsgSent() }
+        heartBeater.notifyMsgReceived()
+        heartBeater.notifyMsgSent()
     }
 
     @Test
@@ -73,7 +72,7 @@ class HeartBeaterTest {
             onMissingHeartBeat = { throw IllegalStateException("not expected") }
         )
         val job = heartBeater.startIn(this)
-        withTimeout(100) { heartBeater.notifyMsgReceived() }
+        heartBeater.notifyMsgReceived()
         job.cancel()
     }
 
@@ -115,7 +114,7 @@ class HeartBeaterTest {
             onMissingHeartBeat = {}
         )
         val job = heartBeater.startIn(this)
-        withTimeout(100) { heartBeater.notifyMsgSent() }
+        heartBeater.notifyMsgSent()
         job.cancel()
     }
 }
