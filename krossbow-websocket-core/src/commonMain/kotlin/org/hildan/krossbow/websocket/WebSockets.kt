@@ -3,6 +3,11 @@ package org.hildan.krossbow.websocket
 import kotlinx.coroutines.channels.ReceiveChannel
 
 /**
+ * Gets a default [WebSocketClient] implementation for the current platform.
+ */
+expect fun defaultWebSocketClient(): WebSocketClient
+
+/**
  * A web socket client.
  *
  * The client is used to connect to the server and create a [WebSocketSession].
