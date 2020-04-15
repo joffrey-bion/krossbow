@@ -63,21 +63,12 @@ kotlin {
 }
 
 tasks.dokka {
-    dependsOn(
-        ":krossbow-websocket-core:dokka",
-        ":krossbow-websocket-spring:dokka"
-    )
+    dependsOn(":krossbow-websocket-core:dokka")
     //    outputFormat = "javadoc"
     multiplatform {
         val global by creating {
             externalDocumentationLink {
                 url = URL("file://${project(":krossbow-websocket-core").buildDir}/dokka/krossbow-websocket-core/")
-                packageListUrl = URL(url, "package-list")
-            }
-        }
-        val jvm by creating {
-            externalDocumentationLink {
-                url = URL("file://${project(":krossbow-websocket-spring").buildDir}/dokka/krossbow-websocket-spring/")
                 packageListUrl = URL(url, "package-list")
             }
         }
