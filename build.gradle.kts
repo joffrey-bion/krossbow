@@ -3,7 +3,7 @@ import com.jfrog.bintray.gradle.BintrayExtension.*
 import org.hildan.github.changelog.generator.DEFAULT_EXCLUDED_LABELS
 
 plugins {
-    val kotlinVersion = "1.3.71"
+    val kotlinVersion = "1.3.72"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
