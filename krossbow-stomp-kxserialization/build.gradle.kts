@@ -45,5 +45,7 @@ tasks.dokka {
                 packageListUrl = URL(url, "package-list")
             }
         }
+        val jvm by creating {}
+        val js by creating {}
     }
 }

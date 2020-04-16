@@ -58,13 +58,14 @@ kotlin {
 }
 
 tasks.dokka {
-    outputFormat = "html"
     multiplatform {
+        val global by creating {}
         val jvm by creating {
             externalDocumentationLink {
                 url = URL("https://docs.oracle.com/en/java/javase/11/docs/api/")
                 packageListUrl = URL(url, "element-list")
             }
         }
+        val js by creating {}
     }
 }

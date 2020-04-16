@@ -1,3 +1,5 @@
+import java.net.URL
+
 plugins {
     kotlin("multiplatform")
 }
@@ -50,8 +52,26 @@ kotlin {
     }
 }
 
-// Disabled because of this Dokka bug for the JS target's npm dependencies:
-// https://github.com/Kotlin/dokka/issues/537
 tasks.dokka {
-    enabled = false
+    dependsOn(
+        ":krossbow-websocket-core:dokka",
+        ":krossbow-websocket-spring:dokka"
+    )
+    multiplatform {
+        val global by creating {
+            externalDocumentationLink {
+                url = URL("file://${project(":krossbow-websocket-core").buildDir}/dokka/krossbow-websocket-core/")
+                packageListUrl = URL(url, "package-list")
+            }
+        }
+        val jvm by creating {
+            externalDocumentationLink {
+                url = URL("file://${project(":krossbow-websocket-spring").buildDir}/dokka/krossbow-websocket-spring/")
+                packageListUrl = URL(url, "package-list")
+            }
+        }
+        // Dokka disabled for JS because of NPM dependency breaking the generation
+        // https://github.com/Kotlin/dokka/issues/537
+        // val js by creating {}
+    }
 }

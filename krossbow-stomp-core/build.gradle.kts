@@ -64,7 +64,6 @@ kotlin {
 
 tasks.dokka {
     dependsOn(":krossbow-websocket-core:dokka")
-    //    outputFormat = "javadoc"
     multiplatform {
         val global by creating {
             externalDocumentationLink {
@@ -72,5 +71,9 @@ tasks.dokka {
                 packageListUrl = URL(url, "package-list")
             }
         }
+        val jvm by creating {}
+        // Dokka disabled for JS because of NPM dependency breaking the generation
+        // https://github.com/Kotlin/dokka/issues/537
+        // val js by creating {}
     }
 }
