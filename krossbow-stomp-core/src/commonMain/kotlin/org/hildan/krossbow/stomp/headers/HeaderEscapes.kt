@@ -53,5 +53,5 @@ internal object HeaderEscaper {
 
 class InvalidEscapeException(
     val invalidSequence: String,
-    message: String = "Invalid escape sequence '$invalidSequence'"
+    message: String = "Invalid header escape sequence '$invalidSequence'"
 ) : IllegalArgumentException(message)

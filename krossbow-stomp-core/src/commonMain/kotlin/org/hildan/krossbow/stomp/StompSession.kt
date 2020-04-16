@@ -9,7 +9,26 @@ import org.hildan.krossbow.stomp.headers.AckMode
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 
 /**
- * A coroutine-based STOMP session.
+ * A coroutine-based STOMP session. This interface defines interactions with a STOMP server.
+ *
+ * ### Subscriptions
+ *
+ * Subscriptions are channel-based.
+ * This is not to avoid callbacks at all costs, but rather to separate internal coroutines processing from the user
+ * code processing.
+ * Error handling is done through the subscription channels: if something fails, channel consumers will crash with
+ * the relevant exception.
+ *
+ * Various extension functions are available to subscribe to a destination with different message conversions.
+ *
+ * ### Heart beats
+ *
+ * When configured, heart beats can be used as a keep-alive to detect if the connection is lost.
+ * The [StompConfig.heartBeat] property should be used to configure heart beats in the [StompClient].
+ *
+ * Sending heart beats is automatically handled by StompSession implementations.
+ * If expected heart beats are not received in time, a [MissingHeartBeatException] is thrown and fails active
+ * subscriptions.
  *
  * ### Suspension & Receipts
  *
@@ -215,20 +234,3 @@ suspend fun <S : StompSession, T> S.use(block: suspend S.() -> T): T {
         disconnect()
     }
 }
-
-/**
- * Exception thrown when a STOMP error frame is received.
- */
-class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception("STOMP ERROR frame received: ${frame.message}")
-
-/**
- * An exception thrown when a RECEIPT frame was expected from the server, but not received in the configured time limit.
- */
-class LostReceiptException(
-    /** The value of the receipt header sent to the server, and expected in a RECEIPT frame. */
-    val receiptId: String,
-    /** THe configured timeout which has expired. */
-    val configuredTimeoutMillis: Long,
-    /** The frame which did not get acknowledged by the server. */
-    val frame: StompFrame
-) : Exception("No RECEIPT frame received for receiptId '$receiptId' (in ${frame.command} frame) within ${configuredTimeoutMillis}ms")

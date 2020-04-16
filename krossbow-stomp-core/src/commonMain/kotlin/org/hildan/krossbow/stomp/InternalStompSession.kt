@@ -273,12 +273,3 @@ private class Subscription<out T>(
         internalMsgChannel.close()
     }
 }
-
-class MessageConversionException(cause: Throwable) : Exception(cause.message, cause)
-
-class MissingHeartBeatException : Exception()
-
-class WebSocketClosedUnexpectedly(
-    val code: Int,
-    val reason: String?
-) : Exception("the WebSocket was closed while subscriptions were still active. Code: $code Reason: $reason")
