@@ -7,15 +7,15 @@ import org.hildan.krossbow.websocket.WebSocketSession
 // If the sender has no real STOMP frame to send, it MUST send an end-of-line (EOL)
 // https://stomp.github.io/stomp-specification-1.2.html#Heart-beating
 
-suspend fun WebSocketSession.sendHeartBeat() {
+internal suspend fun WebSocketSession.sendHeartBeat() {
     sendText("\n")
 }
 
-suspend fun WebSocketSession.closeForMissingHeartBeat() {
+internal suspend fun WebSocketSession.closeForMissingHeartBeat() {
     close(WebSocketCloseCodes.PROTOCOL_ERROR, "Missing heart beat")
 }
 
-fun WebSocketFrame.isHeartBeat(): Boolean = when (this) {
+internal fun WebSocketFrame.isHeartBeat(): Boolean = when (this) {
     is WebSocketFrame.Text -> text.length <= 2 && (text == "\n" || text == "\r\n")
     is WebSocketFrame.Binary -> bytes.isEOL()
     else -> false
