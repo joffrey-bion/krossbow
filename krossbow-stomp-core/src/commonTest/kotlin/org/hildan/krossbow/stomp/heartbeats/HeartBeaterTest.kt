@@ -35,8 +35,9 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTestWithTimeout(1500) {
-        val sendPeriod = 200L
+    fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTestWithTimeout(2000) {
+        val sendPeriod = 300L
+        val waitMargin = 100L
         var result = 0
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(sendPeriod.toInt(), 0),
@@ -45,20 +46,19 @@ class HeartBeaterTest {
         )
         assertEquals(0, result, "shouldn't do anything if not started")
         val job = heartBeater.startIn(this)
-        delay(sendPeriod + 50)
-        assertEquals(1, result, "should send heartbeat after 1 period of inactivity")
+        delay(sendPeriod + waitMargin)
+        assertEquals(1, result, "should have sent a heartbeat after 1 period of inactivity")
         delay(sendPeriod)
-        assertEquals(2, result, "should send heartbeat after 2 periods of inactivity")
+        assertEquals(2, result, "should have sent a heartbeat after 2 periods of inactivity")
+        heartBeater.notifyMsgSent()
         delay(sendPeriod / 2)
         heartBeater.notifyMsgSent()
-        assertEquals(2, result, "should not send heartbeat if a message was sent")
         delay(sendPeriod / 2)
         heartBeater.notifyMsgSent()
-        assertEquals(2, result, "should not send heartbeat if a message was sent")
         delay(sendPeriod / 2)
+        assertEquals(2, result, "should not send heartbeats if messages were sent")
         heartBeater.notifyMsgSent()
-        assertEquals(2, result, "should not send heartbeat if a message was sent")
-        delay(sendPeriod + 50)
+        delay(sendPeriod + waitMargin)
         assertEquals(3, result, "should send heartbeat after 1 period of inactivity")
         job.cancel()
     }
@@ -77,8 +77,9 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun zeroSend_nonZeroReceive_sends() = runAsyncTestWithTimeout(1500) {
-        val receivePeriod = 200L
+    fun zeroSend_nonZeroReceive_sends() = runAsyncTestWithTimeout(2000) {
+        val receivePeriod = 300L
+        val waitMargin = 100L
         var result = 0
         val heartBeater = HeartBeater(
             heartBeat = HeartBeat(0, receivePeriod.toInt()),
@@ -87,20 +88,19 @@ class HeartBeaterTest {
         )
         assertEquals(0, result, "shouldn't do anything if not started")
         val job = heartBeater.startIn(this)
-        delay(receivePeriod + 50)
+        delay(receivePeriod + waitMargin)
         assertEquals(1, result, "should notify missing heartbeat after 1 period of inactivity")
         delay(receivePeriod)
         assertEquals(2, result, "should notify missing heartbeat after 2 periods of inactivity")
+        heartBeater.notifyMsgReceived()
         delay(receivePeriod / 2)
         heartBeater.notifyMsgReceived()
-        assertEquals(2, result, "should not notify missing heartbeat if a message was received")
         delay(receivePeriod / 2)
         heartBeater.notifyMsgReceived()
-        assertEquals(2, result, "should not notify missing heartbeat if a message was received")
         delay(receivePeriod / 2)
-        heartBeater.notifyMsgReceived()
         assertEquals(2, result, "should not notify missing heartbeat if a message was received")
-        delay(receivePeriod + 20)
+        heartBeater.notifyMsgReceived()
+        delay(receivePeriod + waitMargin)
         assertEquals(3, result, "should send heartbeat after 1 period of inactivity")
         job.cancel()
     }
