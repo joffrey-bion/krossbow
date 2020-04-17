@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -12,7 +11,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
@@ -178,13 +177,10 @@ internal class InternalStompSession(
 
     private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
         coroutineScope {
-            val receiptFrame = async { waitForReceipt(receiptId) }
+            val deferredReceipt = async { waitForReceipt(receiptId) }
             sendStompFrameAsIs(frame)
-            try {
-                withTimeout(frame.receiptTimeout) { receiptFrame.await() }
-            } catch (e: TimeoutCancellationException) {
-                throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
-            }
+            withTimeoutOrNull(frame.receiptTimeout) { deferredReceipt.await() }
+                ?: throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
         }
     }
 

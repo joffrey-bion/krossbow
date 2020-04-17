@@ -1,7 +1,7 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.websocket.WebSocketClient
@@ -38,35 +38,43 @@ class StompClient(
      *
      * @throws ConnectionTimeout if this method takes longer than the configured
      * [timeout][StompConfig.connectionTimeoutMillis] (as a whole for both WS connect and STOMP connect)
-     * @throws ConnectionException if anything else goes wrong during the connection process
      */
     suspend fun connect(url: String, login: String? = null, passcode: String? = null): StompSession {
+        val session = withTimeoutOrNull(config.connectionTimeoutMillis) {
+            val wsSession = webSocketConnect(url)
+            wsSession.stompConnect(url, login, passcode)
+        }
+        return session ?: throw ConnectionTimeout(url, config.connectionTimeoutMillis)
+    }
+
+    private suspend fun webSocketConnect(url: String): WebSocketSession {
         try {
-            return withTimeout(config.connectionTimeoutMillis) {
-                val wsSession = webSocketClient.connect(url)
-                wsSession.stompConnect(url, login, passcode)
-            }
-        } catch (te: TimeoutCancellationException) {
-            // This cancellation can also come from the outside, if connect() is wrapped in withTimeout() with a
-            // smaller timeout than the connectionTimeoutMillis. We can't make assumptions as to where the cancellation
-            // comes from.
-            throw ConnectionTimeout(url, te)
+            return webSocketClient.connect(url)
+        } catch (e: CancellationException) {
+            // this cancellation comes from the outside, we should not wrap this exception
+            throw e
         } catch (e: Exception) {
-            throw ConnectionException(url, cause = e)
+            throw WebSocketConnectionException(url, cause = e)
         }
     }
 
     private suspend fun WebSocketSession.stompConnect(url: String, login: String?, passcode: String?): StompSession {
-        val host = extractHost(url)
-        val connectHeaders = StompConnectHeaders(
-            host = host,
-            login = login,
-            passcode = passcode,
-            heartBeat = config.heartBeat
-        )
-        val stompSession = InternalStompSession(config, this)
-        stompSession.connect(connectHeaders)
-        return stompSession
+        try {
+            val connectHeaders = StompConnectHeaders(
+                host = extractHost(url),
+                login = login,
+                passcode = passcode,
+                heartBeat = config.heartBeat
+            )
+            val stompSession = InternalStompSession(config, this)
+            stompSession.connect(connectHeaders)
+            return stompSession
+        } catch (e: CancellationException) {
+            // this cancellation comes from the outside, we should not wrap this exception
+            throw e
+        } catch (e: Exception) {
+            throw StompConnectionException(url, cause = e)
+        }
     }
 
     private fun extractHost(url: String) = url.substringAfter("://").substringBefore("/").substringBefore(":")
@@ -75,16 +83,22 @@ class StompClient(
 /**
  * Exception thrown when the websocket connection + STOMP connection takes too much time.
  */
-class ConnectionTimeout(
-    url: String,
-    cause: TimeoutCancellationException
-) : ConnectionException(url, "${cause.message} when connecting to $url", cause)
+class ConnectionTimeout(url: String, timeoutMillis: Long) :
+    ConnectionException(url, "Timed out waiting for ${timeoutMillis}ms when connecting to $url")
 
 /**
- * An exception thrown when something went wrong during the connection.
+ * Exception thrown when the connection attempt failed at web socket level.
  */
-open class ConnectionException(
-    val url: String,
-    message: String = "Couldn't connect to STOMP server at $url",
-    cause: Throwable?
-) : Exception(message, cause)
+class WebSocketConnectionException(url: String, cause: Throwable? = null) :
+    ConnectionException(url, "Failed to connect at web socket level to $url", cause)
+
+/**
+ * Exception thrown when the connection attempt failed at STOMP protocol level.
+ */
+class StompConnectionException(url: String, cause: Throwable? = null) :
+    ConnectionException(url, "Failed to connect at STOMP protocol level to $url", cause)
+
+/**
+ * Exception thrown when something went wrong during the connection.
+ */
+open class ConnectionException(val url: String, message: String, cause: Throwable? = null) : Exception(message, cause)

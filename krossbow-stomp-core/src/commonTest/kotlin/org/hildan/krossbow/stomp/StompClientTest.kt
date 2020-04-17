@@ -129,7 +129,7 @@ class StompClientTest {
     fun connect_failsIfWebSocketFailsToConnect() = runAsyncTestWithTimeout {
         val wsConnectionException = Exception("some web socket exception")
         val stompClient = StompClient(ImmediatelyFailingWebSocketClient(wsConnectionException))
-        val exception = assertFailsWith(ConnectionException::class) {
+        val exception = assertFailsWith(WebSocketConnectionException::class) {
             stompClient.connect("dummy")
         }
         assertNotNull(exception.cause, "ConnectException should have original exception as cause")
@@ -147,7 +147,7 @@ class StompClientTest {
             wsSession.simulateErrorFrameReceived("connection failed")
         }
 
-        val exception = assertFailsWith(ConnectionException::class) {
+        val exception = assertFailsWith(StompConnectionException::class) {
             stompClient.connect("dummy")
         }
         assertNotNull(exception.cause, "ConnectException should have original exception as cause")

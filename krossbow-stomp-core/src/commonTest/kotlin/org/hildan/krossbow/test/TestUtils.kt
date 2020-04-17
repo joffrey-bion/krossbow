@@ -2,8 +2,6 @@ package org.hildan.krossbow.test
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.reflect.KClass
 import kotlin.test.assertFailsWith
@@ -22,12 +20,9 @@ expect fun <T> runAsyncTest(block: suspend CoroutineScope.() -> T)
 
 expect fun getCause(exception: Exception): Throwable?
 
-suspend fun <T> assertCompletesSoon(deferred: Deferred<T>, message: String, timeoutMillis: Long = 20): T =
-        try {
-            withTimeout(timeoutMillis) { deferred.await() }
-        } catch (e: TimeoutCancellationException) {
-            fail(message)
-        }
+suspend fun <T> assertCompletesSoon(deferred: Deferred<T>, message: String, timeoutMillis: Long = 20): T {
+    return withTimeoutOrNull(timeoutMillis) { deferred.await() } ?: fail(message)
+}
 
 suspend inline fun <T : Throwable> assertTimesOutWith(
     expectedExceptionClass: KClass<T>,
