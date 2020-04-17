@@ -1,5 +1,3 @@
-import java.net.URL
-
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.kotlin.plugin.serialization")
@@ -41,8 +39,8 @@ tasks.dokka {
     multiplatform {
         val global by creating {
             externalDocumentationLink {
-                url = URL("file://${project(":krossbow-stomp-core").buildDir}/dokka/krossbow-stomp-core/")
-                packageListUrl = URL(url, "package-list")
+                url = relativeDokkaUrl("krossbow-stomp-core")
+                packageListUrl = relativeDokkaPackageListUrl("krossbow-stomp-core")
             }
         }
         val jvm by creating {}

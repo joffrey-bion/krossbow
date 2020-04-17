@@ -1,5 +1,3 @@
-import java.net.URL
-
 plugins {
     kotlin("multiplatform")
 }
@@ -60,14 +58,14 @@ tasks.dokka {
     multiplatform {
         val global by creating {
             externalDocumentationLink {
-                url = URL("file://${project(":krossbow-websocket-core").buildDir}/dokka/krossbow-websocket-core/")
-                packageListUrl = URL(url, "package-list")
+                url = relativeDokkaUrl("krossbow-websocket-core")
+                packageListUrl = relativeDokkaPackageListUrl("krossbow-websocket-core")
             }
         }
         val jvm by creating {
             externalDocumentationLink {
-                url = URL("file://${project(":krossbow-websocket-spring").buildDir}/dokka/krossbow-websocket-spring/")
-                packageListUrl = URL(url, "package-list")
+                url = relativeDokkaUrl("krossbow-websocket-spring")
+                packageListUrl = relativeDokkaPackageListUrl("krossbow-websocket-spring")
             }
         }
         // Dokka disabled for JS because of NPM dependency breaking the generation

@@ -1,5 +1,3 @@
-import java.net.URL
-
 plugins {
     kotlin("jvm")
 }
@@ -19,8 +17,8 @@ tasks.dokka {
     dependsOn(":krossbow-websocket-core:dokka")
     configuration {
         externalDocumentationLink {
-            url = URL("file://${project(":krossbow-websocket-core").buildDir}/dokka/krossbow-websocket-core/")
-            packageListUrl = URL(url, "package-list")
+            url = relativeDokkaUrl("krossbow-websocket-core")
+            packageListUrl = relativeDokkaPackageListUrl("krossbow-websocket-core")
         }
     }
 }

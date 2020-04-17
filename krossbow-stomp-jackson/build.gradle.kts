@@ -1,5 +1,3 @@
-import java.net.URL
-
 plugins {
     kotlin("jvm")
 }
@@ -19,8 +17,8 @@ tasks.dokka {
     dependsOn(":krossbow-stomp-core:dokka")
     configuration {
         externalDocumentationLink {
-            url = URL("file://${project(":krossbow-stomp-core").buildDir}/dokka/krossbow-stomp-core/")
-            packageListUrl = URL(url, "package-list")
+            url = relativeDokkaUrl("krossbow-stomp-core")
+            packageListUrl = relativeDokkaPackageListUrl("krossbow-stomp-core")
         }
     }
 }
