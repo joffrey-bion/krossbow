@@ -48,7 +48,7 @@ class HeartBeaterTest {
     }
 
     @Test
-    fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTestWithTimeout(2000) {
+    fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTestWithTimeout(4000) {
         val hbc = HeartBeaterConsumer(HeartBeat(TEST_PERIOD_CONFIG, 0))
         assertTrue(hbc.sent.isEmpty, "shouldn't do anything if not started")
 

@@ -9,7 +9,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.fail
 
-fun <T> runAsyncTestWithTimeout(millis: Long = 1000, block: suspend CoroutineScope.() -> T) = runAsyncTest {
+fun <T> runAsyncTestWithTimeout(millis: Long = 4000, block: suspend CoroutineScope.() -> T) = runAsyncTest {
     val result = withTimeoutOrNull(millis) {
         block()
         Unit
