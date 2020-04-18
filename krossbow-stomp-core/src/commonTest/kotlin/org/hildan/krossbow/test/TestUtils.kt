@@ -2,6 +2,7 @@ package org.hildan.krossbow.test
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.reflect.KClass
 import kotlin.test.assertFailsWith
@@ -22,6 +23,16 @@ expect fun getCause(exception: Exception): Throwable?
 
 suspend fun <T> assertCompletesSoon(deferred: Deferred<T>, message: String, timeoutMillis: Long = 20): T {
     return withTimeoutOrNull(timeoutMillis) { deferred.await() } ?: fail(message)
+}
+
+suspend fun <T> CoroutineScope.assertCompletesSoon(
+    message: String,
+    timeoutMillis: Long = 200,
+    block: suspend CoroutineScope.() -> T
+): T {
+    val scope = this
+    val deferred = scope.async { block() }
+    return assertCompletesSoon(deferred, message, timeoutMillis)
 }
 
 suspend inline fun <T : Throwable> assertTimesOutWith(

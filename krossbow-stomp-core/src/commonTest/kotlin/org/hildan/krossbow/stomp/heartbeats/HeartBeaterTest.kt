@@ -1,120 +1,125 @@
 package org.hildan.krossbow.stomp.heartbeats
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import org.hildan.krossbow.stomp.config.HeartBeat
+import org.hildan.krossbow.test.assertCompletesSoon
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
+private const val TEST_PERIOD_CONFIG = 300
+private const val TEST_SEND_PERIOD: Long = (TEST_PERIOD_CONFIG * 0.95).toLong()
+private const val TEST_RECEIVED_PERIOD: Long = (TEST_PERIOD_CONFIG * 1.05).toLong()
+private const val TEST_MARGIN = 150L
+
+@OptIn(ExperimentalCoroutinesApi::class)
 class HeartBeaterTest {
+
+    private class HeartBeaterConsumer(heartBeat: HeartBeat) {
+        val sent = Channel<Unit>()
+        val received = Channel<Unit>()
+
+        val heartBeater = HeartBeater(
+            heartBeat = heartBeat,
+            sendHeartBeat = { sent.send(Unit) },
+            onMissingHeartBeat = { received.send(Unit) }
+        )
+    }
 
     @Test
     fun zeroSendAndReceive_nothingHappens() = runAsyncTestWithTimeout {
-        var result = 0
-        val heartBeater = HeartBeater(
-            heartBeat = HeartBeat(0, 0),
-            sendHeartBeat = { result++ },
-            onMissingHeartBeat = { throw IllegalStateException("not expected") }
-        )
-        assertEquals(0, result)
-        heartBeater.startIn(this)
-        delay(100)
-        assertEquals(0, result)
+        val hbc = HeartBeaterConsumer(HeartBeat(0, 0))
+        assertTrue(hbc.sent.isEmpty)
+        assertTrue(hbc.received.isEmpty)
+        hbc.heartBeater.startIn(this)
+        delay(300)
+        assertTrue(hbc.sent.isEmpty)
+        assertTrue(hbc.received.isEmpty)
     }
 
     @Test
     fun zeroSendAndReceive_canCallNotifyWithoutEffect() = runAsyncTestWithTimeout {
-        val heartBeater = HeartBeater(
-            heartBeat = HeartBeat(0, 0),
-            sendHeartBeat = { throw IllegalStateException("not expected") },
-            onMissingHeartBeat = { throw IllegalStateException("not expected") }
-        )
-        heartBeater.startIn(this)
-        heartBeater.notifyMsgReceived()
-        heartBeater.notifyMsgSent()
+        val hbc = HeartBeaterConsumer(HeartBeat(0, 0))
+        hbc.heartBeater.startIn(this)
+        hbc.heartBeater.notifyMsgReceived()
+        hbc.heartBeater.notifyMsgSent()
     }
 
     @Test
     fun nonZeroSend_zeroReceive_sendsHeartBeats() = runAsyncTestWithTimeout(2000) {
-        val sendPeriod = 300L
-        val waitMargin = 100L
-        var result = 0
-        val heartBeater = HeartBeater(
-            heartBeat = HeartBeat(sendPeriod.toInt(), 0),
-            sendHeartBeat = { result++ },
-            onMissingHeartBeat = { throw IllegalStateException("not expected") }
-        )
-        assertEquals(0, result, "shouldn't do anything if not started")
-        val job = heartBeater.startIn(this)
-        delay(sendPeriod + waitMargin)
-        assertEquals(1, result, "should have sent a heartbeat after 1 period of inactivity")
-        delay(sendPeriod)
-        assertEquals(2, result, "should have sent a heartbeat after 2 periods of inactivity")
-        heartBeater.notifyMsgSent()
-        delay(sendPeriod / 2)
-        heartBeater.notifyMsgSent()
-        delay(sendPeriod / 2)
-        heartBeater.notifyMsgSent()
-        delay(sendPeriod / 2)
-        assertEquals(2, result, "should not send heartbeats if messages were sent")
-        heartBeater.notifyMsgSent()
-        delay(sendPeriod + waitMargin)
-        assertEquals(3, result, "should send heartbeat after 1 period of inactivity")
+        val hbc = HeartBeaterConsumer(HeartBeat(TEST_PERIOD_CONFIG, 0))
+        assertTrue(hbc.sent.isEmpty, "shouldn't do anything if not started")
+
+        val job = hbc.heartBeater.startIn(this)
+        delay(TEST_SEND_PERIOD)
+        assertCompletesSoon("should have sent a heartbeat after 1st period of inactivity", TEST_MARGIN) {
+            hbc.sent.receive()
+        }
+        delay(TEST_SEND_PERIOD)
+        assertCompletesSoon("should have sent a heartbeat after 2nd period of inactivity", TEST_MARGIN) {
+            hbc.sent.receive()
+        }
+        repeat(3) {
+            hbc.heartBeater.notifyMsgSent()
+            delay(TEST_SEND_PERIOD / 2)
+        }
+        assertTrue(hbc.sent.isEmpty, "shouldn't have sent any heart beat since messages were sent")
+
+        hbc.heartBeater.notifyMsgSent()
+        delay(TEST_SEND_PERIOD)
+        assertCompletesSoon("should have sent a heartbeat after 3rd period of inactivity", TEST_MARGIN) {
+            hbc.sent.receive()
+        }
+
+        assertTrue(hbc.received.isEmpty, "shouldn't have received any heart beat")
         job.cancel()
     }
 
     @Test
     fun nonZeroSend_zeroReceive_canCallNotifyReceived() = runAsyncTestWithTimeout {
-        val sendPeriod = 60L
-        val heartBeater = HeartBeater(
-            heartBeat = HeartBeat(sendPeriod.toInt(), 0),
-            sendHeartBeat = {},
-            onMissingHeartBeat = { throw IllegalStateException("not expected") }
-        )
-        val job = heartBeater.startIn(this)
-        heartBeater.notifyMsgReceived()
+        val hbc = HeartBeaterConsumer(HeartBeat(TEST_PERIOD_CONFIG, 0))
+        val job = hbc.heartBeater.startIn(this)
+        hbc.heartBeater.notifyMsgReceived()
         job.cancel()
     }
 
     @Test
     fun zeroSend_nonZeroReceive_sends() = runAsyncTestWithTimeout(2000) {
-        val receivePeriod = 300L
-        val waitMargin = 100L
-        var result = 0
-        val heartBeater = HeartBeater(
-            heartBeat = HeartBeat(0, receivePeriod.toInt()),
-            sendHeartBeat = { throw IllegalStateException("not expected") },
-            onMissingHeartBeat = { result++ }
-        )
-        assertEquals(0, result, "shouldn't do anything if not started")
-        val job = heartBeater.startIn(this)
-        delay(receivePeriod + waitMargin)
-        assertEquals(1, result, "should notify missing heartbeat after 1 period of inactivity")
-        delay(receivePeriod)
-        assertEquals(2, result, "should notify missing heartbeat after 2 periods of inactivity")
-        heartBeater.notifyMsgReceived()
-        delay(receivePeriod / 2)
-        heartBeater.notifyMsgReceived()
-        delay(receivePeriod / 2)
-        heartBeater.notifyMsgReceived()
-        delay(receivePeriod / 2)
-        assertEquals(2, result, "should not notify missing heartbeat if a message was received")
-        heartBeater.notifyMsgReceived()
-        delay(receivePeriod + waitMargin)
-        assertEquals(3, result, "should send heartbeat after 1 period of inactivity")
+        val hbc = HeartBeaterConsumer(HeartBeat(0, TEST_PERIOD_CONFIG))
+        assertTrue(hbc.received.isEmpty, "shouldn't do anything if not started")
+
+        val job = hbc.heartBeater.startIn(this)
+        delay(TEST_RECEIVED_PERIOD)
+        assertCompletesSoon("should have received a heartbeat after 1st period of inactivity", TEST_MARGIN) {
+            hbc.received.receive()
+        }
+        delay(TEST_RECEIVED_PERIOD)
+        assertCompletesSoon("should have received a heartbeat after 2nd period of inactivity", TEST_MARGIN) {
+            hbc.received.receive()
+        }
+        repeat(3) {
+            hbc.heartBeater.notifyMsgReceived()
+            delay(TEST_RECEIVED_PERIOD / 2)
+        }
+        assertTrue(hbc.received.isEmpty, "shouldn't have received heart beat since messages were received")
+
+        hbc.heartBeater.notifyMsgReceived()
+        delay(TEST_RECEIVED_PERIOD)
+        assertCompletesSoon("should have received a heartbeat after 3rd period of inactivity", TEST_MARGIN) {
+            hbc.received.receive()
+        }
+
+        assertTrue(hbc.sent.isEmpty, "shouldn't have sent any heart beat")
         job.cancel()
     }
 
     @Test
     fun zeroSend_nonZeroReceive_canCallNotifySent() = runAsyncTestWithTimeout {
-        val receivePeriod = 60L
-        val heartBeater = HeartBeater(
-            heartBeat = HeartBeat(0, receivePeriod.toInt()),
-            sendHeartBeat = { throw IllegalStateException("not expected") },
-            onMissingHeartBeat = {}
-        )
-        val job = heartBeater.startIn(this)
-        heartBeater.notifyMsgSent()
+        val hbc = HeartBeaterConsumer(HeartBeat(0, TEST_PERIOD_CONFIG))
+        val job = hbc.heartBeater.startIn(this)
+        hbc.heartBeater.notifyMsgSent()
         job.cancel()
     }
 }
