@@ -67,16 +67,16 @@ class StompSessionHeartBeatsTests {
     @Test
     fun receiveSubMessage_succeedsIfKeptAlive() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 150))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300))
         )
 
         launch {
             val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
             delay(100)
             wsSession.simulateTextFrameReceived("\n")
-            delay(100)
+            delay(150)
             wsSession.simulateTextFrameReceived("\r\n")
-            delay(100)
+            delay(150)
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "message")
         }
 
