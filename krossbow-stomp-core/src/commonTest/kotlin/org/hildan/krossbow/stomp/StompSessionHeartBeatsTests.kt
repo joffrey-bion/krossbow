@@ -75,7 +75,7 @@ class StompSessionHeartBeatsTests {
             delay(100)
             wsSession.simulateTextFrameReceived("\n")
             delay(100)
-            wsSession.simulateTextFrameReceived("\n")
+            wsSession.simulateTextFrameReceived("\r\n")
             delay(100)
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "message")
         }
