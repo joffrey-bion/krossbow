@@ -20,9 +20,9 @@ class StompSessionHeartBeatsTests {
     @Test
     fun wsSessionClosedOnHeartBeatTimeOut() = runAsyncTestWithTimeout {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 100))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300))
         )
-        delay(200)
+        delay(600)
         assertTrue(wsSession.closed)
     }
 
