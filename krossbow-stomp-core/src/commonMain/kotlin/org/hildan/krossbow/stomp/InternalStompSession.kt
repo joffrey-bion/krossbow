@@ -151,10 +151,10 @@ internal class InternalStompSession(
         if (headers.contentLength == null) {
             headers.contentLength = body?.bytes?.size ?: 0
         }
-        return prepareAndSendFrame(StompFrame.Send(headers, body))
+        return prepareReceiptAndSendFrame(StompFrame.Send(headers, body))
     }
 
-    private suspend fun prepareAndSendFrame(frame: StompFrame): StompReceipt? {
+    private suspend fun prepareReceiptAndSendFrame(frame: StompFrame): StompReceipt? {
         val receiptId = getReceiptAndMaybeSetAuto(frame)
         if (receiptId == null) {
             sendStompFrameAsIs(frame)
@@ -217,7 +217,7 @@ internal class InternalStompSession(
         )
         headers.receipt = receiptId
         val subscribeFrame = StompFrame.Subscribe(headers)
-        prepareAndSendFrame(subscribeFrame)
+        prepareReceiptAndSendFrame(subscribeFrame)
         return sub
     }
 
