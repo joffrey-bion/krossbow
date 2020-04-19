@@ -22,8 +22,10 @@ import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.encodeToBytes
 import org.hildan.krossbow.stomp.frame.encodeToText
 import org.hildan.krossbow.stomp.headers.AckMode
+import org.hildan.krossbow.stomp.headers.StompAckHeaders
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
+import org.hildan.krossbow.stomp.headers.StompNackHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
@@ -222,6 +224,14 @@ internal class InternalStompSession(
     internal suspend fun unsubscribe(subscriptionId: String) {
         sendStompFrameAsIs(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
         subscriptionsById.remove(subscriptionId)
+    }
+
+    override suspend fun ack(headers: StompAckHeaders) {
+        sendStompFrameAsIs(StompFrame.Ack(headers))
+    }
+
+    override suspend fun nack(headers: StompNackHeaders) {
+        sendStompFrameAsIs(StompFrame.Nack(headers))
     }
 
     override suspend fun disconnect() {

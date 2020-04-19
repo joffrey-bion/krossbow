@@ -6,6 +6,8 @@ import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.asText
 import org.hildan.krossbow.stomp.headers.AckMode
+import org.hildan.krossbow.stomp.headers.StompAckHeaders
+import org.hildan.krossbow.stomp.headers.StompNackHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 
 /**
@@ -75,6 +77,16 @@ interface StompSession {
         ackMode: AckMode? = null,
         convertMessage: (StompFrame.Message) -> T
     ): StompSubscription<T>
+
+    /**
+     * Sends an ACK frame with the given [headers].
+     */
+    suspend fun ack(headers: StompAckHeaders)
+
+    /**
+     * Sends a NACK frame with the given [headers].
+     */
+    suspend fun nack(headers: StompNackHeaders)
 
     /**
      * If [graceful disconnect][StompConfig.gracefulDisconnect] is enabled (which is the default), sends a DISCONNECT
@@ -222,6 +234,22 @@ suspend fun StompSession.subscribeEmptyMsg(
     receiptId: String? = null,
     ackMode: AckMode? = null
 ): StompSubscription<Unit> = subscribe(destination, receiptId, ackMode) { Unit }
+
+/**
+ * Sends an ACK frame with the given ack [id].
+ *
+ * The provided [id] must match the `ack` header of the message to acknowledge.
+ * If this acknowledgement is part of the transaction, the [transaction] id should be provided.
+ */
+suspend fun StompSession.ack(id: String, transaction: String? = null) = ack(StompAckHeaders(id, transaction))
+
+/**
+ * Sends a NACK frame with the given ack [id].
+ *
+ * The provided [id] must match the `ack` header of the message to refuse.
+ * If this acknowledgement is part of the transaction, the [transaction] id should be provided.
+ */
+suspend fun StompSession.nack(id: String, transaction: String? = null) = nack(StompNackHeaders(id, transaction))
 
 /**
  * Executes the given block on this [StompSession], and [disconnects][StompSession.disconnect] from the session whether
