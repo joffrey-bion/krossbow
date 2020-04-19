@@ -1,5 +1,6 @@
 package org.hildan.krossbow.stomp
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,6 +64,10 @@ internal class InternalStompSession(
                 for (f in webSocketSession.incomingFrames) {
                     onWebSocketFrameReceived(f)
                 }
+            } catch (e: CancellationException) {
+                // If this is thrown, the canceller is already taking care of cleaning up.
+                // We want to avoid running the cleanup twice because there is no reason to.
+                // Also, the cleanup may not be idempotent anymore some day.
             } catch (e: Exception) {
                 closeAllSubscriptionsAndShutdown(e)
             }
