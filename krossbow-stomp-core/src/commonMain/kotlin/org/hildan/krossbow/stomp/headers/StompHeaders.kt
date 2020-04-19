@@ -279,11 +279,11 @@ class StompErrorHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     )
 }
 
-internal fun StompHeaders.acceptVersionHeader() = header(HeaderKeys.ACCEPT_VERSION) { it.split(',') }
+private fun StompHeaders.acceptVersionHeader() = header(HeaderKeys.ACCEPT_VERSION) { it.split(',') }
 
-internal fun StompHeaders.heartBeatHeader() = optionalHeader(HeaderKeys.HEART_BEAT) { it.toHeartBeat() }
+private fun StompHeaders.heartBeatHeader() = optionalHeader(HeaderKeys.HEART_BEAT) { it.toHeartBeat() }
 
-internal fun String.toHeartBeat(): HeartBeat {
+private fun String.toHeartBeat(): HeartBeat {
     val (minSendPeriod, expectedReceivePeriod) = split(',')
     return HeartBeat(
         minSendPeriodMillis = minSendPeriod.toInt(),
@@ -291,4 +291,4 @@ internal fun String.toHeartBeat(): HeartBeat {
     )
 }
 
-internal fun HeartBeat.formatAsHeaderValue() = "$minSendPeriodMillis,$expectedPeriodMillis"
+private fun HeartBeat.formatAsHeaderValue() = "$minSendPeriodMillis,$expectedPeriodMillis"
