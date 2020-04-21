@@ -150,6 +150,6 @@ class StompClientTest {
         val exception = assertFailsWith(StompConnectionException::class) {
             stompClient.connect("dummy")
         }
-        assertNotNull(exception.cause, "ConnectException should have original exception as cause")
+        assertNotNull(exception.cause, "StompConnectionException should have original exception as cause")
     }
 }
