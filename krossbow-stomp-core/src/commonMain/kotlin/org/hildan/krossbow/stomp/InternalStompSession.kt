@@ -1,26 +1,17 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
-import org.hildan.krossbow.stomp.frame.StompDecoder
 import org.hildan.krossbow.stomp.frame.StompFrame
-import org.hildan.krossbow.stomp.frame.encodeToBytes
-import org.hildan.krossbow.stomp.frame.encodeToText
 import org.hildan.krossbow.stomp.headers.AckMode
 import org.hildan.krossbow.stomp.headers.StompAckHeaders
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
@@ -29,26 +20,15 @@ import org.hildan.krossbow.stomp.headers.StompNackHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
-import org.hildan.krossbow.stomp.heartbeats.HeartBeater
-import org.hildan.krossbow.stomp.heartbeats.closeForMissingHeartBeat
-import org.hildan.krossbow.stomp.heartbeats.isHeartBeat
-import org.hildan.krossbow.stomp.heartbeats.sendHeartBeat
 import org.hildan.krossbow.utils.SuspendingAtomicInt
 import org.hildan.krossbow.utils.getStringAndInc
-import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketSession
-import kotlin.coroutines.CoroutineContext
 
 @OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
 internal class InternalStompSession(
     private val config: StompConfig,
-    private val webSocketSession: WebSocketSession
-) : StompSession, CoroutineScope {
-
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = job
+    webSocketSession: WebSocketSession
+) : StompConnection(webSocketSession), StompSession {
 
     private val nextSubscriptionId = SuspendingAtomicInt(0)
 
@@ -58,37 +38,7 @@ internal class InternalStompSession(
 
     private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.BUFFERED)
 
-    private var heartBeater: HeartBeater? = null
-
-    init {
-        launch(CoroutineName("websocket-frames-listener")) {
-            try {
-                for (f in webSocketSession.incomingFrames) {
-                    onWebSocketFrameReceived(f)
-                }
-            } catch (e: CancellationException) {
-                // If this is thrown, the canceller is already taking care of cleaning up.
-                // We want to avoid running the cleanup twice because there is no reason to.
-                // Also, the cleanup may not be idempotent anymore some day.
-            } catch (e: Exception) {
-                closeAllSubscriptionsAndShutdown(e)
-            }
-        }
-    }
-
-    private suspend fun onWebSocketFrameReceived(f: WebSocketFrame) {
-        heartBeater?.notifyMsgReceived()
-        if (f.isHeartBeat()) {
-            return // not an actual STOMP frame
-        }
-        when (f) {
-            is WebSocketFrame.Text -> onStompFrameReceived(StompDecoder.decode(f.text))
-            is WebSocketFrame.Binary -> onStompFrameReceived(StompDecoder.decode(f.bytes))
-            is WebSocketFrame.Close -> closeAllSubscriptionsAndShutdown(WebSocketClosedUnexpectedly(f.code, f.reason))
-        }
-    }
-
-    private suspend fun onStompFrameReceived(frame: StompFrame) {
+    override suspend fun onStompFrameReceived(frame: StompFrame) {
         when (frame) {
             is StompFrame.Message -> onMessageFrameReceived(frame)
             is StompFrame.Error -> {
@@ -109,25 +59,8 @@ internal class InternalStompSession(
         val futureConnectedFrame = async {
             waitForTypedFrame<StompFrame.Connected>()
         }
-        sendStompFrameAsIs(StompFrame.Connect(headers))
-        val connectedFrame = futureConnectedFrame.await()
-        initHeartBeats(connectedFrame.headers.heartBeat)
-        connectedFrame
-    }
-
-    private fun initHeartBeats(heartBeat: HeartBeat?) {
-        if (heartBeat == null || (heartBeat.expectedPeriodMillis == 0 && heartBeat.minSendPeriodMillis == 0)) {
-            return // no heart beats to set
-        }
-        heartBeater = HeartBeater(
-            heartBeat = heartBeat,
-            sendHeartBeat = { webSocketSession.sendHeartBeat() },
-            onMissingHeartBeat = {
-                webSocketSession.closeForMissingHeartBeat()
-                closeAllSubscriptionsAndShutdown(MissingHeartBeatException())
-            }
-        )
-        heartBeater?.startIn(this)
+        sendStompFrame(StompFrame.Connect(headers))
+        futureConnectedFrame.await()
     }
 
     private suspend inline fun <reified T : StompFrame> waitForTypedFrame(predicate: (T) -> Boolean = { true }): T {
@@ -157,7 +90,7 @@ internal class InternalStompSession(
     private suspend fun prepareReceiptAndSendFrame(frame: StompFrame): StompReceipt? {
         val receiptId = getReceiptAndMaybeSetAuto(frame)
         if (receiptId == null) {
-            sendStompFrameAsIs(frame)
+            sendStompFrame(frame)
             return null
         }
         sendAndWaitForReceipt(receiptId, frame)
@@ -171,21 +104,10 @@ internal class InternalStompSession(
         return frame.headers.receipt
     }
 
-    private suspend fun sendStompFrameAsIs(frame: StompFrame) {
-        if (frame.body is FrameBody.Binary) {
-            webSocketSession.sendBinary(frame.encodeToBytes())
-        } else {
-            // frames without body are also sent as text because the headers are always textual
-            // Also, some sockJS implementations don't support binary frames
-            webSocketSession.sendText(frame.encodeToText())
-        }
-        heartBeater?.notifyMsgSent()
-    }
-
     private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
         coroutineScope {
             val deferredReceipt = async { waitForReceipt(receiptId) }
-            sendStompFrameAsIs(frame)
+            sendStompFrame(frame)
             withTimeoutOrNull(frame.receiptTimeout) { deferredReceipt.await() }
                 ?: throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
         }
@@ -222,23 +144,23 @@ internal class InternalStompSession(
     }
 
     internal suspend fun unsubscribe(subscriptionId: String) {
-        sendStompFrameAsIs(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
+        sendStompFrame(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
         subscriptionsById.remove(subscriptionId)
     }
 
     override suspend fun ack(headers: StompAckHeaders) {
-        sendStompFrameAsIs(StompFrame.Ack(headers))
+        sendStompFrame(StompFrame.Ack(headers))
     }
 
     override suspend fun nack(headers: StompNackHeaders) {
-        sendStompFrameAsIs(StompFrame.Nack(headers))
+        sendStompFrame(StompFrame.Nack(headers))
     }
 
     override suspend fun disconnect() {
         if (config.gracefulDisconnect) {
             sendDisconnectFrameAndWaitForReceipt()
         }
-        webSocketSession.close()
+        closeWebSocket()
         closeAllSubscriptionsAndShutdown()
     }
 
@@ -253,11 +175,15 @@ internal class InternalStompSession(
         }
     }
 
-    private suspend fun closeAllSubscriptionsAndShutdown(cause: Throwable? = null) {
+    override suspend fun onError(cause: Throwable?) {
+        closeAllSubscriptionsAndShutdown(cause)
+    }
+
+    private fun closeAllSubscriptionsAndShutdown(cause: Throwable? = null) {
         subscriptionsById.values.forEach { it.close(cause) }
         subscriptionsById.clear()
         nonMsgFrames.close(cause)
-        job.cancelAndJoin()
+        cancel()
     }
 }
 
