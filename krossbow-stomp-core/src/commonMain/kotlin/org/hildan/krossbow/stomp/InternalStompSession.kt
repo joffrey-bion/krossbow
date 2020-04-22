@@ -5,7 +5,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.stomp.config.StompConfig
@@ -34,7 +33,7 @@ internal class InternalStompSession(
 
     private val nextReceiptId = SuspendingAtomicInt(0)
 
-    private val subscriptionsById: MutableMap<String, Subscription<*>> = mutableMapOf()
+    private val subscriptionsById: MutableMap<String, InternalSubscription<*>> = mutableMapOf()
 
     private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.BUFFERED)
 
@@ -130,7 +129,7 @@ internal class InternalStompSession(
         convertMessage: (StompFrame.Message) -> T
     ): StompSubscription<T> {
         val id = nextSubscriptionId.getAndIncrement().toString()
-        val sub = Subscription(id, convertMessage, this)
+        val sub = InternalSubscription(id, convertMessage, this)
         subscriptionsById[id] = sub
         val headers = StompSubscribeHeaders(
             destination = destination,
@@ -184,33 +183,5 @@ internal class InternalStompSession(
         subscriptionsById.clear()
         nonMsgFrames.close(cause)
         cancel()
-    }
-}
-
-private class Subscription<out T>(
-    override val id: String,
-    private val convertMessage: (StompFrame.Message) -> T,
-    private val internalSession: InternalStompSession
-) : StompSubscription<T> {
-
-    private val internalMsgChannel: Channel<T> = Channel()
-
-    override val messages: ReceiveChannel<T> get() = internalMsgChannel
-
-    suspend fun onMessage(message: StompFrame.Message) {
-        try {
-            internalMsgChannel.send(convertMessage(message))
-        } catch (e: Exception) {
-            internalMsgChannel.close(MessageConversionException(e))
-        }
-    }
-
-    fun close(cause: Throwable?) {
-        internalMsgChannel.close(cause)
-    }
-
-    override suspend fun unsubscribe() {
-        internalSession.unsubscribe(id)
-        internalMsgChannel.close()
     }
 }

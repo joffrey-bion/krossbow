@@ -19,6 +19,11 @@ import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketSession
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Base class that enables sending and receiving STOMP frames through a web socket.
+ * It handles the frame conversions between web sockets and STOMP.
+ * It manages heart beats and is aware of heart beat frames.
+ */
 internal abstract class StompConnection(
     private val webSocketSession: WebSocketSession
 ) : CoroutineScope {
