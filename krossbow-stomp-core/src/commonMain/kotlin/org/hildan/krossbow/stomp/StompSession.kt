@@ -5,8 +5,6 @@ import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.asText
 import org.hildan.krossbow.stomp.headers.AckMode
-import org.hildan.krossbow.stomp.headers.StompAckHeaders
-import org.hildan.krossbow.stomp.headers.StompNackHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 
 /**
@@ -78,14 +76,35 @@ interface StompSession {
     ): StompSubscription<T>
 
     /**
-     * Sends an ACK frame with the given [headers].
+     * Sends an ACK frame with the given [ackId].
+     *
+     * The provided [ackId] must match the `ack` header of the message to acknowledge.
+     * If this acknowledgement is part of a transaction, the [transactionId] should be provided.
      */
-    suspend fun ack(headers: StompAckHeaders)
+    suspend fun ack(ackId: String, transactionId: String? = null)
 
     /**
-     * Sends a NACK frame with the given [headers].
+     * Sends a NACK frame with the given [ackId].
+     *
+     * The provided [ackId] must match the `ack` header of the message to refuse.
+     * If this acknowledgement is part of a transaction, the [transactionId] should be provided.
      */
-    suspend fun nack(headers: StompNackHeaders)
+    suspend fun nack(ackId: String, transactionId: String? = null)
+
+    /**
+     * Sends a BEGIN frame with the given [transactionId].
+     */
+    suspend fun begin(transactionId: String)
+
+    /**
+     * Sends a COMMIT frame with the given [transactionId].
+     */
+    suspend fun commit(transactionId: String)
+
+    /**
+     * Sends an ABORT frame with the given [transactionId].
+     */
+    suspend fun abort(transactionId: String)
 
     /**
      * If [graceful disconnect][StompConfig.gracefulDisconnect] is enabled (which is the default), sends a DISCONNECT
@@ -214,20 +233,23 @@ suspend fun StompSession.subscribeEmptyMsg(
 ): StompSubscription<Unit> = subscribe(destination, receiptId, ackMode) { Unit }
 
 /**
- * Sends an ACK frame with the given ack [id].
+ * Executes the following [block] as part of a transaction with the given [transactionId].
+ * The transaction is committed if the block executes successfully, and aborted in case of exception.
+ * Any exception thrown by the block is re-thrown.
  *
- * The provided [id] must match the `ack` header of the message to acknowledge.
- * If this acknowledgement is part of the transaction, the [transaction] id should be provided.
+ * The [transactionId] must still manually be provided within the block for all SEND, ACK, and NACK frames.
  */
-suspend fun StompSession.ack(id: String, transaction: String? = null) = ack(StompAckHeaders(id, transaction))
-
-/**
- * Sends a NACK frame with the given ack [id].
- *
- * The provided [id] must match the `ack` header of the message to refuse.
- * If this acknowledgement is part of the transaction, the [transaction] id should be provided.
- */
-suspend fun StompSession.nack(id: String, transaction: String? = null) = nack(StompNackHeaders(id, transaction))
+suspend inline fun <T> StompSession.withTransaction(transactionId: String, block: StompSession.() -> T): T {
+    begin(transactionId)
+    try {
+        val result = block()
+        commit(transactionId)
+        return result
+    } catch (e: Exception) {
+        abort(transactionId)
+        throw e
+    }
+}
 
 /**
  * Executes the given block on this [StompSession], and [disconnects][StompSession.disconnect] from the session whether

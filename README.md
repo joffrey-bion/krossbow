@@ -32,12 +32,11 @@ Adding support for the Native target may require a bit more effort. Contribution
 
 Here is the list of supported STOMP features:
 
-- All STOMP frames except transactions (`BEGIN`/`COMMIT`/`ABORT`)
+- All STOMP frames, including `ACK`/`NACK` and transactions
 - Custom headers where the protocol allows them
 - Receipts (waiting for RECEIPT frame based on receipt header)
-- Heart beating (keep alive)
-- Both text and binary body
-- Content-length as defined in the specification
+- Heart beats (keep alive)
+- Text and binary bodies
 
 Additional features:
 - Auto-receipts (automatically adds RECEIPT headers when appropriate to ensure no frame is lost)

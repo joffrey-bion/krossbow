@@ -11,7 +11,10 @@ import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.AckMode
+import org.hildan.krossbow.stomp.headers.StompAbortHeaders
 import org.hildan.krossbow.stomp.headers.StompAckHeaders
+import org.hildan.krossbow.stomp.headers.StompBeginHeaders
+import org.hildan.krossbow.stomp.headers.StompCommitHeaders
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
 import org.hildan.krossbow.stomp.headers.StompNackHeaders
@@ -140,12 +143,24 @@ internal class InternalStompSession(
         subscriptionsById.remove(subscriptionId)
     }
 
-    override suspend fun ack(headers: StompAckHeaders) {
-        sendStompFrame(StompFrame.Ack(headers))
+    override suspend fun ack(ackId: String, transactionId: String?) {
+        sendStompFrame(StompFrame.Ack(StompAckHeaders(ackId, transactionId)))
     }
 
-    override suspend fun nack(headers: StompNackHeaders) {
-        sendStompFrame(StompFrame.Nack(headers))
+    override suspend fun nack(ackId: String, transactionId: String?) {
+        sendStompFrame(StompFrame.Nack(StompNackHeaders(ackId, transactionId)))
+    }
+
+    override suspend fun begin(transactionId: String) {
+        sendStompFrame(StompFrame.Begin(StompBeginHeaders(transactionId)))
+    }
+
+    override suspend fun commit(transactionId: String) {
+        sendStompFrame(StompFrame.Commit(StompCommitHeaders(transactionId)))
+    }
+
+    override suspend fun abort(transactionId: String) {
+        sendStompFrame(StompFrame.Abort(StompAbortHeaders(transactionId)))
     }
 
     override suspend fun disconnect() {
