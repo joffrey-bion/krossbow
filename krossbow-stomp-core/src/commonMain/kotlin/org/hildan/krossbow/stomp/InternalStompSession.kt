@@ -76,14 +76,13 @@ internal class InternalStompSession(
     }
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
-        if (headers.contentLength == null) {
-            headers.contentLength = body?.bytes?.size ?: 0
-        }
-        return prepareReceiptAndSendFrame(StompFrame.Send(headers, body))
+        return prepareHeadersAndSendFrame(StompFrame.Send(headers, body))
     }
 
-    private suspend fun prepareReceiptAndSendFrame(frame: StompFrame): StompReceipt? {
-        val receiptId = getReceiptAndMaybeSetAuto(frame)
+    private suspend fun prepareHeadersAndSendFrame(frame: StompFrame): StompReceipt? {
+        maybeSetContentLength(frame)
+        maybeSetAutoReceipt(frame)
+        val receiptId = frame.headers.receipt
         if (receiptId == null) {
             sendStompFrame(frame)
             return null
@@ -92,11 +91,16 @@ internal class InternalStompSession(
         return StompReceipt(receiptId)
     }
 
-    private suspend fun getReceiptAndMaybeSetAuto(frame: StompFrame): String? {
+    private fun maybeSetContentLength(frame: StompFrame) {
+        if (config.autoContentLength && frame.headers.contentLength == null) {
+            frame.headers.contentLength = frame.body?.bytes?.size ?: 0
+        }
+    }
+
+    private suspend fun maybeSetAutoReceipt(frame: StompFrame) {
         if (config.autoReceipt && frame.headers.receipt == null) {
             frame.headers.receipt = nextReceiptId.getStringAndInc()
         }
-        return frame.headers.receipt
     }
 
     private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
@@ -134,7 +138,7 @@ internal class InternalStompSession(
         )
         headers.receipt = receiptId
         val subscribeFrame = StompFrame.Subscribe(headers)
-        prepareReceiptAndSendFrame(subscribeFrame)
+        prepareHeadersAndSendFrame(subscribeFrame)
         return sub
     }
 

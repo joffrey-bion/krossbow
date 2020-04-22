@@ -12,6 +12,10 @@ data class StompConfig(
      */
     var autoReceipt: Boolean = false,
     /**
+     * Whether to automatically compute and add the `content-length` header in sent frames.
+     */
+    var autoContentLength: Boolean = true,
+    /**
      * Defines how long to wait for the websocket+STOMP connection to be established before throwing an exception.
      */
     var connectionTimeoutMillis: Long = 15000,

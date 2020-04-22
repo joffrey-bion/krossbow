@@ -40,6 +40,7 @@ Here is the list of supported STOMP features:
 
 Additional features:
 - Auto-receipts (automatically adds RECEIPT headers when appropriate to ensure no frame is lost)
+- Automatic content length header for sent frames
 - Built-in JSON body conversions (Kotlinx Serialization or Jackson)
 - Possibility to hook custom body converters (for textual or binary bodies)
 
