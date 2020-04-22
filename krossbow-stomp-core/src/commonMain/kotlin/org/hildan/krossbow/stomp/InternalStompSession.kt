@@ -1,5 +1,6 @@
 package org.hildan.krossbow.stomp
 
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -54,7 +55,7 @@ internal class InternalStompSession(
     }
 
     internal suspend fun connect(headers: StompConnectHeaders): StompFrame.Connected = coroutineScope {
-        val futureConnectedFrame = async {
+        val futureConnectedFrame = async(start = CoroutineStart.UNDISPATCHED) {
             waitForTypedFrame<StompFrame.Connected>()
         }
         sendStompFrame(StompFrame.Connect(headers))
@@ -105,7 +106,9 @@ internal class InternalStompSession(
 
     private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
         coroutineScope {
-            val deferredReceipt = async { waitForReceipt(receiptId) }
+            val deferredReceipt = async(start = CoroutineStart.UNDISPATCHED) {
+                waitForReceipt(receiptId)
+            }
             sendStompFrame(frame)
             withTimeoutOrNull(frame.receiptTimeout) { deferredReceipt.await() }
                 ?: throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
