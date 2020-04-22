@@ -2,7 +2,6 @@ package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -42,7 +41,7 @@ internal class InternalStompSession(
             is StompFrame.Message -> onMessageFrameReceived(frame)
             is StompFrame.Error -> {
                 nonMsgFrames.send(frame)
-                closeAllSubscriptionsAndShutdown(StompErrorFrameReceived(frame))
+                shutdown(StompErrorFrameReceived(frame))
             }
             else -> nonMsgFrames.send(frame)
         }
@@ -159,8 +158,7 @@ internal class InternalStompSession(
         if (config.gracefulDisconnect) {
             sendDisconnectFrameAndWaitForReceipt()
         }
-        closeWebSocket()
-        closeAllSubscriptionsAndShutdown()
+        shutdown()
     }
 
     private suspend fun sendDisconnectFrameAndWaitForReceipt() {
@@ -174,14 +172,10 @@ internal class InternalStompSession(
         }
     }
 
-    override suspend fun onError(cause: Throwable?) {
-        closeAllSubscriptionsAndShutdown(cause)
-    }
-
-    private fun closeAllSubscriptionsAndShutdown(cause: Throwable? = null) {
+    override suspend fun shutdown(cause: Throwable?) {
         subscriptionsById.values.forEach { it.close(cause) }
         subscriptionsById.clear()
         nonMsgFrames.close(cause)
-        cancel()
+        super.shutdown(cause)
     }
 }

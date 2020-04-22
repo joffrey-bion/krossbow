@@ -4,6 +4,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.frame.FrameBody
@@ -46,7 +47,7 @@ internal abstract class StompConnection(
                 // We want to avoid running the cleanup twice because there is no reason to.
                 // Also, the cleanup may not be idempotent anymore some day.
             } catch (e: Exception) {
-                onError(e)
+                shutdown(e)
             }
         }
     }
@@ -59,7 +60,7 @@ internal abstract class StompConnection(
         when (f) {
             is WebSocketFrame.Text -> processStompFrame(StompDecoder.decode(f.text))
             is WebSocketFrame.Binary -> processStompFrame(StompDecoder.decode(f.bytes))
-            is WebSocketFrame.Close -> onError(WebSocketClosedUnexpectedly(f.code, f.reason))
+            is WebSocketFrame.Close -> shutdown(WebSocketClosedUnexpectedly(f.code, f.reason))
         }
     }
 
@@ -79,7 +80,7 @@ internal abstract class StompConnection(
             sendHeartBeat = { webSocketSession.sendHeartBeat() },
             onMissingHeartBeat = {
                 webSocketSession.closeForMissingHeartBeat()
-                onError(MissingHeartBeatException())
+                shutdown(MissingHeartBeatException())
             }
         )
         heartBeater?.startIn(this)
@@ -98,9 +99,8 @@ internal abstract class StompConnection(
         heartBeater?.notifyMsgSent()
     }
 
-    suspend fun closeWebSocket() {
+    protected open suspend fun shutdown(cause: Throwable? = null) {
         webSocketSession.close()
+        job.cancelAndJoin()
     }
-
-    protected abstract suspend fun onError(cause: Throwable? = null)
 }
