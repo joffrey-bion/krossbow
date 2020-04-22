@@ -39,10 +39,7 @@ internal class InternalStompSession(
     override suspend fun onStompFrameReceived(frame: StompFrame) {
         when (frame) {
             is StompFrame.Message -> onMessageFrameReceived(frame)
-            is StompFrame.Error -> {
-                nonMsgFrames.send(frame)
-                shutdown(StompErrorFrameReceived(frame))
-            }
+            is StompFrame.Error -> shutdown(StompErrorFrameReceived(frame))
             else -> nonMsgFrames.send(frame)
         }
     }
@@ -65,9 +62,6 @@ internal class InternalStompSession(
         val frameSubscription = nonMsgFrames.openSubscription()
         try {
             for (f in frameSubscription) {
-                if (f is StompFrame.Error) {
-                    throw StompErrorFrameReceived(f)
-                }
                 if (f is T && predicate(f)) {
                     return f
                 }
