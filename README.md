@@ -245,3 +245,4 @@ This project contains the following modules:
  Spring's SockJSClient on JVM, and npm `sockjs-client` for JavaScript (NodeJS and browser).
 - `krossbow-websocket-spring`: a JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides
  both a normal WebSocket client and a SockJS one.
+- `krossbow-websocket-okhttp`: a JVM implementation of the web socket API using OkHttp's WebSocketClient.
