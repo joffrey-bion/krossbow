@@ -22,19 +22,14 @@ import org.hildan.krossbow.stomp.headers.StompNackHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
-import org.hildan.krossbow.utils.SuspendingAtomicInt
-import org.hildan.krossbow.utils.getStringAndInc
 import org.hildan.krossbow.websocket.WebSocketSession
+import org.hildan.krossbow.utils.generateUuid
 
 @OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
 internal class InternalStompSession(
     private val config: StompConfig,
     webSocketSession: WebSocketSession
 ) : StompConnection(webSocketSession), StompSession {
-
-    private val nextSubscriptionId = SuspendingAtomicInt(0)
-
-    private val nextReceiptId = SuspendingAtomicInt(0)
 
     private val subscriptionsById: MutableMap<String, InternalSubscription<*>> = mutableMapOf()
 
@@ -103,9 +98,9 @@ internal class InternalStompSession(
         }
     }
 
-    private suspend fun maybeSetAutoReceipt(frame: StompFrame) {
+    private fun maybeSetAutoReceipt(frame: StompFrame) {
         if (config.autoReceipt && frame.headers.receipt == null) {
-            frame.headers.receipt = nextReceiptId.getStringAndInc()
+            frame.headers.receipt = generateUuid()
         }
     }
 
@@ -136,7 +131,7 @@ internal class InternalStompSession(
         ackMode: AckMode?,
         convertMessage: (StompFrame.Message) -> T
     ): StompSubscription<T> {
-        val id = nextSubscriptionId.getAndIncrement().toString()
+        val id = generateUuid()
         val sub = InternalSubscription(id, convertMessage, this)
         subscriptionsById[id] = sub
         val headers = StompSubscribeHeaders(
@@ -184,7 +179,7 @@ internal class InternalStompSession(
 
     private suspend fun sendDisconnectFrameAndWaitForReceipt() {
         try {
-            val receiptId = nextReceiptId.getStringAndInc()
+            val receiptId = generateUuid()
             val disconnectFrame = StompFrame.Disconnect(StompDisconnectHeaders(receiptId))
             sendAndWaitForReceipt(receiptId, disconnectFrame)
         } catch (e: LostReceiptException) {

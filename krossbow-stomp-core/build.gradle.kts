@@ -30,6 +30,7 @@ kotlin {
                 api(project(":krossbow-websocket-core"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io:${Versions.kotlinxIO}")
+                implementation("com.benasher44:uuid:0.1.0")
             }
         }
         val commonTest by getting {

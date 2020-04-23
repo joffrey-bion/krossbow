@@ -20,6 +20,7 @@ import org.hildan.krossbow.stomp.headers.HeaderKeys.SESSION
 import org.hildan.krossbow.stomp.headers.HeaderKeys.SUBSCRIPTION
 import org.hildan.krossbow.stomp.headers.HeaderKeys.TRANSACTION
 import org.hildan.krossbow.stomp.headers.HeaderKeys.VERSION
+import org.hildan.krossbow.utils.generateUuid
 
 object HeaderKeys {
     const val ACCEPT_VERSION = "accept-version"
@@ -179,7 +180,7 @@ class StompSubscribeHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeade
 
     constructor(
         destination: String,
-        id: String,
+        id: String = generateUuid(),
         ack: AckMode = AckMode.AUTO
     ) : this(
         headersOf(

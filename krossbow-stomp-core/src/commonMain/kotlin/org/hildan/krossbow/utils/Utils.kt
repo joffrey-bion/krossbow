@@ -1,15 +1,8 @@
 package org.hildan.krossbow.utils
 
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import com.benasher44.uuid.uuid4
 
-class SuspendingAtomicInt(private var value: Int = 0) {
-
-    private val mutex = Mutex()
-
-    // TODO maybe change this to actor to completely avoid locking
-    // https://kotlinlang.org/docs/reference/coroutines/shared-mutable-state-and-concurrency.html#actors
-    suspend fun getAndIncrement(): Int = mutex.withLock { value++ }
-}
-
-suspend fun SuspendingAtomicInt.getStringAndInc() = getAndIncrement().toString()
+/**
+ * Generates a new UUID (v4) as a string.
+ */
+internal fun generateUuid(): String = uuid4().toString()
