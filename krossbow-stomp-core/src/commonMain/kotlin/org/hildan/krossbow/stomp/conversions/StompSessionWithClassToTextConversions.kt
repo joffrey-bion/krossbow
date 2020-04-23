@@ -6,6 +6,7 @@ import org.hildan.krossbow.stomp.StompSubscription
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.asText
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
+import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import kotlin.reflect.KClass
 
 /**
@@ -52,22 +53,18 @@ internal class StompSessionWithClassToTextConversions(
         return send(headers, frameBody)
     }
 
-    override suspend fun <T : Any> subscribe(
-        destination: String,
-        clazz: KClass<T>,
-        receiptId: String?
-    ): StompSubscription<T> = subscribe(destination, receiptId) { msg ->
-        requireNotNull(msg.body) {
-            "Empty messages are not allowed in this subscription, please use subscribeOptional instead"
+    override suspend fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): StompSubscription<T> =
+        subscribe(headers) { msg ->
+            requireNotNull(msg.body) {
+                "Empty messages are not allowed in this subscription, please use subscribeOptional instead"
+            }
+            converter.convertFromString(msg.body.asText(), clazz)
         }
-        converter.convertFromString(msg.body.asText(), clazz)
-    }
 
     override suspend fun <T : Any> subscribeOptional(
-        destination: String,
-        clazz: KClass<T>,
-        receiptId: String?
-    ): StompSubscription<T?> = subscribe(destination, receiptId) { msg ->
+        headers: StompSubscribeHeaders,
+        clazz: KClass<T>
+    ): StompSubscription<T?> = subscribe(headers) { msg ->
         if (msg.body == null) {
             null
         } else {

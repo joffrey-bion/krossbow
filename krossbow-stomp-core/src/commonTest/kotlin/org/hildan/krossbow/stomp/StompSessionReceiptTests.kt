@@ -6,6 +6,7 @@ import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
+import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.test.assertCompletesSoon
 import org.hildan.krossbow.test.assertTimesOutWith
 import org.hildan.krossbow.test.connectWithMocks
@@ -188,7 +189,9 @@ class StompSessionReceiptTests {
     fun subscribe_manualReceipt_waitsForCorrectReceipt() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectWithMocks()
         val manualReceiptId = "my-receipt"
-        val deferredSub = async { stompSession.subscribeRaw("/destination", manualReceiptId) }
+        val deferredSub = async {
+            stompSession.subscribe(StompSubscribeHeaders("/destination", receipt = manualReceiptId)) { Unit }
+        }
         assertFalse(deferredSub.isCompleted, "subscribe() should wait until ws send finishes")
         wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
         assertFalse(deferredSub.isCompleted, "subscribe() should wait until receipt is received")
@@ -207,7 +210,7 @@ class StompSessionReceiptTests {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
         }
         assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
-            stompSession.subscribeRaw("/destination", "my-receipt")
+            stompSession.subscribe(StompSubscribeHeaders("/destination", receipt = "my-receipt")) { Unit }
         }
     }
 }

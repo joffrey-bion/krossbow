@@ -163,11 +163,13 @@ class StompSendHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     constructor(
         destination: String,
         transaction: String? = null,
+        receipt: String? = null,
         customHeaders: Map<String, String> = emptyMap()
     ) : this(
         headersOf(
             DESTINATION to destination,
             TRANSACTION to transaction,
+            RECEIPT to receipt,
             customHeaders = customHeaders
         )
     )
@@ -181,12 +183,14 @@ class StompSubscribeHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeade
     constructor(
         destination: String,
         id: String = generateUuid(),
-        ack: AckMode = AckMode.AUTO
+        ack: AckMode = AckMode.AUTO,
+        receipt: String? = null
     ) : this(
         headersOf(
             DESTINATION to destination,
             ID to id,
-            ACK to ack.headerValue
+            ACK to ack.headerValue,
+            RECEIPT to receipt
         )
     )
 }

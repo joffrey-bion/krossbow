@@ -11,7 +11,6 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
-import org.hildan.krossbow.stomp.headers.AckMode
 import org.hildan.krossbow.stomp.headers.StompAbortHeaders
 import org.hildan.krossbow.stomp.headers.StompAckHeaders
 import org.hildan.krossbow.stomp.headers.StompBeginHeaders
@@ -126,20 +125,12 @@ internal class InternalStompSession(
         }
 
     override suspend fun <T> subscribe(
-        destination: String,
-        receiptId: String?,
-        ackMode: AckMode?,
+        headers: StompSubscribeHeaders,
         convertMessage: (StompFrame.Message) -> T
     ): StompSubscription<T> {
-        val id = generateUuid()
+        val id = headers.id
         val sub = InternalSubscription(id, convertMessage, this)
         subscriptionsById[id] = sub
-        val headers = StompSubscribeHeaders(
-            destination = destination,
-            id = id,
-            ack = ackMode ?: AckMode.AUTO
-        )
-        headers.receipt = receiptId
         val subscribeFrame = StompFrame.Subscribe(headers)
         prepareHeadersAndSendFrame(subscribeFrame)
         return sub

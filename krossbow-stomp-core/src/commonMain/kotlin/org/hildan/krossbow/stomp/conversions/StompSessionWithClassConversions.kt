@@ -6,6 +6,7 @@ import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.StompSubscription
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
+import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import kotlin.reflect.KClass
 
 /**
@@ -30,40 +31,38 @@ interface StompSessionWithClassConversions : StompSession {
     ): StompReceipt?
 
     /**
-     * Subscribes to the given [destination], converting received messages into objects of type [T].
+     * Sends a SUBSCRIBE frame with the given [headers], converting received messages into objects of type [T].
      * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
      * Message frames without a body are not expected and result in an exception in the messages channel.
      *
-     * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
-     * RECEIPT frame is received from the server.
+     * If no `receipt` header is provided and [auto-receipt][StompConfig.autoReceipt] is enabled, a new unique receipt
+     * header is generated and added.
+     *
+     * If a receipt header is present (automatically added or manually provided), this method suspends until the
+     * relevant RECEIPT frame is received from the server.
      * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
      * a [LostReceiptException] is thrown.
      *
-     * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+     * If auto-receipt is disabled and no `receipt` header is provided, this method returns immediately.
      */
-    suspend fun <T : Any> subscribe(
-        destination: String,
-        clazz: KClass<T>,
-        receiptId: String? = null
-    ): StompSubscription<T>
+    suspend fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): StompSubscription<T>
 
     /**
-     * Subscribes to the given [destination], converting received messages into objects of type [T].
+     * Sends a SUBSCRIBE frame with the given [headers], converting received messages into objects of type [T].
      * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
      * In this variant, frames without a body are seen as a null value in the messages channel.
      *
-     * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
-     * RECEIPT frame is received from the server.
+     * If no `receipt` header is provided and [auto-receipt][StompConfig.autoReceipt] is enabled, a new unique receipt
+     * header is generated and added.
+     *
+     * If a receipt header is present (automatically added or manually provided), this method suspends until the
+     * relevant RECEIPT frame is received from the server.
      * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
      * a [LostReceiptException] is thrown.
      *
-     * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+     * If auto-receipt is disabled and no `receipt` header is provided, this method returns immediately.
      */
-    suspend fun <T : Any> subscribeOptional(
-        destination: String,
-        clazz: KClass<T>,
-        receiptId: String? = null
-    ): StompSubscription<T?>
+    suspend fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, clazz: KClass<T>): StompSubscription<T?>
 }
 
 /**
@@ -90,39 +89,69 @@ suspend fun <T : Any> StompSessionWithClassConversions.convertAndSend(
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
  * a [LostReceiptException] is thrown.
  */
-suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAndSend(destination: String, body: T?): StompReceipt? =
-        convertAndSend(destination, body, T::class)
+suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAndSend(
+    destination: String,
+    body: T?
+): StompReceipt? = convertAndSend(destination, body, T::class)
+
+/**
+ * Subscribes to the given [destination], converting received messages into objects of type [T].
+ * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+ * Message frames without a body are not expected and result in an exception in the messages channel.
+ *
+ * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
+ *
+ * If auto-receipt is disabled, this method returns immediately.
+ */
+suspend fun <T : Any> StompSessionWithClassConversions.subscribe(
+    destination: String,
+    clazz: KClass<T>
+): StompSubscription<T> = subscribe(StompSubscribeHeaders(destination), clazz)
+
+/**
+ * Subscribes to the given [destination], converting received messages into objects of type [T].
+ * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+ * In this variant, frames without a body are seen as a null value in the messages channel.
+ *
+ * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
+ *
+ * If auto-receipt is disabled, this method returns immediately.
+ */
+suspend fun <T : Any> StompSessionWithClassConversions.subscribeOptional(
+    destination: String,
+    clazz: KClass<T>
+): StompSubscription<T?> = subscribeOptional(StompSubscribeHeaders(destination), clazz)
 
 /**
  * Subscribes to the given [destination], expecting objects of type [T].
  * Empty messages are not allowed and result in an exception in the messages channel.
  * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
  *
- * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server.
+ * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
  * a [LostReceiptException] is thrown.
  *
- * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+ * If auto-receipt is disabled, this method returns immediately.
  */
 suspend inline fun <reified T : Any> StompSessionWithClassConversions.subscribe(
-    destination: String,
-    receiptId: String? = null
-): StompSubscription<T> = subscribe(destination, T::class, receiptId)
+    destination: String
+): StompSubscription<T> = subscribe(destination, T::class)
 
 /**
  * Subscribes to the given [destination], converting received messages into objects of type [T].
  * In this variant, empty messages are allowed and result in a null value in the messages channel.
  * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
  *
- * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server.
+ * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
  * a [LostReceiptException] is thrown.
  *
- * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+ * If auto-receipt is disabled, this method returns immediately.
  */
 suspend inline fun <reified T : Any> StompSessionWithClassConversions.subscribeOptional(
-    destination: String,
-    receiptId: String? = null
-): StompSubscription<T?> = subscribeOptional(destination, T::class, receiptId)
+    destination: String
+): StompSubscription<T?> = subscribeOptional(destination, T::class)

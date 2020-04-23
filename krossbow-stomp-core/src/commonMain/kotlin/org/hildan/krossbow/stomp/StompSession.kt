@@ -4,8 +4,8 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.asText
-import org.hildan.krossbow.stomp.headers.AckMode
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
+import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 
 /**
  * A coroutine-based STOMP session. This interface defines interactions with a STOMP server.
@@ -48,6 +48,13 @@ interface StompSession {
     /**
      * Sends a SEND frame to the server with the given [headers] and the given [body].
      *
+     * Depending on the configuration, headers may be modified before sending the frame:
+     *
+     * - If no `receipt` header is provided and [auto-receipt][StompConfig.autoReceipt] is enabled, a new unique receipt
+     * header is generated and added
+     * - If no `content-length` header is provided and [autoContentLength][StompConfig.autoContentLength] is enabled, the
+     * content length is computed based on body size and added as `content-length` header
+     *
      * @return null right after sending the frame if auto-receipt is disabled and no receipt header is provided.
      * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
      * a [StompReceipt].
@@ -57,21 +64,22 @@ interface StompSession {
     suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt?
 
     /**
-     * Subscribes to the given [destination], converting received messages into objects of type [T] using
+     * Sends a SUBSCRIBE frame with the given [headers], converting received messages into objects of type [T] using
      * [convertMessage].
      * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
      *
-     * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
-     * RECEIPT frame is received from the server.
+     * If no `receipt` header is provided and [auto-receipt][StompConfig.autoReceipt] is enabled, a new unique receipt
+     * header is generated and added.
+     *
+     * If a receipt header is present (automatically added or manually provided), this method suspends until the
+     * relevant RECEIPT frame is received from the server.
      * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
      * a [LostReceiptException] is thrown.
      *
-     * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+     * If auto-receipt is disabled and no `receipt` header is provided, this method returns immediately.
      */
     suspend fun <T> subscribe(
-        destination: String,
-        receiptId: String? = null,
-        ackMode: AckMode? = null,
+        headers: StompSubscribeHeaders,
         convertMessage: (StompFrame.Message) -> T
     ): StompSubscription<T>
 
@@ -164,73 +172,73 @@ suspend fun StompSession.sendText(destination: String, body: String?): StompRece
 suspend fun StompSession.sendEmptyMsg(destination: String): StompReceipt? = send(StompSendHeaders(destination), null)
 
 /**
- * Subscribes to the given [destination], expecting raw message frames.
- * The returned [StompSubscription] can be used to access the channel of received messages and unsubscribe.
+ * Subscribes to the given [destination], converting received messages into objects of type [T] using
+ * [convertMessage].
+ * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
  *
- * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server.
+ * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
  * a [LostReceiptException] is thrown.
  *
- * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+ * If auto-receipt is disabled, this method returns immediately.
  */
-suspend fun StompSession.subscribeRaw(
+suspend fun <T> StompSession.subscribe(
     destination: String,
-    receiptId: String? = null,
-    ackMode: AckMode? = null
-): StompSubscription<StompFrame.Message> = subscribe(destination, receiptId, ackMode) { it }
+    convertMessage: (StompFrame.Message) -> T
+): StompSubscription<T> = subscribe(StompSubscribeHeaders(destination), convertMessage)
+
+/**
+ * Subscribes to the given [destination], expecting raw message frames.
+ * The returned [StompSubscription] can be used to access the channel of received messages and unsubscribe.
+ *
+ * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * a [LostReceiptException] is thrown.
+ *
+ * If auto-receipt is disabled, this method returns immediately.
+ */
+suspend fun StompSession.subscribeRaw(destination: String): StompSubscription<StompFrame.Message> =
+    subscribe(destination) { it }
 
 /**
  * Subscribes to the given [destination], expecting text message bodies.
  * The returned [StompSubscription] can be used to access the channel of received messages and unsubscribe.
- * Frames without a body are seen as a null value in the messages channel of the subscription.
+ * Frames without a body are seen as null values in the messages channel of the subscription.
  *
- * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server.
+ * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
  * a [LostReceiptException] is thrown.
  *
- * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+ * If auto-receipt is disabled, this method returns immediately.
  */
-suspend fun StompSession.subscribeText(
-    destination: String,
-    receiptId: String? = null,
-    ackMode: AckMode? = null
-): StompSubscription<String?> = subscribe(destination, receiptId, ackMode) { it.body?.asText() }
+suspend fun StompSession.subscribeText(destination: String): StompSubscription<String?> =
+    subscribe(destination) { it.body?.asText() }
 
 /**
  * Subscribes to the given [destination], expecting binary message bodies.
  * The returned [StompSubscription] can be used to access the channel of received messages and unsubscribe.
- * Frames without a body are seen as a null value in the messages channel of the subscription.
+ * Frames without a body are seen as null values in the messages channel of the subscription.
  *
- * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server.
+ * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
  * a [LostReceiptException] is thrown.
  *
- * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+ * If auto-receipt is disabled, this method returns immediately.
  */
-suspend fun StompSession.subscribeBinary(
-    destination: String,
-    receiptId: String? = null,
-    ackMode: AckMode? = null
-): StompSubscription<ByteArray?> = subscribe(destination, receiptId, ackMode) { it.body?.bytes }
+suspend fun StompSession.subscribeBinary(destination: String): StompSubscription<ByteArray?> =
+    subscribe(destination) { it.body?.bytes }
 
 /**
  * Subscribes to the given [destination], ignoring the body of the received messages.
  *
- * If auto-receipt is enabled or if a non-null [receiptId] is provided, this method suspends until the relevant
- * RECEIPT frame is received from the server.
+ * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
  * a [LostReceiptException] is thrown.
  *
- * If auto-receipt is disabled and no [receiptId] is provided, this method returns immediately.
+ * If auto-receipt is disabled, this method returns immediately.
  */
-suspend fun StompSession.subscribeEmptyMsg(
-    destination: String,
-    receiptId: String? = null,
-    ackMode: AckMode? = null
-): StompSubscription<Unit> = subscribe(destination, receiptId, ackMode) { Unit }
+suspend fun StompSession.subscribeEmptyMsg(destination: String): StompSubscription<Unit> =
+    subscribe(destination) { Unit }
 
 /**
  * Executes the following [block] as part of a transaction with the given [transactionId].

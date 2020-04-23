@@ -11,6 +11,7 @@ import org.hildan.krossbow.stomp.StompSubscription
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.asText
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
+import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 
 /**
  * Wraps this [StompSession] to add methods that can convert message bodies using the provided Kotlinx Serialization's
@@ -42,10 +43,9 @@ private class StompSessionWithKxSerializationJson(
     }
 
     override suspend fun <T : Any> subscribe(
-        destination: String,
-        deserializer: DeserializationStrategy<T>,
-        receiptId: String?
-    ): StompSubscription<T> = subscribe(destination, receiptId) { msg ->
+        headers: StompSubscribeHeaders,
+        deserializer: DeserializationStrategy<T>
+    ): StompSubscription<T> = subscribe(headers) { msg ->
         val body = msg.body
         requireNotNull(body) {
             "Cannot deserialize object of type ${deserializer.descriptor.serialName} from null body"
@@ -54,10 +54,9 @@ private class StompSessionWithKxSerializationJson(
     }
 
     override suspend fun <T : Any> subscribeOptional(
-        destination: String,
-        deserializer: DeserializationStrategy<T>,
-        receiptId: String?
-    ): StompSubscription<T?> = subscribe(destination, receiptId) { msg ->
+        headers: StompSubscribeHeaders,
+        deserializer: DeserializationStrategy<T>
+    ): StompSubscription<T?> = subscribe(headers) { msg ->
         msg.body?.deserialize(deserializer)
     }
 
