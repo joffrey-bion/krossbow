@@ -22,15 +22,15 @@ This is mainly due to the fact that the project is young, but also because it ha
 This project only supports the JVM 8/11 and JavaScript targets as of now, as it was primarily built for applications
  combining Kotlin/React frontend with Kotlin Spring Boot backend.
 
-This project cannot be used on Android as of now because of its dependency on either Spring (JDK8) or JDK11's API, but
- this could change if the need arises (please open an issue if you'd like to see it happen).
-Android support could be somewhat easily added by writing an adapter for web sockets on top of OkHttp's web sockets.
+Android support could be added mostly with build setup, using the existing adapter for OkHttp's web sockets.
+Please upvote [the corresponding issue](https://github.com/joffrey-bion/krossbow/issues/49) if you'd like to see it
+happen.
 
 Adding support for the Native target may require a bit more effort. Contributions are welcome in this respect, though.
 
 ## Supported STOMP features
 
-Here is the list of supported STOMP features:
+Most of the [STOMP 1.2](https://stomp.github.io/index.html) specification's SHOULDs and MUSTs are implemented:
 
 - All STOMP frames, including `ACK`/`NACK` and transactions
 - Custom headers where the protocol allows them
@@ -39,10 +39,18 @@ Here is the list of supported STOMP features:
 - Text and binary bodies
 
 Additional features:
+
 - Auto-receipts (automatically adds RECEIPT headers when appropriate to ensure no frame is lost)
 - Automatic content length header for sent frames
 - Built-in JSON body conversions (Kotlinx Serialization or Jackson)
 - Possibility to hook custom body converters (for textual or binary bodies)
+
+Missing specification SHOULDs:
+
+- Text data sent over binary web socket frames
+  (using a `content-type` header with `text/` MIME type or explicit `;charset=...`)
+- Binary data sent over text web socket frames
+  (using a non-text `content-type` header, or no `content-type` header)
 
 ## STOMP Usage
 
