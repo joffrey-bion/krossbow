@@ -16,38 +16,6 @@ import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 
-enum class StompCommand(
-    val text: String,
-    val supportsHeaderEscapes: Boolean = true
-) {
-    STOMP("STOMP"),
-    // The CONNECT and CONNECTED frames do not escape the carriage return, line feed or colon octets
-    // in order to remain backward compatible with STOMP 1.0
-    // https://stomp.github.io/stomp-specification-1.2.html#Value_Encoding
-    CONNECT("CONNECT", supportsHeaderEscapes = false),
-    CONNECTED("CONNECTED", supportsHeaderEscapes = false),
-    SEND("SEND"),
-    SUBSCRIBE("SUBSCRIBE"),
-    UNSUBSCRIBE("UNSUBSCRIBE"),
-    ACK("ACK"),
-    NACK("NACK"),
-    BEGIN("BEGIN"),
-    COMMIT("COMMIT"),
-    ABORT("ABORT"),
-    DISCONNECT("DISCONNECT"),
-    MESSAGE("MESSAGE"),
-    RECEIPT("RECEIPT"),
-    ERROR("ERROR");
-
-    companion object {
-        private val valuesByText = values().associateBy { it.text }
-
-        fun parse(text: String) = valuesByText[text] ?: throw InvalidStompCommandException("Unknown STOMP command $text")
-    }
-}
-
-class InvalidStompCommandException(val invalidText: String) : Exception("Unknown STOMP command '$invalidText'")
-
 sealed class StompFrame(
     val command: StompCommand,
     open val headers: StompHeaders,
@@ -119,46 +87,4 @@ sealed class StompFrame(
             StompCommand.ERROR -> Error(StompErrorHeaders(headers), body)
         }
     }
-}
-
-@OptIn(ExperimentalStdlibApi::class)
-sealed class FrameBody {
-
-    abstract val bytes: ByteArray
-
-    data class Text(
-        val text: String
-    ) : FrameBody() {
-        constructor(bytes: ByteArray) : this(bytes.decodeToString())
-
-        // Text frames must be encoded using UTF-8 as per WebSocket specification
-        // If other encodings are needed, the application must use binary frames with relevant content-type header
-        override val bytes by lazy { text.encodeToByteArray() }
-    }
-
-    data class Binary(
-        override val bytes: ByteArray
-    ) : FrameBody() {
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other == null || this::class != other::class) return false
-
-            other as Binary
-
-            if (!bytes.contentEquals(other.bytes)) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            return bytes.contentHashCode()
-        }
-    }
-}
-
-@OptIn(ExperimentalStdlibApi::class)
-fun FrameBody.asText() = when (this) {
-    is FrameBody.Binary -> bytes.decodeToString(throwOnInvalidSequence = true)
-    is FrameBody.Text -> text
 }
