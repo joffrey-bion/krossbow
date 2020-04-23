@@ -65,7 +65,7 @@ sealed class StompFrame(
 
     companion object {
 
-        fun create(
+        internal fun create(
             command: StompCommand,
             headers: StompHeaders,
             body: FrameBody?
