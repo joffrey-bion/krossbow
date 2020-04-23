@@ -58,7 +58,12 @@ internal class InternalStompSession(
         val futureConnectedFrame = async(start = CoroutineStart.UNDISPATCHED) {
             waitForTypedFrame<StompFrame.Connected>()
         }
-        sendStompFrame(StompFrame.Connect(headers))
+        val connectFrame = if (config.connectWithStompCommand) {
+            StompFrame.Stomp(headers)
+        } else {
+            StompFrame.Connect(headers)
+        }
+        sendStompFrame(connectFrame)
         futureConnectedFrame.await()
     }
 

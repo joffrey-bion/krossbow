@@ -16,6 +16,18 @@ data class StompConfig(
      */
     var autoContentLength: Boolean = true,
     /**
+     * Whether to use the `STOMP` command instead of `CONNECT` to establish the connection.
+     *
+     * Clients that use the `STOMP` frame instead of the `CONNECT` frame will only be able to connect to STOMP 1.2
+     * servers (as well as some STOMP 1.1 servers) but the advantage is that a protocol sniffer/discriminator will be
+     * able to differentiate the STOMP connection from an HTTP connection.
+     */
+    var connectWithStompCommand: Boolean = false,
+    /**
+     * The [HeartBeat] to use during STOMP sessions.
+     */
+    var heartBeat: HeartBeat = HeartBeat(),
+    /**
      * Defines how long to wait for the websocket+STOMP connection to be established before throwing an exception.
      */
     var connectionTimeoutMillis: Long = 15000,
@@ -34,10 +46,6 @@ data class StompConfig(
      * [mentioned in the specification](http://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
      */
     var disconnectTimeoutMillis: Long = 200,
-    /**
-     * The [HeartBeat] to use during STOMP sessions.
-     */
-    var heartBeat: HeartBeat = HeartBeat(),
     /**
      * Enables [graceful disconnect](https://stomp.github.io/stomp-specification-1.2.html#DISCONNECT):
      * when disconnecting from the server, the client should first send a DISCONNECT frame with a `receipt` header,

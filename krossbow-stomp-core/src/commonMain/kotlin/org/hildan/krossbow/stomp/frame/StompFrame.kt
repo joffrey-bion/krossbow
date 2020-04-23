@@ -20,6 +20,7 @@ enum class StompCommand(
     val text: String,
     val supportsHeaderEscapes: Boolean = true
 ) {
+    STOMP("STOMP"),
     // The CONNECT and CONNECTED frames do not escape the carriage return, line feed or colon octets
     // in order to remain backward compatible with STOMP 1.0
     // https://stomp.github.io/stomp-specification-1.2.html#Value_Encoding
@@ -52,6 +53,8 @@ sealed class StompFrame(
     open val headers: StompHeaders,
     open val body: FrameBody? = null
 ) {
+    data class Stomp(override val headers: StompConnectHeaders) : StompFrame(StompCommand.STOMP, headers)
+
     data class Connect(override val headers: StompConnectHeaders) : StompFrame(StompCommand.CONNECT, headers)
 
     data class Connected(override val headers: StompConnectedHeaders) : StompFrame(StompCommand.CONNECTED, headers)
@@ -99,6 +102,7 @@ sealed class StompFrame(
             headers: StompHeaders,
             body: FrameBody?
         ): StompFrame = when (command) {
+            StompCommand.STOMP -> Stomp(StompConnectHeaders(headers))
             StompCommand.CONNECT -> Connect(StompConnectHeaders(headers))
             StompCommand.CONNECTED -> Connected(StompConnectedHeaders(headers))
             StompCommand.MESSAGE -> Message(StompMessageHeaders(headers), body)
