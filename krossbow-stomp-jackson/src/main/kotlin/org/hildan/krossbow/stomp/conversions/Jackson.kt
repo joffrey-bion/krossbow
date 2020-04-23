@@ -12,7 +12,7 @@ fun StompSession.withJacksonConversions(
     objectMapper: ObjectMapper = jacksonObjectMapper()
 ): StompSessionWithClassConversions = withTextConversions(JacksonConverter(objectMapper))
 
-internal class JacksonConverter(private val objectMapper: ObjectMapper) : TextMessageConverter {
+private class JacksonConverter(private val objectMapper: ObjectMapper) : TextMessageConverter {
 
     override val mimeType: String = "application/json"
 

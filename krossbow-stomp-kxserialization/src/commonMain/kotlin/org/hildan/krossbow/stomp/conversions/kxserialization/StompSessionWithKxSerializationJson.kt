@@ -19,7 +19,7 @@ import org.hildan.krossbow.stomp.headers.StompSendHeaders
 fun StompSession.withJsonConversions(json: Json = Json(JsonConfiguration.Stable)): StompSessionWithKxSerialization =
         StompSessionWithKxSerializationJson(this, json)
 
-internal class StompSessionWithKxSerializationJson(
+private class StompSessionWithKxSerializationJson(
     session: StompSession,
     private val json: Json
 ) : StompSession by session, StompSessionWithKxSerialization {

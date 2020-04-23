@@ -94,7 +94,7 @@ open class JsWebSocketClientAdapter(
 /**
  * A adapter wrapping a JavaScript [WebSocket] object as a [WebSocketSession].
  */
-class JsWebSocketSession(
+private class JsWebSocketSession(
     private val ws: WebSocket,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : WebSocketSession {

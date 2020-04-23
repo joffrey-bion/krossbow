@@ -99,7 +99,7 @@ private fun ByteBuffer.toByteArray(): ByteArray {
 /**
  * An adapter wrapping JDK11's async [WebSocket] as a [WebSocketSession].
  */
-class Jdk11WebSocketSession(
+private class Jdk11WebSocketSession(
     private val webSocket: WebSocket,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>,
     private val stopListener: suspend () -> Unit

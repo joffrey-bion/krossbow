@@ -42,7 +42,7 @@ open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClien
     }
 }
 
-class KrossbowToSpringHandlerAdapter : WebSocketHandler {
+private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
 
     val channelListener: WebSocketListenerChannelAdapter = WebSocketListenerChannelAdapter()
 
@@ -73,7 +73,7 @@ class KrossbowToSpringHandlerAdapter : WebSocketHandler {
     override fun supportsPartialMessages(): Boolean = true
 }
 
-class SpringToKrossbowSessionAdapter(
+private class SpringToKrossbowSessionAdapter(
     private val session: SpringWebSocketSession,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : KrossbowWebSocketSession {

@@ -32,7 +32,7 @@ class OkHttpWebSocketClient(
     }
 }
 
-class KrossbowToOkHttpListenerAdapter : WebSocketListener(), CoroutineScope {
+private class KrossbowToOkHttpListenerAdapter : WebSocketListener(), CoroutineScope {
 
     private val job = Job()
 
@@ -64,7 +64,7 @@ class KrossbowToOkHttpListenerAdapter : WebSocketListener(), CoroutineScope {
     }
 }
 
-class OkHttpSocketToKrossbowSessionAdapter(
+private class OkHttpSocketToKrossbowSessionAdapter(
     private val okSocket: WebSocket,
     private val listener: KrossbowToOkHttpListenerAdapter
 ) : KrossbowWebSocketSession {
