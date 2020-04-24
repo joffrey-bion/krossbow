@@ -5,7 +5,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.reflect.KClass
-import kotlin.test.assertFailsWith
+import kotlin.reflect.cast
 import kotlin.test.assertNotNull
 import kotlin.test.fail
 
@@ -35,18 +35,31 @@ suspend fun <T> CoroutineScope.assertCompletesSoon(
     return assertCompletesSoon(deferred, message, timeoutMillis)
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 suspend inline fun <T : Throwable> assertTimesOutWith(
     expectedExceptionClass: KClass<T>,
     expectedTimeoutMillis: Long,
     timeoutMarginMillis: Long = 200,
     crossinline block: suspend () -> Unit
 ): T {
-    val message = "expected time out under ${expectedTimeoutMillis}ms, with ${expectedExceptionClass.simpleName}"
-    val result = assertFailsWith(expectedExceptionClass, message) {
+    val result = runCatching {
         withTimeoutOrNull(expectedTimeoutMillis + timeoutMarginMillis) {
             block()
         }
     }
-    assertNotNull(result, message)
-    return result
+    val ex = result.exceptionOrNull()
+    if (ex == null) {
+        if (result.getOrNull() == null) {
+            fail("expected time out after ${expectedTimeoutMillis}ms (with ${expectedExceptionClass.simpleName}) but " +
+                    "nothing happened in ${expectedTimeoutMillis + timeoutMarginMillis}ms")
+        } else {
+            fail("expected time out after ${expectedTimeoutMillis}ms (with ${expectedExceptionClass.simpleName}) but " +
+                    "the block completed successfully")
+        }
+    }
+    if (!expectedExceptionClass.isInstance(ex)) {
+        fail("expected time out with ${expectedExceptionClass.simpleName} (after ${expectedTimeoutMillis}ms) but " +
+                "an exception of type ${ex::class.simpleName} was thrown instead")
+    }
+    return expectedExceptionClass.cast(ex)
 }
