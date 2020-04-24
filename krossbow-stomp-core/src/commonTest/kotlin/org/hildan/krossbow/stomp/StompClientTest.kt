@@ -24,7 +24,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-private const val TEST_CONNECTION_TIMEOUT: Long = 100
+private const val TEST_CONNECTION_TIMEOUT: Long = 500
 
 class StompClientTest {
 
