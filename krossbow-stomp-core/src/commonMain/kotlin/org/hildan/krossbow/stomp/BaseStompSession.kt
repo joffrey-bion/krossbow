@@ -25,7 +25,7 @@ import org.hildan.krossbow.websocket.WebSocketSession
 import org.hildan.krossbow.utils.generateUuid
 
 @OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
-internal class InternalStompSession(
+internal class BaseStompSession(
     private val config: StompConfig,
     webSocketSession: WebSocketSession
 ) : StompConnection(webSocketSession), StompSession {

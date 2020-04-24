@@ -6,6 +6,7 @@ import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.asText
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
+import org.hildan.krossbow.utils.generateUuid
 
 /**
  * A coroutine-based STOMP session. This interface defines interactions with a STOMP server.
@@ -241,16 +242,21 @@ suspend fun StompSession.subscribeEmptyMsg(destination: String): StompSubscripti
     subscribe(destination) { Unit }
 
 /**
- * Executes the following [block] as part of a transaction with the given [transactionId].
- * The transaction is committed if the block executes successfully, and aborted in case of exception.
- * Any exception thrown by the block is re-thrown.
+ * Executes the given [block] as part of a transaction.
  *
- * The [transactionId] must still manually be provided within the block for all SEND, ACK, and NACK frames.
+ * This method automatically generates an ID for the new transaction and sends a BEGIN frame.
+ * The given [block] is given the generated transaction ID as parameter.
+ * The receiver of the given [block] is a special [StompSession] that automatically fills the `transaction` header
+ * (if absent) for all SEND, ACK, and NACK frames.
+ *
+ * The transaction is committed if the block executes successfully, and aborted in case of exception.
+ * Any exception thrown by the block is re-thrown after sending the ABORT frame.
  */
-suspend inline fun <T> StompSession.withTransaction(transactionId: String, block: StompSession.() -> T): T {
+suspend fun <T> StompSession.withTransaction(block: StompSession.(transactionId: String) -> T): T {
+    val transactionId = generateUuid()
     begin(transactionId)
     try {
-        val result = block()
+        val result = TransactionStompSession(this, transactionId).block(transactionId)
         commit(transactionId)
         return result
     } catch (e: Exception) {

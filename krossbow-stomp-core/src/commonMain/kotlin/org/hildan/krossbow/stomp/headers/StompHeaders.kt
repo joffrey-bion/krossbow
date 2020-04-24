@@ -158,7 +158,7 @@ class StompConnectedHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeade
 
 class StompSendHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val destination: String by header()
-    val transaction: String? by optionalHeader()
+    var transaction: String? by mutableOptionalHeader()
 
     constructor(
         destination: String,

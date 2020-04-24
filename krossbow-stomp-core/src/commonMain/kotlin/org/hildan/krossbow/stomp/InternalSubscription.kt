@@ -7,7 +7,7 @@ import org.hildan.krossbow.stomp.frame.StompFrame
 internal class InternalSubscription<out T>(
     override val id: String,
     private val convertMessage: (StompFrame.Message) -> T,
-    private val internalSession: InternalStompSession
+    private val internalSession: BaseStompSession
 ) : StompSubscription<T> {
 
     private val internalMsgChannel: Channel<T> =
