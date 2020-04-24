@@ -1,79 +1,26 @@
 package org.hildan.krossbow.stomp.headers
 
 import org.hildan.krossbow.stomp.config.HeartBeat
-import org.hildan.krossbow.stomp.headers.HeaderKeys.ACCEPT_VERSION
-import org.hildan.krossbow.stomp.headers.HeaderKeys.ACK
-import org.hildan.krossbow.stomp.headers.HeaderKeys.CONTENT_LENGTH
-import org.hildan.krossbow.stomp.headers.HeaderKeys.CONTENT_TYPE
-import org.hildan.krossbow.stomp.headers.HeaderKeys.DESTINATION
-import org.hildan.krossbow.stomp.headers.HeaderKeys.HEART_BEAT
-import org.hildan.krossbow.stomp.headers.HeaderKeys.HOST
-import org.hildan.krossbow.stomp.headers.HeaderKeys.ID
-import org.hildan.krossbow.stomp.headers.HeaderKeys.LOGIN
-import org.hildan.krossbow.stomp.headers.HeaderKeys.MESSAGE
-import org.hildan.krossbow.stomp.headers.HeaderKeys.MESSAGE_ID
-import org.hildan.krossbow.stomp.headers.HeaderKeys.PASSCODE
-import org.hildan.krossbow.stomp.headers.HeaderKeys.RECEIPT
-import org.hildan.krossbow.stomp.headers.HeaderKeys.RECEIPT_ID
-import org.hildan.krossbow.stomp.headers.HeaderKeys.SERVER
-import org.hildan.krossbow.stomp.headers.HeaderKeys.SESSION
-import org.hildan.krossbow.stomp.headers.HeaderKeys.SUBSCRIPTION
-import org.hildan.krossbow.stomp.headers.HeaderKeys.TRANSACTION
-import org.hildan.krossbow.stomp.headers.HeaderKeys.VERSION
+import org.hildan.krossbow.stomp.headers.HeaderNames.ACCEPT_VERSION
+import org.hildan.krossbow.stomp.headers.HeaderNames.ACK
+import org.hildan.krossbow.stomp.headers.HeaderNames.CONTENT_LENGTH
+import org.hildan.krossbow.stomp.headers.HeaderNames.CONTENT_TYPE
+import org.hildan.krossbow.stomp.headers.HeaderNames.DESTINATION
+import org.hildan.krossbow.stomp.headers.HeaderNames.HEART_BEAT
+import org.hildan.krossbow.stomp.headers.HeaderNames.HOST
+import org.hildan.krossbow.stomp.headers.HeaderNames.ID
+import org.hildan.krossbow.stomp.headers.HeaderNames.LOGIN
+import org.hildan.krossbow.stomp.headers.HeaderNames.MESSAGE
+import org.hildan.krossbow.stomp.headers.HeaderNames.MESSAGE_ID
+import org.hildan.krossbow.stomp.headers.HeaderNames.PASSCODE
+import org.hildan.krossbow.stomp.headers.HeaderNames.RECEIPT
+import org.hildan.krossbow.stomp.headers.HeaderNames.RECEIPT_ID
+import org.hildan.krossbow.stomp.headers.HeaderNames.SERVER
+import org.hildan.krossbow.stomp.headers.HeaderNames.SESSION
+import org.hildan.krossbow.stomp.headers.HeaderNames.SUBSCRIPTION
+import org.hildan.krossbow.stomp.headers.HeaderNames.TRANSACTION
+import org.hildan.krossbow.stomp.headers.HeaderNames.VERSION
 import org.hildan.krossbow.utils.generateUuid
-
-object HeaderKeys {
-    const val ACCEPT_VERSION = "accept-version"
-    const val ACK = "ack"
-    const val CONTENT_LENGTH = "content-length"
-    const val CONTENT_TYPE = "content-type"
-    const val DESTINATION = "destination"
-    const val HEART_BEAT = "heart-beat"
-    const val HOST = "host"
-    const val ID = "id"
-    const val LOGIN = "login"
-    const val MESSAGE = "message"
-    const val MESSAGE_ID = "message-id"
-    const val PASSCODE = "passcode"
-    const val RECEIPT = "receipt"
-    const val RECEIPT_ID = "receipt-id"
-    const val SERVER = "server"
-    const val SESSION = "session"
-    const val SUBSCRIPTION = "subscription"
-    const val TRANSACTION = "transaction"
-    const val VERSION = "version"
-}
-
-/**
- * Represents possible values for the
- * [`ack` header](https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header).
- */
-enum class AckMode(val headerValue: String) {
-    /**
-     * When the ack mode is auto, then the client does not need to send the server ACK frames for the messages it
-     * receives. The server will assume the client has received the message as soon as it sends it to the client. This
-     * acknowledgment mode can cause messages being transmitted to the client to get dropped.
-     */
-    AUTO("auto"),
-    /**
-     * When the ack mode is client, then the client MUST send the server ACK frames for the messages it processes. If
-     * the connection fails before a client sends an ACK frame for the message the server will assume the message has
-     * not been processed and MAY redeliver the message to another client. The ACK frames sent by the client will be
-     * treated as a cumulative acknowledgment. This means the acknowledgment operates on the message specified in the
-     * ACK frame and all messages sent to the subscription before the ACK'ed message.
-     */
-    CLIENT("client"),
-    /**
-     * When the ack mode is client-individual, the acknowledgment operates just like the client acknowledgment mode
-     * except that the ACK or NACK frames sent by the client are not cumulative. This means that an ACK or NACK frame
-     * for a subsequent message MUST NOT cause a previous message to get acknowledged.
-     */
-    CLIENT_INDIVIDUAL("client-individual");
-
-    companion object {
-        fun fromHeader(value: String) = values().first { it.headerValue == value }
-    }
-}
 
 interface StompHeaders : MutableMap<String, String> {
 
@@ -284,9 +231,9 @@ class StompErrorHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     )
 }
 
-private fun StompHeaders.acceptVersionHeader() = header(HeaderKeys.ACCEPT_VERSION) { it.split(',') }
+private fun StompHeaders.acceptVersionHeader() = header(ACCEPT_VERSION) { it.split(',') }
 
-private fun StompHeaders.heartBeatHeader() = optionalHeader(HeaderKeys.HEART_BEAT) { it.toHeartBeat() }
+private fun StompHeaders.heartBeatHeader() = optionalHeader(HEART_BEAT) { it.toHeartBeat() }
 
 private fun String.toHeartBeat(): HeartBeat {
     val (minSendPeriod, expectedReceivePeriod) = split(',')

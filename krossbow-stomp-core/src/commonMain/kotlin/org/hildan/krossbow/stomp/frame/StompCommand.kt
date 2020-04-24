@@ -26,7 +26,7 @@ enum class StompCommand(
     companion object {
         private val valuesByText = values().associateBy { it.text }
 
-        fun parse(text: String) = valuesByText[text] ?: throw InvalidStompCommandException(text)
+        internal fun parse(text: String) = valuesByText[text] ?: throw InvalidStompCommandException(text)
     }
 }
 
