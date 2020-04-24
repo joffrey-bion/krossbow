@@ -1,5 +1,18 @@
 # Change Log
 
+## [0.11.1](https://github.com/joffrey-bion/krossbow/tree/0.11.1) (2020-04-24)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.11.1...0.11.1)
+
+**Fixed bugs:**
+
+- LostReceiptException thrown on external timeout [\#48](https://github.com/joffrey-bion/krossbow/issues/48)
+
+**Implemented enhancements:**
+
+- Support for STOMP frame instead of CONNECT [\#50](https://github.com/joffrey-bion/krossbow/issues/50)
+- Add support for transaction frames \(BEGIN/COMMIT/ABORT\) [\#45](https://github.com/joffrey-bion/krossbow/issues/45)
+- Add support for ACK/NACK frames [\#44](https://github.com/joffrey-bion/krossbow/issues/44)
+
 ## [0.11.1](https://github.com/joffrey-bion/krossbow/tree/0.11.1) (2020-04-15)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.11.0...0.11.1)
 

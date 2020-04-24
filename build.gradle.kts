@@ -17,7 +17,7 @@ plugins {
 
 allprojects {
     group = "org.hildan.krossbow"
-    version = "0.11.1"
+    version = "0.12.0"
 }
 
 val Project.githubUser get() = "joffrey-bion"
