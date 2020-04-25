@@ -41,7 +41,6 @@ internal object StompDecoder {
     private fun Input.readStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders =
             utf8LineSequence()
                 .takeWhile { it.isNotEmpty() } // empty line marks end of headers
-                .asIterable()
                 .parseLinesAsStompHeaders(shouldUnescapeHeaders)
 
     private fun Input.utf8LineSequence(): Sequence<String> = sequence {
@@ -65,7 +64,7 @@ internal object StompDecoder {
         FrameBody.Text(this)
     }
 
-    private fun Iterable<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders {
+    private fun Sequence<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders {
         val headersMap = mutableMapOf<String, String>()
         forEach { line ->
             val (rawKey, rawValue) = line.split(':', ignoreCase = false, limit = 2)
