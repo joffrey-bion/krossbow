@@ -1,7 +1,7 @@
 # Change Log
 
-## [0.11.1](https://github.com/joffrey-bion/krossbow/tree/0.11.1) (2020-04-24)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.11.1...0.11.1)
+## [0.12.0](https://github.com/joffrey-bion/krossbow/tree/0.12.0) (2020-04-24)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.11.1...0.12.0)
 
 **Fixed bugs:**
 
