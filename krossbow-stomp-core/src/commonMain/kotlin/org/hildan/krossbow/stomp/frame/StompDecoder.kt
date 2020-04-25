@@ -43,30 +43,10 @@ internal object StompDecoder {
                 .takeWhile { it.isNotEmpty() } // empty line marks end of headers
                 .parseLinesAsStompHeaders(shouldUnescapeHeaders)
 
-    private fun Input.utf8LineSequence(): Sequence<String> = sequence {
-        while (true) {
-            val line = readUTF8Line(estimate = 16) ?: error("Unexpected end of input")
-            yield(line)
-        }
-    }
-
-    private fun Input.readBodyBytes(contentLength: Int?) = when (contentLength) {
-        0 -> null
-        null -> readUpToNullCharacter()
-        else -> readBytes(contentLength)
-    }
-
-    private fun Input.readUpToNullCharacter() = buildPacket { readUntilDelimiter(NULL_BYTE, this) }.readBytes()
-
-    private fun ByteArray.toFrameBody(binary: Boolean) = if (binary) {
-        FrameBody.Binary(this)
-    } else {
-        FrameBody.Text(this)
-    }
-
     private fun Sequence<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders {
         val headersMap = mutableMapOf<String, String>()
         forEach { line ->
+            // the colon ':' is safe to use to split the line because it is escaped as \c (see HeaderEscaper)
             val (rawKey, rawValue) = line.split(':', ignoreCase = false, limit = 2)
             val key = if (shouldUnescapeHeaders) HeaderEscaper.unescape(rawKey) else rawKey
             val value = if (shouldUnescapeHeaders) HeaderEscaper.unescape(rawValue) else rawValue
@@ -79,6 +59,27 @@ internal object StompDecoder {
             }
         }
         return headersMap.asStompHeaders()
+    }
+
+    private fun Input.utf8LineSequence(): Sequence<String> = sequence {
+        while (true) {
+            val line = readUTF8Line(estimate = 16) ?: error("Unexpected end of input")
+            yield(line)
+        }
+    }
+
+    private fun Input.readBodyBytes(contentLength: Int?) = when (contentLength) {
+        0 -> null
+        null -> readUntilNullByte()
+        else -> readBytes(contentLength)
+    }
+
+    private fun Input.readUntilNullByte() = buildPacket { readUntilDelimiter(NULL_BYTE, this) }.readBytes()
+
+    private fun ByteArray.toFrameBody(binary: Boolean) = if (binary) {
+        FrameBody.Binary(this)
+    } else {
+        FrameBody.Text(this)
     }
 
     private fun Input.expectNullOctet() {
