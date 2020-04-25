@@ -26,6 +26,7 @@ internal object StompDecoder {
             val command = readStompCommand()
             val headers = readStompHeaders(command.supportsHeaderEscapes)
             val body = readBodyBytes(headers.contentLength)?.toFrameBody(isBinary)
+            expectNullOctet()
             return StompFrame.create(command, headers, body)
         } catch (e: Exception) {
             throw InvalidStompFrameException(e)
@@ -79,6 +80,13 @@ internal object StompDecoder {
             }
         }
         return headersMap.asStompHeaders()
+    }
+
+    private fun Input.expectNullOctet() {
+        val byte = readByte()
+        if (byte != NULL_BYTE) {
+            throw IllegalStateException("Expected NULL byte at end of frame")
+        }
     }
 }
 
