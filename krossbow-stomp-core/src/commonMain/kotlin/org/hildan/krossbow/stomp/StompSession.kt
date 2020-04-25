@@ -3,7 +3,6 @@ package org.hildan.krossbow.stomp
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
-import org.hildan.krossbow.stomp.frame.asText
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.utils.generateUuid
@@ -213,7 +212,7 @@ suspend fun StompSession.subscribeRaw(destination: String): StompSubscription<St
  * If auto-receipt is disabled, this method returns immediately.
  */
 suspend fun StompSession.subscribeText(destination: String): StompSubscription<String?> =
-    subscribe(destination) { it.body?.asText() }
+    subscribe(destination) { it.bodyAsText }
 
 /**
  * Subscribes to the given [destination], expecting binary message bodies.

@@ -1,5 +1,7 @@
 package org.hildan.krossbow.stomp.frame
 
+import kotlinx.io.charsets.Charset
+import kotlinx.io.charsets.Charsets
 import org.hildan.krossbow.stomp.headers.StompAbortHeaders
 import org.hildan.krossbow.stomp.headers.StompAckHeaders
 import org.hildan.krossbow.stomp.headers.StompBeginHeaders
@@ -21,6 +23,16 @@ sealed class StompFrame(
     open val headers: StompHeaders,
     open val body: FrameBody? = null
 ) {
+    /**
+     * The body of this frame as text.
+     *
+     * If this STOMP frame comes from a text web socket frame, then the body is simply the body text.
+     * If this STOMP frame comes from a binary web socket frame, the binary body is converted to text based on the
+     * `content-type` header of this frame. This conversion respects the conventions defined by the
+     * [STOMP specification](https://stomp.github.io/stomp-specification-1.2.html#Header_content-type).
+     */
+    val bodyAsText: String? by lazy { body?.asText(headers.contentType) }
+
     data class Stomp(override val headers: StompConnectHeaders) : StompFrame(StompCommand.STOMP, headers)
 
     data class Connect(override val headers: StompConnectHeaders) : StompFrame(StompCommand.CONNECT, headers)
@@ -88,3 +100,35 @@ sealed class StompFrame(
         }
     }
 }
+
+private fun FrameBody.asText(contentType: String?): String? = when (this) {
+    is FrameBody.Text -> text
+    is FrameBody.Binary -> decodeAsText(inferCharset(contentType))
+}
+
+// From the specification: https://stomp.github.io/stomp-specification-1.2.html#Header_content-type
+private fun inferCharset(contentTypeHeader: String?): Charset {
+    if (contentTypeHeader == null) {
+        // "If the content-type header is set, its value MUST be a MIME type which describes the format of the body.
+        // Otherwise, the receiver SHOULD consider the body to be a binary blob."
+        throw UnsupportedOperationException("Binary frame without content-type header cannot be converted to text")
+    }
+    // "The implied text encoding for MIME types starting with text/ is UTF-8. If you are using a text based MIME type
+    // with a different encoding then you SHOULD append ;charset= to the MIME type. For example, text/html;
+    // charset=utf-16 SHOULD be used if your sending an HTML body in UTF-16 encoding. The ;charset= SHOULD also get
+    // appended to any non text/ MIME types which can be interpreted as text. A good example of this would be a UTF-8
+    // encoded XML. Its content-type SHOULD get set to application/xml;charset=utf-8"
+    val charset = extractCharset(contentTypeHeader)
+    return when {
+        charset != null -> charset
+        contentTypeHeader.startsWith("text/") -> Charsets.UTF_8
+        else -> throw UnsupportedOperationException("Binary frame with content-type '$contentTypeHeader' cannot be " +
+                "converted to text")
+    }
+}
+
+private fun extractCharset(mimeTypeText: String): Charset? = mimeTypeText.splitToSequence(';')
+    .drop(1)
+    .map { it.substringAfter("charset=", "") }
+    .firstOrNull { it.isNotEmpty() }
+    ?.let { Charset.forName(it) }
