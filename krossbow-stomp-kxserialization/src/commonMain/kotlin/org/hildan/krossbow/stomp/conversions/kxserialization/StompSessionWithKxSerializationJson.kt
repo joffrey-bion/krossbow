@@ -46,8 +46,8 @@ private class StompSessionWithKxSerializationJson(
         headers: StompSubscribeHeaders,
         deserializer: DeserializationStrategy<T>
     ): StompSubscription<T> = subscribe(headers) { msg ->
-        deserializeOrNull(msg, deserializer) ?:
-            error("Empty frame bodies are not allowed in this subscription, please use subscribeOptional() " +
+        deserializeOrNull(msg, deserializer)
+            ?: error("Empty frame bodies are not allowed in this subscription, please use subscribeOptional() " +
                     "instead to allow them. Cannot deserialize object of type ${deserializer.descriptor.serialName} " +
                     "from null body")
     }
