@@ -76,10 +76,10 @@ internal object StompDecoder {
 
     private fun Input.readUntilNullByte() = buildPacket { readUntilDelimiter(NULL_BYTE, this) }.readBytes()
 
-    private fun ByteArray.toFrameBody(binary: Boolean) = if (binary) {
-        FrameBody.Binary(this)
-    } else {
-        FrameBody.Text(this)
+    private fun ByteArray.toFrameBody(binary: Boolean) = when {
+        isEmpty() -> null
+        binary -> FrameBody.Binary(this)
+        else -> FrameBody.Text(this)
     }
 
     private fun Input.expectNullOctet() {
