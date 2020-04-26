@@ -11,12 +11,13 @@ import org.hildan.krossbow.stomp.headers.HeaderEscaper
 internal fun StompFrame.encodeToBytes(): ByteArray = buildPacket { writeStompFrame(this@encodeToBytes) }.readBytes()
 
 private fun Output.writeStompFrame(stompFrame: StompFrame) {
-    writeText(stompFrame.encodedPreamble, charset = Charsets.UTF_8)
+    // the preamble has to be encoded in UTF-8 as per the specification
+    writeText(stompFrame.preambleText, charset = Charsets.UTF_8)
     stompFrame.body?.bytes?.let { writeFully(it) }
     writeByte(0)
 }
 
-internal fun StompFrame.encodeToText(): String = "$encodedPreamble${body.encodeToText()}\u0000"
+internal fun StompFrame.encodeToText(): String = "$preambleText${body.encodeToText()}\u0000"
 
 private fun FrameBody?.encodeToText(): String = when (this) {
     null -> ""
@@ -24,22 +25,17 @@ private fun FrameBody?.encodeToText(): String = when (this) {
     is FrameBody.Text -> text
 }
 
-private val StompFrame.encodedPreamble: String
-    get() {
-        val preamble = StringBuilder()
-        preamble.append(command.text)
-        preamble.append('\n')
-        headers.forEach { (k, v) ->
-            preamble.append(encodeHeader(k, v, command.supportsHeaderEscapes))
-            preamble.append('\n')
+private val StompFrame.preambleText: String
+    get() = buildString {
+        append(command.text)
+        append('\n')
+        headers.forEach { (name, value) ->
+            append(maybeEscape(name))
+            append(':')
+            append(maybeEscape(value))
+            append('\n')
         }
-        preamble.append('\n') // additional empty line to separate the preamble from the body
-        return preamble.toString()
+        append('\n') // additional empty line to separate the preamble from the body
     }
 
-private fun encodeHeader(key: String, value: String, escapeContent: Boolean): String =
-    if (escapeContent) {
-        "${HeaderEscaper.escape(key)}:${HeaderEscaper.escape(value)}"
-    } else {
-        "$key:$value"
-    }
+private fun StompFrame.maybeEscape(s: String) = if (command.supportsHeaderEscapes) HeaderEscaper.escape(s) else s
