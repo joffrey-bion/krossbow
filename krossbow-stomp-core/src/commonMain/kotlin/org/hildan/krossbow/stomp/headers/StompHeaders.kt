@@ -58,7 +58,7 @@ internal fun headersOf(
     return headersMap.asStompHeaders()
 }
 
-class StompConnectHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val host: String by header()
     val acceptVersion: List<String> by acceptVersionHeader()
     val login: String? by optionalHeader()
@@ -82,7 +82,7 @@ class StompConnectHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders
     )
 }
 
-class StompConnectedHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompConnectedHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val version: String by header()
     val session: String? by optionalHeader()
     val server: String? by optionalHeader()
@@ -103,7 +103,7 @@ class StompConnectedHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeade
     )
 }
 
-class StompSendHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompSendHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val destination: String by header()
     var transaction: String? by mutableOptionalHeader()
 
@@ -122,7 +122,7 @@ class StompSendHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     )
 }
 
-class StompSubscribeHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val destination: String by header()
     val id: String by header()
     val ack: AckMode by optionalHeader(default = AckMode.AUTO) { AckMode.fromHeader(it) }
@@ -142,44 +142,44 @@ class StompSubscribeHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeade
     )
 }
 
-class StompUnsubscribeHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompUnsubscribeHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val id: String by header()
 
     constructor(id: String) : this(headersOf(ID to id))
 }
 
-class StompDisconnectHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompDisconnectHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
 
     constructor(receipt: String? = null) : this(headersOf(RECEIPT to receipt))
 }
 
-class StompAckHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompAckHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val id: String by header()
     val transaction: String? by optionalHeader()
 
     constructor(id: String, transaction: String? = null) : this(headersOf(ID to id, TRANSACTION to transaction))
 }
 
-class StompNackHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompNackHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val id: String by header()
     val transaction: String? by optionalHeader()
 
     constructor(id: String, transaction: String? = null) : this(headersOf(ID to id, TRANSACTION to transaction))
 }
 
-class StompBeginHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompBeginHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val transaction: String by header()
 
     constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
 }
 
-class StompCommitHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompCommitHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val transaction: String by header()
 
     constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
 }
 
-class StompAbortHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompAbortHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val transaction: String by header()
 
     constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
@@ -208,13 +208,13 @@ data class StompMessageHeaders(private val rawHeaders: StompHeaders) : StompHead
     )
 }
 
-class StompReceiptHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompReceiptHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val receiptId: String by header(RECEIPT_ID)
 
     constructor(receiptId: String) : this(headersOf(RECEIPT_ID to receiptId))
 }
 
-class StompErrorHeaders(rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompErrorHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val message: String? by optionalHeader()
     val receiptId: String? by optionalHeader(RECEIPT_ID)
 
