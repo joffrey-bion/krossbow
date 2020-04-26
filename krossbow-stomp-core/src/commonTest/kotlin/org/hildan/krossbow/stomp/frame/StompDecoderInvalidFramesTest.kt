@@ -59,6 +59,12 @@ class StompDecoderInvalidFramesTest {
         assertInvalidFrame("MESSAGE\ncontent-length:10\n\nabc$nullChar")
     }
 
+    @Test
+    fun decode_failsIfNonEolCharactersAfterEndOfFrame() {
+        assertInvalidFrame("MESSAGE\n\nabc${nullChar}invalid")
+        assertInvalidFrame("MESSAGE\n\nabc$nullChar\n\r\ninvalid")
+    }
+
     @OptIn(ExperimentalStdlibApi::class)
     private fun assertInvalidFrame(frameText: String) {
         assertFailsWith<InvalidStompFrameException> {

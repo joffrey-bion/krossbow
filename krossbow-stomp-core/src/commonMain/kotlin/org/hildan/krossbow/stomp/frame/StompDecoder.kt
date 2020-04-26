@@ -4,6 +4,7 @@ import kotlinx.io.core.ByteReadPacket
 import kotlinx.io.core.Input
 import kotlinx.io.core.buildPacket
 import kotlinx.io.core.readBytes
+import kotlinx.io.core.readText
 import kotlinx.io.core.readUTF8Line
 import kotlinx.io.core.readUntilDelimiter
 import kotlinx.io.core.use
@@ -27,6 +28,7 @@ internal object StompDecoder {
             val headers = readStompHeaders(command.supportsHeaderEscapes)
             val body = readBodyBytes(headers.contentLength)?.toFrameBody(isBinary)
             expectNullOctet()
+            expectOnlyEOLs()
             return StompFrame.create(command, headers, body)
         } catch (e: Exception) {
             throw InvalidStompFrameException(e)
@@ -86,6 +88,15 @@ internal object StompDecoder {
         val byte = readByte()
         if (byte != NULL_BYTE) {
             throw IllegalStateException("Expected NULL byte at end of frame")
+        }
+    }
+
+    private fun Input.expectOnlyEOLs() {
+        if (!endOfInput) {
+            val endText = readText()
+            if (endText.any { it != '\n' && it != '\r' }) {
+                error("Unexpected non-EOL characters after end-of-frame NULL character: $endText")
+            }
         }
     }
 }
