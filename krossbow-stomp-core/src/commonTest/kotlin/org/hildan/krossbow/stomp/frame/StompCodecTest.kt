@@ -1,6 +1,8 @@
 package org.hildan.krossbow.stomp.frame
 
+import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
+import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -9,59 +11,134 @@ import kotlin.test.assertTrue
 class StompCodecTest {
     private val nullChar = '\u0000'
 
-    private val frameText1 = """
-        MESSAGE
-        destination:test
-        message-id:123
-        subscription:42
-        content-length:24
-        
-        The body of the message.$nullChar
-    """.trimIndent()
+    @Test
+    fun stomp_basic() {
+        val frameText = """
+            STOMP
+            host:some.host
+            accept-version:1.2
+            
+            $nullChar
+        """.trimIndent()
 
-    private val frameText2WithoutBodyContentLength0 = """
-        MESSAGE
-        destination:test
-        message-id:123
-        subscription:42
-        content-length:0
-        
-        $nullChar
-    """.trimIndent()
-
-    private val headers1 = StompMessageHeaders(
-        destination = "test",
-        messageId = "123",
-        subscription = "42"
-    ).apply {
-        contentLength = 24
+        val headers = StompConnectHeaders(host = "some.host")
+        val frame = StompFrame.Stomp(headers)
+        assertEncodingDecoding(frameText, frame, frame)
     }
-
-    private val headers2 = StompMessageHeaders(
-        destination = "test",
-        messageId = "123",
-        subscription = "42"
-    ).apply {
-        contentLength = 0
-    }
-
-    data class Expectation(val frameText: String, val expectedTextFrame: StompFrame, val expectedBinFrame: StompFrame)
-
-    private val expectations = listOf(
-        Expectation(
-            frameText1,
-            StompFrame.Message(headers1, FrameBody.Text("The body of the message.")),
-            StompFrame.Message(headers1, FrameBody.Binary("The body of the message.".encodeToByteArray()))
-        ),
-        Expectation(
-            frameText2WithoutBodyContentLength0,
-            StompFrame.Message(headers2, null),
-            StompFrame.Message(headers2, null)
-        )
-    )
 
     @Test
-    fun decode_message_noBody_noContentLength() {
+    fun connect_basic() {
+        val frameText = """
+            CONNECT
+            host:some.host
+            accept-version:1.2
+            
+            $nullChar
+        """.trimIndent()
+
+        val headers = StompConnectHeaders(host = "some.host")
+        val frame = StompFrame.Connect(headers)
+        assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
+    fun connect_credentials() {
+        val frameText = """
+            CONNECT
+            host:some.host
+            accept-version:1.2
+            login:bob
+            passcode:mypass
+            
+            $nullChar
+        """.trimIndent()
+
+        val headers = StompConnectHeaders(host = "some.host", login = "bob", passcode = "mypass")
+        val frame = StompFrame.Connect(headers)
+        assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
+    fun connect_versions() {
+        val frameText = """
+            CONNECT
+            host:some.host
+            accept-version:1.0,1.1,1.2
+            
+            $nullChar
+        """.trimIndent()
+
+        val headers = StompConnectHeaders(host = "some.host", acceptVersion = listOf("1.0", "1.1", "1.2"))
+        val frame = StompFrame.Connect(headers)
+        assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
+    fun send_noBody_noContentLength() {
+        val frameText = """
+            SEND
+            destination:test
+            
+            $nullChar
+        """.trimIndent()
+
+        val headers = StompSendHeaders(destination = "test")
+        val frame = StompFrame.Send(headers, body = null)
+        assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
+    fun send_classicTextBody_noContentLength() {
+        val frameText = """
+            SEND
+            destination:test
+            
+            The body of the message.$nullChar
+        """.trimIndent()
+
+        val headers = StompSendHeaders(destination = "test")
+        val bodyText = "The body of the message."
+        val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        assertEncodingDecoding(frameText, textFrame, binFrame)
+    }
+
+    @Test
+    fun send_classicTextBody_withContentLength() {
+        val frameText = """
+            SEND
+            destination:test
+            content-length:24
+            
+            The body of the message.$nullChar
+        """.trimIndent()
+
+        val headers = StompSendHeaders(destination = "test").apply { contentLength = 24 }
+        val bodyText = "The body of the message."
+        val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        assertEncodingDecoding(frameText, textFrame, binFrame)
+    }
+
+    @Test
+    fun send_bodyWithNullChar_withContentLength() {
+        val frameText = """
+            SEND
+            destination:test
+            content-length:25
+            
+            The body of$nullChar the message.$nullChar
+        """.trimIndent()
+
+        val headers = StompSendHeaders(destination = "test").apply { contentLength = 25 }
+        val bodyText = "The body of$nullChar the message."
+        val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        assertEncodingDecoding(frameText, textFrame, binFrame)
+    }
+
+    @Test
+    fun message_noBody_noContentLength() {
         val frameText = """
             MESSAGE
             destination:test
@@ -70,19 +147,18 @@ class StompCodecTest {
             
             $nullChar
         """.trimIndent()
-        val expectedHeaders = StompMessageHeaders(
+
+        val headers = StompMessageHeaders(
             destination = "test",
             messageId = "123",
             subscription = "42"
         )
-
-        val expectedFrame = StompFrame.Message(expectedHeaders, body = null)
-        assertEquals(expectedFrame, StompDecoder.decode(frameText))
-        assertEquals(expectedFrame, StompDecoder.decode(frameText.encodeToByteArray()))
+        val frame = StompFrame.Message(headers, body = null)
+        assertEncodingDecoding(frameText, frame, frame)
     }
 
     @Test
-    fun decode_message_classicTextBody_noContentLength() {
+    fun message_classicTextBody_noContentLength() {
         val frameText = """
             MESSAGE
             destination:test
@@ -91,21 +167,20 @@ class StompCodecTest {
             
             The body of the message.$nullChar
         """.trimIndent()
-        val expectedHeaders = StompMessageHeaders(
+
+        val headers = StompMessageHeaders(
             destination = "test",
             messageId = "123",
             subscription = "42"
         )
-        val expectedBodyText = "The body of the message."
-
-        val expectedFrame = StompFrame.Message(expectedHeaders, FrameBody.Text(expectedBodyText))
-        assertEquals(expectedFrame, StompDecoder.decode(frameText))
-        val expectedBinFrame = StompFrame.Message(expectedHeaders, FrameBody.Binary(expectedBodyText.encodeToByteArray()))
-        assertEquals(expectedBinFrame, StompDecoder.decode(frameText.encodeToByteArray()))
+        val bodyText = "The body of the message."
+        val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
     @Test
-    fun decodeText_message_classicTextBody_withContentLength() {
+    fun message_classicTextBody_withContentLength() {
         val frameText = """
             MESSAGE
             destination:test
@@ -115,23 +190,22 @@ class StompCodecTest {
             
             The body of the message.$nullChar
         """.trimIndent()
-        val expectedHeaders = StompMessageHeaders(
+
+        val headers = StompMessageHeaders(
             destination = "test",
             messageId = "123",
             subscription = "42"
         ).apply {
             contentLength = 24
         }
-        val expectedBodyText = "The body of the message."
-
-        val expectedFrame = StompFrame.Message(expectedHeaders, FrameBody.Text(expectedBodyText))
-        assertEquals(expectedFrame, StompDecoder.decode(frameText))
-        val expectedBinFrame = StompFrame.Message(expectedHeaders, FrameBody.Binary(expectedBodyText.encodeToByteArray()))
-        assertEquals(expectedBinFrame, StompDecoder.decode(frameText.encodeToByteArray()))
+        val bodyText = "The body of the message."
+        val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
     @Test
-    fun decodeText_message_bodyWithNullChar_withContentLength() {
+    fun message_bodyWithNullChar_withContentLength() {
         val frameText = """
             MESSAGE
             destination:test
@@ -141,71 +215,24 @@ class StompCodecTest {
             
             The body of$nullChar the message.$nullChar
         """.trimIndent()
-        val expectedHeaders = StompMessageHeaders(
+
+        val headers = StompMessageHeaders(
             destination = "test",
             messageId = "123",
             subscription = "42"
         ).apply {
             contentLength = 25
         }
-        val expectedBodyText = "The body of$nullChar the message."
-
-        val expectedFrame = StompFrame.Message(expectedHeaders, FrameBody.Text(expectedBodyText))
-        assertEquals(expectedFrame, StompDecoder.decode(frameText))
-        val expectedBinFrame = StompFrame.Message(expectedHeaders, FrameBody.Binary(expectedBodyText.encodeToByteArray()))
-        assertEquals(expectedBinFrame, StompDecoder.decode(frameText.encodeToByteArray()))
+        val bodyText = "The body of$nullChar the message."
+        val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
-    @Test
-    fun decodeText_message_bodyWithNullChar_noContentLength() {
-        val frameText = """
-            MESSAGE
-            destination:test
-            message-id:123
-            subscription:42
-            
-            The body$nullChar this should be ignored $nullChar
-        """.trimIndent()
-        val expectedHeaders = StompMessageHeaders(
-            destination = "test",
-            messageId = "123",
-            subscription = "42"
-        )
-        val expectedBodyText = "The body"
-
-        val expectedFrame = StompFrame.Message(expectedHeaders, FrameBody.Text(expectedBodyText))
-        assertEquals(expectedFrame, StompDecoder.decode(frameText))
-        val expectedBinFrame = StompFrame.Message(expectedHeaders, FrameBody.Binary(expectedBodyText.encodeToByteArray()))
-        assertEquals(expectedBinFrame, StompDecoder.decode(frameText.encodeToByteArray()))
-    }
-
-    @Test
-    fun testDecodeText() {
-        for (e in expectations) {
-            val actualFrame = StompDecoder.decode(e.frameText)
-            assertEquals(e.expectedTextFrame, actualFrame)
-        }
-    }
-
-    @Test
-    fun testDecodeBytes() {
-        for (e in expectations) {
-            val actualFrame = StompDecoder.decode(e.frameText.encodeToByteArray())
-            assertEquals(e.expectedBinFrame, actualFrame)
-        }
-    }
-
-    @Test
-    fun testEncodeToText() {
-        for (e in expectations) {
-            assertEquals(e.frameText, e.expectedTextFrame.encodeToText())
-        }
-    }
-
-    @Test
-    fun testEncodeToBytes() {
-        for (e in expectations) {
-            assertTrue(e.frameText.encodeToByteArray().contentEquals(e.expectedTextFrame.encodeToBytes()))
-        }
+    private fun assertEncodingDecoding(frameText: String, textFrame: StompFrame, binFrame: StompFrame) {
+        assertEquals(textFrame, StompDecoder.decode(frameText))
+        assertEquals(binFrame, StompDecoder.decode(frameText.encodeToByteArray()))
+        assertEquals(frameText, textFrame.encodeToText())
+        assertTrue(frameText.encodeToByteArray().contentEquals(textFrame.encodeToBytes()))
     }
 }
