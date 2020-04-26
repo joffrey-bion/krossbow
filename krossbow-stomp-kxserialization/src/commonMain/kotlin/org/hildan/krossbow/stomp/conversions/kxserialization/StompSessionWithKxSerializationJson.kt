@@ -9,6 +9,7 @@ import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.StompSubscription
 import org.hildan.krossbow.stomp.frame.FrameBody
+import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 
@@ -45,20 +46,19 @@ private class StompSessionWithKxSerializationJson(
         headers: StompSubscribeHeaders,
         deserializer: DeserializationStrategy<T>
     ): StompSubscription<T> = subscribe(headers) { msg ->
-        val body = msg.bodyAsText
-        requireNotNull(body) {
-            "Cannot deserialize object of type ${deserializer.descriptor.serialName} from null body"
-        }
-        body.deserializeWith(deserializer)
+        deserializeOrNull(msg, deserializer) ?:
+            error("Empty frame bodies are not allowed in this subscription, please use subscribeOptional() " +
+                    "instead to allow them. Cannot deserialize object of type ${deserializer.descriptor.serialName} " +
+                    "from null body")
     }
 
     override suspend fun <T : Any> subscribeOptional(
         headers: StompSubscribeHeaders,
         deserializer: DeserializationStrategy<T>
     ): StompSubscription<T?> = subscribe(headers) { msg ->
-        msg.bodyAsText?.deserializeWith(deserializer)
+        deserializeOrNull(msg, deserializer)
     }
 
-    private fun <T : Any> String.deserializeWith(deserializer: DeserializationStrategy<T>) =
-            json.parse(deserializer, this)
+    private fun <T : Any> deserializeOrNull(msg: StompFrame.Message, deserializer: DeserializationStrategy<T>) =
+        msg.bodyAsText?.let { json.parse(deserializer, it) }
 }
