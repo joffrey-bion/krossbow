@@ -85,9 +85,8 @@ internal object StompDecoder {
     }
 
     private fun Input.expectNullOctet() {
-        val byte = readByte()
-        if (byte != NULL_BYTE) {
-            throw IllegalStateException("Expected NULL byte at end of frame")
+        if (readByte() != NULL_BYTE) {
+            error("Expected NULL byte at end of frame")
         }
     }
 
