@@ -17,6 +17,7 @@ import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
+import org.hildan.krossbow.utils.extractCharset
 
 sealed class StompFrame(
     val command: StompCommand,
@@ -126,9 +127,3 @@ private fun inferCharset(contentTypeHeader: String?): Charset {
                 "converted to text")
     }
 }
-
-private fun extractCharset(mimeTypeText: String): Charset? = mimeTypeText.splitToSequence(';')
-    .drop(1)
-    .map { it.substringAfter("charset=", "") }
-    .firstOrNull { it.isNotEmpty() }
-    ?.let { Charset.forName(it) }

@@ -1,5 +1,9 @@
 package org.hildan.krossbow.stomp.conversions
 
+import kotlinx.io.charsets.Charset
+import kotlinx.io.charsets.Charsets
+import kotlinx.io.charsets.encodeToByteArray
+import kotlinx.io.core.ExperimentalIoApi
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.StompSubscription
@@ -7,6 +11,7 @@ import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
+import org.hildan.krossbow.utils.extractCharset
 import kotlin.reflect.KClass
 
 /**
@@ -21,7 +26,12 @@ fun StompSession.withTextConversions(converter: TextMessageConverter): StompSess
 interface TextMessageConverter {
 
     /**
-     * The MIME type produced by this converter (to use as content-type header)
+     * The MIME type produced by this converter (to use as content-type header).
+     *
+     * If the media type contains a `charset` parameter and it is different from UTF-8, frames are sent as binary web
+     * socket frames (because text frames can only be UTF-8).
+     * If no `charset` is specified, or if it is specified as UTF-8, then text web socket frames are sent, which means
+     * they will be encoded as UTF-8.
      */
     val mimeType: String
 
@@ -41,6 +51,9 @@ internal class StompSessionWithClassToTextConversions(
     private val converter: TextMessageConverter
 ) : StompSession by session, StompSessionWithClassConversions {
 
+    private val charset: Charset = extractCharset(converter.mimeType) ?: Charsets.UTF_8
+    private val sendBinaryFrames: Boolean = charset != Charsets.UTF_8
+
     override suspend fun <T : Any> convertAndSend(
         headers: StompSendHeaders,
         body: T?,
@@ -49,8 +62,16 @@ internal class StompSessionWithClassToTextConversions(
         if (headers.contentType == null) {
             headers.contentType = converter.mimeType
         }
-        val frameBody = body?.let { FrameBody.Text(converter.convertToString(it, bodyType)) }
+        val bodyText = body?.let { converter.convertToString(it, bodyType) }
+        val frameBody = bodyText?.let { createBody(it) }
         return send(headers, frameBody)
+    }
+
+    @OptIn(ExperimentalIoApi::class)
+    private fun createBody(bodyText: String): FrameBody = if (sendBinaryFrames) {
+        FrameBody.Binary(charset.newEncoder().encodeToByteArray(bodyText))
+    } else {
+        FrameBody.Text(bodyText)
     }
 
     override suspend fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): StompSubscription<T> =
