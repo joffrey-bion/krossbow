@@ -14,19 +14,24 @@ A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https:/
 Any part of the public API may change until version 1.0.0 is released.
 
 This is mainly due to the fact that the project is young, but also because it has multiple dependencies on
- experimental libraries like [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) and 
- [Kotlinx IO](https://github.com/Kotlin/kotlinx-io).
+experimental libraries like [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) and 
+[Kotlinx IO](https://github.com/Kotlin/kotlinx-io).
 
 ## Supported targets
 
-This project only supports the JVM 8/11 and JavaScript targets as of now, as it was primarily built for applications
- combining Kotlin/React frontend with Kotlin Spring Boot backend.
+This project supports the JVM, browser and Node JS targets, and is tested against all 3.
+Take a look at the different web socket implementations below to see how each target is supported and by which artifact.
 
-Android support could be added mostly with build setup, using the existing adapter for OkHttp's web sockets.
-Please upvote [the corresponding issue](https://github.com/joffrey-bion/krossbow/issues/49) if you'd like to see it
-happen.
+Android should be supported by using the OkHttp web socket artifact (`krossbow-websocket-okhttp`) and one of the JVM
+STOMP artifacts.
+However, this is not tested as part of the build (which would add a lot of complexity), and thus any feedback on this
+use case is more than welcome.
+Please upvote [the corresponding issue](https://github.com/joffrey-bion/krossbow/issues/49) if you'd like to see proper
+tests and packaging for the Android target.
 
-Adding support for the Native target may require a bit more effort. Contributions are welcome in this respect, though.
+The Native target is currently unsupported, due to a lack of native web socket implementation.
+Adding support for it may require a bit more effort.
+Contributions are welcome in this respect, though.
 
 ## Supported STOMP features
 
