@@ -40,11 +40,11 @@ fun StompSession.withTextConversions(format: StringFormat, mediaType: String): S
  * [json].
  *
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType] (defaulting to
- * "application/json").
+ * "application/json;charset=utf-8").
  */
 fun StompSession.withJsonConversions(
     json: Json = Json(JsonConfiguration.Stable),
-    mediaType: String = "application/json"
+    mediaType: String = "application/json;charset=utf-8"
 ): StompSessionWithKxSerialization = withTextConversions(json, mediaType)
 
 private abstract class BaseStompSessionWithConversions(
