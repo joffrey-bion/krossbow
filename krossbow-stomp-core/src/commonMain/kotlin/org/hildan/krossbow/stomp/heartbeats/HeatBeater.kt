@@ -7,6 +7,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.selects.select
 import org.hildan.krossbow.stomp.config.HeartBeat
 
@@ -20,10 +21,10 @@ internal class HeartBeater(
 
     fun startIn(scope: CoroutineScope): Job = scope.launch(CoroutineName("stomp-heart-beat")) {
         if (heartBeat.minSendPeriodMillis > 0) {
-            outgoing.startIn(this)
+            outgoing.startIn(this + CoroutineName("stomp-heart-beat-outgoing"))
         }
         if (heartBeat.expectedPeriodMillis > 0) {
-            incoming.startIn(this)
+            incoming.startIn(this + CoroutineName("stomp-heart-beat-incoming"))
         }
     }
 
