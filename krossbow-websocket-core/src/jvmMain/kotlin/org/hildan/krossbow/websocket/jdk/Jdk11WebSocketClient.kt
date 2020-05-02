@@ -55,7 +55,7 @@ private class Jdk11WebSocketListener(
     override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? {
         // The completion of the returned CompletionStage is only used to reclaim the CharSequence.
         // The onText() method itself can be called again as soon as it completes, which can cause concurrency issues.
-        // This re-entrance is however controlled by the invocations counter, in turn controlled the call to request(n).
+        // This re-entrance is however controlled by the invocations counter, incremented by calling request(n).
         // The call to request(1) located after the message processing thus prevents issues.
         return async {
             listener.onTextMessage(data, last)
@@ -66,7 +66,7 @@ private class Jdk11WebSocketListener(
     override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? {
         // The completion of the returned CompletionStage is only used to reclaim the CharSequence.
         // The onBinary() method itself can be called again as soon as it completes, which can cause concurrency issues.
-        // This re-entrance is however controlled by the invocations counter, in turn controlled the call to request(n).
+        // This re-entrance is however controlled by the invocations counter, incremented by calling request(n).
         // The call to request(1) located after the message processing thus prevents issues.
         return async {
             listener.onBinaryMessage(data.toByteArray(), last)
