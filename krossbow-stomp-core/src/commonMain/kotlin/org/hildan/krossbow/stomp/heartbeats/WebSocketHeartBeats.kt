@@ -16,7 +16,7 @@ internal suspend fun WebSocketSession.closeForMissingHeartBeat() {
 }
 
 internal fun WebSocketFrame.isHeartBeat(): Boolean = when (this) {
-    is WebSocketFrame.Text -> text.length <= 2 && (text == "\n" || text == "\r\n")
+    is WebSocketFrame.Text -> text == "\n" || text == "\r\n"
     is WebSocketFrame.Binary -> bytes.isEOL()
     else -> false
 }
