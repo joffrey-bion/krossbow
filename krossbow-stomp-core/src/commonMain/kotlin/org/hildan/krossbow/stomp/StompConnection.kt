@@ -92,8 +92,8 @@ internal abstract class StompConnection(
         if (frame.body is FrameBody.Binary) {
             webSocketSession.sendBinary(frame.encodeToBytes())
         } else {
-            // frames without body are also sent as text because the headers are always textual
-            // Also, some sockJS implementations don't support binary frames
+            // Frames without body are also sent as text because the headers are always textual.
+            // Also, some sockJS implementations don't support binary frames.
             webSocketSession.sendText(frame.encodeToText())
         }
         heartBeater?.notifyMsgSent()
