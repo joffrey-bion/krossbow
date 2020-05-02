@@ -82,7 +82,7 @@ class JacksonConverterTest {
         launch { jsonSession.convertAndSend<Any>("/test", null) }
         val frame = session.waitForSentFrameAndSimulateCompletion()
         assertTrue(frame is StompFrame.Send)
-        assertNull(frame.bodyAsText)
+        assertNull(frame.body)
     }
 
     @Test
