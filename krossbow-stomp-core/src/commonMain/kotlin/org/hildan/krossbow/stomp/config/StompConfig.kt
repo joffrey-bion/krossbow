@@ -24,7 +24,12 @@ data class StompConfig(
      */
     var connectWithStompCommand: Boolean = false,
     /**
-     * The [HeartBeat] to use during STOMP sessions.
+     * The [HeartBeat] to request for the STOMP sessions.
+     *
+     * This is part of a negotiation as defined by the specification, and does not imply that this exact heart beat
+     * configuration will be used.
+     * The actual heart beats to use will be defined by the CONNECTED frame received from the server as a result of
+     * the negotiation.
      */
     var heartBeat: HeartBeat = HeartBeat(),
     /**
