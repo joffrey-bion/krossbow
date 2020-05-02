@@ -1,12 +1,13 @@
 package org.hildan.krossbow.stomp.conversions
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.io.charsets.Charset
 import kotlinx.io.charsets.Charsets
 import kotlinx.io.charsets.encodeToByteArray
 import kotlinx.io.core.ExperimentalIoApi
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.StompSubscription
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
@@ -74,18 +75,20 @@ internal class StompSessionWithClassToTextConversions(
         FrameBody.Text(bodyText)
     }
 
-    override suspend fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): StompSubscription<T> =
-        subscribe(headers) { frame ->
+    override fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T> =
+        subscribe(headers).map { frame ->
             convertOrNull(frame, clazz)
                 ?: error("Empty bodies are not allowed in this subscription, please use subscribeOptional instead")
         }
 
-    override suspend fun <T : Any> subscribeOptional(
-        headers: StompSubscribeHeaders,
-        clazz: KClass<T>
-    ): StompSubscription<T?> = subscribe(headers) { frame -> convertOrNull(frame, clazz) }
+    override fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T?> =
+        subscribe(headers).map { frame -> convertOrNull(frame, clazz) }
 
     private fun <T : Any> convertOrNull(msg: StompFrame.Message, clazz: KClass<T>): T? {
-        return msg.bodyAsText?.let { converter.convertFromString(it, clazz) }
+        val textBody = msg.bodyAsText
+        if (textBody.isEmpty()) {
+            return null
+        }
+        return converter.convertFromString(textBody, clazz)
     }
 }

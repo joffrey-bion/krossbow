@@ -1,5 +1,7 @@
 package org.hildan.krossbow.stomp.conversions.kxserialization
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationStrategy
@@ -9,7 +11,6 @@ import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.modules.SerialModule
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.StompSubscription
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
@@ -69,20 +70,20 @@ private abstract class BaseStompSessionWithConversions(
 
     protected abstract fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>): FrameBody?
 
-    override suspend fun <T : Any> subscribe(
+    override fun <T : Any> subscribe(
         headers: StompSubscribeHeaders,
         deserializer: DeserializationStrategy<T>
-    ): StompSubscription<T> = subscribe(headers) { frame ->
+    ): Flow<T> = subscribe(headers).map { frame ->
         deserializeOrNull(frame, deserializer)
             ?: error("Empty frame bodies are not allowed in this subscription, please use subscribeOptional() " +
                     "instead to allow them. Cannot deserialize object of type ${deserializer.descriptor.serialName} " +
                     "from null body")
     }
 
-    override suspend fun <T : Any> subscribeOptional(
+    override fun <T : Any> subscribeOptional(
         headers: StompSubscribeHeaders,
         deserializer: DeserializationStrategy<T>
-    ): StompSubscription<T?> = subscribe(headers) { frame -> deserializeOrNull(frame, deserializer) }
+    ): Flow<T?> = subscribe(headers).map { frame -> deserializeOrNull(frame, deserializer) }
 
     protected abstract fun <T : Any> deserializeOrNull(
         frame: StompFrame.Message,
@@ -112,6 +113,11 @@ private class StompSessionWithTextConversions(
     override fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>) =
         body?.let { FrameBody.Text(format.stringify(serializer, it)) }
 
-    override fun <T : Any> deserializeOrNull(frame: StompFrame.Message, deserializer: DeserializationStrategy<T>) =
-        frame.bodyAsText?.let { format.parse(deserializer, it) }
+    override fun <T : Any> deserializeOrNull(frame: StompFrame.Message, deserializer: DeserializationStrategy<T>): T? {
+        val body = frame.bodyAsText
+        if (body.isEmpty()) {
+            return null
+        }
+        return format.parse(deserializer, body)
+    }
 }

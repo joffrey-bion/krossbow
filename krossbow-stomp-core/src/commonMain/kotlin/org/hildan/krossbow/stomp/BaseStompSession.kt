@@ -5,7 +5,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
@@ -21,8 +26,8 @@ import org.hildan.krossbow.stomp.headers.StompNackHeaders
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
-import org.hildan.krossbow.websocket.WebSocketSession
 import org.hildan.krossbow.utils.generateUuid
+import org.hildan.krossbow.websocket.WebSocketSession
 
 @OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
 internal class BaseStompSession(
@@ -30,7 +35,7 @@ internal class BaseStompSession(
     webSocketSession: WebSocketSession
 ) : StompConnection(webSocketSession), StompSession {
 
-    private val subscriptionsById: MutableMap<String, InternalSubscription<*>> = mutableMapOf()
+    private val msgChannelsBySubId: MutableMap<String, SendChannel<StompFrame.Message>> = mutableMapOf()
 
     private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.BUFFERED)
 
@@ -45,7 +50,7 @@ internal class BaseStompSession(
     private suspend fun onMessageFrameReceived(frame: StompFrame.Message) {
         val subId = frame.headers.subscription
         // ignore if subscription not found, maybe we just unsubscribed and received one more msg
-        subscriptionsById[subId]?.onMessage(frame)
+        msgChannelsBySubId[subId]?.send(frame)
     }
 
     internal suspend fun connect(headers: StompConnectHeaders): StompFrame.Connected = coroutineScope {
@@ -124,21 +129,19 @@ internal class BaseStompSession(
             config.receiptTimeoutMillis
         }
 
-    override suspend fun <T> subscribe(
-        headers: StompSubscribeHeaders,
-        convertMessage: (StompFrame.Message) -> T
-    ): StompSubscription<T> {
+    override fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> = channelFlow {
         val id = headers.id
-        val sub = InternalSubscription(id, convertMessage, this)
-        subscriptionsById[id] = sub
+        msgChannelsBySubId[id] = channel
         val subscribeFrame = StompFrame.Subscribe(headers)
         prepareHeadersAndSendFrame(subscribeFrame)
-        return sub
+        awaitClose {
+            launch { unsubscribe(id) }
+        }
     }
 
     internal suspend fun unsubscribe(subscriptionId: String) {
         sendStompFrame(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
-        subscriptionsById.remove(subscriptionId)
+        msgChannelsBySubId.remove(subscriptionId)
     }
 
     override suspend fun ack(ackId: String, transactionId: String?) {
@@ -180,8 +183,8 @@ internal class BaseStompSession(
     }
 
     override suspend fun shutdown(cause: Throwable?) {
-        subscriptionsById.values.forEach { it.close(cause) }
-        subscriptionsById.clear()
+        msgChannelsBySubId.values.forEach { it.close(cause) }
+        msgChannelsBySubId.clear()
         nonMsgFrames.close(cause)
         super.shutdown(cause)
     }

@@ -1,9 +1,9 @@
 package org.hildan.krossbow.stomp
 
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.frame.InvalidStompFrameException
 import org.hildan.krossbow.test.connectWithMocks
-import org.hildan.krossbow.test.getCause
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.simulateMessageFrameReceived
@@ -13,7 +13,6 @@ import org.hildan.krossbow.websocket.WebSocketException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertNotNull
 
 class StompSessionSubscriptionsTest {
 
@@ -25,8 +24,8 @@ class StompSessionSubscriptionsTest {
             val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "HELLO")
         }
-        val sub = stompSession.subscribeText("/dest")
-        val message = sub.messages.receive()
+        val messages = stompSession.subscribeText("/dest")
+        val message = messages.first()
         assertEquals("HELLO", message)
     }
 
@@ -40,9 +39,9 @@ class StompSessionSubscriptionsTest {
             wsSession.simulateErrorFrameReceived(errorMessage)
         }
 
-        val sub = stompSession.subscribeText("/dest")
+        val messages = stompSession.subscribeText("/dest")
         val exception = assertFailsWith(StompErrorFrameReceived::class) {
-            sub.messages.receive()
+            messages.first()
         }
         assertEquals(errorMessage, exception.frame.message)
     }
@@ -58,9 +57,9 @@ class StompSessionSubscriptionsTest {
             wsSession.simulateClose(WebSocketCloseCodes.SERVER_ERROR, errorMessage)
         }
 
-        val sub = stompSession.subscribeText("/dest")
+        val messages = stompSession.subscribeText("/dest")
         val exception = assertFailsWith(WebSocketException::class) {
-            sub.messages.receive()
+            messages.first()
         }
         assertEquals(errorMessage, exception.message)
     }
@@ -76,7 +75,7 @@ class StompSessionSubscriptionsTest {
 
         val sub = stompSession.subscribeText("/dest")
         val exception = assertFailsWith(WebSocketClosedUnexpectedly::class) {
-            sub.messages.receive()
+            sub.first()
         }
         assertEquals(WebSocketCloseCodes.NORMAL_CLOSURE, exception.code)
         assertEquals("some reason", exception.reason)
@@ -93,27 +92,7 @@ class StompSessionSubscriptionsTest {
 
         val sub = stompSession.subscribeText("/dest")
         assertFailsWith(InvalidStompFrameException::class) {
-            sub.messages.receive()
+            sub.first()
         }
-    }
-
-    @Test
-    fun receiveSubMessage_conversionError_shouldGiveExceptionInChannel() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectWithMocks()
-
-        launch {
-            val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
-            wsSession.simulateMessageFrameReceived(subFrame.headers.id, "HELLO")
-        }
-        val errorMessage = "some error message"
-        val sub = stompSession.subscribe<String>("/dest") { throw RuntimeException(errorMessage) }
-
-        val exception = assertFailsWith(MessageConversionException::class) {
-            sub.messages.receive()
-        }
-        val cause = getCause(exception)
-        assertNotNull(cause)
-        assertEquals(RuntimeException::class, cause::class)
-        assertEquals(errorMessage, cause.message)
     }
 }

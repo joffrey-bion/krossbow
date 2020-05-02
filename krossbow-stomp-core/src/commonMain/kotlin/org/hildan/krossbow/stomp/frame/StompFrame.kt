@@ -27,12 +27,16 @@ sealed class StompFrame(
     /**
      * The body of this frame as text.
      *
-     * If this STOMP frame comes from a text web socket frame, then the body is simply the body text.
      * If this STOMP frame comes from a binary web socket frame, the binary body is converted to text based on the
      * `content-type` header of this frame. This conversion respects the conventions defined by the
      * [STOMP specification](https://stomp.github.io/stomp-specification-1.2.html#Header_content-type).
+     *
+     * If this STOMP frame comes from a text web socket frame, then [bodyAsText] is simply the body's text.
+     *
+     * The STOMP protocol doesn't distinguish between absent frame bodies and 0-length bodies.
+     * For this reason and for convenience, [bodyAsText] is the empty string in this case.
      */
-    val bodyAsText: String? by lazy { body?.asText(headers.contentType) }
+    val bodyAsText: String by lazy { body?.asText(headers.contentType) ?: "" }
 
     data class Stomp(override val headers: StompConnectHeaders) : StompFrame(StompCommand.STOMP, headers)
 

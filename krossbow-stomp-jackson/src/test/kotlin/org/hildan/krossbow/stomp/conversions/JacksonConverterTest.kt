@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
@@ -90,9 +91,11 @@ class JacksonConverterTest {
         val session = MockStompSession()
         val jsonSession = session.withJacksonConversions()
 
-        val sub = jsonSession.subscribe<String>("/test")
-        session.simulateSubscriptionFrame(FrameBody.Text("\"message\""))
-        val msg = sub.messages.receive()
+        val messages = jsonSession.subscribe<String>("/test")
+        launch {
+            session.simulateSubscriptionFrame(FrameBody.Text("\"message\""))
+        }
+        val msg = messages.first()
         assertEquals("message", msg)
     }
 
@@ -101,9 +104,11 @@ class JacksonConverterTest {
         val session = MockStompSession()
         val jsonSession = session.withJacksonConversions()
 
-        val sub = jsonSession.subscribe<Person>("/test")
-        session.simulateSubscriptionFrame(FrameBody.Text("""{"name":"Bob","age":5}"""))
-        val msg = sub.messages.receive()
+        val messages = jsonSession.subscribe<Person>("/test")
+        launch {
+            session.simulateSubscriptionFrame(FrameBody.Text("""{"name":"Bob","age":5}"""))
+        }
+        val msg = messages.first()
         assertEquals(Person("Bob", 5), msg)
     }
 
@@ -114,11 +119,13 @@ class JacksonConverterTest {
                 val session = MockStompSession()
                 val jsonSession = session.withJacksonConversions()
 
-                val sub = jsonSession.subscribe<Int>("/test")
-                session.simulateSubscriptionFrame(null)
+                val messages = jsonSession.subscribe<Int>("/test")
+                launch {
+                    session.simulateSubscriptionFrame(null)
+                }
 
                 assertFailsWith(IllegalStateException::class) {
-                    sub.messages.receive()
+                    messages.first()
                 }
             }
         }
@@ -130,10 +137,11 @@ class JacksonConverterTest {
             val session = MockStompSession()
             val jsonSession = session.withJacksonConversions()
 
-            val sub = jsonSession.subscribeOptional<Int>("/test")
-            session.simulateSubscriptionFrame(null)
-
-            assertNull(sub.messages.receive())
+            val messages = jsonSession.subscribeOptional<Int>("/test")
+            launch {
+                session.simulateSubscriptionFrame(null)
+            }
+            assertNull(messages.first())
         }
     }
 }

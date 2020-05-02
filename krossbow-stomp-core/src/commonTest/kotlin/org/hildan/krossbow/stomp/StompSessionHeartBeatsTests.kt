@@ -1,6 +1,7 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -41,9 +42,9 @@ class StompSessionHeartBeatsTests {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
         }
 
-        val sub = stompSession.subscribeText("/dest")
-        val message = sub.messages.receive()
-        assertEquals("HELLO", message)
+        val messages = stompSession.subscribeText("/dest")
+        val msg = messages.first()
+        assertEquals("HELLO", msg)
 
         stompSession.disconnect()
     }
@@ -58,9 +59,9 @@ class StompSessionHeartBeatsTests {
             wsSession.waitForSubscribeAndSimulateCompletion()
         }
 
-        val sub = stompSession.subscribeText("/dest")
+        val messages = stompSession.subscribeText("/dest")
         assertFailsWith(MissingHeartBeatException::class) {
-            sub.messages.receive()
+            messages.first()
         }
     }
 
@@ -80,8 +81,8 @@ class StompSessionHeartBeatsTests {
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "message")
         }
 
-        val sub = stompSession.subscribeText("/dest")
-        val msg = sub.messages.receive()
+        val messages = stompSession.subscribeText("/dest")
+        val msg = messages.first()
         assertEquals("message", msg)
     }
 }

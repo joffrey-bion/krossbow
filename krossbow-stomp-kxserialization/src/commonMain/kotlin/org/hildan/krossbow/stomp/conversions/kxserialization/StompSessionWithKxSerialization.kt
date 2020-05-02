@@ -1,15 +1,14 @@
 package org.hildan.krossbow.stomp.conversions.kxserialization
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.modules.SerialModule
 import kotlinx.serialization.modules.getContextualOrDefault
-import org.hildan.krossbow.stomp.LostReceiptException
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.StompSubscription
-import org.hildan.krossbow.stomp.config.StompConfig
+import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 
@@ -34,46 +33,26 @@ interface StompSessionWithKxSerialization : StompSession {
     ): StompReceipt?
 
     /**
-     * Sends a SUBSCRIBE frame with the given [headers], converting received messages into objects of type [T] using
-     * the given [deserializer].
-     * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
-     * Message frames without a body are not expected and result in an exception in the messages channel.
+     * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+     * coroutine is cancelled.
+     * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided
+     * Kotlinx Serialization's [deserializer].
+     * Message frames without a body are not allowed and result in an exception in the flow's collector.
      *
-     * If no `receipt` header is provided and [auto-receipt][StompConfig.autoReceipt] is enabled, a new unique receipt
-     * header is generated and added.
-     *
-     * If a receipt header is present (automatically added or manually provided), this method suspends until the
-     * relevant RECEIPT frame is received from the server.
-     * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
-     * a [LostReceiptException] is thrown.
-     *
-     * If auto-receipt is disabled and no `receipt` header is provided, this method returns immediately.
+     * See the general [StompSession] documentation for more details about subscription flows and receipts.
      */
-    suspend fun <T : Any> subscribe(
-        headers: StompSubscribeHeaders,
-        deserializer: DeserializationStrategy<T>
-    ): StompSubscription<T>
+    fun <T : Any> subscribe(headers: StompSubscribeHeaders, deserializer: DeserializationStrategy<T>): Flow<T>
 
     /**
-     * Sends a SUBSCRIBE frame with the given [headers], converting received messages into objects of type [T] using
-     * the given [deserializer].
-     * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
-     * In this variant, empty messages are allowed and result in a null value in the messages channel.
+     * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+     * coroutine is cancelled.
+     * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided
+     * Kotlinx Serialization's [deserializer].
+     * Message frames without a body are allowed and result in null values in the flow.
      *
-     * If no `receipt` header is provided and [auto-receipt][StompConfig.autoReceipt] is enabled, a new unique receipt
-     * header is generated and added.
-     *
-     * If a receipt header is present (automatically added or manually provided), this method suspends until the
-     * relevant RECEIPT frame is received from the server.
-     * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
-     * a [LostReceiptException] is thrown.
-     *
-     * If auto-receipt is disabled and no `receipt` header is provided, this method returns immediately.
+     * See the general [StompSession] documentation for more details about subscription flows and receipts.
      */
-    suspend fun <T : Any> subscribeOptional(
-        headers: StompSubscribeHeaders,
-        deserializer: DeserializationStrategy<T>
-    ): StompSubscription<T?>
+    fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, deserializer: DeserializationStrategy<T>): Flow<T?>
 }
 
 /**
@@ -123,76 +102,59 @@ suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndS
 ): StompReceipt? = convertAndSend(StompSendHeaders(destination), body)
 
 /**
- * Subscribes to the given [destination], converting received messages into objects of type [T] using the given
- * [deserializer].
- * Message frames without a body are not expected and result in an exception in the messages channel.
- * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+ * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+ * coroutine is cancelled.
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided
+ * Kotlinx Serialization's [deserializer].
+ * Message frames without a body are not allowed and result in an exception in the flow's collector.
  *
- * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
- * a [LostReceiptException] is thrown.
- *
- * If auto-receipt is disabled, this method returns immediately.
+ * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-suspend fun <T : Any> StompSessionWithKxSerialization.subscribe(
+fun <T : Any> StompSessionWithKxSerialization.subscribe(
     destination: String,
     deserializer: DeserializationStrategy<T>
-): StompSubscription<T> = subscribe(StompSubscribeHeaders(destination), deserializer)
+): Flow<T> = subscribe(StompSubscribeHeaders(destination), deserializer)
 
 /**
- * Subscribes to the given [destination], converting received messages into objects of type [T].
- * In this variant, empty messages are allowed and result in a null value in the messages channel.
- * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+ * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+ * coroutine is cancelled.
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided
+ * Kotlinx Serialization's [deserializer].
+ * Message frames without a body are allowed and result in null values in the flow.
  *
- * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
- * a [LostReceiptException] is thrown.
- *
- * If auto-receipt is disabled, this method returns immediately.
+ * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-suspend fun <T : Any> StompSessionWithKxSerialization.subscribeOptional(
+fun <T : Any> StompSessionWithKxSerialization.subscribeOptional(
     destination: String,
     deserializer: DeserializationStrategy<T>
-): StompSubscription<T?> = subscribeOptional(StompSubscribeHeaders(destination), deserializer)
+): Flow<T?> = subscribeOptional(StompSubscribeHeaders(destination), deserializer)
 
 /**
- * Subscribes to the given [destination], converting received messages into objects of type [T]. The returned
- * [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+ * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+ * coroutine is cancelled.
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using a deserializer inferred
+ * from the class of [T]. This has limited support in JavaScript and may break on generic types.
+ * Message frames without a body are not allowed and result in an exception in the flow's collector.
  *
- * This overload uses reflection to find the relevant deserializer for [T]. This has limited support in JavaScript
- * and may break on generic types.
- *
- * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
- * a [LostReceiptException] is thrown.
- *
- * If auto-receipt is disabled, this method returns immediately.
+ * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
 @ImplicitReflectionSerializer
-suspend inline fun <reified T : Any> StompSessionWithKxSerialization.subscribe(
-    destination: String
-): StompSubscription<T> {
+inline fun <reified T : Any> StompSessionWithKxSerialization.subscribe(destination: String): Flow<T> {
     val serializer = context.getContextualOrDefault(T::class)
     return subscribe(destination, serializer)
 }
 
 /**
- * Subscribes to the given [destination], converting received messages into objects of type [T]. The returned
- * [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+ * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+ * coroutine is cancelled.
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using a deserializer inferred
+ * from the class of [T]. This has limited support in JavaScript and may break on generic types.
+ * Message frames without a body are allowed and result in null values in the flow.
  *
- * This overload uses reflection to find the relevant deserializer for [T]. This has limited support in JavaScript
- * and may break on generic types.
- *
- * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
- * a [LostReceiptException] is thrown.
- *
- * If auto-receipt is disabled, this method returns immediately.
+ * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
 @ImplicitReflectionSerializer
-suspend inline fun <reified T : Any> StompSessionWithKxSerialization.subscribeOptional(
-    destination: String
-): StompSubscription<T?> {
+inline fun <reified T : Any> StompSessionWithKxSerialization.subscribeOptional(destination: String): Flow<T?> {
     val serializer = context.getContextualOrDefault(T::class)
     return subscribeOptional(destination, serializer)
 }

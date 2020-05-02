@@ -1,10 +1,11 @@
 package org.hildan.krossbow.stomp.conversions
 
+import kotlinx.coroutines.flow.Flow
 import org.hildan.krossbow.stomp.LostReceiptException
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.StompSubscription
 import org.hildan.krossbow.stomp.config.StompConfig
+import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import kotlin.reflect.KClass
@@ -31,38 +32,27 @@ interface StompSessionWithClassConversions : StompSession {
     ): StompReceipt?
 
     /**
-     * Sends a SUBSCRIBE frame with the given [headers], converting received messages into objects of type [T].
-     * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
-     * Message frames without a body are not expected and result in an exception in the messages channel.
+     * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+     * coroutine is cancelled.
+     * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T], but the exact conversion
+     * is implementation-dependent.
+     * Message frames without a body MAY be skipped or result in an exception depending on the implementation.
      *
-     * If no `receipt` header is provided and [auto-receipt][StompConfig.autoReceipt] is enabled, a new unique receipt
-     * header is generated and added.
-     *
-     * If a receipt header is present (automatically added or manually provided), this method suspends until the
-     * relevant RECEIPT frame is received from the server.
-     * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
-     * a [LostReceiptException] is thrown.
-     *
-     * If auto-receipt is disabled and no `receipt` header is provided, this method returns immediately.
+     * See the general [StompSession] documentation for more details about subscription flows and receipts.
      */
-    suspend fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): StompSubscription<T>
+    fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T>
 
     /**
-     * Sends a SUBSCRIBE frame with the given [headers], converting received messages into objects of type [T].
-     * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
-     * In this variant, frames without a body are seen as a null value in the messages channel.
+     * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+     * coroutine is cancelled.
+     * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] or `null` based on [clazz],
+     * but the exact conversion is implementation-dependent.
+     * Message frames without a body MAY be skipped or result in an exception depending on the implementation, they
+     * don't have to be translated into null values.
      *
-     * If no `receipt` header is provided and [auto-receipt][StompConfig.autoReceipt] is enabled, a new unique receipt
-     * header is generated and added.
-     *
-     * If a receipt header is present (automatically added or manually provided), this method suspends until the
-     * relevant RECEIPT frame is received from the server.
-     * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
-     * a [LostReceiptException] is thrown.
-     *
-     * If auto-receipt is disabled and no `receipt` header is provided, this method returns immediately.
+     * See the general [StompSession] documentation for more details about subscription flows and receipts.
      */
-    suspend fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, clazz: KClass<T>): StompSubscription<T?>
+    fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T?>
 }
 
 /**
@@ -95,63 +85,56 @@ suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAnd
 ): StompReceipt? = convertAndSend(destination, body, T::class)
 
 /**
- * Subscribes to the given [destination], converting received messages into objects of type [T].
- * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
- * Message frames without a body are not expected and result in an exception in the messages channel.
+ * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+ * coroutine is cancelled.
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T], but the exact conversion
+ * is implementation-dependent.
+ * Message frames without a body MAY be skipped or result in an exception depending on the implementation.
  *
- * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
- * a [LostReceiptException] is thrown.
- *
- * If auto-receipt is disabled, this method returns immediately.
+ * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-suspend fun <T : Any> StompSessionWithClassConversions.subscribe(
-    destination: String,
-    clazz: KClass<T>
-): StompSubscription<T> = subscribe(StompSubscribeHeaders(destination), clazz)
+fun <T : Any> StompSessionWithClassConversions.subscribe(destination: String, clazz: KClass<T>): Flow<T> =
+    subscribe(StompSubscribeHeaders(destination), clazz)
 
 /**
- * Subscribes to the given [destination], converting received messages into objects of type [T].
- * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
- * In this variant, frames without a body are seen as a null value in the messages channel.
+ * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+ * coroutine is cancelled.
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] or `null`, but the exact
+ * conversion is implementation-dependent.
+ * Message frames without a body MAY be skipped or result in an exception depending on the implementation, they
+ * don't have to be translated into null values.
+ * Conversely, message frames with a non-empty body may result in null values in the flow depending on the
+ * implementation.
  *
- * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
- * a [LostReceiptException] is thrown.
- *
- * If auto-receipt is disabled, this method returns immediately.
+ * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-suspend fun <T : Any> StompSessionWithClassConversions.subscribeOptional(
-    destination: String,
-    clazz: KClass<T>
-): StompSubscription<T?> = subscribeOptional(StompSubscribeHeaders(destination), clazz)
+fun <T : Any> StompSessionWithClassConversions.subscribeOptional(destination: String, clazz: KClass<T>): Flow<T?> =
+    subscribeOptional(StompSubscribeHeaders(destination), clazz)
 
 /**
- * Subscribes to the given [destination], expecting objects of type [T].
- * Empty messages are not allowed and result in an exception in the messages channel.
- * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+ * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+ * coroutine is cancelled.
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T], but the exact conversion
+ * is implementation-dependent.
+ * Message frames without a body MAY be skipped or result in an exception depending on the implementation.
  *
- * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
- * a [LostReceiptException] is thrown.
- *
- * If auto-receipt is disabled, this method returns immediately.
+ * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-suspend inline fun <reified T : Any> StompSessionWithClassConversions.subscribe(
-    destination: String
-): StompSubscription<T> = subscribe(destination, T::class)
+inline fun <reified T : Any> StompSessionWithClassConversions.subscribe(destination: String): Flow<T> =
+    subscribe(destination, T::class)
 
 /**
- * Subscribes to the given [destination], converting received messages into objects of type [T].
- * In this variant, empty messages are allowed and result in a null value in the messages channel.
- * The returned [StompSubscription] can be used to access the channel of received objects and unsubscribe.
+ * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
+ * coroutine is cancelled.
  *
- * If auto-receipt is enabled, this method suspends until the relevant RECEIPT frame is received from the server.
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
- * a [LostReceiptException] is thrown.
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] or `null`, but the exact
+ * conversion is implementation-dependent.
+ * Message frames without a body MAY be skipped or result in an exception depending on the implementation, they
+ * don't have to be translated into null values.
+ * Conversely, message frames with a non-empty body may result in null values in the flow depending on the
+ * implementation.
  *
- * If auto-receipt is disabled, this method returns immediately.
+ * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-suspend inline fun <reified T : Any> StompSessionWithClassConversions.subscribeOptional(
-    destination: String
-): StompSubscription<T?> = subscribeOptional(destination, T::class)
+inline fun <reified T : Any> StompSessionWithClassConversions.subscribeOptional(destination: String): Flow<T?> =
+    subscribeOptional(destination, T::class)

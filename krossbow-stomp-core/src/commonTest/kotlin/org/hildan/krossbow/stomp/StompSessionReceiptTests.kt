@@ -1,6 +1,7 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -14,6 +15,7 @@ import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.simulateTextStompFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
+import org.hildan.krossbow.test.waitForSubscribeAndSimulateCompletion
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketException
 import kotlin.test.Test
@@ -149,56 +151,18 @@ class StompSessionReceiptTests {
     }
 
     @Test
-    fun subscribe_doesntWaitIfNoReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectWithMocks()
-        val deferredSub = async { stompSession.subscribeRaw("/destination") }
-        assertFalse(deferredSub.isCompleted, "subscribe() should wait for the websocket to actually send the frame")
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
-        assertTrue(deferredSub.isCompleted, "subscribe() should resume immediately after the SUBSCRIBE frame is sent")
-    }
-
-    @Test
-    fun subscribe_autoReceipt_waitsUntilReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectWithMocks {
-            autoReceipt = true
-        }
-        val deferredSub = async { stompSession.subscribeRaw("/destination") }
-        val subscribeFrame = wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
-        val receiptId = subscribeFrame.headers.receipt
-        assertNotNull(receiptId, "receipt header should be auto-populated")
-        assertFalse(deferredSub.isCompleted, "subscribe() should wait until receipt is received")
-        wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders(receiptId)))
-        assertCompletesSoon(deferredSub, "send() should resume soon after correct RECEIPT frame is received")
-    }
-
-    @Test
     fun subscribe_autoReceipt_timesOutIfLostReceipt() = runAsyncTestWithTimeout {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
             receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
         }
         launch {
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
+            wsSession.waitForSubscribeAndSimulateCompletion()
         }
+        val messages = stompSession.subscribe("/destination")
         assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
-            stompSession.subscribeRaw("/destination")
+            messages.first()
         }
-    }
-
-    @Test
-    fun subscribe_manualReceipt_waitsForCorrectReceipt() = runAsyncTestWithTimeout {
-        val (wsSession, stompSession) = connectWithMocks()
-        val manualReceiptId = "my-receipt"
-        val deferredSub = async {
-            stompSession.subscribe(StompSubscribeHeaders("/destination", receipt = manualReceiptId)) { Unit }
-        }
-        assertFalse(deferredSub.isCompleted, "subscribe() should wait until ws send finishes")
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
-        assertFalse(deferredSub.isCompleted, "subscribe() should wait until receipt is received")
-        wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders("other-receipt")))
-        assertFalse(deferredSub.isCompleted, "subscribe() should not resume on other receipts")
-        wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders(manualReceiptId)))
-        assertCompletesSoon(deferredSub, "subscribe() should resume soon after correct RECEIPT frame is received")
     }
 
     @Test
@@ -209,8 +173,9 @@ class StompSessionReceiptTests {
         launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
         }
+        val messages = stompSession.subscribe(StompSubscribeHeaders("/destination", receipt = "my-receipt"))
         assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
-            stompSession.subscribe(StompSubscribeHeaders("/destination", receipt = "my-receipt")) { Unit }
+            messages.first()
         }
     }
 }

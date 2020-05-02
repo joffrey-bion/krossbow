@@ -1,13 +1,11 @@
 package org.hildan.krossbow.stomp.conversions
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.consumeAsFlow
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.StompSubscription
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
@@ -32,31 +30,8 @@ class MockStompSession : StompSession {
         return null
     }
 
-    override suspend fun <T> subscribe(
-        headers: StompSubscribeHeaders,
-        convertMessage: (StompFrame.Message) -> T
-    ): StompSubscription<T> {
-        val msgs: Channel<T> = Channel()
-        val job = GlobalScope.launch {
-            for (f in incomingFrames) {
-                try {
-                    val element = convertMessage(f)
-                    msgs.send(element)
-                } catch (e: Exception) {
-                    msgs.close(e)
-                }
-            }
-        }
-        return object : StompSubscription<T> {
-            override val id: String = "42"
-            override val messages: ReceiveChannel<T> = msgs
-
-            override suspend fun unsubscribe() {
-                msgs.close()
-                job.cancelAndJoin()
-            }
-        }
-    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> = incomingFrames.consumeAsFlow()
 
     override suspend fun ack(ackId: String, transactionId: String?) {
         TODO("Not yet implemented")
