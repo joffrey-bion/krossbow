@@ -28,7 +28,9 @@ class MessageConversionException(cause: Throwable) : Exception(cause.message, ca
 /**
  * An exception thrown when expected heart beats are not received.
  */
-class MissingHeartBeatException : Exception()
+class MissingHeartBeatException(
+    val expectedPeriodMillis: Int
+) : Exception("A server heart beat was missing (expecting data every ${expectedPeriodMillis}ms at most)")
 
 /**
  * An exception thrown when the underlying websocket connection was closed at an inappropriate time.

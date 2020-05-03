@@ -80,7 +80,7 @@ internal abstract class StompConnection(
             sendHeartBeat = { webSocketSession.sendHeartBeat() },
             onMissingHeartBeat = {
                 webSocketSession.closeForMissingHeartBeat()
-                shutdown(MissingHeartBeatException())
+                shutdown(MissingHeartBeatException(heartBeat.expectedPeriodMillis))
             }
         )
         heartBeater?.startIn(this)
