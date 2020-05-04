@@ -115,3 +115,10 @@ suspend fun WebSocketSessionMock.waitForSubscribeAndSimulateCompletion(): StompF
     assertTrue(frame is StompFrame.Subscribe)
     return frame
 }
+
+suspend fun WebSocketSessionMock.waitForUnsubscribeAndSimulateCompletion(expectedSubId: String): StompFrame.Unsubscribe {
+    val frame = waitForSendAndSimulateCompletion(StompCommand.UNSUBSCRIBE)
+    assertTrue(frame is StompFrame.Unsubscribe)
+    assertEquals(expectedSubId, frame.headers.id)
+    return frame
+}

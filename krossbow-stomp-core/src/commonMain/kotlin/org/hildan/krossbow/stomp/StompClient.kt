@@ -66,7 +66,7 @@ class StompClient(
                 passcode = passcode,
                 heartBeat = config.heartBeat
             )
-            val stompSession = BaseStompSession(config, this)
+            val stompSession = BaseStompSession(config, StompSocket(this))
             stompSession.connect(connectHeaders)
             return stompSession
         } catch (e: CancellationException) {

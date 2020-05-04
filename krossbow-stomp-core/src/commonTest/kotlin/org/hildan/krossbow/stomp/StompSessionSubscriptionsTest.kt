@@ -3,11 +3,14 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.frame.InvalidStompFrameException
+import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.test.connectWithMocks
 import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.simulateMessageFrameReceived
+import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import org.hildan.krossbow.test.waitForSubscribeAndSimulateCompletion
+import org.hildan.krossbow.test.waitForUnsubscribeAndSimulateCompletion
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketException
 import kotlin.test.Test
@@ -23,10 +26,13 @@ class StompSessionSubscriptionsTest {
         launch {
             val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "HELLO")
+            wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
         }
         val messages = stompSession.subscribeText("/dest")
         val message = messages.first()
         assertEquals("HELLO", message)
+        stompSession.disconnect()
     }
 
     @Test

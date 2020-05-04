@@ -1,15 +1,23 @@
 package org.hildan.krossbow.stomp
 
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.stomp.config.StompConfig
@@ -27,58 +35,31 @@ import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.utils.generateUuid
-import org.hildan.krossbow.websocket.WebSocketSession
 
-@OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class) // for broadcast channel
 internal class BaseStompSession(
     private val config: StompConfig,
-    webSocketSession: WebSocketSession
-) : StompConnection(webSocketSession), StompSession {
-
-    private val msgChannelsBySubId: MutableMap<String, SendChannel<StompFrame.Message>> = mutableMapOf()
-
-    private val nonMsgFrames = BroadcastChannel<StompFrame>(Channel.BUFFERED)
-
-    override suspend fun onStompFrameReceived(frame: StompFrame) {
-        when (frame) {
-            is StompFrame.Message -> onMessageFrameReceived(frame)
-            is StompFrame.Error -> shutdown(StompErrorFrameReceived(frame))
-            else -> nonMsgFrames.send(frame)
-        }
-    }
-
-    private suspend fun onMessageFrameReceived(frame: StompFrame.Message) {
-        val subId = frame.headers.subscription
-        // ignore if subscription not found, maybe we just unsubscribed and received one more msg
-        msgChannelsBySubId[subId]?.send(frame)
-    }
+    private val stompSocket: StompSocket
+) : StompSession {
+    private val job = Job()
+    private val subscriptionsScope: CoroutineScope = CoroutineScope(job + CoroutineName("stomp-subscriptions"))
 
     internal suspend fun connect(headers: StompConnectHeaders): StompFrame.Connected = coroutineScope {
         val futureConnectedFrame = async(start = CoroutineStart.UNDISPATCHED) {
-            waitForTypedFrame<StompFrame.Connected>()
+            waitForConnectedFrame()
         }
         val connectFrame = if (config.connectWithStompCommand) {
             StompFrame.Stomp(headers)
         } else {
             StompFrame.Connect(headers)
         }
-        sendStompFrame(connectFrame)
+        stompSocket.sendStompFrame(connectFrame)
         futureConnectedFrame.await()
     }
 
-    private suspend inline fun <reified T : StompFrame> waitForTypedFrame(predicate: (T) -> Boolean = { true }): T {
-        val frameSubscription = nonMsgFrames.openSubscription()
-        try {
-            for (f in frameSubscription) {
-                if (f is T && predicate(f)) {
-                    return f
-                }
-            }
-        } finally {
-            frameSubscription.cancel()
-        }
-        throw IllegalStateException("Frames channel closed unexpectedly while expecting a frame of type ${T::class}")
-    }
+    private suspend inline fun waitForConnectedFrame(): StompFrame.Connected =
+        stompSocket.stompFrames.filterIsInstance<StompFrame.Connected>().firstOrNull()
+            ?: error("Frames channel closed unexpectedly while expecting the CONNECTED frame")
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
         return prepareHeadersAndSendFrame(StompFrame.Send(headers, body))
@@ -89,7 +70,7 @@ internal class BaseStompSession(
         maybeSetAutoReceipt(frame)
         val receiptId = frame.headers.receipt
         if (receiptId == null) {
-            sendStompFrame(frame)
+            stompSocket.sendStompFrame(frame)
             return null
         }
         sendAndWaitForReceipt(receiptId, frame)
@@ -113,14 +94,15 @@ internal class BaseStompSession(
             val deferredReceipt = async(start = CoroutineStart.UNDISPATCHED) {
                 waitForReceipt(receiptId)
             }
-            sendStompFrame(frame)
+            stompSocket.sendStompFrame(frame)
             withTimeoutOrNull(frame.receiptTimeout) { deferredReceipt.await() }
                 ?: throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
         }
     }
 
     private suspend fun waitForReceipt(receiptId: String): StompFrame.Receipt =
-            waitForTypedFrame { it.headers.receiptId == receiptId }
+        stompSocket.stompFrames.filterIsInstance<StompFrame.Receipt>().firstOrNull { it.headers.receiptId == receiptId }
+            ?: error("Frames channel closed unexpectedly while waiting for RECEIPT frame with id='$receiptId'")
 
     private val StompFrame.receiptTimeout: Long
         get() = if (command == StompCommand.DISCONNECT) {
@@ -131,44 +113,54 @@ internal class BaseStompSession(
 
     override fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> = channelFlow {
         val id = headers.id
-        msgChannelsBySubId[id] = channel
+        subscriptionsScope.launch {
+            stompSocket.stompFrames
+                .filterIsInstance<StompFrame.Message>()
+                .filter { it.headers.subscription == id }
+                .onCompletion { close(it) }
+                .catch { /* avoids crashing the scope, we already transmit exceptions through close() */ }
+                .collect {
+                    send(it)
+                }
+        }
         val subscribeFrame = StompFrame.Subscribe(headers)
         prepareHeadersAndSendFrame(subscribeFrame)
+
         awaitClose {
-            launch { unsubscribe(id) }
+            subscriptionsScope.launch { unsubscribe(id) }
         }
     }
 
-    internal suspend fun unsubscribe(subscriptionId: String) {
-        sendStompFrame(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
-        msgChannelsBySubId.remove(subscriptionId)
+    private suspend fun unsubscribe(subscriptionId: String) {
+        stompSocket.sendStompFrame(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
     }
 
     override suspend fun ack(ackId: String, transactionId: String?) {
-        sendStompFrame(StompFrame.Ack(StompAckHeaders(ackId, transactionId)))
+        stompSocket.sendStompFrame(StompFrame.Ack(StompAckHeaders(ackId, transactionId)))
     }
 
     override suspend fun nack(ackId: String, transactionId: String?) {
-        sendStompFrame(StompFrame.Nack(StompNackHeaders(ackId, transactionId)))
+        stompSocket.sendStompFrame(StompFrame.Nack(StompNackHeaders(ackId, transactionId)))
     }
 
     override suspend fun begin(transactionId: String) {
-        sendStompFrame(StompFrame.Begin(StompBeginHeaders(transactionId)))
+        stompSocket.sendStompFrame(StompFrame.Begin(StompBeginHeaders(transactionId)))
     }
 
     override suspend fun commit(transactionId: String) {
-        sendStompFrame(StompFrame.Commit(StompCommitHeaders(transactionId)))
+        stompSocket.sendStompFrame(StompFrame.Commit(StompCommitHeaders(transactionId)))
     }
 
     override suspend fun abort(transactionId: String) {
-        sendStompFrame(StompFrame.Abort(StompAbortHeaders(transactionId)))
+        stompSocket.sendStompFrame(StompFrame.Abort(StompAbortHeaders(transactionId)))
     }
 
     override suspend fun disconnect() {
         if (config.gracefulDisconnect) {
             sendDisconnectFrameAndWaitForReceipt()
         }
-        shutdown()
+        subscriptionsScope.cancel()
+        stompSocket.close()
     }
 
     private suspend fun sendDisconnectFrameAndWaitForReceipt() {
@@ -180,12 +172,5 @@ internal class BaseStompSession(
             // Sometimes the server closes the connection too quickly to send a RECEIPT, which is not really an error
             // http://stomp.github.io/stomp-specification-1.2.html#Connection_Lingering
         }
-    }
-
-    override suspend fun shutdown(cause: Throwable?) {
-        msgChannelsBySubId.values.forEach { it.close(cause) }
-        msgChannelsBySubId.clear()
-        nonMsgFrames.close(cause)
-        super.shutdown(cause)
     }
 }

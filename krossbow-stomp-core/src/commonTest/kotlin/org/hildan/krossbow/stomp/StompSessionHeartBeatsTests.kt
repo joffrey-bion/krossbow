@@ -39,6 +39,7 @@ class StompSessionHeartBeatsTests {
         launch {
             val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "HELLO")
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.UNSUBSCRIBE)
             wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
         }
 
