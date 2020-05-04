@@ -52,7 +52,7 @@ class StompSessionSubscriptionsTest {
             val job = launch {
                 repeat(15) {
                     wsSession.simulateMessageFrameReceived(subFrame.headers.id, "MSG_$it")
-                    delay(200)
+                    delay(300)
                 }
             }
             wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
@@ -67,7 +67,7 @@ class StompSessionSubscriptionsTest {
                 messages.add(it)
             }
         }
-        delay(500)
+        delay(750)
         collectingJob.cancelAndJoin() // joining actually waits for UNSUBSCRIBE
 
         assertEquals(listOf("MSG_0", "MSG_1", "MSG_2"), messages)
