@@ -1,5 +1,17 @@
 # Change Log
 
+## [0.20.0](https://github.com/joffrey-bion/krossbow/tree/0.20.0) (2020-05-05)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.12.0...0.20.0)
+
+**Fixed bugs:**
+
+- Textual content\-type on binary websocket frames is always decoded as UTF\-8 [\#51](https://github.com/joffrey-bion/krossbow/issues/51)
+
+**Implemented enhancements:**
+
+- Represent subscriptions with Kotlin Flows [\#53](https://github.com/joffrey-bion/krossbow/issues/53)
+- Add base adapters to support all Kotlinx Serialization formats [\#52](https://github.com/joffrey-bion/krossbow/issues/52)
+
 ## [0.12.0](https://github.com/joffrey-bion/krossbow/tree/0.12.0) (2020-04-24)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.11.1...0.12.0)
 
