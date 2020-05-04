@@ -11,6 +11,7 @@ import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateMessageFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import org.hildan.krossbow.test.waitForSubscribeAndSimulateCompletion
+import org.hildan.krossbow.test.waitForUnsubscribeAndSimulateCompletion
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -80,6 +81,7 @@ class StompSessionHeartBeatsTests {
             wsSession.simulateTextFrameReceived("\r\n")
             delay(150)
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "message")
+            wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
         }
 
         val messages = stompSession.subscribeText("/dest")

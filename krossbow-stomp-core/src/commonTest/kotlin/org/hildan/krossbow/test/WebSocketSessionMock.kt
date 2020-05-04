@@ -106,7 +106,7 @@ suspend fun WebSocketSessionMock.simulateConnectedFrameReceived(
 
 suspend fun WebSocketSessionMock.waitForSendAndSimulateCompletion(expectedCommand: StompCommand): StompFrame {
     val frame = waitForSentFrameAndSimulateCompletion()
-    assertEquals(expectedCommand, frame.command, "the next sent frame should be a $expectedCommand STOMP frame")
+    assertEquals(expectedCommand, frame.command, "The next sent frame should be a $expectedCommand STOMP frame.")
     return frame
 }
 

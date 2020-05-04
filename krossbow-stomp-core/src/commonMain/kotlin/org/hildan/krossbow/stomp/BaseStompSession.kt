@@ -1,24 +1,19 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
@@ -41,8 +36,6 @@ internal class BaseStompSession(
     private val config: StompConfig,
     private val stompSocket: StompSocket
 ) : StompSession {
-    private val job = Job()
-    private val subscriptionsScope: CoroutineScope = CoroutineScope(job + CoroutineName("stomp-subscriptions"))
 
     internal suspend fun connect(headers: StompConnectHeaders): StompFrame.Connected = coroutineScope {
         val futureConnectedFrame = async(start = CoroutineStart.UNDISPATCHED) {
@@ -58,7 +51,7 @@ internal class BaseStompSession(
     }
 
     private suspend inline fun waitForConnectedFrame(): StompFrame.Connected =
-        stompSocket.stompFrames.filterIsInstance<StompFrame.Connected>().firstOrNull()
+        stompSocket.stompFramesFlow.filterIsInstance<StompFrame.Connected>().firstOrNull()
             ?: error("Frames channel closed unexpectedly while expecting the CONNECTED frame")
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
@@ -101,7 +94,7 @@ internal class BaseStompSession(
     }
 
     private suspend fun waitForReceipt(receiptId: String): StompFrame.Receipt =
-        stompSocket.stompFrames.filterIsInstance<StompFrame.Receipt>().firstOrNull { it.headers.receiptId == receiptId }
+        stompSocket.stompFramesFlow.filterIsInstance<StompFrame.Receipt>().firstOrNull { it.headers.receiptId == receiptId }
             ?: error("Frames channel closed unexpectedly while waiting for RECEIPT frame with id='$receiptId'")
 
     private val StompFrame.receiptTimeout: Long
@@ -111,24 +104,31 @@ internal class BaseStompSession(
             config.receiptTimeoutMillis
         }
 
-    override fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> = channelFlow {
+    override fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> = flow<StompFrame.Message> {
         val id = headers.id
-        subscriptionsScope.launch {
-            stompSocket.stompFrames
-                .filterIsInstance<StompFrame.Message>()
-                .filter { it.headers.subscription == id }
-                .onCompletion { close(it) }
-                .catch { /* avoids crashing the scope, we already transmit exceptions through close() */ }
-                .collect {
-                    send(it)
-                }
-        }
-        val subscribeFrame = StompFrame.Subscribe(headers)
-        prepareHeadersAndSendFrame(subscribeFrame)
 
-        awaitClose {
-            subscriptionsScope.launch { unsubscribe(id) }
-        }
+        // it's necessary to open the subscription before sending SUBSCRIBE, otherwise we may miss the first messages
+        val allFrames = stompSocket.stompFramesChannel.openSubscription()
+        prepareHeadersAndSendFrame(StompFrame.Subscribe(headers))
+
+        val messagesFlow = allFrames.consumeAsFlow()
+            .filterIsInstance<StompFrame.Message>()
+            .filter { it.headers.subscription == id }
+            .onCompletion {
+                when (it) {
+                    // 1. No exception (null) occurs when the flow terminates normally. This can mean that the
+                    // connection was closed and the flow of frames is over, or it can mean that the consumer used a
+                    // terminal operator like first(), which aborts the flow "normally" without cancelling it.
+                    // 2. The consumer was cancelled or an exception occurred upstream.
+                    // In both cases we want to unsubscribe.
+                    null, is CancellationException -> unsubscribe(id)
+                    // 3. Other upstream exception: a fatal error on either STOMP or web socket protocol occurred
+                    // If such a fatal error occurs, we can't (and don't want to) send even an UNSUBSCRIBE frame.
+                    else -> Unit
+                }
+            }
+
+        emitAll(messagesFlow)
     }
 
     private suspend fun unsubscribe(subscriptionId: String) {
@@ -159,7 +159,6 @@ internal class BaseStompSession(
         if (config.gracefulDisconnect) {
             sendDisconnectFrameAndWaitForReceipt()
         }
-        subscriptionsScope.cancel()
         stompSocket.close()
     }
 

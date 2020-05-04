@@ -43,15 +43,20 @@ internal class StompSocket(
 
     private var heartBeater: HeartBeater? = null
 
-    private val stompFramesChannel = BroadcastChannel<StompFrame>(Channel.BUFFERED)
+    /**
+     * The [BroadcastChannel] of decoded STOMP frames.
+     */
+    val stompFramesChannel = BroadcastChannel<StompFrame>(Channel.BUFFERED)
 
     /**
-     * The flow of decoded STOMP frames.
+     * The [Flow] of decoded STOMP frames.
+     *
      * Multiple concurrent collectors are allowed and correspond to independent subscriptions.
+     * All frames are sent to all subscribers similarly to a [BroadcastChannel].
      * Cancellation of one collector results in the cancellation of the corresponding subscription but doesn't fail
      * the others.
      */
-    val stompFrames: Flow<StompFrame> = stompFramesChannel.asFlow()
+    val stompFramesFlow: Flow<StompFrame> = stompFramesChannel.asFlow()
 
     init {
         scope.launch(CoroutineName("stomp-frame-decoder")) {
