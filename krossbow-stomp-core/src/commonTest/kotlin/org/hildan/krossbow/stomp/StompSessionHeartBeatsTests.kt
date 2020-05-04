@@ -33,7 +33,7 @@ class StompSessionHeartBeatsTests {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(
                 version = "1.2",
-                heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300)
+                heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 500)
             )
         )
 
