@@ -1,8 +1,11 @@
 package org.hildan.krossbow.stomp.frame
 
+/**
+ * A STOMP command.
+ */
 enum class StompCommand(
-    val text: String,
-    val supportsHeaderEscapes: Boolean = true
+    internal val text: String,
+    internal val supportsHeaderEscapes: Boolean = true
 ) {
     STOMP("STOMP"),
     // The CONNECT and CONNECTED frames do not escape the carriage return, line feed or colon octets
@@ -30,4 +33,7 @@ enum class StompCommand(
     }
 }
 
+/**
+ * Exception thrown when some text could not be parsed as a [StompCommand].
+ */
 class InvalidStompCommandException(val invalidText: String) : Exception("Unknown STOMP command '$invalidText'")

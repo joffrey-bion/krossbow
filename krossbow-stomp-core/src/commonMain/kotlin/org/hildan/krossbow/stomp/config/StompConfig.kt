@@ -4,11 +4,11 @@ import org.hildan.krossbow.stomp.LostReceiptException
 import org.hildan.krossbow.stomp.StompSession
 
 /**
- * Configuration for the STOMP protocol.
+ * Configuration for the STOMP client.
  */
 data class StompConfig(
     /**
-     * Whether to automatically attach a `receipt` header to the sent messages in order to track receipts.
+     * Whether to automatically attach a `receipt` header to the sent frames in order to track receipts.
      */
     var autoReceipt: Boolean = false,
     /**
@@ -26,10 +26,10 @@ data class StompConfig(
     /**
      * The [HeartBeat] to request for the STOMP sessions.
      *
-     * This is part of a negotiation as defined by the specification, and does not imply that this exact heart beat
-     * configuration will be used.
-     * The actual heart beats to use will be defined by the CONNECTED frame received from the server as a result of
-     * the negotiation.
+     * This is part of a negotiation and does not imply that this exact heart beat configuration will be used.
+     * The actual heart beats are defined by the CONNECTED frame received from the server as a result of the
+     * negotiation. This behaviour is
+     * [defined by the specification](https://stomp.github.io/stomp-specification-1.2.html#Heart-beating).
      */
     var heartBeat: HeartBeat = HeartBeat(),
     /**
@@ -40,21 +40,25 @@ data class StompConfig(
      * Defines how long to wait for a RECEIPT frame from the server before throwing a [LostReceiptException].
      * Only crashes when a `receipt` header was actually present in the sent frame (and thus a RECEIPT was expected).
      * Such header is always present if [autoReceipt] is enabled.
+     *
      * Note that this doesn't apply to the DISCONNECT frames, use [disconnectTimeoutMillis] instead for that.
      */
-    var receiptTimeoutMillis: Long = 500,
+    var receiptTimeoutMillis: Long = 1000,
     /**
-     * Like [receiptTimeoutMillis] but only for the DISCONNECT frame.
+     * Like [receiptTimeoutMillis] but only for the receipt of the DISCONNECT frame.
      * This is ignored if [gracefulDisconnect] is disabled.
+     *
      * Note that if this timeout expires, the [StompSession.disconnect] call doesn't throw an exception.
      * This is to allow servers to close the connection quickly (sometimes too quick for sending a RECEIPT/ERROR) as
      * [mentioned in the specification](http://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
      */
     var disconnectTimeoutMillis: Long = 200,
     /**
-     * Enables [graceful disconnect](https://stomp.github.io/stomp-specification-1.2.html#DISCONNECT):
-     * when disconnecting from the server, the client should first send a DISCONNECT frame with a `receipt` header,
-     * and then wait for a RECEIPT frame before closing the connection.
+     * Enables [graceful disconnect](https://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
+     *
+     * If enabled, when disconnecting from the server, the client first sends a DISCONNECT frame with a `receipt`
+     * header, and then waits for a RECEIPT frame before closing the connection.
+     *
      * If this graceful disconnect is disabled, then calling [StompSession.disconnect] immediately closes the web
      * socket connection.
      * In this case, there is no guarantee that the server received all previous messages.
@@ -63,7 +67,7 @@ data class StompConfig(
 )
 
 /**
- * Defines the heart beats for STOMP sessions, as
+ * Defines heart beats for STOMP sessions, as
  * [defined in the STOMP specification](https://stomp.github.io/stomp-specification-1.2.html#Heart-beating).
  */
 data class HeartBeat(

@@ -100,4 +100,7 @@ internal object StompDecoder {
     }
 }
 
+/**
+ * Exception thrown when some frame data could not be decoded as a STOMP frame.
+ */
 class InvalidStompFrameException(cause: Throwable) : Exception("Failed to decode invalid STOMP frame", cause)

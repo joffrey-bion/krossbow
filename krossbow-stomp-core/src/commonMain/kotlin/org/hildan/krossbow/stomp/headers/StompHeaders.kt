@@ -21,6 +21,9 @@ import org.hildan.krossbow.stomp.headers.HeaderNames.SUBSCRIPTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.TRANSACTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.VERSION
 
+/**
+ * Represents the headers of a STOMP frame.
+ */
 interface StompHeaders : MutableMap<String, String> {
 
     var contentLength: Int?

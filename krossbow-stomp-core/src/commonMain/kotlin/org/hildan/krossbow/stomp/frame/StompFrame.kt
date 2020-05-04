@@ -19,9 +19,16 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.utils.extractCharset
 
+/**
+ * Represents a STOMP frame. The structure of STOMP frames is
+ * [defined by the specification](https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames).
+ */
 sealed class StompFrame(
+    /** The command of this STOMP frame, which is the first word of the frame. */
     val command: StompCommand,
+    /** The headers of this STOMP frame. */
     open val headers: StompHeaders,
+    /** The body of this STOMP frame. */
     open val body: FrameBody? = null
 ) {
     /**
