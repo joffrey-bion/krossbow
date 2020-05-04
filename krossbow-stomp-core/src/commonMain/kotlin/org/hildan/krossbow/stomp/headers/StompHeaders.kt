@@ -20,7 +20,6 @@ import org.hildan.krossbow.stomp.headers.HeaderNames.SESSION
 import org.hildan.krossbow.stomp.headers.HeaderNames.SUBSCRIPTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.TRANSACTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.VERSION
-import org.hildan.krossbow.utils.generateUuid
 
 interface StompHeaders : MutableMap<String, String> {
 
@@ -129,7 +128,7 @@ data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) : StompHe
 
     constructor(
         destination: String,
-        id: String = generateUuid(),
+        id: String? = null, // not optional, but this allows generating it in subscription flows
         ack: AckMode = AckMode.AUTO,
         receipt: String? = null
     ) : this(

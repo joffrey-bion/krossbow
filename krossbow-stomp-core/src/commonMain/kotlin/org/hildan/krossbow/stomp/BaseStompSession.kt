@@ -19,6 +19,7 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
+import org.hildan.krossbow.stomp.headers.HeaderNames
 import org.hildan.krossbow.stomp.headers.StompAbortHeaders
 import org.hildan.krossbow.stomp.headers.StompAckHeaders
 import org.hildan.krossbow.stomp.headers.StompBeginHeaders
@@ -105,11 +106,13 @@ internal class BaseStompSession(
         }
 
     override fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> = flow<StompFrame.Message> {
-        val id = headers.id
+        // generating the ID within the flow enables multiple concurrent collectors (because different subscription IDs)
+        val headersWithId = headers.withId()
+        val id = headersWithId.id
 
         // it's necessary to open the subscription before sending SUBSCRIBE, otherwise we may miss the first messages
         val allFrames = stompSocket.stompFramesChannel.openSubscription()
-        prepareHeadersAndSendFrame(StompFrame.Subscribe(headers))
+        prepareHeadersAndSendFrame(StompFrame.Subscribe(headersWithId))
 
         val messagesFlow = allFrames.consumeAsFlow()
             .filterIsInstance<StompFrame.Message>()
@@ -172,4 +175,13 @@ internal class BaseStompSession(
             // http://stomp.github.io/stomp-specification-1.2.html#Connection_Lingering
         }
     }
+}
+
+private fun StompSubscribeHeaders.withId(): StompSubscribeHeaders {
+    // we can't use the delegated id property here, because it would crash if the underlying header is absent
+    val existingId = get(HeaderNames.ID)
+    if (existingId != null) {
+        return this
+    }
+    return StompSubscribeHeaders(destination, generateUuid(), ack, receipt)
 }
