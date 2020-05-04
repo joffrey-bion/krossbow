@@ -14,17 +14,25 @@ import org.hildan.krossbow.utils.generateUuid
  *
  * ### Subscriptions
  *
- * Subscriptions are [Flow]-based.
- * This is not to avoid callbacks at all costs, but rather to separate internal coroutines processing from the user
- * code processing.
+ * Subscriptions are [Flow]-based. All [subscribe] overloads immediately return a cold [Flow] (and don't suspend).
+ * No subscription happens when calling these methods.
  *
- * All subscribe methods immediately return a cold [Flow] (and don't suspend).
- * The actual subscription (with a SUBSCRIBE frame) only occurs upon [collect][Flow.collect]ion of the flow.
- * To unsubscribe, simply cancel the collector's job.
- * This will cancel the flow and trigger the UNSUBSCRIBE frame.
+ * The actual subscription (with a SUBSCRIBE frame) only occurs when a terminal operator is used on the flow.
  *
- * Error handling is done through the flows: if something fails (e.g. an ERROR frame is received) the relevant exception
- * is propagated to the collector.
+ * If no specific subscription ID is provided in the SUBSCRIBE headers, the returned flow can safely be collected
+ * multiple times, even concurrently.
+ * This will simply result in independent subscriptions with different IDs.
+ *
+ * If an ID is manually provided in the headers, the flow must only be collected once.
+ * Multiple collections of the flow result in an unspecified behaviour.
+ *
+ * Subscription cancellation via UNSUBSCRIBE frame is automatically handled in the following situations:
+ * - the flow consumer's job is cancelled
+ * - the flow consumer throws an exception
+ * - the flow consumer uses a terminal operator that ends the flow early, such as [first][kotlinx.coroutines.flow.first]
+ *
+ * If an error occurs upstream (e.g. STOMP ERROR frame or unexpected web socket closure), then all subscription flow
+ * collectors throw the relevant exception.
  *
  * Various extension functions are available to subscribe to a destination with predefined message conversions.
  * You can also apply your own operators on the returned flows to convert/handle message frames.
@@ -54,9 +62,9 @@ import org.hildan.krossbow.utils.generateUuid
  * after the underlying web socket implementation has returned from sending the frame.
  *
  * This suspend-until-receipt behaviour is less noticeable for subscription methods because they return cold flows.
- * The suspension doesn't occur when calling the subscribe method itself, but when collecting the flow.
+ * The suspension doesn't occur when calling the [subscribe] method itself, but when collecting the flow.
  * This means that, if a receipt header is present, the [collect][Flow.collect] call will expect a RECEIPT frame from
- * the server corresponding to the SUBSCRIBE frame.
+ * the server corresponding to the SUBSCRIBE frame, and won't start receiving messages until then.
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
  * a [LostReceiptException] is thrown in the collector's code.
  */
@@ -190,7 +198,7 @@ suspend fun StompSession.sendEmptyMsg(destination: String): StompReceipt? = send
 
 /**
  * Returns a cold [Flow] of [MESSAGE][StompFrame.Message] frames that subscribes on [collect][Flow.collect], and
- * unsubscribes when the consuming coroutine is cancelled.
+ * unsubscribes when the consumer is cancelled.
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
