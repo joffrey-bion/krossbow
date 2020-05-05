@@ -56,13 +56,39 @@ If you find a bug or a feature that's missing compared to the specification, ple
 
 ### Raw STOMP usage (without conversions)
 
-This is how to create a client and interact with it:
+This is how to create a STOMP client and interact with it:
 
 ```kotlin
-import org.hildan.krossbow.stomp.StompClient
-import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.sendText
-import org.hildan.krossbow.stomp.subscribeText
+import kotlinx.coroutines.flow.*
+import org.hildan.krossbow.stomp.*
+
+val client = StompClient() // custom WebSocketClient and other config can be passed in here
+val session: StompSession = client.connect(url) // optional login/passcode can be provided here
+
+session.sendText("/some/destination", "Basic text message") 
+
+// this flow is cold, the subscription doesn't occur until a consumer starts collecting the flow
+val subscription: Flow<String> = subscribeText("/some/topic/destination")
+
+val collectorJob = launch {
+    // flow collection triggers the SUBSCRIBE frame and receives messages
+    subscription.collect { msg ->
+        println("Received: $msg")
+    }
+}
+delay(3000)
+// When we're finished... (cancelling the flow collector triggers an UNSUBSCRIBE frame)
+collectorJob.cancel()
+ 
+session.disconnect()
+```
+
+If you want to disconnect automatically in case of exception or normal termination, you can use a `try`/`finally` block,
+or use `StompSession.use()`, which is similar to `Closeable.use()`:
+
+```kotlin
+import kotlinx.coroutines.flow.*
+import org.hildan.krossbow.stomp.*
 
 val client = StompClient() // custom WebSocketClient and other config can be passed in here
 val session: StompSession = client.connect(url) // optional login/passcode can be provided here
@@ -70,74 +96,57 @@ val session: StompSession = client.connect(url) // optional login/passcode can b
 session.use { // this: StompSession
     sendText("/some/destination", "Basic text message") 
 
-    val subscription = subscribeText("/some/topic/destination")
+    val subscription: Flow<String> = subscribeText("/some/topic/destination")
 
-    val firstMessage: String? = subscription.messages.receive()
+    // terminal operators that finish early (like first) also trigger UNSUBSCRIBE automatically
+    val firstMessage: String = subscription.first()
     println("Received: $firstMessage")
-
-    subscription.unsubscribe()
-}
-```
-
-The `StompSession.use()` method here is similar to `Closeable.use()` and allows to disconnect automatically even in
- case of error.
-
-If the STOMP session needs to be passed around and cannot be used in one place like this, it is possible to be explicit
-using `try`/`finally`, and `disconnect()` manually:
-
-```kotlin
-import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.sendText
-import org.hildan.krossbow.stomp.subscribeText
-
-val session: StompSession = StompClient().connect(url)
-
-try {
-    session.sendText("/some/destination", "Basic text message") 
-
-    val subscription = session.subscribeText("/some/topic/destination")
-
-    val firstMessage: String? = subscription.messages.receive()
-    println("Received: $firstMessage")
-
-    subscription.unsubscribe()
-} finally {
-    session.disconnect()
 }
 ```
 
 ### Using body conversions
 
-Usually STOMP is used in conjunction with JSON bodies that are converted back and forth between objects.
+You can use STOMP with basic text as frame bodies, but it really becomes interesting when you can convert the frame
+bodies back and forth into Kotlin objects.
+
+#### Using Kotlinx Serialization conversions
+
 Krossbow comes with built-in support for Kotlinx Serialization in order to support multiplatform conversions.
 
 You will need to use the `krossbow-stomp-kxserialization` module to add these capabilities (you don't need the core
- module anymore as it is transitively brought by this one).
+module anymore as it is transitively brought by this one).
 
-Call `withJsonConversions` to add conversions capabilities to your `StompSession`.
+Call `withJsonConversions` to add JSON conversions capabilities to your `StompSession`.
 Then, use `convertAndSend` and `subscribe` overloads with serializers to use these conversions:
 
 ```kotlin
-import org.hildan.krossbow.stomp.StompClient
-import org.hildan.krossbow.stomp.conversions.kxserialization.convertAndSend
-import org.hildan.krossbow.stomp.conversions.kxserialization.subscribe
-import org.hildan.krossbow.stomp.conversions.kxserialization.withJsonConversions
+import org.hildan.krossbow.stomp.*
+import org.hildan.krossbow.stomp.conversions.kxserialization.*
+
+@Serializable
+data class Person(val name: String, val age: Int)
+@Serializable
+data class MyMessage(val timestamp: Long, val author: String, val content: String)
 
 val session = StompClient().connect(url)
 val jsonStompSession = session.withJsonConversions() // adds convenience methods for kotlinx.serialization's conversions
 
 jsonStompSession.use {
-    convertAndSend("/some/destination", MyPojo("Custom", 42), MyPojo.serializer()) 
+    convertAndSend("/some/destination", Person("Bob", 42), Person.serializer()) 
 
-    val subscription = subscribe("/some/topic/destination", MyMessage.serializer())
-    val firstMessage: MyMessage = subscription.messages.receive()
-
-    println("Received: $firstMessage")
-    subscription.unsubscribe()
+    // overloads without explicit serializers exist, but should be avoided if you also target JavaScript
+    val subscription: Flow<MyMessage> = subscribe("/some/topic/destination", MyMessage.serializer())
+    
+    subscription.collect { msg ->
+        println("Received message from ${msg.author}: ${msg.content}")
+    }
 }
 ```
 
 Note that `withJsonConversions()` takes an optional `Json` argument to customize the serialization configuration.
+
+You can also use the more general `withTextConversions()` and `withBinaryConversions()` methods with the various
+serialization formats provided by Kotlinx Serialization.
 
 #### Using Jackson conversions (JVM only)
 
@@ -149,13 +158,12 @@ You will need to use the `krossbow-stomp-jackson` module to add these capabiliti
 
 ```kotlin
 StompClient().connect(url).withJacksonConversions().use {
-    convertAndSend("/some/destination", MyPojo("Custom", 42)) 
+    convertAndSend("/some/destination", Person("Bob", 42)) 
 
-    val subscription = subscribe<MyMessage>("/some/topic/destination")
-    val firstMessage: MyMessage = subscription.messages.receive()
+    val subscription: Flow<MyMessage> = subscribe<MyMessage>("/some/topic/destination")
+    val firstMessage: MyMessage = subscription.first()
 
     println("Received: $firstMessage")
-    subscription.unsubscribe()
 }
 ```
 
@@ -169,7 +177,7 @@ If you want to use your own text conversion, you can implement `TextMessageConve
 
 ```kotlin
 val myConverter = object : TextMessageConverter {
-    override val mimeType: String = "application/json"
+    override val mimeType: String = "application/json;charset=utf-8"
 
     override fun <T : Any> convertToString(body: T, bodyType: KClass<T>): String {
         TODO("your own object -> text conversion")
@@ -184,10 +192,9 @@ StompClient().connect(url).withTextConversions(myConverter).use {
     convertAndSend("/some/destination", MyPojo("Custom", 42)) 
 
     val subscription = subscribe<MyMessage>("/some/topic/destination")
-    val firstMessage: MyMessage = subscription.messages.receive()
+    val firstMessage: MyMessage = subscription.first()
 
     println("Received: $firstMessage")
-    subscription.unsubscribe()
 }
 ```
 
@@ -213,11 +220,9 @@ Other artifacts provide more implementations supporting more platforms by depend
 All the dependencies are currently published to Bintray JCenter.
 They are not yet available on npm yet.
 
-If you are using STOMP and have no special requirement for the web socket implementation, `krossbow-websocket-core` 
+If you are using STOMP and have no special requirements for the web socket implementation, `krossbow-websocket-core` 
 doesn't need to be explicitly declared as dependency because it is transitively pulled by all `krossbow-stomp-xxx` 
 artifacts.
-
-### Common library
 
 ```kotlin
 // common source set
@@ -235,9 +240,9 @@ implementation("org.hildan.krossbow:krossbow-stomp-core-js:$krossbowVersion")
 This project contains the following modules:
 - `krossbow-stomp-core`: the multiplatform STOMP client to use as a STOMP library in common, JVM or JS projects. It
  implements the STOMP 1.2 protocol on top of a websocket API defined by the `krossbow-websocket-core` module.
-- `krossbow-stomp-jackson`: a superset of `krossbow-stomp-core` adding conversion features using Jackson
+- `krossbow-stomp-jackson`: a superset of `krossbow-stomp-core` adding JSON conversion features using Jackson (JVM only)
 - `krossbow-stomp-kxserialization`: a superset of `krossbow-stomp-core` adding conversion features using Kotlinx
- Serialization library
+ Serialization library (multiplatform)
 - `krossbow-websocket-core`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
  WebSocket clients. This also provides a default JS client implementations using the Browser's native WebSocket, and
   a JVM 11+ implementation using the async WebSocket API.
