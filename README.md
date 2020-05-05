@@ -35,7 +35,7 @@ Contributions are welcome in this respect, though.
 
 ## Supported STOMP features
 
-Most of the [STOMP 1.2](https://stomp.github.io/index.html) specification's SHOULDs and MUSTs are implemented:
+All of the [STOMP 1.2](https://stomp.github.io/index.html) specification is implemented and supported:
 
 - All STOMP frames, including `ACK`/`NACK` and transactions
 - Custom headers where the protocol allows them
@@ -50,12 +50,7 @@ Additional features:
 - Built-in JSON body conversions (Kotlinx Serialization or Jackson)
 - Possibility to hook custom body converters (for textual or binary bodies)
 
-Missing specification SHOULDs:
-
-- Text data sent over binary web socket frames
-  (using a `content-type` header with `text/` MIME type or explicit `;charset=...`)
-- Binary data sent over text web socket frames
-  (using a non-text `content-type` header, or no `content-type` header)
+If you find a bug or a feature that's missing compared to the specification, please open an issue.
 
 ## STOMP Usage
 
