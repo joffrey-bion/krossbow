@@ -1,5 +1,6 @@
 package org.hildan.krossbow.test
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -14,10 +15,14 @@ import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketSession
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class WebSocketSessionMock : WebSocketSession {
 
     private val listener = WebSocketListenerChannelAdapter()
+
+    override val canSend: Boolean
+        get() = !closed
 
     override val incomingFrames = listener.incomingFrames
 
@@ -27,12 +32,21 @@ class WebSocketSessionMock : WebSocketSession {
 
     override suspend fun sendText(frameText: String) {
         // decoding the sent frame to check the validity and perform further assertions later
-        sentFrames.send(StompDecoder.decode(frameText))
+        sendStompFrame(StompDecoder.decode(frameText))
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
         // decoding the sent frame to check the validity and perform further assertions later
-        sentFrames.send(StompDecoder.decode(frameData))
+        sendStompFrame(StompDecoder.decode(frameData))
+    }
+
+    private suspend fun sendStompFrame(stompFrame: StompFrame) {
+        try {
+            sentFrames.send(stompFrame)
+        } catch (e: CancellationException) {
+            fail("Cancelled (test timeout?) while trying to send a ${stompFrame.command} frame. Maybe a " +
+                    "'waitFor...AndSimulateCompletion()' call is missing, or maybe it's just bad luck/bad timing")
+        }
     }
 
     override suspend fun close(code: Int, reason: String?) {
@@ -54,7 +68,7 @@ class WebSocketSessionMock : WebSocketSession {
         listener.onBinaryMessage(data)
     }
 
-    suspend fun simulateError(message: String) {
+    fun simulateError(message: String) {
         listener.onError(Exception(message))
     }
 
@@ -105,7 +119,11 @@ suspend fun WebSocketSessionMock.simulateConnectedFrameReceived(
 }
 
 suspend fun WebSocketSessionMock.waitForSendAndSimulateCompletion(expectedCommand: StompCommand): StompFrame {
-    val frame = waitForSentFrameAndSimulateCompletion()
+    val frame = try {
+        waitForSentFrameAndSimulateCompletion()
+    } catch (e: CancellationException) {
+        fail("Cancelled (test timeout?) while waiting for $expectedCommand frame to be sent")
+    }
     assertEquals(expectedCommand, frame.command, "The next sent frame should be a $expectedCommand STOMP frame.")
     return frame
 }
