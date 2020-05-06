@@ -40,8 +40,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation(project(":krossbow-stomp-kxserialization"))
-                implementation(project(":krossbow-websocket-sockjs"))
             }
         }
         val jvmMain by getting {
@@ -55,8 +53,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation(project(":krossbow-stomp-jackson"))
-                implementation(project(":krossbow-websocket-spring"))
                 implementation("uk.org.lidalia:slf4j-test:1.1.0")
             }
         }
