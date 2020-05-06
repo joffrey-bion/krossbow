@@ -69,6 +69,9 @@ private class OkHttpSocketToKrossbowSessionAdapter(
     private val listener: KrossbowToOkHttpListenerAdapter
 ) : KrossbowWebSocketSession {
 
+    override val canSend: Boolean
+        get() = true // all send methods are just no-ops when the session is closed, so always OK
+
     override val incomingFrames: ReceiveChannel<WebSocketFrame> = listener.channelListener.incomingFrames
 
     override suspend fun sendText(frameText: String) {

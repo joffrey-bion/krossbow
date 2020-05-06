@@ -99,6 +99,9 @@ private class JsWebSocketSession(
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : WebSocketSession {
 
+    override val canSend: Boolean
+        get() = ws.readyState == WebSocket.OPEN
+
     override suspend fun sendText(frameText: String) {
         ws.send(frameText)
     }

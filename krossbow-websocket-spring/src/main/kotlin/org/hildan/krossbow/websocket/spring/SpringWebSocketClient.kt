@@ -78,6 +78,9 @@ private class SpringToKrossbowSessionAdapter(
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : KrossbowWebSocketSession {
 
+    override val canSend: Boolean
+        get() = session.isOpen
+
     override suspend fun sendText(frameText: String) {
         withContext(Dispatchers.IO) {
             session.sendMessage(TextMessage(frameText, true))

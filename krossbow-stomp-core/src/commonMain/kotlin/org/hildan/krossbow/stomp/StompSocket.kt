@@ -58,6 +58,9 @@ internal class StompSocket(
      */
     val stompFramesFlow: Flow<StompFrame> = stompFramesChannel.asFlow()
 
+    val canSend: Boolean
+        get() = webSocketSession.canSend
+
     init {
         scope.launch(CoroutineName("stomp-frame-decoder")) {
             webSocketSession.incomingFrames.consumeAsFlow()

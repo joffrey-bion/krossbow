@@ -105,6 +105,9 @@ private class Jdk11WebSocketSession(
     private val stopListener: suspend () -> Unit
 ) : WebSocketSession {
 
+    override val canSend: Boolean
+        get() = !webSocket.isOutputClosed
+
     override suspend fun sendText(frameText: String) {
         webSocket.sendText(frameText, true).await()
     }

@@ -124,7 +124,7 @@ internal class BaseStompSession(
                     // terminal operator like first(), which aborts the flow "normally" without cancelling it.
                     // 2. The consumer was cancelled or an exception occurred upstream.
                     // In both cases we want to unsubscribe.
-                    null, is CancellationException -> unsubscribe(id)
+                    null, is CancellationException -> if (stompSocket.canSend) unsubscribe(id)
                     // 3. Other upstream exception: a fatal error on either STOMP or web socket protocol occurred
                     // If such a fatal error occurs, we can't (and don't want to) send even an UNSUBSCRIBE frame.
                     else -> Unit
