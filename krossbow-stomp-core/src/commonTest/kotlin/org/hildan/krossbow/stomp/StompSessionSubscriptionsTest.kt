@@ -40,10 +40,10 @@ class StompSessionSubscriptionsTest {
         val messages = stompSession.subscribeText("/dest")
         val message = messages.first()
         assertEquals("HELLO", message)
-        assertFalse(wsSession.closed)
+        assertFalse(wsSession.closed, "Unsubscribe should not close the web socket session")
 
         stompSession.disconnect()
-        assertTrue(wsSession.closed)
+        assertTrue(wsSession.closed, "disconnect() should close the web socket session")
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -62,10 +62,10 @@ class StompSessionSubscriptionsTest {
         val messagesFlow = stompSession.subscribeText("/dest")
         val messages = messagesFlow.take(3).toList()
         assertEquals(listOf("MSG_0", "MSG_1", "MSG_2"), messages)
-        assertFalse(wsSession.closed)
+        assertFalse(wsSession.closed, "Unsubscribe should not close the web socket session")
 
         stompSession.disconnect()
-        assertTrue(wsSession.closed)
+        assertTrue(wsSession.closed, "disconnect() should close the web socket session")
     }
 
     @Test
@@ -152,7 +152,7 @@ class StompSessionSubscriptionsTest {
             messages.first()
         }
         assertEquals(errorMessage, exception.frame.message,
-            "The exception in collectors should have the ERROR frame's body as message")
+            "The exception in collectors should have the STOMP ERROR frame's body as message")
         assertTrue(wsSession.closed, "The web socket should be closed after a STOMP ERROR frame")
     }
 
@@ -164,7 +164,6 @@ class StompSessionSubscriptionsTest {
         launch {
             wsSession.waitForSubscribeAndSimulateCompletion()
             wsSession.simulateError(errorMessage)
-            wsSession.simulateClose(WebSocketCloseCodes.SERVER_ERROR, errorMessage)
             // after a web socket error, we should not attempt to send an UNSUBSCRIBE or DISCONNECT frame
         }
 
@@ -172,7 +171,8 @@ class StompSessionSubscriptionsTest {
         val exception = assertFailsWith(WebSocketException::class) {
             messages.first()
         }
-        assertEquals(errorMessage, exception.message)
+        assertEquals(errorMessage, exception.message,
+            "The exception in collectors should have the web socket error frame's body as message")
         assertTrue(wsSession.closed, "The web socket should be closed after a web socket frame")
     }
 
