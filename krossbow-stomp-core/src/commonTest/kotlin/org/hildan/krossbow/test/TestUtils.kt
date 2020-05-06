@@ -4,20 +4,25 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
-import kotlin.test.assertNotNull
 import kotlin.test.fail
 
-fun <T> runAsyncTestWithTimeout(millis: Long = 4000, block: suspend CoroutineScope.() -> T) = runAsyncTest {
+fun <T> runAsyncTestWithTimeout(millis: Long = 4000, block: suspend CoroutineScope.() -> T) = runAsyncTest(StuckTestTracker()) {
     val result = withTimeoutOrNull(millis) {
         block()
         Unit
     }
-    assertNotNull(result, "this test should run in less than ${millis}ms")
+    if (result == null) {
+        val stuckCallsList = coroutineContext.stuckCalls.joinToString("\n") { "- $it" }
+        val stuckReport = if (stuckCallsList.isEmpty()) "" else "Stuck method tracker reports the following calls:\n$stuckCallsList\n"
+        fail("This test should run in less than ${millis}ms.\n$stuckReport")
+    }
 }
 
-expect fun <T> runAsyncTest(block: suspend CoroutineScope.() -> T)
+expect fun <T> runAsyncTest(context: CoroutineContext = EmptyCoroutineContext, block: suspend CoroutineScope.() -> T)
 
 expect fun getCause(exception: Exception): Throwable?
 

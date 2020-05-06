@@ -1,6 +1,5 @@
 package org.hildan.krossbow.test
 
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -13,9 +12,9 @@ import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketSession
+import kotlin.coroutines.coroutineContext
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import kotlin.test.fail
 
 class WebSocketSessionMock : WebSocketSession {
 
@@ -41,11 +40,10 @@ class WebSocketSessionMock : WebSocketSession {
     }
 
     private suspend fun sendStompFrame(stompFrame: StompFrame) {
-        try {
+        coroutineContext.withStuckTracking(
+            "sendStompFrame(${stompFrame.command}) (maybe a waitForSentFrameAndSimulateCompletion() is missing?)"
+        ) {
             sentFrames.send(stompFrame)
-        } catch (e: CancellationException) {
-            fail("Cancelled (test timeout?) while trying to send a ${stompFrame.command} frame. Maybe a " +
-                    "'waitFor...AndSimulateCompletion()' call is missing, or maybe it's just bad luck/bad timing")
         }
     }
 
@@ -119,10 +117,10 @@ suspend fun WebSocketSessionMock.simulateConnectedFrameReceived(
 }
 
 suspend fun WebSocketSessionMock.waitForSendAndSimulateCompletion(expectedCommand: StompCommand): StompFrame {
-    val frame = try {
+    val frame = coroutineContext.withStuckTracking(
+        "waitForSendAndSimulateCompletion($expectedCommand) (maybe some STOMP frame should be sent but isn't?)"
+    ) {
         waitForSentFrameAndSimulateCompletion()
-    } catch (e: CancellationException) {
-        fail("Cancelled (test timeout?) while waiting for $expectedCommand frame to be sent")
     }
     assertEquals(expectedCommand, frame.command, "The next sent frame should be a $expectedCommand STOMP frame.")
     return frame
