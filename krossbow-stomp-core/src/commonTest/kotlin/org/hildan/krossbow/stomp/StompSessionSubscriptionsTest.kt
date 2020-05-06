@@ -77,7 +77,7 @@ class StompSessionSubscriptionsTest {
             val job = launch {
                 repeat(15) {
                     wsSession.simulateMessageFrameReceived(subFrame.headers.id, "MSG_$it")
-                    delay(300)
+                    delay(700)
                 }
             }
             wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
@@ -92,7 +92,7 @@ class StompSessionSubscriptionsTest {
                 messages.add(it)
             }
         }
-        delay(800)
+        delay(2000)
         collectingJob.cancelAndJoin() // joining actually waits for UNSUBSCRIBE
 
         assertEquals(listOf("MSG_0", "MSG_1", "MSG_2"), messages)
@@ -111,7 +111,7 @@ class StompSessionSubscriptionsTest {
             val job = launch {
                 repeat(15) {
                     wsSession.simulateMessageFrameReceived(subFrame.headers.id, "MSG_$it")
-                    delay(300)
+                    delay(700)
                 }
             }
             wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
@@ -126,7 +126,7 @@ class StompSessionSubscriptionsTest {
                 messages.add(it)
             }
         }
-        delay(800)
+        delay(2000)
         stompSession.disconnect()
 
         assertEquals(listOf("MSG_0", "MSG_1", "MSG_2"), messages)
