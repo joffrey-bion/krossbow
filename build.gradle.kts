@@ -13,6 +13,7 @@ plugins {
     id("org.jetbrains.dokka") version "0.10.1" apply false
     id("com.jfrog.bintray") version "1.8.5" apply false
     id("org.hildan.github.changelog") version "0.8.0"
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.2.3"
 }
 
 allprojects {

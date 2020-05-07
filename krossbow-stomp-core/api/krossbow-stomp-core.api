@@ -1,0 +1,1044 @@
+public class org/hildan/krossbow/stomp/ConnectionException : java/lang/Exception {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getUrl ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/ConnectionTimeout : org/hildan/krossbow/stomp/ConnectionException {
+	public fun <init> (Ljava/lang/String;J)V
+}
+
+public final class org/hildan/krossbow/stomp/LostReceiptException : java/lang/Exception {
+	public fun <init> (Ljava/lang/String;JLorg/hildan/krossbow/stomp/frame/StompFrame;)V
+	public final fun getConfiguredTimeoutMillis ()J
+	public final fun getFrame ()Lorg/hildan/krossbow/stomp/frame/StompFrame;
+	public final fun getReceiptId ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/MessageConversionException : java/lang/Exception {
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
+public final class org/hildan/krossbow/stomp/MissingHeartBeatException : java/lang/Exception {
+	public fun <init> (I)V
+	public final fun getExpectedPeriodMillis ()I
+}
+
+public final class org/hildan/krossbow/stomp/StompClient {
+	public fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lorg/hildan/krossbow/stomp/config/StompConfig;)V
+	public final fun connect (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun connect$default (Lorg/hildan/krossbow/stomp/StompClient;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/stomp/StompConnectionException : org/hildan/krossbow/stomp/ConnectionException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class org/hildan/krossbow/stomp/StompErrorFrameReceived : java/lang/Exception {
+	public fun <init> (Lorg/hildan/krossbow/stomp/frame/StompFrame$Error;)V
+	public final fun getFrame ()Lorg/hildan/krossbow/stomp/frame/StompFrame$Error;
+}
+
+public final class org/hildan/krossbow/stomp/StompReceipt {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lorg/hildan/krossbow/stomp/StompReceipt;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/StompReceipt;Ljava/lang/String;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/StompReceipt;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/hildan/krossbow/stomp/StompSession {
+	public abstract fun abort (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun ack (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun begin (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun commit (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun disconnect (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun nack (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun send (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class org/hildan/krossbow/stomp/StompSession$DefaultImpls {
+	public static synthetic fun ack$default (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun nack$default (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/stomp/StompSessionKt {
+	public static final fun sendBinary (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun sendEmptyMsg (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun sendText (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun subscribe (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun subscribeBinary (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun subscribeText (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun use (Lorg/hildan/krossbow/stomp/StompSession;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun withTransaction (Lorg/hildan/krossbow/stomp/StompSession;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/stomp/WebSocketClosedUnexpectedly : java/lang/Exception {
+	public fun <init> (ILjava/lang/String;)V
+	public final fun getCode ()I
+	public final fun getReason ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/WebSocketConnectionException : org/hildan/krossbow/stomp/ConnectionException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class org/hildan/krossbow/stomp/config/HeartBeat {
+	public fun <init> ()V
+	public fun <init> (II)V
+	public synthetic fun <init> (IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lorg/hildan/krossbow/stomp/config/HeartBeat;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/config/HeartBeat;IIILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/HeartBeat;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpectedPeriodMillis ()I
+	public final fun getMinSendPeriodMillis ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/config/StompConfig {
+	public fun <init> ()V
+	public fun <init> (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;JJJZ)V
+	public synthetic fun <init> (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;JJJZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
+	public final fun component5 ()J
+	public final fun component6 ()J
+	public final fun component7 ()J
+	public final fun component8 ()Z
+	public final fun copy (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;JJJZ)Lorg/hildan/krossbow/stomp/config/StompConfig;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/config/StompConfig;ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;JJJZILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/StompConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAutoContentLength ()Z
+	public final fun getAutoReceipt ()Z
+	public final fun getConnectWithStompCommand ()Z
+	public final fun getConnectionTimeoutMillis ()J
+	public final fun getDisconnectTimeoutMillis ()J
+	public final fun getGracefulDisconnect ()Z
+	public final fun getHeartBeat ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
+	public final fun getReceiptTimeoutMillis ()J
+	public fun hashCode ()I
+	public final fun setAutoContentLength (Z)V
+	public final fun setAutoReceipt (Z)V
+	public final fun setConnectWithStompCommand (Z)V
+	public final fun setConnectionTimeoutMillis (J)V
+	public final fun setDisconnectTimeoutMillis (J)V
+	public final fun setGracefulDisconnect (Z)V
+	public final fun setHeartBeat (Lorg/hildan/krossbow/stomp/config/HeartBeat;)V
+	public final fun setReceiptTimeoutMillis (J)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions : org/hildan/krossbow/stomp/StompSession {
+	public abstract fun convertAndSend (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Ljava/lang/Object;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lkotlin/reflect/KClass;)Lkotlinx/coroutines/flow/Flow;
+	public abstract fun subscribeOptional (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lkotlin/reflect/KClass;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions$DefaultImpls {
+	public static synthetic fun convertAndSend$default (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Ljava/lang/Object;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversionsKt {
+	public static final fun convertAndSend (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Ljava/lang/String;Ljava/lang/Object;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun convertAndSend$default (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Ljava/lang/String;Ljava/lang/Object;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun subscribe (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Ljava/lang/String;Lkotlin/reflect/KClass;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun subscribeOptional (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Ljava/lang/String;Lkotlin/reflect/KClass;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class org/hildan/krossbow/stomp/conversions/StompSessionWithClassToTextConversionsKt {
+	public static final fun withTextConversions (Lorg/hildan/krossbow/stomp/StompSession;Lorg/hildan/krossbow/stomp/conversions/TextMessageConverter;)Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;
+}
+
+public abstract interface class org/hildan/krossbow/stomp/conversions/TextMessageConverter {
+	public abstract fun convertFromString (Ljava/lang/String;Lkotlin/reflect/KClass;)Ljava/lang/Object;
+	public abstract fun convertToString (Ljava/lang/Object;Lkotlin/reflect/KClass;)Ljava/lang/String;
+	public abstract fun getMimeType ()Ljava/lang/String;
+}
+
+public abstract class org/hildan/krossbow/stomp/frame/FrameBody {
+	public abstract fun getBytes ()[B
+}
+
+public final class org/hildan/krossbow/stomp/frame/FrameBody$Binary : org/hildan/krossbow/stomp/frame/FrameBody {
+	public fun <init> ([B)V
+	public final fun component1 ()[B
+	public final fun copy ([B)Lorg/hildan/krossbow/stomp/frame/FrameBody$Binary;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/FrameBody$Binary;[BILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/FrameBody$Binary;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getBytes ()[B
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/FrameBody$Text : org/hildan/krossbow/stomp/frame/FrameBody {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> ([B)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lorg/hildan/krossbow/stomp/frame/FrameBody$Text;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/FrameBody$Text;Ljava/lang/String;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/FrameBody$Text;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getBytes ()[B
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/InvalidStompCommandException : java/lang/Exception {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getInvalidText ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/InvalidStompFrameException : java/lang/Exception {
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompCommand : java/lang/Enum {
+	public static final field ABORT Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field ACK Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field BEGIN Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field COMMIT Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field CONNECT Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field CONNECTED Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field Companion Lorg/hildan/krossbow/stomp/frame/StompCommand$Companion;
+	public static final field DISCONNECT Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field ERROR Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field MESSAGE Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field NACK Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field RECEIPT Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field SEND Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field STOMP Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field SUBSCRIBE Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static final field UNSUBSCRIBE Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static fun valueOf (Ljava/lang/String;)Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static fun values ()[Lorg/hildan/krossbow/stomp/frame/StompCommand;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompCommand$Companion {
+}
+
+public abstract class org/hildan/krossbow/stomp/frame/StompFrame {
+	public static final field Companion Lorg/hildan/krossbow/stomp/frame/StompFrame$Companion;
+	public synthetic fun <init> (Lorg/hildan/krossbow/stomp/frame/StompCommand;Lorg/hildan/krossbow/stomp/headers/StompHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getBody ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
+	public final fun getBodyAsText ()Ljava/lang/String;
+	public final fun getCommand ()Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Abort : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Abort;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Abort;Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Abort;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Ack : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Ack;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Ack;Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Ack;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Begin : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Begin;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Begin;Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Begin;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Commit : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Commit;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Commit;Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Commit;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Companion {
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Connect : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Connect;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Connect;Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Connect;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Connected : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Connected;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Connected;Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Connected;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Disconnect : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Disconnect;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Disconnect;Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Disconnect;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Error : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;
+	public final fun component2 ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Error;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Error;Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getBody ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Message : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;
+	public final fun component2 ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Message;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Message;Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Message;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getBody ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Nack : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Nack;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Nack;Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Nack;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Receipt : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Receipt;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Receipt;Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Receipt;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Send : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;
+	public final fun component2 ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Send;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Send;Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Send;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getBody ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Stomp : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Stomp;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Stomp;Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Stomp;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Subscribe : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Subscribe;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Subscribe;Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Subscribe;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Unsubscribe : org/hildan/krossbow/stomp/frame/StompFrame {
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;)V
+	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Unsubscribe;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/frame/StompFrame$Unsubscribe;Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Unsubscribe;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/headers/AckMode : java/lang/Enum {
+	public static final field AUTO Lorg/hildan/krossbow/stomp/headers/AckMode;
+	public static final field CLIENT Lorg/hildan/krossbow/stomp/headers/AckMode;
+	public static final field CLIENT_INDIVIDUAL Lorg/hildan/krossbow/stomp/headers/AckMode;
+	public static final field Companion Lorg/hildan/krossbow/stomp/headers/AckMode$Companion;
+	public final fun getHeaderValue ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lorg/hildan/krossbow/stomp/headers/AckMode;
+	public static fun values ()[Lorg/hildan/krossbow/stomp/headers/AckMode;
+}
+
+public final class org/hildan/krossbow/stomp/headers/AckMode$Companion {
+	public final fun fromHeader (Ljava/lang/String;)Lorg/hildan/krossbow/stomp/headers/AckMode;
+}
+
+public final class org/hildan/krossbow/stomp/headers/HeaderNames {
+	public static final field ACCEPT_VERSION Ljava/lang/String;
+	public static final field ACK Ljava/lang/String;
+	public static final field CONTENT_LENGTH Ljava/lang/String;
+	public static final field CONTENT_TYPE Ljava/lang/String;
+	public static final field DESTINATION Ljava/lang/String;
+	public static final field HEART_BEAT Ljava/lang/String;
+	public static final field HOST Ljava/lang/String;
+	public static final field ID Ljava/lang/String;
+	public static final field INSTANCE Lorg/hildan/krossbow/stomp/headers/HeaderNames;
+	public static final field LOGIN Ljava/lang/String;
+	public static final field MESSAGE Ljava/lang/String;
+	public static final field MESSAGE_ID Ljava/lang/String;
+	public static final field PASSCODE Ljava/lang/String;
+	public static final field RECEIPT Ljava/lang/String;
+	public static final field RECEIPT_ID Ljava/lang/String;
+	public static final field SERVER Ljava/lang/String;
+	public static final field SESSION Ljava/lang/String;
+	public static final field SUBSCRIPTION Ljava/lang/String;
+	public static final field TRANSACTION Ljava/lang/String;
+	public static final field VERSION Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/headers/InvalidAckHeaderException : java/lang/Exception {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getInvalidText ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/headers/InvalidEscapeException : java/lang/IllegalArgumentException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getInvalidSequence ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompAbortHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public final fun getTransaction ()Ljava/lang/String;
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompAckHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public final fun getId ()Ljava/lang/String;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public final fun getTransaction ()Ljava/lang/String;
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompBeginHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public final fun getTransaction ()Ljava/lang/String;
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompCommitHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public final fun getTransaction ()Ljava/lang/String;
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompConnectHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getAcceptVersion ()Ljava/util/List;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public final fun getHeartBeat ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
+	public final fun getHost ()Ljava/lang/String;
+	public fun getKeys ()Ljava/util/Set;
+	public final fun getLogin ()Ljava/lang/String;
+	public final fun getPasscode ()Ljava/lang/String;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompConnectedHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public final fun getHeartBeat ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public final fun getServer ()Ljava/lang/String;
+	public final fun getSession ()Ljava/lang/String;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public final fun getVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompDisconnectHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompErrorHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun getReceipt ()Ljava/lang/String;
+	public final fun getReceiptId ()Ljava/lang/String;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public abstract interface class org/hildan/krossbow/stomp/headers/StompHeaders : java/util/Map, kotlin/jvm/internal/markers/KMutableMap {
+	public abstract fun getContentLength ()Ljava/lang/Integer;
+	public abstract fun getContentType ()Ljava/lang/String;
+	public abstract fun getReceipt ()Ljava/lang/String;
+	public abstract fun setContentLength (Ljava/lang/Integer;)V
+	public abstract fun setContentType (Ljava/lang/String;)V
+	public abstract fun setReceipt (Ljava/lang/String;)V
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompMessageHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getAck ()Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public final fun getDestination ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public final fun getMessageId ()Ljava/lang/String;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public final fun getSubscription ()Ljava/lang/String;
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompNackHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public final fun getId ()Ljava/lang/String;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public final fun getTransaction ()Ljava/lang/String;
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompReceiptHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public final fun getReceiptId ()Ljava/lang/String;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompSendHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public final fun getDestination ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public final fun getTransaction ()Ljava/lang/String;
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun setTransaction (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompSubscribeHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/headers/AckMode;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/headers/AckMode;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getAck ()Lorg/hildan/krossbow/stomp/headers/AckMode;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public final fun getDestination ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public final fun getId ()Ljava/lang/String;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class org/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getContentLength ()Ljava/lang/Integer;
+	public fun getContentType ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public final fun getId ()Ljava/lang/String;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getReceipt ()Ljava/lang/String;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/String;
+	public fun setContentLength (Ljava/lang/Integer;)V
+	public fun setContentType (Ljava/lang/String;)V
+	public fun setReceipt (Ljava/lang/String;)V
+	public final fun size ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+

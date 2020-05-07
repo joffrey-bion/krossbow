@@ -1,0 +1,13 @@
+public final class org/hildan/krossbow/websocket/spring/SpringDefaultWebSocketClient : org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter {
+	public static final field INSTANCE Lorg/hildan/krossbow/websocket/spring/SpringDefaultWebSocketClient;
+}
+
+public final class org/hildan/krossbow/websocket/spring/SpringSockJSWebSocketClient : org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter {
+	public static final field INSTANCE Lorg/hildan/krossbow/websocket/spring/SpringSockJSWebSocketClient;
+}
+
+public class org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter : org/hildan/krossbow/websocket/WebSocketClient {
+	public fun <init> (Lorg/springframework/web/socket/client/WebSocketClient;)V
+	public fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
