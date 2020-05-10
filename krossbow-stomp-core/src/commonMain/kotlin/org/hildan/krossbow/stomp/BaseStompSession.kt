@@ -119,11 +119,12 @@ internal class BaseStompSession(
             .filter { it.headers.subscription == id }
             .onCompletion {
                 when (it) {
-                    // 1. No exception (null) occurs when the flow terminates normally. This can mean that the
-                    // connection was closed and the flow of frames is over, or it can mean that the consumer used a
-                    // terminal operator like first(), which aborts the flow "normally" without cancelling it.
+                    // 1. No exception (null) occurs when the flow terminates normally.
+                    // 1a. This can mean that the connection was closed and the flow of frames is over, or
+                    // 1b. This can mean that the consumer used a terminal operator like first(), which aborts the flow
+                    //     "normally" without cancelling it.
                     // 2. The consumer was cancelled or an exception occurred upstream.
-                    // In both cases we want to unsubscribe.
+                    // In cases 1b and 2 we want to unsubscribe, but for 1a we need to check if we can still send
                     null, is CancellationException -> if (stompSocket.canSend) unsubscribe(id)
                     // 3. Other upstream exception: a fatal error on either STOMP or web socket protocol occurred
                     // If such a fatal error occurs, we can't (and don't want to) send even an UNSUBSCRIBE frame.
