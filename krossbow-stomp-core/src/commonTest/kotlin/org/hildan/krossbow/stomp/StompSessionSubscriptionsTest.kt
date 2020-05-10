@@ -8,12 +8,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runBlockingTest
 import org.hildan.krossbow.stomp.frame.InvalidStompFrameException
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.test.connectWithMocks
-import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.simulateMessageFrameReceived
+import org.hildan.krossbow.test.simulateReceiptFrameReceived
+import org.hildan.krossbow.test.waitForDisconnectAndSimulateCompletion
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import org.hildan.krossbow.test.waitForSubscribeAndSimulateCompletion
 import org.hildan.krossbow.test.waitForUnsubscribeAndSimulateCompletion
@@ -28,7 +30,7 @@ import kotlin.test.assertTrue
 class StompSessionSubscriptionsTest {
 
     @Test
-    fun subscription_firstOperatorUnsubscribes() = runAsyncTestWithTimeout {
+    fun subscription_firstOperatorUnsubscribes() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
@@ -48,7 +50,7 @@ class StompSessionSubscriptionsTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun subscription_takeOperatorUnsubscribes() = runAsyncTestWithTimeout {
+    fun subscription_takeOperatorUnsubscribes() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
@@ -69,7 +71,7 @@ class StompSessionSubscriptionsTest {
     }
 
     @Test
-    fun subscription_collectorCancellationUnsubscribes() = runAsyncTestWithTimeout {
+    fun subscription_collectorCancellationUnsubscribes() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
@@ -77,7 +79,7 @@ class StompSessionSubscriptionsTest {
             val job = launch {
                 repeat(15) {
                     wsSession.simulateMessageFrameReceived(subFrame.headers.id, "MSG_$it")
-                    delay(700)
+                    delay(1000)
                 }
             }
             wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
@@ -92,7 +94,7 @@ class StompSessionSubscriptionsTest {
                 messages.add(it)
             }
         }
-        delay(2000)
+        advanceTimeBy(2000)
         collectingJob.cancelAndJoin() // joining actually waits for UNSUBSCRIBE
 
         assertEquals(listOf("MSG_0", "MSG_1", "MSG_2"), messages)
@@ -103,19 +105,20 @@ class StompSessionSubscriptionsTest {
     }
 
     @Test
-    fun subscription_disconnectDoesntNeedToUnsubscribe() = runAsyncTestWithTimeout {
+    fun subscription_disconnectDoesntNeedToUnsubscribe() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
             val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
             val job = launch {
                 repeat(15) {
+                    delay(1000)
                     wsSession.simulateMessageFrameReceived(subFrame.headers.id, "MSG_$it")
-                    delay(700)
                 }
             }
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            val disconnectFrame = wsSession.waitForDisconnectAndSimulateCompletion()
             job.cancel()
+            wsSession.simulateReceiptFrameReceived(disconnectFrame.headers.receipt!!)
             // after disconnecting, we should not attempt to send an UNSUBSCRIBE frame
         }
         val messagesFlow = stompSession.subscribeText("/dest")
@@ -126,9 +129,8 @@ class StompSessionSubscriptionsTest {
                 messages.add(it)
             }
         }
-        delay(2000)
+        advanceTimeBy(3000)
         stompSession.disconnect()
-
         assertEquals(listOf("MSG_0", "MSG_1", "MSG_2"), messages)
         assertTrue(wsSession.closed, "disconnect() should close the web socket session")
         collectingJob.join()
@@ -137,7 +139,7 @@ class StompSessionSubscriptionsTest {
     }
 
     @Test
-    fun subscription_stompErrorFrame_shouldGiveExceptionInCollector() = runAsyncTestWithTimeout {
+    fun subscription_stompErrorFrame_shouldGiveExceptionInCollector() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         val errorMessage = "some error message"
@@ -157,7 +159,7 @@ class StompSessionSubscriptionsTest {
     }
 
     @Test
-    fun subscription_webSocketError_shouldGiveExceptionInCollector() = runAsyncTestWithTimeout {
+    fun subscription_webSocketError_shouldGiveExceptionInCollector() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         val errorMessage = "some error message"
@@ -177,7 +179,7 @@ class StompSessionSubscriptionsTest {
     }
 
     @Test
-    fun subscription_webSocketClose_shouldGiveExceptionInCollector() = runAsyncTestWithTimeout {
+    fun subscription_webSocketClose_shouldGiveExceptionInCollector() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
@@ -195,7 +197,7 @@ class StompSessionSubscriptionsTest {
     }
 
     @Test
-    fun subscription_frameDecodingError_shouldGiveExceptionInCollector() = runAsyncTestWithTimeout {
+    fun subscription_frameDecodingError_shouldGiveExceptionInCollector() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {

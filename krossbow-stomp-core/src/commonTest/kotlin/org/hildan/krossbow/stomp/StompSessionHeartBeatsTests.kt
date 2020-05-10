@@ -3,11 +3,11 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runBlockingTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.test.connectWithMocks
-import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateMessageFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import org.hildan.krossbow.test.waitForSubscribeAndSimulateCompletion
@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 class StompSessionHeartBeatsTests {
 
     @Test
-    fun wsSessionClosedOnHeartBeatTimeOut() = runAsyncTestWithTimeout {
+    fun wsSessionClosedOnHeartBeatTimeOut() = runBlockingTest {
         val (wsSession, _) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300))
         )
@@ -29,7 +29,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun receiveSubMessage_success() = runAsyncTestWithTimeout {
+    fun receiveSubMessage_success() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(
                 version = "1.2",
@@ -52,7 +52,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun receiveSubMessage_failsOnHeartBeatTimeOut() = runAsyncTestWithTimeout {
+    fun receiveSubMessage_failsOnHeartBeatTimeOut() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300))
         )
@@ -68,7 +68,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun receiveSubMessage_succeedsIfKeptAlive() = runAsyncTestWithTimeout {
+    fun receiveSubMessage_succeedsIfKeptAlive() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300))
         )

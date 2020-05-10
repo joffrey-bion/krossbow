@@ -10,9 +10,9 @@ import org.hildan.krossbow.stomp.frame.encodeToText
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
+import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketSession
-import kotlin.coroutines.coroutineContext
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -40,11 +40,7 @@ class WebSocketSessionMock : WebSocketSession {
     }
 
     private suspend fun sendStompFrame(stompFrame: StompFrame) {
-        coroutineContext.withStuckTracking(
-            "sendStompFrame(${stompFrame.command}) (maybe a waitForSentFrameAndSimulateCompletion() is missing?)"
-        ) {
-            sentFrames.send(stompFrame)
-        }
+        sentFrames.send(stompFrame)
     }
 
     override suspend fun close(code: Int, reason: String?) {
@@ -116,12 +112,12 @@ suspend fun WebSocketSessionMock.simulateConnectedFrameReceived(
     simulateTextStompFrameReceived(connectedFrame)
 }
 
+suspend fun WebSocketSessionMock.simulateReceiptFrameReceived(receiptId: String) {
+    simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders(receiptId)))
+}
+
 suspend fun WebSocketSessionMock.waitForSendAndSimulateCompletion(expectedCommand: StompCommand): StompFrame {
-    val frame = coroutineContext.withStuckTracking(
-        "waitForSendAndSimulateCompletion($expectedCommand) (maybe some STOMP frame should be sent but isn't?)"
-    ) {
-        waitForSentFrameAndSimulateCompletion()
-    }
+    val frame = waitForSentFrameAndSimulateCompletion()
     assertEquals(expectedCommand, frame.command, "The next sent frame should be a $expectedCommand STOMP frame.")
     return frame
 }
@@ -136,5 +132,11 @@ suspend fun WebSocketSessionMock.waitForUnsubscribeAndSimulateCompletion(expecte
     val frame = waitForSendAndSimulateCompletion(StompCommand.UNSUBSCRIBE)
     assertTrue(frame is StompFrame.Unsubscribe)
     assertEquals(expectedSubId, frame.headers.id)
+    return frame
+}
+
+suspend fun WebSocketSessionMock.waitForDisconnectAndSimulateCompletion(): StompFrame.Disconnect {
+    val frame = waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+    assertTrue(frame is StompFrame.Disconnect)
     return frame
 }

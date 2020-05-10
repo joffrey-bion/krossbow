@@ -3,6 +3,7 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runBlockingTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -11,9 +12,7 @@ import org.hildan.krossbow.test.ImmediatelyFailingWebSocketClient
 import org.hildan.krossbow.test.ImmediatelySucceedingWebSocketClient
 import org.hildan.krossbow.test.ManuallyConnectingWebSocketClient
 import org.hildan.krossbow.test.WebSocketSessionMock
-import org.hildan.krossbow.test.assertCompletesSoon
 import org.hildan.krossbow.test.assertTimesOutWith
-import org.hildan.krossbow.test.runAsyncTestWithTimeout
 import org.hildan.krossbow.test.simulateConnectedFrameReceived
 import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
@@ -23,13 +22,14 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 private const val TEST_CONNECTION_TIMEOUT: Long = 500
 
 class StompClientTest {
 
     @Test
-    fun connect_suspendsUntilConnectedFrame() = runAsyncTestWithTimeout {
+    fun connect_suspendsUntilConnectedFrame() = runBlockingTest {
         val wsClient = ManuallyConnectingWebSocketClient()
         val stompClient = StompClient(wsClient)
 
@@ -43,25 +43,25 @@ class StompClientTest {
         assertFalse(deferredStompSession.isCompleted, "connect() call should wait for STOMP connection")
 
         wsSession.simulateConnectedFrameReceived()
-        assertCompletesSoon(deferredStompSession, "connect() call should finish after receiving CONNECTED frame")
+        assertTrue(deferredStompSession.isCompleted, "connect() call should finish after receiving CONNECTED frame")
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_fullHttpUrl() = runAsyncTestWithTimeout {
+    fun connect_sendsCorrectHeaders_fullHttpUrl() = runBlockingTest {
         testConnectHeaders(StompConnectHeaders(host = "some.host", heartBeat = HeartBeat())) { client ->
             client.connect("http://some.host:8080/ws")
         }
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_standardWsUrl() = runAsyncTestWithTimeout {
+    fun connect_sendsCorrectHeaders_standardWsUrl() = runBlockingTest {
         testConnectHeaders(StompConnectHeaders(host = "some.host", heartBeat = HeartBeat())) { client ->
             client.connect("ws://some.host/socket")
         }
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_withCredentials() = runAsyncTestWithTimeout {
+    fun connect_sendsCorrectHeaders_withCredentials() = runBlockingTest {
         val expectedHeaders = StompConnectHeaders(
             host = "some.host", login = "login", passcode = "pass", heartBeat = HeartBeat()
         )
@@ -71,7 +71,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_withCustomHeartBeats() = runAsyncTestWithTimeout {
+    fun connect_sendsCorrectHeaders_withCustomHeartBeats() = runBlockingTest {
         val customHeartBeat = HeartBeat(10, 50)
         val expectedHeaders = StompConnectHeaders(
             host = "some.host",
@@ -105,7 +105,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_timesOutIfWebSocketDoesNotConnect() = runAsyncTestWithTimeout {
+    fun connect_timesOutIfWebSocketDoesNotConnect() = runBlockingTest {
         // this WS client will suspend on connect() until manually triggered (which is not done during this test)
         val stompClient = StompClient(ManuallyConnectingWebSocketClient()) {
             connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
@@ -116,7 +116,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_timesOutIfConnectedFrameIsNotReceived() = runAsyncTestWithTimeout {
+    fun connect_timesOutIfConnectedFrameIsNotReceived() = runBlockingTest {
         val stompClient = StompClient(ImmediatelySucceedingWebSocketClient()) {
             connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
         }
@@ -126,7 +126,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_failsIfWebSocketFailsToConnect() = runAsyncTestWithTimeout {
+    fun connect_failsIfWebSocketFailsToConnect() = runBlockingTest {
         val wsConnectionException = Exception("some web socket exception")
         val stompClient = StompClient(ImmediatelyFailingWebSocketClient(wsConnectionException))
         val exception = assertFailsWith(WebSocketConnectionException::class) {
@@ -138,7 +138,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_failsIfErrorFrameReceived() = runAsyncTestWithTimeout {
+    fun connect_failsIfErrorFrameReceived() = runBlockingTest {
         val wsSession = WebSocketSessionMock()
         val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession))
 
