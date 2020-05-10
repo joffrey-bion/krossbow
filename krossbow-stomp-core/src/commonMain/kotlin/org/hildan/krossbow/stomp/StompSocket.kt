@@ -121,16 +121,20 @@ internal class StompSocket(
     }
 
     suspend fun close(cause: Throwable? = null) {
-        // required to stop the subscribers of the frames, and propagate the exception if present
-        stompFramesChannel.close(cause)
         val closeCode = when (cause) {
             is MissingHeartBeatException -> WebSocketCloseCodes.PROTOCOL_ERROR
             null -> WebSocketCloseCodes.NORMAL_CLOSURE
             else -> WebSocketCloseCodes.GOING_AWAY
         }
         webSocketSession.close(code = closeCode, reason = cause?.message)
-        // this will cancel the collection of web socket frames, maybe before the web socket server's close frame is
-        // received
+
+        // Required to stop the subscribers of the frames, and propagate the exception if present.
+        // We close this channel after the web socket, so that consumers can see they can't send UNSUBSCRIBE.
+        stompFramesChannel.close(cause)
+
+        // Cancels the collection of web socket frames.
+        // Maybe this will happen before the web socket server's close frame is received, but it's OK because we
+        // closed the stompFramesChannel already.
         scope.cancel(CancellationException(cause?.message, cause))
     }
 }
