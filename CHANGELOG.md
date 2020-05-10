@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.20.1](https://github.com/joffrey-bion/krossbow/tree/0.20.1) (2020-05-10)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.0...0.20.1)
+
+**Fixed bugs:**
+
+- Should not send UNSUBSCRIBE frames after DISCONNECT [\#54](https://github.com/joffrey-bion/krossbow/issues/54)
+
 ## [0.20.0](https://github.com/joffrey-bion/krossbow/tree/0.20.0) (2020-05-05)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.12.0...0.20.0)
 
