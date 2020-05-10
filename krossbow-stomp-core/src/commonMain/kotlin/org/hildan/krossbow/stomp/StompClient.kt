@@ -7,6 +7,7 @@ import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketSession
 import org.hildan.krossbow.websocket.defaultWebSocketClient
+import kotlin.coroutines.coroutineContext
 
 /**
  * A STOMP 1.2 client based on web sockets.
@@ -66,7 +67,7 @@ class StompClient(
                 passcode = passcode,
                 heartBeat = config.heartBeat
             )
-            val stompSession = BaseStompSession(config, StompSocket(this))
+            val stompSession = BaseStompSession(config, StompSocket(this, coroutineContext))
             stompSession.connect(connectHeaders)
             return stompSession
         } catch (e: CancellationException) {

@@ -29,6 +29,8 @@ import org.hildan.krossbow.stomp.heartbeats.sendHeartBeat
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketSession
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * A web socket wrapper that enables sending and receiving STOMP frames through the socket.
@@ -37,9 +39,10 @@ import org.hildan.krossbow.websocket.WebSocketSession
  */
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 internal class StompSocket(
-    private val webSocketSession: WebSocketSession
+    private val webSocketSession: WebSocketSession,
+    coroutineContext: CoroutineContext = EmptyCoroutineContext
 ) {
-    private val scope = CoroutineScope(Job() + CoroutineName("stomp-socket"))
+    private val scope = CoroutineScope(coroutineContext + Job() + CoroutineName("stomp-socket"))
 
     private var heartBeater: HeartBeater? = null
 
