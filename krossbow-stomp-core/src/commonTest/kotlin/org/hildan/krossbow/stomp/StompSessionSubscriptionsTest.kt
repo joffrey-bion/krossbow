@@ -153,7 +153,7 @@ class StompSessionSubscriptionsTest {
         val exception = assertFailsWith(StompErrorFrameReceived::class) {
             messages.first()
         }
-        assertEquals(errorMessage, exception.frame.message,
+        assertEquals(errorMessage, exception.message,
             "The exception in collectors should have the STOMP ERROR frame's body as message")
         assertTrue(wsSession.closed, "The web socket should be closed after a STOMP ERROR frame")
     }

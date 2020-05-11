@@ -6,7 +6,7 @@ import org.hildan.krossbow.stomp.frame.StompFrame
  * An exception thrown when a STOMP ERROR frame is received.
  * It is usually thrown through subscription channels.
  */
-class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception("STOMP ERROR frame received: ${frame.message}")
+class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception(frame.message)
 
 /**
  * An exception thrown when a RECEIPT frame was expected from the server, but not received in the configured time limit.

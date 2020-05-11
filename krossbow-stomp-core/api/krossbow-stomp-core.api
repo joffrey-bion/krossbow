@@ -335,7 +335,6 @@ public final class org/hildan/krossbow/stomp/frame/StompFrame$Error : org/hildan
 	public fun getBody ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
 	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;
 	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
-	public final fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
