@@ -21,11 +21,6 @@ class LostReceiptException(
 ) : Exception("No RECEIPT frame received for receiptId '$receiptId' (in ${frame.command} frame) within ${configuredTimeoutMillis}ms")
 
 /**
- * An exception thrown when a MESSAGE frame's body failed to be converted.
- */
-class MessageConversionException(cause: Throwable) : Exception(cause.message, cause)
-
-/**
  * An exception thrown when expected heart beats are not received.
  */
 class MissingHeartBeatException(

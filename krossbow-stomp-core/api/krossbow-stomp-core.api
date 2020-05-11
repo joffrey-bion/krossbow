@@ -15,10 +15,6 @@ public final class org/hildan/krossbow/stomp/LostReceiptException : java/lang/Ex
 	public final fun getReceiptId ()Ljava/lang/String;
 }
 
-public final class org/hildan/krossbow/stomp/MessageConversionException : java/lang/Exception {
-	public fun <init> (Ljava/lang/Throwable;)V
-}
-
 public final class org/hildan/krossbow/stomp/MissingHeartBeatException : java/lang/Exception {
 	public fun <init> (I)V
 	public final fun getExpectedPeriodMillis ()I
