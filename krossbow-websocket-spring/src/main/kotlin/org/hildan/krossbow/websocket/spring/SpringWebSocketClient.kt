@@ -1,6 +1,6 @@
 package org.hildan.krossbow.websocket.spring
 
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
@@ -19,6 +19,7 @@ import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport
 import org.springframework.web.socket.sockjs.client.SockJsClient
 import org.springframework.web.socket.sockjs.client.Transport
 import org.springframework.web.socket.sockjs.client.WebSocketTransport
+import java.util.concurrent.Executors
 import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
 import org.hildan.krossbow.websocket.WebSocketSession as KrossbowWebSocketSession
 import org.springframework.web.socket.WebSocketSession as SpringWebSocketSession
@@ -78,30 +79,27 @@ private class SpringToKrossbowSessionAdapter(
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : KrossbowWebSocketSession {
 
+    private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+
     override val canSend: Boolean
         get() = session.isOpen
 
     override suspend fun sendText(frameText: String) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             session.sendMessage(TextMessage(frameText, true))
         }
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             session.sendMessage(BinaryMessage(frameData, true))
         }
     }
 
     override suspend fun close(code: Int, reason: String?) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             session.close(CloseStatus(code, reason))
         }
+        dispatcher.close()
     }
 }
-
-// FIXME Use a single coroutine or a concurrent wrapper for sending WS frames with Spring.
-//  From Spring docs on sendMessage():
-//  The underlying standard WebSocket session (JSR-356) does not allow concurrent sending.
-//  Therefore sending must be synchronized.
-//  To ensure that, one option is to wrap the WebSocketSession with the ConcurrentWebSocketSessionDecorator.
