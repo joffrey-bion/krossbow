@@ -233,9 +233,9 @@ data class StompErrorHeaders(private val rawHeaders: StompHeaders) : StompHeader
     )
 }
 
-private fun StompHeaders.acceptVersionHeader() = header(ACCEPT_VERSION) { it.split(',') }
+private fun acceptVersionHeader() = header(ACCEPT_VERSION) { it.split(',') }
 
-private fun StompHeaders.heartBeatHeader() = optionalHeader(HEART_BEAT) { it.toHeartBeat() }
+private fun heartBeatHeader() = optionalHeader(HEART_BEAT) { it.toHeartBeat() }
 
 private fun String.toHeartBeat(): HeartBeat {
     val (minSendPeriod, expectedReceivePeriod) = split(',')

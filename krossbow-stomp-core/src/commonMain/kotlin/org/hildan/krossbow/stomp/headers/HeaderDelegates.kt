@@ -1,77 +1,71 @@
 package org.hildan.krossbow.stomp.headers
 
+import kotlin.properties.ReadOnlyProperty
+import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-internal fun StompHeaders.header(customKey: String? = null) = header(customKey) { it }
+internal fun header(customKey: String? = null): HeaderDelegate<String> = header(customKey) { it }
 
-internal fun StompHeaders.optionalHeader(customKey: String? = null, default: String? = null): HeaderDelegate<String?> =
+internal fun optionalHeader(customKey: String? = null, default: String? = null): HeaderDelegate<String?> =
     optionalHeader(customKey, default) { it }
 
-internal inline fun <T> StompHeaders.optionalHeader(
+internal inline fun <T> optionalHeader(
     customKey: String? = null,
     crossinline transform: (String) -> T
 ): HeaderDelegate<T?> = optionalHeader(customKey, null, transform)
 
-internal fun StompHeaders.mutableOptionalHeader(
-    customKey: String? = null,
-    default: String? = null
-): MutableHeaderDelegate<String?> =
-        mutableOptionalHeader(customKey, default, { it }, { it })
+internal fun mutableOptionalHeader(customKey: String? = null, default: String? = null): MutableHeaderDelegate<String?> =
+    mutableOptionalHeader(customKey, default, { it }, { it })
 
-internal fun StompHeaders.mutableOptionalIntHeader(
-    customKey: String? = null,
-    default: Int? = null
-): MutableHeaderDelegate<Int?> =
-        mutableOptionalHeader(customKey, default, { it.toInt() }, { it.toString() })
+internal fun mutableOptionalIntHeader(customKey: String? = null, default: Int? = null): MutableHeaderDelegate<Int?> =
+    mutableOptionalHeader(customKey, default, { it.toInt() }, { it.toString() })
 
-internal inline fun <T> StompHeaders.header(customKey: String? = null, crossinline transform: (String) -> T) =
-        HeaderDelegate(this, customKey) { value, key ->
+internal inline fun <T> header(customKey: String? = null, crossinline transform: (String) -> T): HeaderDelegate<T> =
+        HeaderDelegate(customKey) { value, key ->
             value?.let(transform) ?: throw IllegalStateException("missing required header '$key'")
         }
 
-internal inline fun <T> StompHeaders.optionalHeader(
+internal inline fun <T> optionalHeader(
     customKey: String? = null,
     default: T,
     crossinline transform: (String) -> T
-): HeaderDelegate<T> = HeaderDelegate(this, customKey) { value, _ -> value?.let(transform) ?: default }
+): HeaderDelegate<T> = HeaderDelegate(customKey) { value, _ -> value?.let(transform) ?: default }
 
-internal inline fun <T> StompHeaders.mutableOptionalHeader(
+internal inline fun <T> mutableOptionalHeader(
     customKey: String? = null,
     default: T,
     crossinline getTransform: (String) -> T,
     noinline setTransform: (T) -> String?
 ): MutableHeaderDelegate<T> = MutableHeaderDelegate(
-    rawHeaders = this,
     customName = customKey,
     getTransform = { value, _ -> value?.let(getTransform) ?: default },
     setTransform = setTransform
 )
 
 internal open class HeaderDelegate<T>(
-    private val rawHeaders: StompHeaders,
     private val customName: String? = null,
     private val transform: (String?, String) -> T
-) {
-    operator fun getValue(thisRef: StompHeaders, property: KProperty<*>): T {
+) : ReadOnlyProperty<StompHeaders, T> {
+
+    override operator fun getValue(thisRef: StompHeaders, property: KProperty<*>): T {
         val headerName = customName ?: property.name
-        return transform(rawHeaders[headerName], headerName)
+        return transform(thisRef[headerName], headerName)
     }
 }
 
 internal class MutableHeaderDelegate<T>(
-    private val rawHeaders: StompHeaders,
     private val customName: String? = null,
     getTransform: (String?, String) -> T,
     private val setTransform: (T) -> String?
-) : HeaderDelegate<T>(rawHeaders, customName, getTransform) {
+) : HeaderDelegate<T>(customName, getTransform), ReadWriteProperty<StompHeaders, T> {
 
-    operator fun setValue(thisRef: StompHeaders, property: KProperty<*>, value: T) {
+    override operator fun setValue(thisRef: StompHeaders, property: KProperty<*>, value: T) {
         val headerName = customName ?: property.name
         val strValue = setTransform(value)
         if (strValue == null) {
-            rawHeaders.remove(headerName)
+            thisRef.remove(headerName)
         } else {
-            rawHeaders[headerName] = strValue
+            thisRef[headerName] = strValue
         }
     }
 }
