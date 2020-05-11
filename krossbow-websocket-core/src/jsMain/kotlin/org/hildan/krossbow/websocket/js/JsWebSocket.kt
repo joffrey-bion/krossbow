@@ -74,7 +74,9 @@ open class JsWebSocketClientAdapter(
                 }
                 ws.onmessage = { event ->
                     GlobalScope.launch {
-                        // TODO check the possible types here
+                        // Types defined by the specification here:
+                        // https://html.spec.whatwg.org/multipage/web-sockets.html#feedback-from-the-protocol
+                        // Because ws.binaryType was set to ARRAYBUFFER, we should never receive Blob objects
                         when (val body = event.data) {
                             is String -> listener.onTextMessage(body)
                             is ArrayBuffer -> listener.onBinaryMessage(body.toByteArray())
