@@ -68,7 +68,7 @@ val session: StompSession = client.connect(url) // optional login/passcode can b
 session.sendText("/some/destination", "Basic text message") 
 
 // this flow is cold, the subscription doesn't occur until a consumer starts collecting the flow
-val subscription: Flow<String> = subscribeText("/some/topic/destination")
+val subscription: Flow<String> = session.subscribeText("/some/topic/destination")
 
 val collectorJob = launch {
     // flow collection triggers the SUBSCRIBE frame and receives messages
