@@ -17,6 +17,9 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
  */
 interface StompSessionWithKxSerialization : StompSession {
 
+    /**
+     * The Kotlinx Serialization's [SerialModule] used to provide serializers at runtime.
+     */
     val context: SerialModule
 
     /**
