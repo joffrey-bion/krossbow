@@ -23,7 +23,6 @@ import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.encodeToBytes
 import org.hildan.krossbow.stomp.frame.encodeToText
 import org.hildan.krossbow.stomp.heartbeats.HeartBeater
-import org.hildan.krossbow.stomp.heartbeats.closeForMissingHeartBeat
 import org.hildan.krossbow.stomp.heartbeats.isHeartBeat
 import org.hildan.krossbow.stomp.heartbeats.sendHeartBeat
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
@@ -98,10 +97,7 @@ internal class StompSocket(
         heartBeater = HeartBeater(
             heartBeat = heartBeat,
             sendHeartBeat = { webSocketSession.sendHeartBeat() },
-            onMissingHeartBeat = {
-                webSocketSession.closeForMissingHeartBeat()
-                close(MissingHeartBeatException(heartBeat.expectedPeriodMillis))
-            }
+            onMissingHeartBeat = { close(MissingHeartBeatException(heartBeat.expectedPeriodMillis)) }
         )
         heartBeater?.startIn(scope)
     }
