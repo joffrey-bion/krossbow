@@ -119,9 +119,9 @@ internal class StompSocket(
 
     suspend fun close(cause: Throwable? = null) {
         val closeCode = when (cause) {
-            is MissingHeartBeatException -> WebSocketCloseCodes.PROTOCOL_ERROR
             null -> WebSocketCloseCodes.NORMAL_CLOSURE
-            else -> WebSocketCloseCodes.GOING_AWAY
+            is MissingHeartBeatException -> 3002 // 1002 would be PROTOCOL_ERROR, but browsers reserve it
+            else -> 3001 // 1001 would be GOING_AWAY, but browsers reserve this code for actual page leave
         }
         webSocketSession.close(code = closeCode, reason = cause?.message)
 
