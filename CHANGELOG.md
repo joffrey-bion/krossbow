@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.20.3](https://github.com/joffrey-bion/krossbow/tree/0.20.3) (2020-05-15)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.2...0.20.3)
+
+**Fixed bugs:**
+
+- Web socket close\(\) attempted on closed socket [\#57](https://github.com/joffrey-bion/krossbow/issues/57)
+
 ## [0.20.2](https://github.com/joffrey-bion/krossbow/tree/0.20.2) (2020-05-15)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.1...0.20.2)
 
