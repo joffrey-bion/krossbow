@@ -63,6 +63,7 @@ internal class StompSocket(
     init {
         scope.launch(CoroutineName("stomp-frame-decoder")) {
             webSocketSession.incomingFrames.consumeAsFlow()
+                .catch { stompFramesChannel.close(it) } // upstream errors should just propagate, nothing to close
                 .onEach { processWebSocketFrame(it) }
                 .catch { close(it) }
                 .collect()
@@ -119,7 +120,15 @@ internal class StompSocket(
             is MissingHeartBeatException -> 3002 // 1002 would be PROTOCOL_ERROR, but browsers reserve it
             else -> 3001 // 1001 would be GOING_AWAY, but browsers reserve this code for actual page leave
         }
-        webSocketSession.close(code = closeCode, reason = cause?.message)
+
+        // If we are shutting down because of WebSocketClosedUnexpectedly, than we shouldn't try to close the web
+        // socket again.
+        // In case of STOMP ERROR frame, the server must close the connection.
+        // However, the web socket did not error and we may need to close the output, so we don't discriminate
+        // against StompErrorFrameReceived, and close anyway event in this case.
+        if (cause !is WebSocketClosedUnexpectedly) {
+            webSocketSession.close(code = closeCode, reason = cause?.message)
+        }
 
         // Required to stop the subscribers of the frames, and propagate the exception if present.
         // We close this channel after the web socket, so that consumers can see they can't send UNSUBSCRIBE.

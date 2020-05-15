@@ -1,6 +1,8 @@
 package org.hildan.krossbow.test
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.receiveOrNull
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompDecoder
@@ -15,6 +17,7 @@ import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketSession
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class WebSocketSessionMock : WebSocketSession {
 
@@ -26,6 +29,8 @@ class WebSocketSessionMock : WebSocketSession {
     override val incomingFrames = listener.incomingFrames
 
     private val sentFrames = Channel<StompFrame>()
+
+    private val closeEvent = Channel<Unit>()
 
     var closed = false
 
@@ -45,6 +50,7 @@ class WebSocketSessionMock : WebSocketSession {
 
     override suspend fun close(code: Int, reason: String?) {
         closed = true
+        closeEvent.send(Unit)
     }
 
     /**
@@ -53,6 +59,22 @@ class WebSocketSessionMock : WebSocketSession {
      * @returns the parsed stomp frame that was sent to allow further assertions
      */
     suspend fun waitForSentFrameAndSimulateCompletion(): StompFrame = sentFrames.receive()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun expectClose() {
+        val e = closeEvent.receiveOrNull()
+        if (e == null) {
+            fail("Expected web socket close")
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun expectNoClose() {
+        val e = closeEvent.poll()
+        if (e != null) {
+            fail("the web socket close() method should not be called")
+        }
+    }
 
     suspend fun simulateTextFrameReceived(text: String) {
         listener.onTextMessage(text)

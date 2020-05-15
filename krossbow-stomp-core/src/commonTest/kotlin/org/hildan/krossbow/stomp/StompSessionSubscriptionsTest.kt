@@ -38,6 +38,7 @@ class StompSessionSubscriptionsTest {
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "HELLO")
             wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
             wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.expectClose()
         }
         val messages = stompSession.subscribeText("/dest")
         val message = messages.first()
@@ -60,6 +61,7 @@ class StompSessionSubscriptionsTest {
             }
             wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
             wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.expectClose()
         }
         val messagesFlow = stompSession.subscribeText("/dest")
         val messages = messagesFlow.take(3).toList()
@@ -85,6 +87,7 @@ class StompSessionSubscriptionsTest {
             wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
             job.cancel()
             wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.expectClose()
         }
         val messagesFlow = stompSession.subscribeText("/dest")
 
@@ -120,6 +123,7 @@ class StompSessionSubscriptionsTest {
             job.cancel()
             wsSession.simulateReceiptFrameReceived(disconnectFrame.headers.receipt!!)
             // after disconnecting, we should not attempt to send an UNSUBSCRIBE frame
+            wsSession.expectClose()
         }
         val messagesFlow = stompSession.subscribeText("/dest")
 
@@ -147,6 +151,7 @@ class StompSessionSubscriptionsTest {
             wsSession.waitForSubscribeAndSimulateCompletion()
             wsSession.simulateErrorFrameReceived(errorMessage)
             // after receiving a STOMP error frame, we should not attempt to send an UNSUBSCRIBE or DISCONNECT frame
+            wsSession.expectClose()
         }
 
         val messages = stompSession.subscribeText("/dest")
@@ -167,6 +172,8 @@ class StompSessionSubscriptionsTest {
             wsSession.waitForSubscribeAndSimulateCompletion()
             wsSession.simulateError(errorMessage)
             // after a web socket error, we should not attempt to send an UNSUBSCRIBE or DISCONNECT frame
+            // we should also not try to close the web socket after an error
+            wsSession.expectNoClose()
         }
 
         val messages = stompSession.subscribeText("/dest")
@@ -175,7 +182,6 @@ class StompSessionSubscriptionsTest {
         }
         assertEquals(errorMessage, exception.message,
             "The exception in collectors should have the web socket error frame's body as message")
-        assertTrue(wsSession.closed, "The web socket should be closed after a web socket frame")
     }
 
     @Test
@@ -186,6 +192,8 @@ class StompSessionSubscriptionsTest {
             wsSession.waitForSubscribeAndSimulateCompletion()
             wsSession.simulateClose(WebSocketCloseCodes.NORMAL_CLOSURE, "some reason")
             // after a web socket closure, we should not attempt to send an UNSUBSCRIBE or DISCONNECT frame
+            // the web socket is already closed so it should not be attempted to close it
+            wsSession.expectNoClose()
         }
 
         val sub = stompSession.subscribeText("/dest")
@@ -204,6 +212,7 @@ class StompSessionSubscriptionsTest {
             wsSession.waitForSubscribeAndSimulateCompletion()
             wsSession.simulateTextFrameReceived("not a valid STOMP frame")
             // after an invalid STOMP frame, we should not attempt to send an UNSUBSCRIBE or DISCONNECT frame
+            wsSession.expectClose()
         }
 
         val sub = stompSession.subscribeText("/dest")

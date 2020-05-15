@@ -77,6 +77,7 @@ class StompSessionReceiptTests {
         launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
             wsSession.simulateErrorFrameReceived("some error")
+            wsSession.expectClose()
         }
         val exception = assertFailsWith(StompErrorFrameReceived::class) {
             stompSession.sendEmptyMsg("/destination")
@@ -92,6 +93,7 @@ class StompSessionReceiptTests {
         launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
             wsSession.simulateError("some error")
+            wsSession.expectNoClose()
         }
         val exception = assertFailsWith(WebSocketException::class) {
             stompSession.sendEmptyMsg("/destination")
@@ -107,6 +109,7 @@ class StompSessionReceiptTests {
         launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
             wsSession.simulateClose(WebSocketCloseCodes.NORMAL_CLOSURE, "because why not")
+            wsSession.expectNoClose()
         }
         val exception = assertFailsWith(WebSocketClosedUnexpectedly::class) {
             stompSession.sendEmptyMsg("/destination")

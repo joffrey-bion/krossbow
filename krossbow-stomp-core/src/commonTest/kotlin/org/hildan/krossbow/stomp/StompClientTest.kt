@@ -145,6 +145,7 @@ class StompClientTest {
         launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
             wsSession.simulateErrorFrameReceived("connection failed")
+            wsSession.expectClose()
         }
 
         val exception = assertFailsWith(StompConnectionException::class) {
