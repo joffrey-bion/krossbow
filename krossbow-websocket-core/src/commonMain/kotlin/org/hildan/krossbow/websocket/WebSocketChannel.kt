@@ -4,12 +4,16 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 
 /**
- * Adapter between listener calls and a web socket frames channel.
+ * Adapter between listener calls and a web socket "incoming" frames channel.
  * This is to make it easier to bridge listener-based APIs with the channel-based API of Krossbow.
  * Methods of this listener never fail, but can send failure through the frames channel to the consumers.
  */
 class WebSocketListenerChannelAdapter {
 
+    /**
+     * The channel of incoming web socket frames.
+     * This channel is closed when the web socket connection is closed
+     */
     val incomingFrames: ReceiveChannel<WebSocketFrame>
         get() = frames
 
@@ -24,22 +28,16 @@ class WebSocketListenerChannelAdapter {
     }
 
     suspend fun onBinaryMessage(bytes: ByteArray, isLast: Boolean = true) {
-        runCatching {
-            partialBinaryMessageHandler.processMessage(bytes, isLast)
-        }
+        partialBinaryMessageHandler.processMessage(bytes, isLast)
     }
 
     suspend fun onTextMessage(text: CharSequence, isLast: Boolean = true) {
-        runCatching {
-            partialTextMessageHandler.processMessage(text, isLast)
-        }
+        partialTextMessageHandler.processMessage(text, isLast)
     }
 
     suspend fun onClose(code: Int, reason: String?) {
-        runCatching {
-            frames.send(WebSocketFrame.Close(code, reason))
-            frames.close()
-        }
+        frames.send(WebSocketFrame.Close(code, reason))
+        frames.close()
     }
 
     fun onError(message: String) {
