@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.20.2](https://github.com/joffrey-bion/krossbow/tree/0.20.2) (2020-05-15)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.1...0.20.2)
+
+**Fixed bugs:**
+
+- \[JS\] DOMException: Failed to execute 'close' on 'WebSocket' [\#56](https://github.com/joffrey-bion/krossbow/issues/56)
+- Spring web socket adapter is not thread safe [\#55](https://github.com/joffrey-bion/krossbow/issues/55)
+
 ## [0.20.1](https://github.com/joffrey-bion/krossbow/tree/0.20.1) (2020-05-10)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.0...0.20.1)
 
