@@ -1,9 +1,6 @@
 package org.hildan.krossbow.websocket.jdk
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.future.await
@@ -37,6 +34,8 @@ class Jdk11WebSocketClient(
             val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
             val webSocket = webSocketBuilder.buildAsync(URI(url), jdk11WebSocketListener).await()
             return Jdk11WebSocketSession(webSocket, listener.incomingFrames, jdk11WebSocketListener::stop)
+        } catch (e: CancellationException) {
+            throw e // this is an upstream exception that we don't want to wrap here
         } catch (e: Exception) {
             throw WebSocketConnectionException(url, cause = e)
         }
