@@ -33,6 +33,20 @@ data class StompConfig(
      */
     var heartBeat: HeartBeat = HeartBeat(),
     /**
+     * Defines tolerance for heart beats.
+     *
+     * If both the client and server really stick to the heart beats periods negotiated and given by the CONNECTED frame,
+     * network latencies will make them miss their marks. That's why we need some sort of tolerance.
+     *
+     * In case the server is too strict about its expectations, we can send heart beats a little bit earlier than we're
+     * supposed to (see [HeartBeatTolerance.outgoingMarginMillis]).
+     *
+     * In case the server really sticks to its own period without such margin, we need to allow a little bit of delay to
+     * make up for network latencies before we fail and close the connection (see
+     * [HeartBeatTolerance.incomingMarginMillis]).
+     */
+    var heartBeatTolerance: HeartBeatTolerance = HeartBeatTolerance(),
+    /**
      * Defines how long to wait for the websocket+STOMP connection to be established before throwing an exception.
      */
     var connectionTimeoutMillis: Long = 15000,
@@ -83,4 +97,32 @@ data class HeartBeat(
      * between heart-beats.
      */
     val expectedPeriodMillis: Int = 0
+)
+
+/**
+ * Defines tolerance for heart beats.
+ *
+ * If both the client and server really stick to the heart beats periods negotiated and given by the CONNECTED frame,
+ * network latencies will make them miss their marks. That's why we need some sort of tolerance.
+ *
+ * In case the server is too strict about its expectations, we can send heart beats a little bit earlier than we're
+ * supposed to (see [outgoingMarginMillis]).
+ *
+ * In case the server really sticks to its own period without such margin, we need to allow a little bit of delay to
+ * make up for network latencies before we fail and close the connection (see [incomingMarginMillis]).
+ */
+data class HeartBeatTolerance(
+    /**
+     * How many milliseconds in advance heart beats should be sent.
+     * This is to avoid issues when servers are not very tolerant on heart beats reception.
+     *
+     * By default, we expect the server to be tolerant in its expectations, so we send heart beats on time.
+     */
+    val outgoingMarginMillis: Int = 0,
+    /**
+     * How much more to wait before failing when we don't receive a heart beat from the server in the expected time.
+     *
+     * By default, we expect the server to send heart beats on time, so we add some margin in our own expectation.
+     */
+    val incomingMarginMillis: Int = 500
 )

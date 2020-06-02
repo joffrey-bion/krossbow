@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.hildan.krossbow.stomp.config.HeartBeat
+import org.hildan.krossbow.stomp.config.HeartBeatTolerance
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.test.connectWithMocks
@@ -22,9 +23,11 @@ class StompSessionHeartBeatsTests {
     @Test
     fun wsSessionClosedOnHeartBeatTimeOut() = runBlockingTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300))
-        )
-        delay(600)
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 1000))
+        ) {
+            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+        }
+        advanceTimeBy(1000 + 100 + 1)
         assertTrue(wsSession.closed)
     }
 
@@ -33,7 +36,7 @@ class StompSessionHeartBeatsTests {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(
                 version = "1.2",
-                heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 500)
+                heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 1000)
             )
         )
 
@@ -55,7 +58,7 @@ class StompSessionHeartBeatsTests {
     @Test
     fun receiveSubMessage_failsOnHeartBeatTimeOut() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 1000))
         )
 
         launch {
@@ -72,16 +75,16 @@ class StompSessionHeartBeatsTests {
     @Test
     fun receiveSubMessage_succeedsIfKeptAlive() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 300))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 1000))
         )
 
         launch {
             val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
-            delay(100)
+            delay(800)
             wsSession.simulateTextFrameReceived("\n")
-            delay(150)
+            delay(1000)
             wsSession.simulateTextFrameReceived("\r\n")
-            delay(150)
+            delay(900)
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "message")
             wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
         }

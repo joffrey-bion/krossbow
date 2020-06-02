@@ -102,20 +102,36 @@ public final class org/hildan/krossbow/stomp/config/HeartBeat {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class org/hildan/krossbow/stomp/config/HeartBeatTolerance {
+	public fun <init> ()V
+	public fun <init> (II)V
+	public synthetic fun <init> (IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;IIILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIncomingMarginMillis ()I
+	public final fun getOutgoingMarginMillis ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public fun <init> ()V
-	public fun <init> (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;JJJZ)V
-	public synthetic fun <init> (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;JJJZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;JJJZ)V
+	public synthetic fun <init> (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;JJJZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
-	public final fun component5 ()J
+	public final fun component5 ()Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
 	public final fun component6 ()J
 	public final fun component7 ()J
-	public final fun component8 ()Z
-	public final fun copy (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;JJJZ)Lorg/hildan/krossbow/stomp/config/StompConfig;
-	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/config/StompConfig;ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;JJJZILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/StompConfig;
+	public final fun component8 ()J
+	public final fun component9 ()Z
+	public final fun copy (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;JJJZ)Lorg/hildan/krossbow/stomp/config/StompConfig;
+	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/config/StompConfig;ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;JJJZILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/StompConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAutoContentLength ()Z
 	public final fun getAutoReceipt ()Z
@@ -124,6 +140,7 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun getDisconnectTimeoutMillis ()J
 	public final fun getGracefulDisconnect ()Z
 	public final fun getHeartBeat ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
+	public final fun getHeartBeatTolerance ()Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
 	public final fun getReceiptTimeoutMillis ()J
 	public fun hashCode ()I
 	public final fun setAutoContentLength (Z)V
@@ -133,6 +150,7 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun setDisconnectTimeoutMillis (J)V
 	public final fun setGracefulDisconnect (Z)V
 	public final fun setHeartBeat (Lorg/hildan/krossbow/stomp/config/HeartBeat;)V
+	public final fun setHeartBeatTolerance (Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;)V
 	public final fun setReceiptTimeoutMillis (J)V
 	public fun toString ()Ljava/lang/String;
 }

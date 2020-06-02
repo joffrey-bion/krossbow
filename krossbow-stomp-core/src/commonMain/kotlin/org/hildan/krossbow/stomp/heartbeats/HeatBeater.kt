@@ -1,67 +1,67 @@
 package org.hildan.krossbow.stomp.heartbeats
 
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import kotlinx.coroutines.selects.select
 import org.hildan.krossbow.stomp.config.HeartBeat
+import org.hildan.krossbow.stomp.config.HeartBeatTolerance
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 internal class HeartBeater(
-    val heartBeat: HeartBeat,
-    val sendHeartBeat: suspend () -> Unit,
-    val onMissingHeartBeat: suspend () -> Unit
+    private val heartBeat: HeartBeat,
+    private val tolerance: HeartBeatTolerance,
+    private val sendHeartBeat: suspend () -> Unit,
+    private val onMissingHeartBeat: suspend () -> Unit
 ) {
-    private val outgoing = Ticker((heartBeat.minSendPeriodMillis * 0.95).toLong(), sendHeartBeat)
-    private val incoming = Ticker((heartBeat.expectedPeriodMillis * 1.05).toLong(), onMissingHeartBeat)
+    private val outgoingTicker: Ticker = createOutgoingHeartBeatsTicker()
+    private val incomingTicker: Ticker = createIncomingHeartBeatsTicker()
 
     fun startIn(scope: CoroutineScope): Job = scope.launch(CoroutineName("stomp-heart-beat")) {
         if (heartBeat.minSendPeriodMillis > 0) {
-            outgoing.startIn(this + CoroutineName("stomp-heart-beat-outgoing"))
+            outgoingTicker.startIn(this + CoroutineName("stomp-heart-beat-outgoing"))
         }
         if (heartBeat.expectedPeriodMillis > 0) {
-            incoming.startIn(this + CoroutineName("stomp-heart-beat-incoming"))
+            incomingTicker.startIn(this + CoroutineName("stomp-heart-beat-incoming"))
         }
     }
 
-    suspend fun notifyMsgSent() {
-        outgoing.reset()
+    private fun createIncomingHeartBeatsTicker(): Ticker {
+        val incomingPeriodExpectation = heartBeat.expectedPeriodMillis + tolerance.incomingMarginMillis
+        return Ticker(incomingPeriodExpectation.toLong(), onMissingHeartBeat)
     }
 
-    suspend fun notifyMsgReceived() {
-        incoming.reset()
+    private fun createOutgoingHeartBeatsTicker(): Ticker {
+        val outgoingPeriodMillis = heartBeat.minSendPeriodMillis - tolerance.outgoingMarginMillis
+        return Ticker(outgoingPeriodMillis.toLong(), sendHeartBeat)
+    }
+
+    fun notifyMsgSent() {
+        outgoingTicker.reset()
+    }
+
+    fun notifyMsgReceived() {
+        incomingTicker.reset()
     }
 }
 
 private class Ticker(
-    private val periodMillis: Long,
-    private val onTick: suspend () -> Unit
+    val periodMillis: Long,
+    val onTick: suspend () -> Unit
 ) {
-    private val resetter = Channel<Unit>()
-    private var running = false
+    private val resetEvents = Channel<Unit>()
 
     @OptIn(ExperimentalCoroutinesApi::class) // for onTimeout
     fun startIn(scope: CoroutineScope): Job = scope.launch {
-        running = true
         while (isActive) {
             select<Unit> {
-                resetter.onReceive { }
+                resetEvents.onReceive { }
                 onTimeout(periodMillis, onTick)
             }
         }
-    }.also {
-        it.invokeOnCompletion {
-            running = false
-        }
     }
 
-    suspend fun reset() {
-        if (running) {
-            resetter.send(Unit)
-        }
+    fun reset() {
+        resetEvents.offer(Unit)
     }
 }

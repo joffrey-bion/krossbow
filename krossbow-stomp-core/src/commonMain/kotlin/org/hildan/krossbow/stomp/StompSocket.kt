@@ -9,14 +9,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.config.HeartBeat
+import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompDecoder
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -39,6 +35,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 internal class StompSocket(
     private val webSocketSession: WebSocketSession,
+    private val config: StompConfig,
     coroutineContext: CoroutineContext = EmptyCoroutineContext
 ) {
     private val scope = CoroutineScope(coroutineContext + Job() + CoroutineName("stomp-socket"))
@@ -97,6 +94,7 @@ internal class StompSocket(
         }
         heartBeater = HeartBeater(
             heartBeat = heartBeat,
+            tolerance = config.heartBeatTolerance,
             sendHeartBeat = { webSocketSession.sendHeartBeat() },
             onMissingHeartBeat = { close(MissingHeartBeatException(heartBeat.expectedPeriodMillis)) }
         )
@@ -121,11 +119,11 @@ internal class StompSocket(
             else -> 3001 // 1001 would be GOING_AWAY, but browsers reserve this code for actual page leave
         }
 
-        // If we are shutting down because of WebSocketClosedUnexpectedly, than we shouldn't try to close the web
+        // If we are shutting down because of WebSocketClosedUnexpectedly, then we shouldn't try to close the web
         // socket again.
         // In case of STOMP ERROR frame, the server must close the connection.
         // However, the web socket did not error and we may need to close the output, so we don't discriminate
-        // against StompErrorFrameReceived, and close anyway event in this case.
+        // against StompErrorFrameReceived, and close anyway even in this case.
         if (cause !is WebSocketClosedUnexpectedly) {
             webSocketSession.close(code = closeCode, reason = cause?.message)
         }

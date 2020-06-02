@@ -5,23 +5,30 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runBlockingTest
 import org.hildan.krossbow.stomp.config.HeartBeat
+import org.hildan.krossbow.stomp.config.HeartBeatTolerance
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-private const val TEST_PERIOD_CONFIG = 300
-private const val TEST_SEND_PERIOD: Long = (TEST_PERIOD_CONFIG * 0.95).toLong()
-private const val TEST_RECEIVED_PERIOD: Long = (TEST_PERIOD_CONFIG * 1.05).toLong()
+private const val TEST_PERIOD_CONFIG = 5000
+private const val TEST_OUTGOING_MARGIN = 200
+private const val TEST_INCOMING_MARGIN = 500
+private const val TEST_SEND_PERIOD: Long = (TEST_PERIOD_CONFIG - TEST_OUTGOING_MARGIN).toLong()
+private const val TEST_RECEIVED_PERIOD: Long = (TEST_PERIOD_CONFIG + TEST_INCOMING_MARGIN).toLong()
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HeartBeaterTest {
 
-    private class HeartBeaterConsumer(heartBeat: HeartBeat) {
+    private class HeartBeaterConsumer(
+        heartBeat: HeartBeat,
+        tolerance: HeartBeatTolerance = HeartBeatTolerance(TEST_OUTGOING_MARGIN, TEST_INCOMING_MARGIN)
+    ) {
         val sent = Channel<Unit>()
         val received = Channel<Unit>()
 
         val heartBeater = HeartBeater(
             heartBeat = heartBeat,
+            tolerance = tolerance,
             sendHeartBeat = { sent.send(Unit) },
             onMissingHeartBeat = { received.send(Unit) }
         )
