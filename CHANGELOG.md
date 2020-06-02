@@ -1,5 +1,16 @@
 # Change Log
 
+## [0.21.0](https://github.com/joffrey-bion/krossbow/tree/0.21.0) (2020-06-02)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.3...0.21.0)
+
+**Fixed bugs:**
+
+- Jdk11WebSocketClient wraps cancellations in WebSocketConnectionException [\#58](https://github.com/joffrey-bion/krossbow/issues/58)
+
+**Implemented enhancements:**
+
+- Make the heartbeats margins configurable [\#59](https://github.com/joffrey-bion/krossbow/issues/59)
+
 ## [0.20.3](https://github.com/joffrey-bion/krossbow/tree/0.20.3) (2020-05-15)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.2...0.20.3)
 
