@@ -122,7 +122,7 @@ internal class BaseStompSession(
                     // If the consumer was cancelled or an exception occurred downstream, the STOMP session keeps going
                     // so we want to unsubscribe this failed subscription
                     is CancellationException -> unsubscribe(id)
-                    // If the flow completes normally, it means the frames channel is closed, and so it the web socket
+                    // If the flow completes normally, it means the frames channel is closed, and so is the web socket
                     // connection. We can't send an unsubscribe frame in this case.
                     // If an exception is thrown upstream, it means there was a STOMP or web socket error and we can't
                     // unsubscribe either.
