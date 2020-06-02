@@ -60,7 +60,7 @@ subprojects {
         // Since it is not configurable, we have to disable the rule.
         // https://github.com/pinterest/ktlint/issues/527
         // https://youtrack.jetbrains.com/issue/KT-10974
-        disabledRules.set(setOf("import-ordering"))
+        disabledRules.set(setOf("import-ordering", "no-wildcard-imports"))
         filter {
             exclude("sockjs-client.kt") // mostly generated, and cannot easily be adjusted to match the style
         }
