@@ -18,6 +18,7 @@ import org.hildan.krossbow.stomp.frame.StompDecoder
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.frame.encodeToBytes
 import org.hildan.krossbow.stomp.frame.encodeToText
+import org.hildan.krossbow.stomp.heartbeats.*
 import org.hildan.krossbow.stomp.heartbeats.HeartBeater
 import org.hildan.krossbow.stomp.heartbeats.isHeartBeat
 import org.hildan.krossbow.stomp.heartbeats.sendHeartBeat
@@ -88,15 +89,16 @@ internal class StompSocket(
         is WebSocketFrame.Close -> throw WebSocketClosedUnexpectedly(f.code, f.reason)
     }
 
-    private fun initHeartBeats(heartBeat: HeartBeat?) {
-        if (heartBeat == null || (heartBeat.expectedPeriodMillis == 0 && heartBeat.minSendPeriodMillis == 0)) {
-            return // no heart beats to set
+    private fun initHeartBeats(serverHeartBeat: HeartBeat?) {
+        val negotiatedHeartBeat = config.heartBeat.negotiated(serverHeartBeat)
+        if (negotiatedHeartBeat == NO_HEART_BEATS) {
+            return
         }
         heartBeater = HeartBeater(
-            heartBeat = heartBeat,
+            heartBeat = negotiatedHeartBeat,
             tolerance = config.heartBeatTolerance,
             sendHeartBeat = { webSocketSession.sendHeartBeat() },
-            onMissingHeartBeat = { close(MissingHeartBeatException(heartBeat.expectedPeriodMillis)) }
+            onMissingHeartBeat = { close(MissingHeartBeatException(negotiatedHeartBeat.expectedPeriodMillis)) }
         )
         heartBeater?.startIn(scope)
     }
