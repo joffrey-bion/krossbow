@@ -19,8 +19,7 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.coroutines}")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io:${Versions.kotlinxIO}")
             }
         }
@@ -32,7 +31,6 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:${Versions.kotlinxIO}")
             }
@@ -46,8 +44,6 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-js"))
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-js:${Versions.kotlinxIO}")
             }
         }

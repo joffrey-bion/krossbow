@@ -14,7 +14,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 api(project(":krossbow-websocket-core"))
             }
         }
@@ -26,7 +25,6 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
                 api(project(":krossbow-websocket-spring"))
             }
         }
@@ -38,7 +36,6 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-js"))
                 implementation(npm("sockjs-client", "1.4.0"))
             }
         }

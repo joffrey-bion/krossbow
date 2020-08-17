@@ -8,7 +8,6 @@ val jacksonVersion = "2.10.0"
 
 dependencies {
     api(project(":krossbow-stomp-core"))
-    implementation(kotlin("stdlib-jdk8"))
     api("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     api("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 

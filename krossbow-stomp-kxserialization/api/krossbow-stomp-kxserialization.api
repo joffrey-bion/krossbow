@@ -7,7 +7,7 @@ public final class org/hildan/krossbow/stomp/conversions/kxserialization/Kotlinx
 
 public abstract interface class org/hildan/krossbow/stomp/conversions/kxserialization/StompSessionWithKxSerialization : org/hildan/krossbow/stomp/StompSession {
 	public abstract fun convertAndSend (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Ljava/lang/Object;Lkotlinx/serialization/SerializationStrategy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public abstract fun getSerializersModule ()Lkotlinx/serialization/modules/SerializersModule;
 	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lkotlinx/serialization/DeserializationStrategy;)Lkotlinx/coroutines/flow/Flow;
 	public abstract fun subscribeOptional (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lkotlinx/serialization/DeserializationStrategy;)Lkotlinx/coroutines/flow/Flow;
 }

@@ -29,9 +29,8 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 api(project(":krossbow-websocket-core"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io:${Versions.kotlinxIO}")
                 implementation("com.benasher44:uuid:0.1.0")
             }
@@ -44,8 +43,6 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:${Versions.kotlinxIO}")
             }
         }
@@ -58,8 +55,6 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-js"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-js:${Versions.kotlinxIO}")
 
                 // Currently required by kotlinx-io-js

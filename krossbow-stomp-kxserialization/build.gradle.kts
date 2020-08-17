@@ -1,11 +1,11 @@
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.kotlin.plugin.serialization")
+    kotlin("plugin.serialization")
 }
 
 description = "An extension of Krossbow STOMP client using Kotlinx Serialization for message conversions"
 
-val serializationVersion = "0.20.0"
+val serializationVersion = "1.0.0-RC"
 
 kotlin {
     jvm()
@@ -16,19 +16,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 api(project(":krossbow-stomp-core"))
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
             }
         }
     }

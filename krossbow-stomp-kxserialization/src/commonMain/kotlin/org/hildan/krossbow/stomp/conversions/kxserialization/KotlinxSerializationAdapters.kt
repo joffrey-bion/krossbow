@@ -2,13 +2,9 @@ package org.hildan.krossbow.stomp.conversions.kxserialization
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.BinaryFormat
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
-import kotlinx.serialization.StringFormat
+import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.modules.SerializersModule
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.frame.FrameBody
@@ -23,6 +19,7 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
  * The STOMP frames sent by the returned session have a binary body (of type [FrameBody.Binary]).
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType].
  */
+@ExperimentalSerializationApi
 fun StompSession.withBinaryConversions(format: BinaryFormat, mediaType: String): StompSessionWithKxSerialization =
     StompSessionWithBinaryConversions(this, format, mediaType)
 
@@ -33,6 +30,7 @@ fun StompSession.withBinaryConversions(format: BinaryFormat, mediaType: String):
  * The STOMP frames sent by the returned session have a textual body (of type [FrameBody.Text]).
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType].
  */
+@ExperimentalSerializationApi
 fun StompSession.withTextConversions(format: StringFormat, mediaType: String): StompSessionWithKxSerialization =
     StompSessionWithTextConversions(this, format, mediaType)
 
@@ -43,14 +41,15 @@ fun StompSession.withTextConversions(format: StringFormat, mediaType: String): S
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType] (defaulting to
  * "application/json;charset=utf-8").
  */
+@ExperimentalSerializationApi
 fun StompSession.withJsonConversions(
-    json: Json = Json(JsonConfiguration.Stable),
+    json: Json = Json {},
     mediaType: String = "application/json;charset=utf-8"
 ): StompSessionWithKxSerialization = withTextConversions(json, mediaType)
 
 private abstract class BaseStompSessionWithConversions(
     session: StompSession,
-    override val context: SerialModule,
+    override val serializersModule: SerializersModule,
     protected val mediaType: String
 ) : StompSession by session, StompSessionWithKxSerialization {
 
@@ -70,6 +69,7 @@ private abstract class BaseStompSessionWithConversions(
 
     protected abstract fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>): FrameBody?
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun <T : Any> subscribe(
         headers: StompSubscribeHeaders,
         deserializer: DeserializationStrategy<T>
@@ -91,33 +91,35 @@ private abstract class BaseStompSessionWithConversions(
     ): T?
 }
 
+@ExperimentalSerializationApi
 private class StompSessionWithBinaryConversions(
     session: StompSession,
     val format: BinaryFormat,
     mediaType: String
-) : BaseStompSessionWithConversions(session, format.context, mediaType) {
+) : BaseStompSessionWithConversions(session, format.serializersModule, mediaType) {
 
     override fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>) =
-        body?.let { FrameBody.Binary(format.dump(serializer, it)) }
+        body?.let { FrameBody.Binary(format.encodeToByteArray(serializer, it)) }
 
     override fun <T : Any> deserializeOrNull(frame: StompFrame.Message, deserializer: DeserializationStrategy<T>) =
-        frame.body?.bytes?.let { format.load(deserializer, it) }
+        frame.body?.bytes?.let { format.decodeFromByteArray(deserializer, it) }
 }
 
+@ExperimentalSerializationApi
 private class StompSessionWithTextConversions(
     session: StompSession,
     val format: StringFormat,
     mediaType: String
-) : BaseStompSessionWithConversions(session, format.context, mediaType) {
+) : BaseStompSessionWithConversions(session, format.serializersModule, mediaType) {
 
     override fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>) =
-        body?.let { FrameBody.Text(format.stringify(serializer, it)) }
+        body?.let { FrameBody.Text(format.encodeToString(serializer, it)) }
 
     override fun <T : Any> deserializeOrNull(frame: StompFrame.Message, deserializer: DeserializationStrategy<T>): T? {
         val body = frame.bodyAsText
         if (body.isEmpty()) {
             return null
         }
-        return format.parse(deserializer, body)
+        return format.decodeFromString(deserializer, body)
     }
 }

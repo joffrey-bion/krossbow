@@ -2,10 +2,9 @@ package org.hildan.krossbow.stomp.conversions.kxserialization
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.SerializationStrategy
-import kotlinx.serialization.modules.SerialModule
-import kotlinx.serialization.modules.getContextualOrDefault
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.serializer
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -20,7 +19,7 @@ interface StompSessionWithKxSerialization : StompSession {
     /**
      * The Kotlinx Serialization's [SerialModule] used to provide serializers at runtime.
      */
-    val context: SerialModule
+    val serializersModule: SerializersModule
 
     /**
      * Sends a SEND frame to the server with the given [headers] and the given [body], converted appropriately using
@@ -80,12 +79,11 @@ suspend fun <T : Any> StompSessionWithKxSerialization.convertAndSend(
  * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise this method
  * suspends until the relevant RECEIPT frame is received from the server, and then returns a [StompReceipt].
  */
-@ImplicitReflectionSerializer
 suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndSend(
     headers: StompSendHeaders,
     body: T? = null
 ): StompReceipt? {
-    val serializer = context.getContextualOrDefault(T::class)
+    val serializer = serializersModule.serializer<T>()
     return convertAndSend(headers, body, serializer)
 }
 
@@ -98,7 +96,6 @@ suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndS
  * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise this method
  * suspends until the relevant RECEIPT frame is received from the server, and then returns a [StompReceipt].
  */
-@ImplicitReflectionSerializer
 suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndSend(
     destination: String,
     body: T? = null
@@ -141,9 +138,8 @@ fun <T : Any> StompSessionWithKxSerialization.subscribeOptional(
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-@ImplicitReflectionSerializer
 inline fun <reified T : Any> StompSessionWithKxSerialization.subscribe(destination: String): Flow<T> {
-    val serializer = context.getContextualOrDefault(T::class)
+    val serializer = serializersModule.serializer<T>()
     return subscribe(destination, serializer)
 }
 
@@ -156,8 +152,7 @@ inline fun <reified T : Any> StompSessionWithKxSerialization.subscribe(destinati
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-@ImplicitReflectionSerializer
 inline fun <reified T : Any> StompSessionWithKxSerialization.subscribeOptional(destination: String): Flow<T?> {
-    val serializer = context.getContextualOrDefault(T::class)
+    val serializer = serializersModule.serializer<T>()
     return subscribeOptional(destination, serializer)
 }

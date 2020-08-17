@@ -11,7 +11,6 @@ dependencies {
 
     api("org.slf4j:slf4j-api:1.7.26")
 
-    implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
 
     // For Spring's WebSocket clients

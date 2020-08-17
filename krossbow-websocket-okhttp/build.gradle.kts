@@ -7,7 +7,6 @@ description = "A Krossbow adapter for OkHttp's WebSocket client"
 dependencies {
     api(project(":krossbow-websocket-core"))
 
-    implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
 
     api("com.squareup.okhttp3:okhttp:4.5.0")

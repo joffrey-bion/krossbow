@@ -16,7 +16,7 @@ internal object StompDecoder {
 
     private const val NULL_BYTE = 0.toByte()
 
-    private val MAX_COMMAND_LENGTH = StompCommand.values().map { it.text.length }.max()!!
+    private val MAX_COMMAND_LENGTH = StompCommand.values().map { it.text.length }.maxOrNull()!!
 
     fun decode(frameBytes: ByteArray): StompFrame = ByteReadPacket(frameBytes).use { it.readStompFrame(true) }
 
