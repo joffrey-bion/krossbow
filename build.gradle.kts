@@ -78,8 +78,14 @@ subprojects {
     afterEvaluate {
 
         val publications = extensions.getByType<PublishingExtension>().publications
-        publications.mapNotNull { it as? MavenPublication }.forEach {
-            it.configurePomForMavenCentral(project)
+        publications.filterIsInstance<MavenPublication>().forEach { pub ->
+            pub.configurePomForMavenCentral(project)
+            val moduleFile = buildDir.resolve("publications/${pub.name}/module.json")
+            if (moduleFile.exists()) {
+                pub.artifact(object : org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact(moduleFile) {
+                    override fun getDefaultExtension() = "module"
+                })
+            }
         }
 
         extensions.configure<BintrayExtension>("bintray") {
