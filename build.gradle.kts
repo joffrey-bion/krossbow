@@ -44,9 +44,18 @@ subprojects {
         jcenter()
     }
 
+    val compilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.freeCompilerArgs += compilerArgs
     }
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile> {
+        kotlinOptions.freeCompilerArgs += compilerArgs
+    }
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon> {
+        kotlinOptions.freeCompilerArgs += compilerArgs
+    }
+
     tasks.withType<AbstractTestTask> {
         testLogging {
             events("failed", "standardOut", "standardError")
