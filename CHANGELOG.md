@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.30.1](https://github.com/joffrey-bion/krossbow/tree/0.30.1) (2020-08-31)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.30.0...0.30.1)
+
+**Fixed bugs:**
+
+- Gradle metadata not published correctly [\#63](https://github.com/joffrey-bion/krossbow/issues/63)
+
 ## [0.30.0](https://github.com/joffrey-bion/krossbow/tree/0.30.0) (2020-08-30)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.21.1...0.30.0)
 
