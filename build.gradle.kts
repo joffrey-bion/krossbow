@@ -1,5 +1,7 @@
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayExtension.*
+import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
+import org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact
 import org.hildan.github.changelog.generator.DEFAULT_EXCLUDED_LABELS
 
 plugins {
@@ -76,16 +78,9 @@ subprojects {
     }
 
     afterEvaluate {
-
         val publications = extensions.getByType<PublishingExtension>().publications
         publications.filterIsInstance<MavenPublication>().forEach { pub ->
             pub.configurePomForMavenCentral(project)
-            val moduleFile = buildDir.resolve("publications/${pub.name}/module.json")
-            if (moduleFile.exists()) {
-                pub.artifact(object : org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact(moduleFile) {
-                    override fun getDefaultExtension() = "module"
-                })
-            }
         }
 
         extensions.configure<BintrayExtension>("bintray") {
@@ -123,6 +118,23 @@ subprojects {
 
         tasks["check"].dependsOn(tasks["dokka"])
         tasks["bintrayUpload"].dependsOn(tasks["build"])
+
+        // Workaround bintray plugin issue for Gradle metadata publishing
+        // https://github.com/bintray/gradle-bintray-plugin/issues/229
+        tasks.withType<BintrayUploadTask> {
+            doFirst {
+                publications
+                    .filterIsInstance<MavenPublication>()
+                    .forEach { pub ->
+                        val moduleFile = buildDir.resolve("publications/${pub.name}/module.json")
+                        if (moduleFile.exists()) {
+                            pub.artifact(object : FileBasedMavenArtifact(moduleFile) {
+                                override fun getDefaultExtension() = "module"
+                            })
+                        }
+                    }
+            }
+        }
     }
 }
 
