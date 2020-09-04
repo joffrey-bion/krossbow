@@ -59,6 +59,24 @@ class StompCodecTest {
     }
 
     @Test
+    fun connect_custom_headers() {
+        val frameText = """
+            CONNECT
+            host:some.host
+            accept-version:1.2
+            login:bob
+            passcode:mypass
+            Authorization:Bearer -jwt-
+            
+            $nullChar
+        """.trimIndent()
+
+        val headers = StompConnectHeaders(host = "some.host", login = "bob", passcode = "mypass", customHeaders = mapOf("Authorization" to "Bearer -jwt-"))
+        val frame = StompFrame.Connect(headers)
+        assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
     fun connect_versions() {
         val frameText = """
             CONNECT

@@ -72,14 +72,16 @@ data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHead
         acceptVersion: List<String> = listOf("1.2"),
         login: String? = null,
         passcode: String? = null,
-        heartBeat: HeartBeat? = null
+        heartBeat: HeartBeat? = null,
+        customHeaders: Map<String, String> = emptyMap()
     ) : this(
         headersOf(
             HOST to host,
             ACCEPT_VERSION to acceptVersion.joinToString(","),
             LOGIN to login,
             PASSCODE to passcode,
-            HEART_BEAT to heartBeat?.formatAsHeaderValue()
+            HEART_BEAT to heartBeat?.formatAsHeaderValue(),
+            customHeaders = customHeaders
         )
     )
 }

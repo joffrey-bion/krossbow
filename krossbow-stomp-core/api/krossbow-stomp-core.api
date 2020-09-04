@@ -24,8 +24,8 @@ public final class org/hildan/krossbow/stomp/StompClient {
 	public fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;)V
 	public synthetic fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lorg/hildan/krossbow/stomp/config/StompConfig;)V
-	public final fun connect (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun connect$default (Lorg/hildan/krossbow/stomp/StompClient;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun connect (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun connect$default (Lorg/hildan/krossbow/stomp/StompClient;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/stomp/StompConnectionException : org/hildan/krossbow/stomp/ConnectionException {
@@ -644,8 +644,8 @@ public final class org/hildan/krossbow/stomp/headers/StompCommitHeaders : org/hi
 }
 
 public final class org/hildan/krossbow/stomp/headers/StompConnectHeaders : org/hildan/krossbow/stomp/headers/StompHeaders {
-	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompHeaders;)V
 	public fun clear ()V
 	public final fun containsKey (Ljava/lang/Object;)Z

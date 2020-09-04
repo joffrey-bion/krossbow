@@ -36,14 +36,16 @@ class StompClient(
      * Connects to the given WebSocket [url] and to the STOMP session, and returns after receiving the CONNECTED frame.
      * If [login] and [passcode] are provided, they are used to connect at STOMP level (after the web socket
      * connection is established).
+     * If [customStompConnectHeaders] is provided, its content will be included in the CONNECT/STOMP frame and
+     * might be used by the server for various usages, e.g. Authorization
      *
      * @throws ConnectionTimeout if this method takes longer than the configured
      * [timeout][StompConfig.connectionTimeoutMillis] (as a whole for both WS connect and STOMP connect)
      */
-    suspend fun connect(url: String, login: String? = null, passcode: String? = null): StompSession {
+    suspend fun connect(url: String, login: String? = null, passcode: String? = null, customStompConnectHeaders: Map<String, String> = emptyMap()): StompSession {
         val session = withTimeoutOrNull(config.connectionTimeoutMillis) {
             val wsSession = webSocketConnect(url)
-            wsSession.stompConnect(url, login, passcode)
+            wsSession.stompConnect(url, login, passcode, customStompConnectHeaders)
         }
         return session ?: throw ConnectionTimeout(url, config.connectionTimeoutMillis)
     }
@@ -59,13 +61,14 @@ class StompClient(
         }
     }
 
-    private suspend fun WebSocketSession.stompConnect(url: String, login: String?, passcode: String?): StompSession {
+    private suspend fun WebSocketSession.stompConnect(url: String, login: String?, passcode: String?, customHeaders: Map<String, String> = emptyMap()): StompSession {
         try {
             val connectHeaders = StompConnectHeaders(
                 host = extractHost(url),
                 login = login,
                 passcode = passcode,
-                heartBeat = config.heartBeat
+                heartBeat = config.heartBeat,
+                customHeaders = customHeaders
             )
             val stompSession = BaseStompSession(config, StompSocket(this, config, coroutineContext))
             stompSession.connect(connectHeaders)
