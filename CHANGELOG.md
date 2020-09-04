@@ -1,5 +1,16 @@
 # Change Log
 
+## [0.31.0](https://github.com/joffrey-bion/krossbow/tree/0.31.0) (2020-09-04)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.30.1...0.31.0)
+
+**Implemented enhancements:**
+
+- extra HTTP headers for connect frame \(for passing auth token or other\) [\#64](https://github.com/joffrey-bion/krossbow/issues/64)
+
+**Merged pull requests:**
+
+- Add custom headers support to CONNECT frame [\#65](https://github.com/joffrey-bion/krossbow/pull/65) ([@Mostrapotski](https://github.com/Mostrapotski))
+
 ## [0.30.1](https://github.com/joffrey-bion/krossbow/tree/0.30.1) (2020-08-31)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.30.0...0.30.1)
 
