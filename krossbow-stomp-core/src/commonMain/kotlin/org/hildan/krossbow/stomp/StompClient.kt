@@ -36,14 +36,16 @@ class StompClient(
      * Connects to the given WebSocket [url] and to the STOMP session, and returns after receiving the CONNECTED frame.
      * If [login] and [passcode] are provided, they are used to connect at STOMP level (after the web socket
      * connection is established).
+     * If [customStompConnectHeaders] is provided, its content will be included in the CONNECT/STOMP frame and
+     * might be used by the server for various usages, e.g. Authorization
      *
      * @throws ConnectionTimeout if this method takes longer than the configured
      * [timeout][StompConfig.connectionTimeoutMillis] (as a whole for both WS connect and STOMP connect)
      */
-    suspend fun connect(url: String, login: String? = null, passcode: String? = null, customHeaders: Map<String, String> = emptyMap()): StompSession {
+    suspend fun connect(url: String, login: String? = null, passcode: String? = null, customStompConnectHeaders: Map<String, String> = emptyMap()): StompSession {
         val session = withTimeoutOrNull(config.connectionTimeoutMillis) {
             val wsSession = webSocketConnect(url)
-            wsSession.stompConnect(url, login, passcode, customHeaders)
+            wsSession.stompConnect(url, login, passcode, customStompConnectHeaders)
         }
         return session ?: throw ConnectionTimeout(url, config.connectionTimeoutMillis)
     }
