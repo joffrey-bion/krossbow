@@ -71,7 +71,12 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host", login = "bob", passcode = "mypass", customHeaders = mapOf("Authorization" to "Bearer -jwt-"))
+        val headers = StompConnectHeaders(
+            host = "some.host",
+            login = "bob",
+            passcode = "mypass",
+            customHeaders = mapOf("Authorization" to "Bearer -jwt-")
+        )
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }

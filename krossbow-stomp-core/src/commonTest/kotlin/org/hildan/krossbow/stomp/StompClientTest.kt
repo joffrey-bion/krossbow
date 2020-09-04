@@ -85,6 +85,21 @@ class StompClientTest {
         }
     }
 
+    @Test
+    fun connect_sendsCorrectHeaders_withCustomHeaders() {
+        val userProvidedHeaders = mapOf("Authorization" to "Bearer -jwt-")
+        runBlockingTest {
+            val expectedHeaders = StompConnectHeaders(
+                host = "some.host",
+                heartBeat = HeartBeat(),
+                customHeaders = userProvidedHeaders
+            )
+            testConnectHeaders(expectedHeaders) { client ->
+                client.connect("http://some.host/ws", customStompConnectHeaders = userProvidedHeaders)
+            }
+        }
+    }
+
     private suspend fun testConnectHeaders(
         expectedHeaders: StompConnectHeaders,
         configureClient: StompConfig.() -> Unit = {},
