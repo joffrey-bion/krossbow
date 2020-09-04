@@ -40,10 +40,10 @@ class StompClient(
      * @throws ConnectionTimeout if this method takes longer than the configured
      * [timeout][StompConfig.connectionTimeoutMillis] (as a whole for both WS connect and STOMP connect)
      */
-    suspend fun connect(url: String, login: String? = null, passcode: String? = null): StompSession {
+    suspend fun connect(url: String, login: String? = null, passcode: String? = null, customHeaders: Map<String, String> = emptyMap()): StompSession {
         val session = withTimeoutOrNull(config.connectionTimeoutMillis) {
             val wsSession = webSocketConnect(url)
-            wsSession.stompConnect(url, login, passcode)
+            wsSession.stompConnect(url, login, passcode, customHeaders)
         }
         return session ?: throw ConnectionTimeout(url, config.connectionTimeoutMillis)
     }
@@ -59,13 +59,14 @@ class StompClient(
         }
     }
 
-    private suspend fun WebSocketSession.stompConnect(url: String, login: String?, passcode: String?): StompSession {
+    private suspend fun WebSocketSession.stompConnect(url: String, login: String?, passcode: String?, customHeaders: Map<String, String> = emptyMap()): StompSession {
         try {
             val connectHeaders = StompConnectHeaders(
                 host = extractHost(url),
                 login = login,
                 passcode = passcode,
-                heartBeat = config.heartBeat
+                heartBeat = config.heartBeat,
+                customHeaders = customHeaders
             )
             val stompSession = BaseStompSession(config, StompSocket(this, config, coroutineContext))
             stompSession.connect(connectHeaders)
