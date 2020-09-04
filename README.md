@@ -7,7 +7,12 @@
 
 A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
  over web sockets.
- 
+
+## Kotlin version compatibility
+
+Starting at version 0.30.0, Krossbow uses Kotlin 1.4.
+This library was built using Kotlin 1.3 up to version 0.21.1.
+
 ## Experimental status
 
 ***This project is experimental, meaning that there is no guarantee of backwards compatibility.*** 
@@ -217,22 +222,31 @@ Other artifacts provide more implementations supporting more platforms by depend
 
 ## Adding the dependency
 
-All the dependencies are currently published to Bintray JCenter.
+All the modules are currently published to Bintray JCenter.
+They are not available on Maven Central yet because of Javadoc generation issues/Dokka misconfiguration.
 They are not yet available on npm yet.
 
 If you are using STOMP and have no special requirements for the web socket implementation, `krossbow-websocket-core` 
 doesn't need to be explicitly declared as dependency because it is transitively pulled by all `krossbow-stomp-xxx` 
 artifacts.
 
-```kotlin
-// common source set
-implementation("org.hildan.krossbow:krossbow-stomp-core-metadata:$krossbowVersion")
+Using Gradle for a single platform project, add the relevant artifact (with platform suffix):
 
-// jvm source set
+```kotlin
+// jvm project
 implementation("org.hildan.krossbow:krossbow-stomp-core-jvm:$krossbowVersion")
 
-// js source set
+// js project
 implementation("org.hildan.krossbow:krossbow-stomp-core-js:$krossbowVersion")
+```
+
+Using Gradle for a multi-platform project, since Kotlin 1.4 (and Krossbow version 0.30.0), you don't need to use the
+`metadata` artifact, nor do you need to declare all platform-dependent artifacts.
+Just add the non-suffixed version of the artifact to your `commonMain` source set:
+
+```kotlin
+// multiplatform project (commonMain source set)
+implementation("org.hildan.krossbow:krossbow-stomp-core:$krossbowVersion")
 ```
 
 ## Project structure
