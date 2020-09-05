@@ -5,7 +5,7 @@
 
 **Implemented enhancements:**
 
-- extra HTTP headers for connect frame \(for passing auth token or other\) [\#64](https://github.com/joffrey-bion/krossbow/issues/64)
+- Add custom headers support to the STOMP CONNECT frame [\#64](https://github.com/joffrey-bion/krossbow/issues/64)
 
 **Merged pull requests:**
 
