@@ -119,20 +119,6 @@ public final class org/hildan/krossbow/stomp/config/HeartBeatTolerance {
 
 public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public fun <init> ()V
-	public fun <init> (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;JJJZ)V
-	public synthetic fun <init> (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;JJJZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Z
-	public final fun component2 ()Z
-	public final fun component3 ()Z
-	public final fun component4 ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
-	public final fun component5 ()Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
-	public final fun component6 ()J
-	public final fun component7 ()J
-	public final fun component8 ()J
-	public final fun component9 ()Z
-	public final fun copy (ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;JJJZ)Lorg/hildan/krossbow/stomp/config/StompConfig;
-	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/config/StompConfig;ZZZLorg/hildan/krossbow/stomp/config/HeartBeat;Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;JJJZILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/StompConfig;
-	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAutoContentLength ()Z
 	public final fun getAutoReceipt ()Z
 	public final fun getConnectWithStompCommand ()Z
@@ -141,8 +127,8 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun getGracefulDisconnect ()Z
 	public final fun getHeartBeat ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
 	public final fun getHeartBeatTolerance ()Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
+	public final fun getInstrumentation ()Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;
 	public final fun getReceiptTimeoutMillis ()J
-	public fun hashCode ()I
 	public final fun setAutoContentLength (Z)V
 	public final fun setAutoReceipt (Z)V
 	public final fun setConnectWithStompCommand (Z)V
@@ -151,8 +137,8 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun setGracefulDisconnect (Z)V
 	public final fun setHeartBeat (Lorg/hildan/krossbow/stomp/config/HeartBeat;)V
 	public final fun setHeartBeatTolerance (Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;)V
+	public final fun setInstrumentation (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;)V
 	public final fun setReceiptTimeoutMillis (J)V
-	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions : org/hildan/krossbow/stomp/StompSession {
@@ -1053,5 +1039,23 @@ public final class org/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders : o
 	public final fun size ()I
 	public fun toString ()Ljava/lang/String;
 	public final fun values ()Ljava/util/Collection;
+}
+
+public abstract interface class org/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation {
+	public abstract fun onFrameDecoded (Lorg/hildan/krossbow/websocket/WebSocketFrame;Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun onStompFrameSent (Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun onWebSocketClientError (Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun onWebSocketClosed (Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun onWebSocketFrameReceived (Lorg/hildan/krossbow/websocket/WebSocketFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun plus (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;)Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;
+}
+
+public final class org/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation$DefaultImpls {
+	public static fun onFrameDecoded (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Lorg/hildan/krossbow/websocket/WebSocketFrame;Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun onStompFrameSent (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun onWebSocketClientError (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun onWebSocketClosed (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun onWebSocketFrameReceived (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Lorg/hildan/krossbow/websocket/WebSocketFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun plus (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;)Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;
 }
 

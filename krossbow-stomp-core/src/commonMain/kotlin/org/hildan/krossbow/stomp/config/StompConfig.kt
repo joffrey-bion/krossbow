@@ -2,19 +2,22 @@ package org.hildan.krossbow.stomp.config
 
 import org.hildan.krossbow.stomp.LostReceiptException
 import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.instrumentation.KrossbowInstrumentation
 
 /**
  * Configuration for the STOMP client.
  */
-data class StompConfig(
+class StompConfig {
     /**
      * Whether to automatically attach a `receipt` header to the sent frames in order to track receipts.
      */
-    var autoReceipt: Boolean = false,
+    var autoReceipt: Boolean = false
+
     /**
      * Whether to automatically compute and add the `content-length` header in sent frames.
      */
-    var autoContentLength: Boolean = true,
+    var autoContentLength: Boolean = true
+
     /**
      * Whether to use the `STOMP` command instead of `CONNECT` to establish the connection.
      *
@@ -22,7 +25,8 @@ data class StompConfig(
      * servers (as well as some STOMP 1.1 servers) but the advantage is that a protocol sniffer/discriminator will be
      * able to differentiate the STOMP connection from an HTTP connection.
      */
-    var connectWithStompCommand: Boolean = false,
+    var connectWithStompCommand: Boolean = false
+
     /**
      * The [HeartBeat] to request for the STOMP sessions.
      *
@@ -31,7 +35,8 @@ data class StompConfig(
      * negotiation. This behaviour is
      * [defined by the specification](https://stomp.github.io/stomp-specification-1.2.html#Heart-beating).
      */
-    var heartBeat: HeartBeat = HeartBeat(),
+    var heartBeat: HeartBeat = HeartBeat()
+
     /**
      * Defines tolerance for heart beats.
      *
@@ -45,11 +50,13 @@ data class StompConfig(
      * make up for network latencies before we fail and close the connection (see
      * [HeartBeatTolerance.incomingMarginMillis]).
      */
-    var heartBeatTolerance: HeartBeatTolerance = HeartBeatTolerance(),
+    var heartBeatTolerance: HeartBeatTolerance = HeartBeatTolerance()
+
     /**
      * Defines how long to wait for the websocket+STOMP connection to be established before throwing an exception.
      */
-    var connectionTimeoutMillis: Long = 15000,
+    var connectionTimeoutMillis: Long = 15000
+
     /**
      * Defines how long to wait for a RECEIPT frame from the server before throwing a [LostReceiptException].
      * Only crashes when a `receipt` header was actually present in the sent frame (and thus a RECEIPT was expected).
@@ -57,7 +64,8 @@ data class StompConfig(
      *
      * Note that this doesn't apply to the DISCONNECT frames, use [disconnectTimeoutMillis] instead for that.
      */
-    var receiptTimeoutMillis: Long = 1000,
+    var receiptTimeoutMillis: Long = 1000
+
     /**
      * Like [receiptTimeoutMillis] but only for the receipt of the DISCONNECT frame.
      * This is ignored if [gracefulDisconnect] is disabled.
@@ -66,7 +74,8 @@ data class StompConfig(
      * This is to allow servers to close the connection quickly (sometimes too quick for sending a RECEIPT/ERROR) as
      * [mentioned in the specification](http://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
      */
-    var disconnectTimeoutMillis: Long = 200,
+    var disconnectTimeoutMillis: Long = 200
+
     /**
      * Enables [graceful disconnect](https://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
      *
@@ -78,7 +87,13 @@ data class StompConfig(
      * In this case, there is no guarantee that the server received all previous messages.
      */
     var gracefulDisconnect: Boolean = true
-)
+
+    /**
+     * A set of hooks that are called in different places of the internal execution of Krossbow.
+     * The instrumentation can be used for monitoring, logging or debugging purposes.
+     */
+    var instrumentation: KrossbowInstrumentation? = null
+}
 
 /**
  * Defines heart beats for STOMP sessions, as
