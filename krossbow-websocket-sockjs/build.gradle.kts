@@ -46,27 +46,3 @@ kotlin {
         }
     }
 }
-
-tasks.dokka {
-    dependsOn(
-        ":krossbow-websocket-core:dokka",
-        ":krossbow-websocket-spring:dokka"
-    )
-    multiplatform {
-        val global by creating {
-            externalDocumentationLink {
-                url = relativeDokkaUrl("krossbow-websocket-core")
-                packageListUrl = relativeDokkaPackageListUrl("krossbow-websocket-core")
-            }
-        }
-        val jvm by creating {
-            externalDocumentationLink {
-                url = relativeDokkaUrl("krossbow-websocket-spring")
-                packageListUrl = relativeDokkaPackageListUrl("krossbow-websocket-spring")
-            }
-        }
-        // Dokka disabled for JS because of NPM dependency breaking the generation
-        // https://github.com/Kotlin/dokka/issues/537
-        // val js by creating {}
-    }
-}

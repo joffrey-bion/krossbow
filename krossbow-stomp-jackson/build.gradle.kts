@@ -15,19 +15,9 @@ dependencies {
     testImplementation(kotlin("test-junit"))
 }
 
-tasks.dokka {
-    dependsOn(":krossbow-stomp-core:dokka")
-    configuration {
-        externalDocumentationLink {
-            url = relativeDokkaUrl("krossbow-stomp-core")
-            packageListUrl = relativeDokkaPackageListUrl("krossbow-stomp-core")
-        }
-    }
-}
-
 val dokkaJar by tasks.creating(Jar::class) {
     archiveClassifier.set("javadoc")
-    from(tasks.dokka)
+    from(tasks.dokkaHtml)
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

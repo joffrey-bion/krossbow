@@ -1,5 +1,14 @@
 import com.gradle.scan.plugin.BuildScanExtension
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        // for Dokka 1.4.0 (not yet in Gradle plugin portal)
+        // https://kotlin.github.io/dokka/1.4.0/user_guide/gradle/usage/
+        jcenter()
+    }
+}
+
 plugins {
     id("com.gradle.enterprise") version "3.2.1"
 }

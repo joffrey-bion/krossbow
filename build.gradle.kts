@@ -11,8 +11,8 @@ plugins {
     kotlin("multiplatform") version kotlinVersion apply false
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
+    id("org.jetbrains.dokka") version "1.4.0" apply false
     id("org.jlleitschuh.gradle.ktlint") version "9.1.1" apply false
-    id("org.jetbrains.dokka") version "0.10.1" apply false
     id("com.jfrog.bintray") version "1.8.5" apply false
     id("org.hildan.github.changelog") version "0.8.0"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.2.3"
@@ -21,6 +21,12 @@ plugins {
 allprojects {
     group = "org.hildan.krossbow"
     version = "0.32.0"
+
+    repositories {
+        jcenter()
+    }
+
+    apply(plugin = "org.jetbrains.dokka")
 }
 
 val Project.githubUser get() = "joffrey-bion"
@@ -40,11 +46,6 @@ subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "maven-publish")
     apply(plugin = "com.jfrog.bintray")
-    apply(plugin = "org.jetbrains.dokka")
-
-    repositories {
-        jcenter()
-    }
 
     val compilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
@@ -116,7 +117,7 @@ subprojects {
             })
         }
 
-        tasks["assemble"].dependsOn(tasks["dokka"])
+        tasks["assemble"].dependsOn(tasks["dokkaHtml"])
         tasks["bintrayUpload"].dependsOn(tasks["build"])
 
         // Workaround bintray plugin issue for Gradle metadata publishing

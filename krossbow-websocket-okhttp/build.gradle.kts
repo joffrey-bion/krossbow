@@ -12,19 +12,9 @@ dependencies {
     api("com.squareup.okhttp3:okhttp:4.5.0")
 }
 
-tasks.dokka {
-    dependsOn(":krossbow-websocket-core:dokka")
-    configuration {
-        externalDocumentationLink {
-            url = relativeDokkaUrl("krossbow-websocket-core")
-            packageListUrl = relativeDokkaPackageListUrl("krossbow-websocket-core")
-        }
-    }
-}
-
 val dokkaJar by tasks.creating(Jar::class) {
     archiveClassifier.set("javadoc")
-    from(tasks.dokka)
+    from(tasks.dokkaHtml)
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

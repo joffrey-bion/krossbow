@@ -22,17 +22,3 @@ kotlin {
         }
     }
 }
-
-tasks.dokka {
-    dependsOn(":krossbow-stomp-core:dokka")
-    multiplatform {
-        val global by creating {
-            externalDocumentationLink {
-                url = relativeDokkaUrl("krossbow-stomp-core")
-                packageListUrl = relativeDokkaPackageListUrl("krossbow-stomp-core")
-            }
-        }
-        val jvm by creating {}
-        val js by creating {}
-    }
-}

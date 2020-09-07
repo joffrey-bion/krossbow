@@ -1,5 +1,3 @@
-import java.net.URL
-
 plugins {
     kotlin("jvm")
 }
@@ -21,23 +19,9 @@ dependencies {
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.15")
 }
 
-tasks.dokka {
-    dependsOn(":krossbow-websocket-core:dokka")
-    configuration {
-        externalDocumentationLink {
-            url = URL("https://docs.spring.io/spring/docs/current/javadoc-api/")
-            packageListUrl = URL(url, "package-list")
-        }
-        externalDocumentationLink {
-            url = relativeDokkaUrl("krossbow-websocket-core")
-            packageListUrl = relativeDokkaPackageListUrl("krossbow-websocket-core")
-        }
-    }
-}
-
 val dokkaJar by tasks.creating(Jar::class) {
     archiveClassifier.set("javadoc")
-    from(tasks.dokka)
+    from(tasks.dokkaHtml)
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

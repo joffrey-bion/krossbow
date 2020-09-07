@@ -1,7 +1,8 @@
-import java.net.URL
+// import java.net.URL
 
 plugins {
     kotlin("multiplatform")
+    // id("org.jetbrains.dokka")
 }
 
 description = "WebSocket client API used by the Krossbow STOMP client, with default JS and JVM implementations."
@@ -52,18 +53,5 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-    }
-}
-
-tasks.dokka {
-    multiplatform {
-        val global by creating {}
-        val jvm by creating {
-            externalDocumentationLink {
-                url = URL("https://docs.oracle.com/en/java/javase/11/docs/api/")
-                packageListUrl = URL(url, "element-list")
-            }
-        }
-        val js by creating {}
     }
 }
