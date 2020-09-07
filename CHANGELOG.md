@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.32.0](https://github.com/joffrey-bion/krossbow/tree/0.32.0) (2020-09-07)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.31.0...0.32.0)
+
+**Implemented enhancements:**
+
+- Add instrumentation option to monitor/log/debug internal events [\#67](https://github.com/joffrey-bion/krossbow/issues/67)
+
 ## [0.31.0](https://github.com/joffrey-bion/krossbow/tree/0.31.0) (2020-09-04)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.30.1...0.31.0)
 
