@@ -116,7 +116,7 @@ subprojects {
             })
         }
 
-        tasks["check"].dependsOn(tasks["dokka"])
+        tasks["assemble"].dependsOn(tasks["dokka"])
         tasks["bintrayUpload"].dependsOn(tasks["build"])
 
         // Workaround bintray plugin issue for Gradle metadata publishing
