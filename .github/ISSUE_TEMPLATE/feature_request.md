@@ -21,4 +21,4 @@ Is there a way (maybe inconvenient) to achieve your goal at the moment, or a wor
 Kotlin version:
 Kotlin target: *(e.g. browser, NodeJS, JVM, Android, a multiplatform combination?)*
 
-If you can, please provide a bit of context about the bigger picture of what you were trying to achieve (it always helps to have precise use cases in mind when adding the feature, and even ).
+If you can, please provide a bit of context about the bigger picture of what you were trying to achieve (it always helps to have precise use cases in mind when adding the feature, and even when considering other features in the future).
