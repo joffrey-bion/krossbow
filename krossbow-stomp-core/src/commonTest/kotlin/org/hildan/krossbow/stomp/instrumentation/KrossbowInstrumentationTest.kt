@@ -57,7 +57,7 @@ class KrossbowInstrumentationTest {
         val inst = KrossbowInstrumentationMock()
 
         launch {
-            val (wsSession, stompSession) = connectWithMocks {
+            val (wsSession, _) = connectWithMocks {
                 instrumentation = inst
             }
             wsSession.simulateError("Simulated error")
@@ -80,7 +80,7 @@ class KrossbowInstrumentationTest {
         val inst = KrossbowInstrumentationMock()
 
         launch {
-            val (wsSession, stompSession) = connectWithMocks {
+            val (wsSession, _) = connectWithMocks {
                 instrumentation = inst
             }
             wsSession.simulateErrorFrameReceived("Simulated error")
