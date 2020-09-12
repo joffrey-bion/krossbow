@@ -265,3 +265,13 @@ This project contains the following modules:
 - `krossbow-websocket-spring`: a JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides
  both a normal WebSocket client and a SockJS one.
 - `krossbow-websocket-okhttp`: a JVM implementation of the web socket API using OkHttp's WebSocketClient.
+
+## Contribute
+
+Don't hesitate to open GitHub issues, even to ask questions or discuss a new feature.
+Pull-requests are welcome, but please open an issue first so that we can discuss the initial design or fix, which
+may avoid unnecessary work.
+
+## License
+
+This project is published under the [MIT license](https://github.com/joffrey-bion/krossbow/blob/master/LICENSE).
