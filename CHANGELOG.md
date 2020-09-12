@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.40.0](https://github.com/joffrey-bion/krossbow/tree/0.40.0) (2020-09-13)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.32.0...0.40.0)
+
+**Implemented enhancements:**
+
+- Make subscribe methods suspending [\#68](https://github.com/joffrey-bion/krossbow/issues/68)
+
 ## [0.32.0](https://github.com/joffrey-bion/krossbow/tree/0.32.0) (2020-09-07)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.31.0...0.32.0)
 

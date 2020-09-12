@@ -20,7 +20,7 @@ plugins {
 
 allprojects {
     group = "org.hildan.krossbow"
-    version = "0.32.0"
+    version = "0.40.0"
 
     repositories {
         jcenter()
