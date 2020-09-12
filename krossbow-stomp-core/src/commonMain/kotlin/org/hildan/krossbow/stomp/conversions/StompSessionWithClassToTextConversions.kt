@@ -75,13 +75,13 @@ internal class StompSessionWithClassToTextConversions(
         FrameBody.Text(bodyText)
     }
 
-    override fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T> =
+    override suspend fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T> =
         subscribe(headers).map { frame ->
             convertOrNull(frame, clazz)
                 ?: error("Empty bodies are not allowed in this subscription, please use subscribeOptional instead")
         }
 
-    override fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T?> =
+    override suspend fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T?> =
         subscribe(headers).map { frame -> convertOrNull(frame, clazz) }
 
     private fun <T : Any> convertOrNull(msg: StompFrame.Message, clazz: KClass<T>): T? {

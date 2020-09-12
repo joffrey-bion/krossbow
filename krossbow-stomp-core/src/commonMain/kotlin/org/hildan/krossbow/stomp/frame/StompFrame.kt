@@ -34,14 +34,17 @@ sealed class StompFrame(
     /**
      * The body of this frame as text.
      *
-     * If this STOMP frame comes from a binary web socket frame, the binary body is converted to text based on the
-     * `content-type` header of this frame. This conversion respects the conventions defined by the
-     * [STOMP specification](https://stomp.github.io/stomp-specification-1.2.html#Header_content-type).
-     *
      * If this STOMP frame comes from a text web socket frame, then [bodyAsText] is simply the body's text.
      *
-     * The STOMP protocol doesn't distinguish between absent frame bodies and 0-length bodies.
-     * For this reason and for convenience, [bodyAsText] is the empty string in this case.
+     * If this STOMP frame comes from a binary web socket frame, the binary body is decoded to text based on the
+     * `content-type` header of this frame.
+     * If there is no `content-type` header, or if the charset cannot be properly extracted/inferred from it, accessing
+     * [bodyAsText] throws an exception.
+     * The `content-type` header must be present and its value must start with `text/` or contain an explicit charset,
+     * as defined in the [specification](https://stomp.github.io/stomp-specification-1.2.html#Header_content-type).
+     *
+     * The STOMP protocol doesn't distinguish between missing bodies and 0-length bodies.
+     * For this reason and for convenience, [bodyAsText] is the empty string in both cases.
      */
     val bodyAsText: String by lazy { body?.asText(headers.contentType) ?: "" }
 

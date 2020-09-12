@@ -70,7 +70,7 @@ private abstract class BaseStompSessionWithConversions(
     protected abstract fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>): FrameBody?
 
     @OptIn(ExperimentalSerializationApi::class)
-    override fun <T : Any> subscribe(
+    override suspend fun <T : Any> subscribe(
         headers: StompSubscribeHeaders,
         deserializer: DeserializationStrategy<T>
     ): Flow<T> = subscribe(headers).map { frame ->
@@ -80,7 +80,7 @@ private abstract class BaseStompSessionWithConversions(
                     "from null body")
     }
 
-    override fun <T : Any> subscribeOptional(
+    override suspend fun <T : Any> subscribeOptional(
         headers: StompSubscribeHeaders,
         deserializer: DeserializationStrategy<T>
     ): Flow<T?> = subscribe(headers).map { frame -> deserializeOrNull(frame, deserializer) }

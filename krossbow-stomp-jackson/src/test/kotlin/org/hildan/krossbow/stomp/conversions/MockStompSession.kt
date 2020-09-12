@@ -31,7 +31,8 @@ class MockStompSession : StompSession {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> = incomingFrames.consumeAsFlow()
+    override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> =
+        incomingFrames.consumeAsFlow()
 
     override suspend fun ack(ackId: String, transactionId: String?) {
         TODO("Not yet implemented")

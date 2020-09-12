@@ -32,27 +32,31 @@ interface StompSessionWithClassConversions : StompSession {
     ): StompReceipt?
 
     /**
-     * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
-     * coroutine is cancelled.
-     * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T], but the exact conversion
+     * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the
+     * collector is done or cancelled.
+     * The returned flow can be collected only once.
+     *
+     * The received [MESSAGE][StompFrame.Message] frames are converted into instances of [T], but the exact conversion
      * is implementation-dependent.
      * Message frames without a body MAY be skipped or result in an exception depending on the implementation.
      *
      * See the general [StompSession] documentation for more details about subscription flows and receipts.
      */
-    fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T>
+    suspend fun <T : Any> subscribe(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T>
 
     /**
-     * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
-     * coroutine is cancelled.
-     * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] or `null` based on [clazz],
-     * but the exact conversion is implementation-dependent.
-     * Message frames without a body MAY be skipped or result in an exception depending on the implementation, they
-     * don't have to be translated into null values.
+     * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the
+     * collector is done or cancelled.
+     * The returned flow can be collected only once.
+     *
+     * The received [MESSAGE][StompFrame.Message] frames are converted into instances of [T] or `null`, but the exact
+     * conversion is implementation-dependent.
+     * Message frames without a body MAY be skipped or result in an exception depending on the implementation, but
+     * they usually should be translated to `null`.
      *
      * See the general [StompSession] documentation for more details about subscription flows and receipts.
      */
-    fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T?>
+    suspend fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, clazz: KClass<T>): Flow<T?>
 }
 
 /**
@@ -93,7 +97,7 @@ suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAnd
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-fun <T : Any> StompSessionWithClassConversions.subscribe(destination: String, clazz: KClass<T>): Flow<T> =
+suspend fun <T : Any> StompSessionWithClassConversions.subscribe(destination: String, clazz: KClass<T>): Flow<T> =
     subscribe(StompSubscribeHeaders(destination), clazz)
 
 /**
@@ -108,8 +112,10 @@ fun <T : Any> StompSessionWithClassConversions.subscribe(destination: String, cl
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-fun <T : Any> StompSessionWithClassConversions.subscribeOptional(destination: String, clazz: KClass<T>): Flow<T?> =
-    subscribeOptional(StompSubscribeHeaders(destination), clazz)
+suspend fun <T : Any> StompSessionWithClassConversions.subscribeOptional(
+    destination: String,
+    clazz: KClass<T>
+): Flow<T?> = subscribeOptional(StompSubscribeHeaders(destination), clazz)
 
 /**
  * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
@@ -120,7 +126,7 @@ fun <T : Any> StompSessionWithClassConversions.subscribeOptional(destination: St
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-inline fun <reified T : Any> StompSessionWithClassConversions.subscribe(destination: String): Flow<T> =
+suspend inline fun <reified T : Any> StompSessionWithClassConversions.subscribe(destination: String): Flow<T> =
     subscribe(destination, T::class)
 
 /**
@@ -136,5 +142,5 @@ inline fun <reified T : Any> StompSessionWithClassConversions.subscribe(destinat
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-inline fun <reified T : Any> StompSessionWithClassConversions.subscribeOptional(destination: String): Flow<T?> =
+suspend inline fun <reified T : Any> StompSessionWithClassConversions.subscribeOptional(destination: String): Flow<T?> =
     subscribeOptional(destination, T::class)

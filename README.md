@@ -72,17 +72,16 @@ val session: StompSession = client.connect(url) // optional login/passcode can b
 
 session.sendText("/some/destination", "Basic text message") 
 
-// this flow is cold, the subscription doesn't occur until a consumer starts collecting the flow
+// this triggers a SUBSCRIBE frame and returns the flow of messages for the subscription
 val subscription: Flow<String> = session.subscribeText("/some/topic/destination")
 
 val collectorJob = launch {
-    // flow collection triggers the SUBSCRIBE frame and receives messages
     subscription.collect { msg ->
         println("Received: $msg")
     }
 }
 delay(3000)
-// When we're finished... (cancelling the flow collector triggers an UNSUBSCRIBE frame)
+// cancelling the flow collector triggers an UNSUBSCRIBE frame
 collectorJob.cancel()
  
 session.disconnect()
@@ -107,6 +106,7 @@ session.use { // this: StompSession
     val firstMessage: String = subscription.first()
     println("Received: $firstMessage")
 }
+// DISCONNECT frame was automatically sent at the end of the use{...} block
 ```
 
 ### Using body conversions

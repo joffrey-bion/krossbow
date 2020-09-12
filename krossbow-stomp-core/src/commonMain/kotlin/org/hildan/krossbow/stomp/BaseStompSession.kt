@@ -8,11 +8,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.stomp.config.StompConfig
@@ -105,7 +103,7 @@ internal class BaseStompSession(
             config.receiptTimeoutMillis
         }
 
-    override fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> = flow<StompFrame.Message> {
+    override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> {
         // generating the ID within the flow enables multiple concurrent collectors (because different subscription IDs)
         val headersWithId = headers.withId()
         val id = headersWithId.id
@@ -114,13 +112,15 @@ internal class BaseStompSession(
         val allFrames = stompSocket.stompFramesChannel.openSubscription()
         prepareHeadersAndSendFrame(StompFrame.Subscribe(headersWithId))
 
-        val messagesFlow = allFrames.consumeAsFlow()
+        return allFrames.consumeAsFlow()
             .filterIsInstance<StompFrame.Message>()
             .filter { it.headers.subscription == id }
             .onCompletion {
                 when (it) {
                     // If the consumer was cancelled or an exception occurred downstream, the STOMP session keeps going
-                    // so we want to unsubscribe this failed subscription
+                    // so we want to unsubscribe this failed subscription.
+                    // Note that calling .first() actually cancels the flow with CancellationException, so it's
+                    // covered here.
                     is CancellationException -> unsubscribe(id)
                     // If the flow completes normally, it means the frames channel is closed, and so is the web socket
                     // connection. We can't send an unsubscribe frame in this case.
@@ -129,8 +129,6 @@ internal class BaseStompSession(
                     else -> Unit
                 }
             }
-
-        emitAll(messagesFlow)
     }
 
     private suspend fun unsubscribe(subscriptionId: String) {

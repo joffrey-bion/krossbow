@@ -35,26 +35,33 @@ interface StompSessionWithKxSerialization : StompSession {
     ): StompReceipt?
 
     /**
-     * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
-     * coroutine is cancelled.
-     * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided
+     * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the collector is
+     * done or cancelled.
+     * The returned flow can be collected only once.
+     *
+     * The received [MESSAGE][StompFrame.Message] frames are converted into instances of [T] using the provided
      * Kotlinx Serialization's [deserializer].
      * Message frames without a body are not allowed and result in an exception in the flow's collector.
      *
      * See the general [StompSession] documentation for more details about subscription flows and receipts.
      */
-    fun <T : Any> subscribe(headers: StompSubscribeHeaders, deserializer: DeserializationStrategy<T>): Flow<T>
+    suspend fun <T : Any> subscribe(headers: StompSubscribeHeaders, deserializer: DeserializationStrategy<T>): Flow<T>
 
     /**
-     * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
-     * coroutine is cancelled.
-     * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided
-     * Kotlinx Serialization's [deserializer].
-     * Message frames without a body are allowed and result in null values in the flow.
+     * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the collector is
+     * done or cancelled.
+     * The returned flow can be collected only once.
+     *
+     * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided Kotlinx
+     * Serialization's [deserializer].
+     * Message frames without a body are allowed and result in `null` values in the flow.
      *
      * See the general [StompSession] documentation for more details about subscription flows and receipts.
      */
-    fun <T : Any> subscribeOptional(headers: StompSubscribeHeaders, deserializer: DeserializationStrategy<T>): Flow<T?>
+    suspend fun <T : Any> subscribeOptional(
+        headers: StompSubscribeHeaders,
+        deserializer: DeserializationStrategy<T>
+    ): Flow<T?>
 }
 
 /**
@@ -102,57 +109,65 @@ suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndS
 ): StompReceipt? = convertAndSend(StompSendHeaders(destination), body)
 
 /**
- * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
- * coroutine is cancelled.
- * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided
- * Kotlinx Serialization's [deserializer].
+ * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the collector is done
+ * or cancelled.
+ * The returned flow can be collected only once.
+ *
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided Kotlinx
+ * Serialization's [deserializer].
  * Message frames without a body are not allowed and result in an exception in the flow's collector.
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-fun <T : Any> StompSessionWithKxSerialization.subscribe(
+suspend fun <T : Any> StompSessionWithKxSerialization.subscribe(
     destination: String,
     deserializer: DeserializationStrategy<T>
 ): Flow<T> = subscribe(StompSubscribeHeaders(destination), deserializer)
 
 /**
- * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
- * coroutine is cancelled.
- * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided
- * Kotlinx Serialization's [deserializer].
+ * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the collector is done
+ * or cancelled.
+ * The returned flow can be collected only once.
+ *
+ * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using the provided Kotlinx
+ * Serialization's [deserializer].
  * Message frames without a body are allowed and result in null values in the flow.
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-fun <T : Any> StompSessionWithKxSerialization.subscribeOptional(
+suspend fun <T : Any> StompSessionWithKxSerialization.subscribeOptional(
     destination: String,
     deserializer: DeserializationStrategy<T>
 ): Flow<T?> = subscribeOptional(StompSubscribeHeaders(destination), deserializer)
 
 /**
- * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
- * coroutine is cancelled.
+ * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the collector is done
+ * or cancelled.
+ * The returned flow can be collected only once.
+ *
  * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using a deserializer inferred
  * from the class of [T]. This has limited support in JavaScript and may break on generic types.
  * Message frames without a body are not allowed and result in an exception in the flow's collector.
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-inline fun <reified T : Any> StompSessionWithKxSerialization.subscribe(destination: String): Flow<T> {
+suspend inline fun <reified T : Any> StompSessionWithKxSerialization.subscribe(destination: String): Flow<T> {
     val serializer = serializersModule.serializer<T>()
     return subscribe(destination, serializer)
 }
 
 /**
- * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
- * coroutine is cancelled.
+ * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the collector is done
+ * or cancelled.
+ * The returned flow can be collected only once.
+ *
  * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] using a deserializer inferred
  * from the class of [T]. This has limited support in JavaScript and may break on generic types.
  * Message frames without a body are allowed and result in null values in the flow.
  *
  * See the general [StompSession] documentation for more details about subscription flows and receipts.
  */
-inline fun <reified T : Any> StompSessionWithKxSerialization.subscribeOptional(destination: String): Flow<T?> {
+suspend inline fun <reified T : Any> StompSessionWithKxSerialization.subscribeOptional(destination: String): Flow<T?> {
     val serializer = serializersModule.serializer<T>()
     return subscribeOptional(destination, serializer)
 }
