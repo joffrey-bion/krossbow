@@ -21,14 +21,14 @@ jobs:
         java-version: ${{ matrix.jdk-version }}
 
     - name: Gradle build cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2.1.1
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-build-${{ hashFiles('**/*.gradle*') }}
         restore-keys: ${{ runner.os }}-gradle-build-
 
     - name: Gradle wrapper cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2.1.1
       with:
         path: ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
