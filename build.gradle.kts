@@ -27,6 +27,15 @@ allprojects {
     }
 
     apply(plugin = "org.jetbrains.dokka")
+
+    afterEvaluate {
+        // suppressing Dokka generation for JS because of the annoying ZipException on NPM dependencies
+        // https://github.com/Kotlin/dokka/issues/537
+        tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+            dokkaSourceSets.findByName("jsMain")?.suppress?.set(true)
+            dokkaSourceSets.findByName("jsTest")?.suppress?.set(true)
+        }
+    }
 }
 
 val Project.githubUser get() = "joffrey-bion"
