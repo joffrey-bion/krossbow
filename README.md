@@ -211,14 +211,17 @@ Other artifacts provide more implementations supporting more platforms by depend
 
 | Artifact                    |           Browser          |           NodeJS           |                JVM8+ (blocking)               |   JVM11+ (async)   | Dependencies |
 |-----------------------------|:--------------------------:|:--------------------------:|:---------------------------------------------:|:------------------:|--------------|
-| `krossbow-websocket-core`   |     :white_check_mark:     |                            |                                               | :white_check_mark: |              |
-| `krossbow-websocket-sockjs` | :eight_pointed_black_star: | :eight_pointed_black_star: |           :eight_pointed_black_star:          |                    | [sockjs-client](https://github.com/sockjs/sockjs-client), [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) |
+| `krossbow-websocket-core`   |     :white_check_mark:     |                            |                                               | :white_check_mark: | None         |
+| `krossbow-websocket-sockjs` | :eight_pointed_black_star: | :eight_pointed_black_star: |                    :eight_pointed_black_star: |                    | [sockjs-client](https://github.com/sockjs/sockjs-client), [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) |
 | `krossbow-websocket-spring` |                            |                            | :white_check_mark: :eight_pointed_black_star: |                    | [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) |
-| `krossbow-websocket-okhttp` |                            |                            |               :white_check_mark:              |                    | [OkHttp](https://square.github.io/okhttp/) |
+| `krossbow-websocket-okhttp` |                            |                            | :white_check_mark:                            |                    | [OkHttp](https://square.github.io/okhttp/) |
+| `krossbow-websocket-ktor`   |     :white_check_mark:     |     :white_check_mark:     | :white_check_mark: \*                           |                    | [Ktor](https://ktor.io/clients/websockets.html), and the relevant [Ktor engine(s)](https://ktor.io/clients/http-client/engines.html) |
 
 :white_check_mark: supported with native web socket transport
 
 :eight_pointed_black_star: supported using [SockJS](https://github.com/sockjs/sockjs-client) protocol (requires a SockJS server)
+
+\* Blocking when using OkHttp engine, but can be async with CIO engine
 
 ## Adding the dependency
 
@@ -260,6 +263,7 @@ This project contains the following modules:
 - `krossbow-websocket-core`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
  WebSocket clients. This also provides a default JS client implementations using the Browser's native WebSocket, and
   a JVM 11+ implementation using the async WebSocket API.
+- `krossbow-websocket-ktor`: a multiplatform `WebSocketClient` implementation based on Ktor's `HttpClient`.
 - `krossbow-websocket-sockjs`: a multiplatform `WebSocketClient` implementation for use with SockJS servers. It uses
  Spring's SockJSClient on JVM, and npm `sockjs-client` for JavaScript (NodeJS and browser).
 - `krossbow-websocket-spring`: a JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides
