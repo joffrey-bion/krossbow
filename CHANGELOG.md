@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.41.0](https://github.com/joffrey-bion/krossbow/tree/0.41.0) (2020-09-13)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.40.0...0.41.0)
+
+**Implemented enhancements:**
+
+- Add adapter for Ktor's websocket implementation [\#69](https://github.com/joffrey-bion/krossbow/issues/69)
+
 ## [0.40.0](https://github.com/joffrey-bion/krossbow/tree/0.40.0) (2020-09-13)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.32.0...0.40.0)
 
