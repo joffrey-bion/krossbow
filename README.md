@@ -240,7 +240,7 @@ Other artifacts provide more implementations supporting more platforms by depend
 
 :eight_pointed_black_star: supported using [SockJS](https://github.com/sockjs/sockjs-client) protocol (requires a SockJS server)
 
-\* Blocking when using OkHttp engine, but can be async with CIO engine
+\* backed by blocking I/O when using the OkHttp engine, but can be fully async with the CIO engine
 
 ### Adding the dependency
 
