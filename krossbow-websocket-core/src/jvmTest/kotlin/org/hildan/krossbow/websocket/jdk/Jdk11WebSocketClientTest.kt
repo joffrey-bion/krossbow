@@ -9,9 +9,8 @@ class Jdk11WebSocketClientTest {
     @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun test() {
-        val port = 12345
-        val server = EchoWebSocketServer(port)
-        server.start()
+        val server = EchoWebSocketServer()
+        val port = server.startAndAwaitPort()
         testEchoWs(Jdk11WebSocketClient(), "ws://localhost:$port")
         server.stop()
     }
