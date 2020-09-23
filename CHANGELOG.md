@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.42.0](https://github.com/joffrey-bion/krossbow/tree/0.42.0) (2020-09-23)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.41.0...0.42.0)
+
+**Closed issues:**
+
+- Upgrade to Kotlinx Serialization 1.0.0-RC2 [\#70](https://github.com/joffrey-bion/krossbow/issues/70)
+
 ## [0.41.0](https://github.com/joffrey-bion/krossbow/tree/0.41.0) (2020-09-13)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.40.0...0.41.0)
 
