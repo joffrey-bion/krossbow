@@ -7,7 +7,7 @@ The main additions that this module brings are the extension functions:
  
 - `StompSession.withBinaryConversions()`
 - `StompSession.withTextConversions()`
-- `StompSession.withJsonConversions()`
+- `StompSession.withJsonConversions()` (requires a peer dependency on `kotlinx-serialization-json`, see below)
 
 which turn your `StompSession` into a `StompSessionWithKxSerialization`.
 
@@ -53,3 +53,9 @@ implementation("org.hildan.krossbow:krossbow-stomp-kxserialization-jvm:$krossbow
 // for a JS dependency in a JS project
 implementation("org.hildan.krossbow:krossbow-stomp-kxserialization-js:$krossbowVersion")
 ```
+
+To avoid adding unnecessary runtime dependencies on consumers of Krossbow, `kotlinx-serialization-json` is not
+ transitively brought by `krossbow-stomp-serialization` (since Krossbow 0.42.0, using Kotlinx Serialization 1.0.0-RC2).
+ 
+You need to add yourself the relevant Kotlinx Serialization dependency corresponding to the format you want to use.
+In the case of JSON, that would be `kotlinx-serialization-json`.

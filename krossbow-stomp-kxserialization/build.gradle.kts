@@ -5,7 +5,7 @@ plugins {
 
 description = "An extension of Krossbow STOMP client using Kotlinx Serialization for message conversions"
 
-val serializationVersion = "1.0.0-RC"
+val serializationVersion = "1.0.0-RC2"
 
 kotlin {
     jvm()
@@ -18,6 +18,7 @@ kotlin {
             dependencies {
                 api(project(":krossbow-stomp-core"))
                 api("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
             }
         }
     }
