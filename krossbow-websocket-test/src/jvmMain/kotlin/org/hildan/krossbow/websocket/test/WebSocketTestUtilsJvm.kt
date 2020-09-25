@@ -7,11 +7,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
-import java.lang.Exception
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 
 actual fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit) = runBlocking { block() }
+
+actual suspend fun runAlongEchoWSServer(block: suspend (port: Int) -> Unit) {
+    val server = EchoWebSocketServer()
+    val port = server.startAndAwaitPort()
+    block(port)
+    server.stop()
+}
 
 class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(port)) {
 
@@ -34,17 +40,15 @@ class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(por
     override fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean) {
     }
 
-    fun startAndAwaitPort(): Int {
+    suspend fun startAndAwaitPort(timeoutMillis: Long = 1000): Int {
         start()
-        return awaitPort()
+        return awaitPort(timeoutMillis)
     }
 
-    private fun awaitPort(): Int = runBlocking {
-        withTimeout(1000) {
-            while (port <= 0) {
-                delay(10)
-            }
-            port
+    private suspend fun awaitPort(timeoutMillis: Long): Int = withTimeout(timeoutMillis) {
+        while (port <= 0) {
+            delay(10)
         }
+        port
     }
 }

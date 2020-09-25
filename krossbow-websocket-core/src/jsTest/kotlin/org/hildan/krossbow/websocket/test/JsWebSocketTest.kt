@@ -1,15 +1,12 @@
 package org.hildan.krossbow.websocket.test
 
+import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.js.BrowserWebSocketClient
 import kotlin.test.Ignore
-import kotlin.test.Test
 
-class JsWebSocketTest {
+// TODO provide WebSocket for node somehow (using isomorphic-ws package?)
+@Ignore
+class JsWebSocketTest : WebSocketClientTestSuite() {
 
-    // TODO provide WebSocket for node somehow (using isomorphic-ws package?)
-    @Ignore
-    @Test
-    fun test_browser() {
-        testEchoWs(BrowserWebSocketClient, "ws://demos.kaazing.com/echo")
-    }
+    override fun provideClient(): WebSocketClient = BrowserWebSocketClient
 }

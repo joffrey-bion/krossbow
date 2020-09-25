@@ -1,11 +1,8 @@
-// import java.net.URL
-
 plugins {
     kotlin("multiplatform")
-    // id("org.jetbrains.dokka")
 }
 
-description = "WebSocket client API used by the Krossbow STOMP client, with default JS and JVM implementations."
+description = "Test utilities for Krossbow WebSocket adapter implementations."
 
 kotlin {
     jvm()
@@ -20,37 +17,29 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
+                api(project(":krossbow-websocket-core"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io:${Versions.kotlinxIO}")
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(project(":krossbow-websocket-test"))
+
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
             }
         }
         val jvmMain by getting {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:${Versions.kotlinxIO}")
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
+
+                // for the test server
+                implementation("com.pusher:java-websocket:1.4.1")
+
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation("com.pusher:java-websocket:1.4.1")
             }
         }
         val jsMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-io-js:${Versions.kotlinxIO}")
-            }
-        }
-        val jsTest by getting {
-            dependencies {
+
                 implementation(kotlin("test-js"))
             }
         }

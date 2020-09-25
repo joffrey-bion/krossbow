@@ -3,12 +3,35 @@ package org.hildan.krossbow.websocket.test
 import kotlinx.coroutines.CoroutineScope
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketFrame
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 expect fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit)
 
-fun testEchoWs(websocketClient: WebSocketClient, url: String) = runSuspendingTest {
+expect suspend fun runAlongEchoWSServer(block: suspend (port: Int) -> Unit)
+
+abstract class WebSocketClientTestSuite {
+
+    abstract fun provideClient(): WebSocketClient
+
+    private lateinit var wsClient: WebSocketClient
+
+    @BeforeTest
+    fun setupClient() {
+        wsClient = provideClient()
+    }
+
+    @Test
+    fun testWithEchoServer() = runSuspendingTest {
+        runAlongEchoWSServer { port ->
+            testEchoWs(wsClient, "ws://localhost:$port")
+        }
+    }
+}
+
+suspend fun testEchoWs(websocketClient: WebSocketClient, url: String) {
     val session = websocketClient.connect(url)
 
     session.sendText("hello")

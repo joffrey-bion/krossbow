@@ -23,6 +23,7 @@ include("krossbow-websocket-ktor")
 include("krossbow-websocket-okhttp")
 include("krossbow-websocket-sockjs")
 include("krossbow-websocket-spring")
+include("krossbow-websocket-test")
 
 gradleEnterprise {
     buildScan {
