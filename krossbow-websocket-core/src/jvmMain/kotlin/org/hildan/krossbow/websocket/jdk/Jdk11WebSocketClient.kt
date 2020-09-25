@@ -1,6 +1,9 @@
 package org.hildan.krossbow.websocket.jdk
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.future.await
@@ -33,7 +36,7 @@ class Jdk11WebSocketClient(
             val listener = WebSocketListenerChannelAdapter()
             val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
             val webSocket = webSocketBuilder.buildAsync(URI(url), jdk11WebSocketListener).await()
-            return Jdk11WebSocketSession(webSocket, listener.incomingFrames, jdk11WebSocketListener::stop)
+            return Jdk11WebSocketSession(webSocket, listener.incomingFrames)
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here
         } catch (e: Exception) {
@@ -51,43 +54,38 @@ private class Jdk11WebSocketListener(
     override val coroutineContext: CoroutineContext
         get() = job
 
-    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? {
+    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? = asyncFuture {
+        listener.onTextMessage(data, last)
         // The completion of the returned CompletionStage is only used to reclaim the CharSequence.
         // The onText() method itself can be called again as soon as it completes, which can cause concurrency issues.
         // This re-entrance is however controlled by the invocations counter, incremented by calling request(n).
         // The call to request(1) located after the message processing thus prevents issues.
-        return async {
-            listener.onTextMessage(data, last)
-            webSocket.request(1)
-        }.asCompletableFuture()
+        webSocket.request(1)
     }
 
-    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? {
+    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? = asyncFuture {
+        listener.onBinaryMessage(data.toByteArray(), last)
         // The completion of the returned CompletionStage is only used to reclaim the CharSequence.
         // The onBinary() method itself can be called again as soon as it completes, which can cause concurrency issues.
         // This re-entrance is however controlled by the invocations counter, incremented by calling request(n).
-        // The call to request(1) located after the message processing thus prevents issues.
-        return async {
-            listener.onBinaryMessage(data.toByteArray(), last)
-            // calling request(1) here to ensure that onBinary() is not called again
-            // before the (potentially partial) message has been processed
-            webSocket.request(1)
-        }.asCompletableFuture()
+        // The call to request(1) here is to ensure that onBinary() is not called again
+        // before the (potentially partial) message has been processed
+        webSocket.request(1)
     }
 
-    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? {
-        return async { listener.onClose(statusCode, reason) }.asCompletableFuture()
+    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? = asyncFuture {
+        listener.onClose(statusCode, reason)
+        job.cancel()
     }
 
     override fun onError(webSocket: WebSocket, error: Throwable?) {
         listener.onError(error)
         job.cancel()
     }
-
-    suspend fun stop() {
-        job.cancelAndJoin()
-    }
 }
+
+private fun CoroutineScope.asyncFuture(block: suspend CoroutineScope.() -> Unit) =
+    async(block = block).asCompletableFuture()
 
 private fun ByteBuffer.toByteArray(): ByteArray {
     val array = ByteArray(remaining())
@@ -100,8 +98,7 @@ private fun ByteBuffer.toByteArray(): ByteArray {
  */
 private class Jdk11WebSocketSession(
     private val webSocket: WebSocket,
-    override val incomingFrames: ReceiveChannel<WebSocketFrame>,
-    private val stopListener: suspend () -> Unit
+    override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : WebSocketSession {
 
     override val canSend: Boolean
@@ -117,6 +114,5 @@ private class Jdk11WebSocketSession(
 
     override suspend fun close(code: Int, reason: String?) {
         webSocket.sendClose(code, reason ?: "").await()
-        stopListener.invoke()
     }
 }
