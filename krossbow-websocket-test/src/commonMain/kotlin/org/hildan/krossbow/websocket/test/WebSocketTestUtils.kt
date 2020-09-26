@@ -2,7 +2,7 @@ package org.hildan.krossbow.websocket.test
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.yield
+import kotlinx.coroutines.delay
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketFrame
@@ -55,6 +55,6 @@ suspend fun testEchoWs(websocketClient: WebSocketClient, url: String) {
     assertTrue(closeFrame is WebSocketFrame.Close, "Last frame should be a close frame")
     assertEquals(WebSocketCloseCodes.NORMAL_CLOSURE, closeFrame.code)
 
-    yield() // somehow isClosedForReceive needs some time (or at least to regain control)
+    delay(20) // somehow isClosedForReceive needs some time to become true
     assertTrue(session.incomingFrames.isClosedForReceive, "The incoming frames channel should be closed")
 }

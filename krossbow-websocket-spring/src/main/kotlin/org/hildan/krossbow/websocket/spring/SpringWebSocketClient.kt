@@ -1,8 +1,10 @@
 package org.hildan.krossbow.websocket.spring
 
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.await
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.hildan.krossbow.websocket.WebSocketFrame
@@ -66,7 +68,12 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
     }
 
     override fun afterConnectionClosed(session: SpringWebSocketSession, closeStatus: CloseStatus) {
-        runBlocking {
+        // afterConnectionClosed is synchronously called by Tyrus implementation during a session.close() call.
+        // It is not called when receiving the server close frame when the closure is initiated on the client side.
+        // Source: org.glassfish.tyrus.core.ProtocolHandler.close()
+        // This means that if no receiver is listening on the incoming frames channel, onClose() here may suspend
+        // forever. That's why we need an asynchronous dispatch of onClose() here.
+        GlobalScope.launch {
             channelListener.onClose(closeStatus.code, closeStatus.reason)
         }
     }

@@ -17,6 +17,10 @@ dependencies {
     // JSR 356 - Java API for WebSocket (reference implementation)
     // Low-level implementation required by Spring's client
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.15")
+
+    implementation(kotlin("test"))
+    implementation(kotlin("test-junit"))
+    testImplementation(project(":krossbow-websocket-test"))
 }
 
 val dokkaJar by tasks.creating(Jar::class) {
