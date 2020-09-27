@@ -12,7 +12,7 @@ import java.nio.ByteBuffer
 
 actual fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit) = runBlocking { block() }
 
-actual suspend fun runAlongEchoWSServer(block: suspend (port: Int) -> Unit) {
+internal actual suspend fun runAlongEchoWSServer(block: suspend (port: Int) -> Unit) {
     val server = EchoWebSocketServer()
     val port = server.startAndAwaitPort()
     block(port)

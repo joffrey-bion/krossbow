@@ -19,11 +19,6 @@ public abstract class org/hildan/krossbow/websocket/test/WebSocketClientTestSuit
 }
 
 public final class org/hildan/krossbow/websocket/test/WebSocketTestUtilsJvmKt {
-	public static final fun runAlongEchoWSServer (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun runSuspendingTest (Lkotlin/jvm/functions/Function2;)V
-}
-
-public final class org/hildan/krossbow/websocket/test/WebSocketTestUtilsKt {
-	public static final fun testEchoWs (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 

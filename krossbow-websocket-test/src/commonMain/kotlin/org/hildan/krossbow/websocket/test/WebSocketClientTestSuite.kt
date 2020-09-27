@@ -30,7 +30,7 @@ abstract class WebSocketClientTestSuite {
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-suspend fun testEchoWs(websocketClient: WebSocketClient, url: String) {
+private suspend fun testEchoWs(websocketClient: WebSocketClient, url: String) {
     val session = websocketClient.connect(url)
 
     session.sendText("hello")
