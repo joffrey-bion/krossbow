@@ -3,10 +3,9 @@ package org.hildan.krossbow.websocket.jdk
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.future.await
+import kotlinx.coroutines.future.future
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
@@ -54,7 +53,7 @@ private class Jdk11WebSocketListener(
     override val coroutineContext: CoroutineContext
         get() = job
 
-    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? = asyncFuture {
+    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? = future {
         listener.onTextMessage(data, last)
         // The completion of the returned CompletionStage is only used to reclaim the CharSequence.
         // The onText() method itself can be called again as soon as it completes, which can cause concurrency issues.
@@ -63,7 +62,7 @@ private class Jdk11WebSocketListener(
         webSocket.request(1)
     }
 
-    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? = asyncFuture {
+    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? = future {
         listener.onBinaryMessage(data.toByteArray(), last)
         // The completion of the returned CompletionStage is only used to reclaim the CharSequence.
         // The onBinary() method itself can be called again as soon as it completes, which can cause concurrency issues.
@@ -73,7 +72,7 @@ private class Jdk11WebSocketListener(
         webSocket.request(1)
     }
 
-    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? = asyncFuture {
+    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? = future {
         listener.onClose(statusCode, reason)
         job.cancel()
     }
@@ -83,9 +82,6 @@ private class Jdk11WebSocketListener(
         job.cancel()
     }
 }
-
-private fun CoroutineScope.asyncFuture(block: suspend CoroutineScope.() -> Unit) =
-    async(block = block).asCompletableFuture()
 
 private fun ByteBuffer.toByteArray(): ByteArray {
     val array = ByteArray(remaining())
