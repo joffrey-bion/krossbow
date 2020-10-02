@@ -35,7 +35,7 @@ class Jdk11WebSocketClient(
             val listener = WebSocketListenerChannelAdapter()
             val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
             val webSocket = webSocketBuilder.buildAsync(URI(url), jdk11WebSocketListener).await()
-            return Jdk11WebSocketSession(webSocket, listener.incomingFrames)
+            return Jdk11WebSocketSession(webSocket, url, listener.incomingFrames)
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here
         } catch (e: Exception) {
@@ -89,6 +89,7 @@ private fun ByteBuffer.toByteArray(): ByteArray {
  */
 private class Jdk11WebSocketSession(
     private val webSocket: WebSocket,
+    override val url: String,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : WebSocketSession {
 

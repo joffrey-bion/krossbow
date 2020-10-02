@@ -101,6 +101,9 @@ private class JsWebSocketSession(
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : WebSocketSession {
 
+    override val url: String
+        get() = ws.url
+
     override val canSend: Boolean
         get() = ws.readyState == WebSocket.OPEN
 

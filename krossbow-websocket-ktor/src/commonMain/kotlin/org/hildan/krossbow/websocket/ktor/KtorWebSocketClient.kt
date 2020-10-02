@@ -46,6 +46,9 @@ private class KtorWebSocketSessionAdapter(
 
     private val scope = CoroutineScope(EmptyCoroutineContext + Job() + CoroutineName("krossbow-ktor-ws-frames-mapper"))
 
+    override val url: String
+        get() = wsSession.call.request.url.toString()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override val canSend: Boolean
         get() = !wsSession.outgoing.isClosedForSend

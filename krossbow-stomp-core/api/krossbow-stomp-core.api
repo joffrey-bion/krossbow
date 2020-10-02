@@ -28,6 +28,11 @@ public final class org/hildan/krossbow/stomp/StompClient {
 	public static synthetic fun connect$default (Lorg/hildan/krossbow/stomp/StompClient;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
+public final class org/hildan/krossbow/stomp/StompClientKt {
+	public static final fun stomp (Lorg/hildan/krossbow/websocket/WebSocketSession;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun stomp$default (Lorg/hildan/krossbow/websocket/WebSocketSession;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
 public final class org/hildan/krossbow/stomp/StompConnectionException : org/hildan/krossbow/stomp/ConnectionException {
 	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V

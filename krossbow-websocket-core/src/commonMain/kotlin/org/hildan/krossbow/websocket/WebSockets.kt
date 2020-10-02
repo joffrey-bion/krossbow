@@ -29,6 +29,17 @@ interface WebSocketClient {
 interface WebSocketSession {
 
     /**
+     * The URL that was used to connect this web socket.
+     */
+    val url: String
+
+    /**
+     * The host to which this web socket is connected.
+     */
+    val host: String
+        get() = extractHost(url)
+
+    /**
      * Whether it is safe to send messages through this web socket.
      * If this is false, sending frames should not be attempted and may fail.
      *
@@ -62,6 +73,8 @@ interface WebSocketSession {
      */
     suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
 }
+
+private fun extractHost(url: String) = url.substringAfter("://").substringBefore("/").substringBefore(":")
 
 /**
  * An exception thrown when something went wrong at web socket level.

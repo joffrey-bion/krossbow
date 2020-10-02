@@ -100,13 +100,16 @@ public final class org/hildan/krossbow/websocket/WebSocketListenerChannelAdapter
 public abstract interface class org/hildan/krossbow/websocket/WebSocketSession {
 	public abstract fun close (ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getCanSend ()Z
+	public abstract fun getHost ()Ljava/lang/String;
 	public abstract fun getIncomingFrames ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public abstract fun getUrl ()Ljava/lang/String;
 	public abstract fun sendBinary ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun sendText (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/websocket/WebSocketSession$DefaultImpls {
 	public static synthetic fun close$default (Lorg/hildan/krossbow/websocket/WebSocketSession;ILjava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun getHost (Lorg/hildan/krossbow/websocket/WebSocketSession;)Ljava/lang/String;
 }
 
 public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClient : org/hildan/krossbow/websocket/WebSocketClient {

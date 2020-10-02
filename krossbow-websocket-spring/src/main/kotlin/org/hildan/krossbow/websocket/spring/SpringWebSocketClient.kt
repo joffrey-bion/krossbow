@@ -88,6 +88,9 @@ private class SpringToKrossbowSessionAdapter(
 
     private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
+    override val url: String
+        get() = session.uri?.toString()!!
+
     override val canSend: Boolean
         get() = session.isOpen
 
