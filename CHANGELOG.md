@@ -1,11 +1,24 @@
 # Change Log
 
+## [0.43.0](https://github.com/joffrey-bion/krossbow/tree/0.43.0) (2020-10-10)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.42.0...0.43.0)
+
+**Closed issues:**
+
+- Upgrade to Kotlin 1.4.10 [\#74](https://github.com/joffrey-bion/krossbow/issues/74)
+- Upgrade kotlinx.serialization to 1.0 [\#73](https://github.com/joffrey-bion/krossbow/issues/73)
+
+**Fixed bugs:**
+
+- Spring websocket adapter deadlocks on close\(\) [\#72](https://github.com/joffrey-bion/krossbow/issues/72)
+- JDK11 websocket adapter doesn't let the received CLOSE frame through [\#71](https://github.com/joffrey-bion/krossbow/issues/71)
+
 ## [0.42.0](https://github.com/joffrey-bion/krossbow/tree/0.42.0) (2020-09-23)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.41.0...0.42.0)
 
 **Closed issues:**
 
-- Upgrade to Kotlinx Serialization 1.0.0-RC2 [\#70](https://github.com/joffrey-bion/krossbow/issues/70)
+- Upgrade to Kotlinx Serialization 1.0.0\-RC2 [\#70](https://github.com/joffrey-bion/krossbow/issues/70)
 
 ## [0.41.0](https://github.com/joffrey-bion/krossbow/tree/0.41.0) (2020-09-13)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.40.0...0.41.0)
