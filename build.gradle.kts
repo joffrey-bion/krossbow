@@ -5,13 +5,13 @@ import org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact
 import org.hildan.github.changelog.generator.DEFAULT_EXCLUDED_LABELS
 
 plugins {
-    val kotlinVersion = "1.4.0"
+    val kotlinVersion = "1.4.10"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
-    id("org.jetbrains.dokka") version "1.4.0" apply false
+    id("org.jetbrains.dokka") version kotlinVersion apply false
     id("org.jlleitschuh.gradle.ktlint") version "9.1.1" apply false
     id("com.jfrog.bintray") version "1.8.5" apply false
     id("org.hildan.github.changelog") version "0.8.0"
@@ -59,13 +59,10 @@ subprojects {
     val compilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
-        kotlinOptions.freeCompilerArgs += compilerArgs
     }
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile> {
+    tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>> {
         kotlinOptions.freeCompilerArgs += compilerArgs
-    }
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon> {
-        kotlinOptions.freeCompilerArgs += compilerArgs
+        //kotlinOptions.allWarningsAsErrors = true
     }
 
     tasks.withType<AbstractTestTask> {
