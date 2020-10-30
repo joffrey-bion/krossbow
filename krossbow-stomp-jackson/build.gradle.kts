@@ -4,7 +4,7 @@ plugins {
 
 description = "An extension of Krossbow STOMP client using Jackson for message conversions"
 
-val jacksonVersion = "2.10.0"
+val jacksonVersion = "2.11.3"
 
 dependencies {
     api(project(":krossbow-stomp-core"))
