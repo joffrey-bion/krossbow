@@ -9,7 +9,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
 
-    api("com.squareup.okhttp3:okhttp:4.5.0")
+    api("com.squareup.okhttp3:okhttp:4.9.0")
 }
 
 val dokkaJar by tasks.creating(Jar::class) {
