@@ -39,6 +39,8 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                // For kotlinx-coroutines-test
+                implementation("org.jetbrains.kotlinx:atomicfu:${Versions.atomicFu}")
             }
         }
         val jvmMain by getting {

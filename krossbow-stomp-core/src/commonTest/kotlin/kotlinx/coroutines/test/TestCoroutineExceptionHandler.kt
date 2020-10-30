@@ -54,7 +54,7 @@ public class TestCoroutineExceptionHandler : AbstractCoroutineContextElement(Cor
         synchronized(_exceptions) {
             val exception = _exceptions.firstOrNull() ?: return
             // log the rest
-            _exceptions.drop(1).forEach { "${it::class.simpleName}: ${it.message}" }
+            _exceptions.drop(1).forEach { it.printStackTrace() }
             throw exception
         }
     }

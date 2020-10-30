@@ -13,9 +13,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 /**
  * A scope which provides detailed control over the execution of coroutines for tests.
  */
-public interface TestCoroutineScope : CoroutineScope,
-    UncaughtExceptionCaptor,
-    DelayController {
+public interface TestCoroutineScope : CoroutineScope, UncaughtExceptionCaptor, DelayController {
     /**
      * Call after the test completes.
      * Calls [UncaughtExceptionCaptor.cleanupTestCoroutines] and [DelayController.cleanupTestCoroutines].

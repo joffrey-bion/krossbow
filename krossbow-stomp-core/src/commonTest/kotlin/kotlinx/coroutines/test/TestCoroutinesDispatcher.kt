@@ -4,20 +4,12 @@
 
 package kotlinx.coroutines.test
 
-import kotlinx.atomicfu.atomic
-import kotlinx.atomicfu.update
-import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Delay
-import kotlinx.coroutines.DisposableHandle
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.internal.ThreadSafeHeap
-import kotlinx.coroutines.internal.ThreadSafeHeapNode
-import kotlin.coroutines.CoroutineContext
+import kotlinx.atomicfu.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.internal.*
+import kotlin.coroutines.*
 import kotlin.jvm.JvmField
-import kotlin.math.max
+import kotlin.math.*
 
 /**
  * [CoroutineDispatcher] that performs both immediate and lazy execution of coroutines in tests
@@ -75,7 +67,7 @@ public class TestCoroutineDispatcher : CoroutineDispatcher(), Delay, DelayContro
     }
 
     /** @suppress */
-    override fun invokeOnTimeout(timeMillis: Long, block: Runnable): DisposableHandle {
+    override fun invokeOnTimeout(timeMillis: Long, block: Runnable, context: CoroutineContext): DisposableHandle {
         val node = postDelayed(block, timeMillis)
         return object : DisposableHandle {
             override fun dispose() {
