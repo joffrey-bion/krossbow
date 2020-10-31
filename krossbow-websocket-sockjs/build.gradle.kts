@@ -36,7 +36,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation(npm("sockjs-client", "1.4.0"))
+                implementation(npm("sockjs-client", "1.5.0"))
             }
         }
         val jsTest by getting {
