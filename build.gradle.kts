@@ -38,7 +38,7 @@ allprojects {
     }
 }
 
-val Project.githubUser get() = "joffrey-bion"
+val Project.githubUser get() = getPropOrEnv("githubUser", "GITHUB_USER")
 val githubSlug = "$githubUser/${rootProject.name}"
 val githubRepoUrl = "https://github.com/$githubSlug"
 val Project.labels get() = arrayOf("websocket", "stomp", "krossbow", "multiplatform", "kotlin", "client")
