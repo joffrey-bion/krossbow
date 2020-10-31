@@ -12,11 +12,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
 
     // For Spring's WebSocket clients
-    api("org.springframework:spring-websocket:5.2.3.RELEASE")
+    api("org.springframework:spring-websocket:5.3.0")
 
     // JSR 356 - Java API for WebSocket (reference implementation)
     // Low-level implementation required by Spring's client
-    implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.15")
+    implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.17")
 
     implementation(kotlin("test"))
     implementation(kotlin("test-junit"))
