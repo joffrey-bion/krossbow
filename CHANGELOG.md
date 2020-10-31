@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.0.0](https://github.com/joffrey-bion/krossbow/tree/1.0.0) (2020-10-31)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.43.0...1.0.0)
+
+**Implemented enhancements:**
+
+- Upgrade spring\-websocket to 5.3.0 [\#80](https://github.com/joffrey-bion/krossbow/issues/80)
+- Upgrade SockJS client to 1.5.0 [\#79](https://github.com/joffrey-bion/krossbow/issues/79)
+- Upgrade Ktor to 1.4.1 [\#78](https://github.com/joffrey-bion/krossbow/issues/78)
+- Upgrade jackson to 2.11.3 [\#77](https://github.com/joffrey-bion/krossbow/issues/77)
+- Upgrade OkHttp to 4.9.0 [\#76](https://github.com/joffrey-bion/krossbow/issues/76)
+- Upgrade coroutines to 1.4.0 [\#75](https://github.com/joffrey-bion/krossbow/issues/75)
+
 ## [0.43.0](https://github.com/joffrey-bion/krossbow/tree/0.43.0) (2020-10-10)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.42.0...0.43.0)
 
