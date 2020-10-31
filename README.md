@@ -2,21 +2,11 @@
 
 [![Bintray Download](https://img.shields.io/bintray/v/joffrey-bion/maven/krossbow-stomp-core)](https://bintray.com/joffrey-bion/maven/krossbow-stomp-core/_latestVersion)
 [![Github Build](https://img.shields.io/github/workflow/status/joffrey-bion/krossbow/CI%20Build?label=build&logo=github)](https://github.com/joffrey-bion/krossbow/actions?query=workflow%3A%22CI+Build%22)
-[![Travis Build](https://img.shields.io/travis/joffrey-bion/krossbow/master.svg?label=build&logo=travis)](https://travis-ci.org/joffrey-bion/krossbow)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/joffrey-bion/krossbow/blob/master/LICENSE)
 
 A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
 over web sockets.
 This project supports the JVM and JS targets (including browser and NodeJS).
-
-## Experimental status
-
-This project is experimental, meaning that there is no guarantee of backwards compatibility. 
-Any part of the public API may change until version 1.0.0 is released.
-
-This is mainly due to the fact that the project is young, but also because it has dependencies on experimental
-libraries like [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) and 
-[Kotlinx IO](https://github.com/Kotlin/kotlinx-io).
 
 ## Supported targets
 
