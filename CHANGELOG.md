@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.1.0](https://github.com/joffrey-bion/krossbow/tree/1.1.0) (2020-11-13)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.0.0...1.1.0)
+
+**Implemented enhancements:**
+
+- Upgrade to coroutines 1.4.1 [\#82](https://github.com/joffrey-bion/krossbow/issues/82)
+- Add WebSocketSession.stomp\(\) extension [\#81](https://github.com/joffrey-bion/krossbow/issues/81)
+
 ## [1.0.0](https://github.com/joffrey-bion/krossbow/tree/1.0.0) (2020-10-31)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.43.0...1.0.0)
 
