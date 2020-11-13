@@ -12,7 +12,6 @@ plugins {
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jetbrains.dokka") version kotlinVersion apply false
-    id("org.jlleitschuh.gradle.ktlint") version "9.1.1" apply false
     id("com.jfrog.bintray") version "1.8.5" apply false
     id("org.hildan.github.changelog") version "0.8.0"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.2.3"
@@ -52,7 +51,6 @@ changelog {
 }
 
 subprojects {
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "maven-publish")
     apply(plugin = "com.jfrog.bintray")
 
@@ -70,17 +68,6 @@ subprojects {
             events("failed", "standardOut", "standardError")
             exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             showStackTraces = true
-        }
-    }
-
-    extensions.configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        // The import ordering expected by ktlint is alphabetical, which doesn't match IDEA's formatter.
-        // Since it is not configurable, we have to disable the rule.
-        // https://github.com/pinterest/ktlint/issues/527
-        // https://youtrack.jetbrains.com/issue/KT-10974
-        disabledRules.set(setOf("import-ordering", "no-wildcard-imports"))
-        filter {
-            exclude("sockjs-client.kt") // mostly generated, and cannot easily be adjusted to match the style
         }
     }
 
