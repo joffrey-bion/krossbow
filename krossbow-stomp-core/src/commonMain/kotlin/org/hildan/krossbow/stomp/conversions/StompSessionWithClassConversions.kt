@@ -28,7 +28,7 @@ interface StompSessionWithClassConversions : StompSession {
     suspend fun <T : Any> convertAndSend(
         headers: StompSendHeaders,
         body: T? = null,
-        bodyType: KClass<T>
+        bodyType: KClass<T>,
     ): StompReceipt?
 
     /**
@@ -71,7 +71,7 @@ interface StompSessionWithClassConversions : StompSession {
 suspend fun <T : Any> StompSessionWithClassConversions.convertAndSend(
     destination: String,
     body: T? = null,
-    bodyType: KClass<T>
+    bodyType: KClass<T>,
 ): StompReceipt? = convertAndSend(StompSendHeaders(destination), body, bodyType)
 
 /**
@@ -85,7 +85,7 @@ suspend fun <T : Any> StompSessionWithClassConversions.convertAndSend(
  */
 suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAndSend(
     destination: String,
-    body: T?
+    body: T?,
 ): StompReceipt? = convertAndSend(destination, body, T::class)
 
 /**
@@ -114,7 +114,7 @@ suspend fun <T : Any> StompSessionWithClassConversions.subscribe(destination: St
  */
 suspend fun <T : Any> StompSessionWithClassConversions.subscribeOptional(
     destination: String,
-    clazz: KClass<T>
+    clazz: KClass<T>,
 ): Flow<T?> = subscribeOptional(StompSubscribeHeaders(destination), clazz)
 
 /**

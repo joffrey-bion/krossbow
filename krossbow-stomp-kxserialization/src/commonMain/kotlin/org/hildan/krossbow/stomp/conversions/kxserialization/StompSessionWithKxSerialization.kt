@@ -17,7 +17,7 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 interface StompSessionWithKxSerialization : StompSession {
 
     /**
-     * The Kotlinx Serialization's [SerialModule] used to provide serializers at runtime.
+     * The Kotlinx Serialization's [SerializersModule] used to provide serializers at runtime.
      */
     val serializersModule: SerializersModule
 
@@ -31,7 +31,7 @@ interface StompSessionWithKxSerialization : StompSession {
     suspend fun <T : Any> convertAndSend(
         headers: StompSendHeaders,
         body: T? = null,
-        serializer: SerializationStrategy<T>
+        serializer: SerializationStrategy<T>,
     ): StompReceipt?
 
     /**
@@ -60,7 +60,7 @@ interface StompSessionWithKxSerialization : StompSession {
      */
     suspend fun <T : Any> subscribeOptional(
         headers: StompSubscribeHeaders,
-        deserializer: DeserializationStrategy<T>
+        deserializer: DeserializationStrategy<T>,
     ): Flow<T?>
 }
 
@@ -74,7 +74,7 @@ interface StompSessionWithKxSerialization : StompSession {
 suspend fun <T : Any> StompSessionWithKxSerialization.convertAndSend(
     destination: String,
     body: T? = null,
-    serializer: SerializationStrategy<T>
+    serializer: SerializationStrategy<T>,
 ): StompReceipt? = convertAndSend(StompSendHeaders(destination), body, serializer)
 
 /**
@@ -88,7 +88,7 @@ suspend fun <T : Any> StompSessionWithKxSerialization.convertAndSend(
  */
 suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndSend(
     headers: StompSendHeaders,
-    body: T? = null
+    body: T? = null,
 ): StompReceipt? {
     val serializer = serializersModule.serializer<T>()
     return convertAndSend(headers, body, serializer)
@@ -105,7 +105,7 @@ suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndS
  */
 suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndSend(
     destination: String,
-    body: T? = null
+    body: T? = null,
 ): StompReceipt? = convertAndSend(StompSendHeaders(destination), body)
 
 /**
@@ -121,7 +121,7 @@ suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndS
  */
 suspend fun <T : Any> StompSessionWithKxSerialization.subscribe(
     destination: String,
-    deserializer: DeserializationStrategy<T>
+    deserializer: DeserializationStrategy<T>,
 ): Flow<T> = subscribe(StompSubscribeHeaders(destination), deserializer)
 
 /**
@@ -137,7 +137,7 @@ suspend fun <T : Any> StompSessionWithKxSerialization.subscribe(
  */
 suspend fun <T : Any> StompSessionWithKxSerialization.subscribeOptional(
     destination: String,
-    deserializer: DeserializationStrategy<T>
+    deserializer: DeserializationStrategy<T>,
 ): Flow<T?> = subscribeOptional(StompSubscribeHeaders(destination), deserializer)
 
 /**

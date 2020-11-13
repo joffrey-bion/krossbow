@@ -33,7 +33,7 @@ import org.hildan.krossbow.utils.generateUuid
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class) // for broadcast channel
 internal class BaseStompSession(
     private val config: StompConfig,
-    private val stompSocket: StompSocket
+    private val stompSocket: StompSocket,
 ) : StompSession {
 
     internal suspend fun connect(headers: StompConnectHeaders): StompFrame.Connected = coroutineScope {

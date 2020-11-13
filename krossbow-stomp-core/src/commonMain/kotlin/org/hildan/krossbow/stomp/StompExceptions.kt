@@ -17,14 +17,14 @@ class LostReceiptException(
     /** The configured timeout which has expired. */
     val configuredTimeoutMillis: Long,
     /** The frame which did not get acknowledged by the server. */
-    val frame: StompFrame
+    val frame: StompFrame,
 ) : Exception("No RECEIPT frame received for receiptId '$receiptId' (in ${frame.command} frame) within ${configuredTimeoutMillis}ms")
 
 /**
  * An exception thrown when expected heart beats are not received.
  */
 class MissingHeartBeatException(
-    val expectedPeriodMillis: Int
+    val expectedPeriodMillis: Int,
 ) : Exception("A server heart beat was missing (expecting data every ${expectedPeriodMillis}ms at most)")
 
 /**
@@ -32,5 +32,5 @@ class MissingHeartBeatException(
  */
 class WebSocketClosedUnexpectedly(
     val code: Int,
-    val reason: String?
+    val reason: String?,
 ) : Exception("the WebSocket was closed while subscriptions were still active. Code: $code Reason: $reason")

@@ -11,21 +11,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.hildan.krossbow.stomp.frame.InvalidStompFrameException
 import org.hildan.krossbow.stomp.frame.StompCommand
-import org.hildan.krossbow.test.connectWithMocks
-import org.hildan.krossbow.test.simulateErrorFrameReceived
-import org.hildan.krossbow.test.simulateMessageFrameReceived
-import org.hildan.krossbow.test.simulateReceiptFrameReceived
-import org.hildan.krossbow.test.waitForDisconnectAndSimulateCompletion
-import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
-import org.hildan.krossbow.test.waitForSubscribeAndSimulateCompletion
-import org.hildan.krossbow.test.waitForUnsubscribeAndSimulateCompletion
+import org.hildan.krossbow.test.*
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketException
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class StompSessionSubscriptionsTest {
 
@@ -158,8 +147,7 @@ class StompSessionSubscriptionsTest {
         val exception = assertFailsWith(StompErrorFrameReceived::class) {
             messages.first()
         }
-        assertEquals(errorMessage, exception.message,
-            "The exception in collectors should have the STOMP ERROR frame's body as message")
+        assertEquals(errorMessage, exception.message, "The exception in collectors should have the STOMP ERROR frame's body as message")
         assertTrue(wsSession.closed, "The web socket should be closed after a STOMP ERROR frame")
     }
 
@@ -180,8 +168,7 @@ class StompSessionSubscriptionsTest {
         val exception = assertFailsWith(WebSocketException::class) {
             messages.first()
         }
-        assertEquals(errorMessage, exception.message,
-            "The exception in collectors should have the web socket error frame's body as message")
+        assertEquals(errorMessage, exception.message, "The exception in collectors should have the web socket error frame's body as message")
     }
 
     @Test

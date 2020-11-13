@@ -44,19 +44,19 @@ fun StompSession.withTextConversions(format: StringFormat, mediaType: String): S
 @ExperimentalSerializationApi
 fun StompSession.withJsonConversions(
     json: Json = Json {},
-    mediaType: String = "application/json;charset=utf-8"
+    mediaType: String = "application/json;charset=utf-8",
 ): StompSessionWithKxSerialization = withTextConversions(json, mediaType)
 
 private abstract class BaseStompSessionWithConversions(
     session: StompSession,
     override val serializersModule: SerializersModule,
-    protected val mediaType: String
+    protected val mediaType: String,
 ) : StompSession by session, StompSessionWithKxSerialization {
 
     override suspend fun <T : Any> convertAndSend(
         headers: StompSendHeaders,
         body: T?,
-        serializer: SerializationStrategy<T>
+        serializer: SerializationStrategy<T>,
     ): StompReceipt? {
         if (body == null) {
             return send(headers, null)
@@ -72,22 +72,22 @@ private abstract class BaseStompSessionWithConversions(
     @OptIn(ExperimentalSerializationApi::class)
     override suspend fun <T : Any> subscribe(
         headers: StompSubscribeHeaders,
-        deserializer: DeserializationStrategy<T>
+        deserializer: DeserializationStrategy<T>,
     ): Flow<T> = subscribe(headers).map { frame ->
-        deserializeOrNull(frame, deserializer)
-            ?: error("Empty frame bodies are not allowed in this subscription, please use subscribeOptional() " +
-                    "instead to allow them. Cannot deserialize object of type ${deserializer.descriptor.serialName} " +
-                    "from null body")
+        deserializeOrNull(frame, deserializer) ?: error(
+            "Empty frame bodies are not allowed in this subscription, please use subscribeOptional() instead to allow " +
+                "them. Cannot deserialize object of type ${deserializer.descriptor.serialName} from null body"
+        )
     }
 
     override suspend fun <T : Any> subscribeOptional(
         headers: StompSubscribeHeaders,
-        deserializer: DeserializationStrategy<T>
+        deserializer: DeserializationStrategy<T>,
     ): Flow<T?> = subscribe(headers).map { frame -> deserializeOrNull(frame, deserializer) }
 
     protected abstract fun <T : Any> deserializeOrNull(
         frame: StompFrame.Message,
-        deserializer: DeserializationStrategy<T>
+        deserializer: DeserializationStrategy<T>,
     ): T?
 }
 
@@ -95,7 +95,7 @@ private abstract class BaseStompSessionWithConversions(
 private class StompSessionWithBinaryConversions(
     session: StompSession,
     val format: BinaryFormat,
-    mediaType: String
+    mediaType: String,
 ) : BaseStompSessionWithConversions(session, format.serializersModule, mediaType) {
 
     override fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>) =
@@ -109,7 +109,7 @@ private class StompSessionWithBinaryConversions(
 private class StompSessionWithTextConversions(
     session: StompSession,
     val format: StringFormat,
-    mediaType: String
+    mediaType: String,
 ) : BaseStompSessionWithConversions(session, format.serializersModule, mediaType) {
 
     override fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>) =

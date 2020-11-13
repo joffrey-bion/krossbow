@@ -79,7 +79,7 @@ class StompClientTest {
         )
         testConnectHeaders(
             expectedHeaders = expectedHeaders,
-            configureClient = { heartBeat = customHeartBeat }
+            configureClient = { heartBeat = customHeartBeat },
         ) { client ->
             client.connect("http://some.host/ws")
         }
@@ -103,7 +103,7 @@ class StompClientTest {
     private suspend fun testConnectHeaders(
         expectedHeaders: StompConnectHeaders,
         configureClient: StompConfig.() -> Unit = {},
-        connectCall: suspend (StompClient) -> Unit
+        connectCall: suspend (StompClient) -> Unit,
     ) {
         coroutineScope {
             val wsSession = WebSocketSessionMock()

@@ -6,7 +6,7 @@ internal val NO_HEART_BEATS = HeartBeat(0, 0)
 
 internal fun HeartBeat.negotiated(serverHeartBeats: HeartBeat?): HeartBeat = HeartBeat(
     minSendPeriodMillis = computeNegotiatedPeriod(minSendPeriodMillis, serverHeartBeats?.expectedPeriodMillis),
-    expectedPeriodMillis = computeNegotiatedPeriod(expectedPeriodMillis, serverHeartBeats?.minSendPeriodMillis)
+    expectedPeriodMillis = computeNegotiatedPeriod(expectedPeriodMillis, serverHeartBeats?.minSendPeriodMillis),
 )
 
 private fun computeNegotiatedPeriod(clientPeriod: Int, serverPeriod: Int?): Int = when {

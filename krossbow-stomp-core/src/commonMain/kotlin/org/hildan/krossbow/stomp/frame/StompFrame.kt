@@ -2,21 +2,7 @@ package org.hildan.krossbow.stomp.frame
 
 import kotlinx.io.charsets.Charset
 import kotlinx.io.charsets.Charsets
-import org.hildan.krossbow.stomp.headers.StompAbortHeaders
-import org.hildan.krossbow.stomp.headers.StompAckHeaders
-import org.hildan.krossbow.stomp.headers.StompBeginHeaders
-import org.hildan.krossbow.stomp.headers.StompCommitHeaders
-import org.hildan.krossbow.stomp.headers.StompConnectHeaders
-import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
-import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
-import org.hildan.krossbow.stomp.headers.StompErrorHeaders
-import org.hildan.krossbow.stomp.headers.StompHeaders
-import org.hildan.krossbow.stomp.headers.StompMessageHeaders
-import org.hildan.krossbow.stomp.headers.StompNackHeaders
-import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
-import org.hildan.krossbow.stomp.headers.StompSendHeaders
-import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
-import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
+import org.hildan.krossbow.stomp.headers.*
 import org.hildan.krossbow.utils.extractCharset
 
 /**
@@ -29,7 +15,7 @@ sealed class StompFrame(
     /** The headers of this STOMP frame. */
     open val headers: StompHeaders,
     /** The body of this STOMP frame. */
-    open val body: FrameBody? = null
+    open val body: FrameBody? = null,
 ) {
     /**
      * The body of this frame as text.
@@ -74,7 +60,7 @@ sealed class StompFrame(
      */
     data class Send(
         override val headers: StompSendHeaders,
-        override val body: FrameBody?
+        override val body: FrameBody?,
     ) : StompFrame(StompCommand.SEND, headers, body)
 
     /**
@@ -97,7 +83,7 @@ sealed class StompFrame(
      */
     data class Message(
         override val headers: StompMessageHeaders,
-        override val body: FrameBody?
+        override val body: FrameBody?,
     ) : StompFrame(StompCommand.MESSAGE, headers, body)
 
     /**
@@ -152,7 +138,7 @@ sealed class StompFrame(
      */
     data class Error(
         override val headers: StompErrorHeaders,
-        override val body: FrameBody?
+        override val body: FrameBody?,
     ) : StompFrame(StompCommand.ERROR, headers, body) {
         /**
          * The description of the error, taken from the `message` header if present, or from the body.
@@ -165,7 +151,7 @@ sealed class StompFrame(
         internal fun create(
             command: StompCommand,
             headers: StompHeaders,
-            body: FrameBody?
+            body: FrameBody?,
         ): StompFrame = when (command) {
             StompCommand.STOMP -> Stomp(StompConnectHeaders(headers))
             StompCommand.CONNECT -> Connect(StompConnectHeaders(headers))
@@ -186,7 +172,7 @@ sealed class StompFrame(
     }
 }
 
-private fun FrameBody.asText(contentType: String?): String? = when (this) {
+private fun FrameBody.asText(contentType: String?): String = when (this) {
     is FrameBody.Text -> text
     is FrameBody.Binary -> decodeAsText(inferCharset(contentType))
 }
@@ -207,7 +193,8 @@ private fun inferCharset(contentTypeHeader: String?): Charset {
     return when {
         charset != null -> charset
         contentTypeHeader.startsWith("text/") -> Charsets.UTF_8
-        else -> throw UnsupportedOperationException("Binary frame with content-type '$contentTypeHeader' cannot be " +
-                "converted to text")
+        else -> throw UnsupportedOperationException(
+            "Binary frame with content-type '$contentTypeHeader' cannot be converted to text"
+        )
     }
 }

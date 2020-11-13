@@ -10,16 +10,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class JacksonConverterTest {
     // necessary for tests on Windows to work (multiline string always uses \n as line ending)
     private val platformAgnosticIndenter = DefaultIndenter("  ", "\n")
-    private val platformAgnosticPrettyPrinter = DefaultPrettyPrinter().withObjectIndenter(platformAgnosticIndenter).withArrayIndenter(platformAgnosticIndenter)
+    private val platformAgnosticPrettyPrinter =
+        DefaultPrettyPrinter().withObjectIndenter(platformAgnosticIndenter).withArrayIndenter(platformAgnosticIndenter)
     private val platformAgnosticObjectMapper = ObjectMapper().setDefaultPrettyPrinter(platformAgnosticPrettyPrinter)
 
     data class Person(val name: String, val age: Int)
@@ -67,10 +64,10 @@ class JacksonConverterTest {
         val frame = session.waitForSentFrameAndSimulateCompletion()
         assertTrue(frame is StompFrame.Send)
         val expectedJson = """
-        {
-          "name" : "Bob",
-          "age" : 42
-        }
+            {
+              "name" : "Bob",
+              "age" : 42
+            }
         """.trimIndent()
         assertEquals(expectedJson, frame.bodyAsText)
     }

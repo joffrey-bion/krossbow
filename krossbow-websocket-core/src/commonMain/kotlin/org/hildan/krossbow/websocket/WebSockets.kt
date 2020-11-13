@@ -97,6 +97,7 @@ class WebSocketConnectionClosedException(
     url: String,
     val code: Int,
     val reason: String?
-) : WebSocketConnectionException(url,
+) : WebSocketConnectionException(
+    url,
     "Couldn't connect to web socket at $url. The server closed the connection. Code: $code Reason: $reason"
 )

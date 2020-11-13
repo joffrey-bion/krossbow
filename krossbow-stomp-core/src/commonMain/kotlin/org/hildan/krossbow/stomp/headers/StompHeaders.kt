@@ -34,7 +34,7 @@ interface StompHeaders : MutableMap<String, String> {
 }
 
 private data class SimpleStompHeaders(
-    private val headers: MutableMap<String, String>
+    private val headers: MutableMap<String, String>,
 ) : StompHeaders, MutableMap<String, String> by headers {
 
     override var contentLength: Int? by mutableOptionalIntHeader(CONTENT_LENGTH)
@@ -48,7 +48,7 @@ internal fun MutableMap<String, String>.asStompHeaders(): StompHeaders = SimpleS
 
 internal fun headersOf(
     vararg pairs: Pair<String, String?>,
-    customHeaders: Map<String, String> = emptyMap()
+    customHeaders: Map<String, String> = emptyMap(),
 ): StompHeaders {
     val headersMap = mutableMapOf<String, String>()
     pairs.forEach { (key, value) ->
@@ -73,7 +73,7 @@ data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHead
         login: String? = null,
         passcode: String? = null,
         heartBeat: HeartBeat? = null,
-        customHeaders: Map<String, String> = emptyMap()
+        customHeaders: Map<String, String> = emptyMap(),
     ) : this(
         headersOf(
             HOST to host,
@@ -81,7 +81,7 @@ data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHead
             LOGIN to login,
             PASSCODE to passcode,
             HEART_BEAT to heartBeat?.formatAsHeaderValue(),
-            customHeaders = customHeaders
+            customHeaders = customHeaders,
         )
     )
 }
@@ -96,13 +96,13 @@ data class StompConnectedHeaders(private val rawHeaders: StompHeaders) : StompHe
         version: String = "1.2",
         session: String? = null,
         server: String? = null,
-        heartBeat: HeartBeat? = null
+        heartBeat: HeartBeat? = null,
     ) : this(
         headersOf(
             VERSION to version,
             SESSION to session,
             SERVER to server,
-            HEART_BEAT to heartBeat?.formatAsHeaderValue()
+            HEART_BEAT to heartBeat?.formatAsHeaderValue(),
         )
     )
 }
@@ -115,13 +115,13 @@ data class StompSendHeaders(private val rawHeaders: StompHeaders) : StompHeaders
         destination: String,
         transaction: String? = null,
         receipt: String? = null,
-        customHeaders: Map<String, String> = emptyMap()
+        customHeaders: Map<String, String> = emptyMap(),
     ) : this(
         headersOf(
             DESTINATION to destination,
             TRANSACTION to transaction,
             RECEIPT to receipt,
-            customHeaders = customHeaders
+            customHeaders = customHeaders,
         )
     )
 }
@@ -135,13 +135,13 @@ data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) : StompHe
         destination: String,
         id: String? = null, // not optional, but this allows generating it in subscription flows
         ack: AckMode = AckMode.AUTO,
-        receipt: String? = null
+        receipt: String? = null,
     ) : this(
         headersOf(
             DESTINATION to destination,
             ID to id,
             ACK to ack.headerValue,
-            RECEIPT to receipt
+            RECEIPT to receipt,
         )
     )
 }
@@ -200,14 +200,14 @@ data class StompMessageHeaders(private val rawHeaders: StompHeaders) : StompHead
         messageId: String,
         subscription: String,
         ack: String? = null,
-        customHeaders: Map<String, String> = emptyMap()
+        customHeaders: Map<String, String> = emptyMap(),
     ) : this(
         headersOf(
             DESTINATION to destination,
             MESSAGE_ID to messageId,
             SUBSCRIPTION to subscription,
             ACK to ack,
-            customHeaders = customHeaders
+            customHeaders = customHeaders,
         )
     )
 }
@@ -225,12 +225,12 @@ data class StompErrorHeaders(private val rawHeaders: StompHeaders) : StompHeader
     constructor(
         message: String? = null,
         receiptId: String? = null,
-        customHeaders: Map<String, String> = emptyMap()
+        customHeaders: Map<String, String> = emptyMap(),
     ) : this(
         headersOf(
             MESSAGE to message,
             RECEIPT_ID to receiptId,
-            customHeaders = customHeaders
+            customHeaders = customHeaders,
         )
     )
 }

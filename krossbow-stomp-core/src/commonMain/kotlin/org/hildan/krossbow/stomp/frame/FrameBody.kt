@@ -22,9 +22,7 @@ sealed class FrameBody {
     /**
      * Represents the body of a [StompFrame] that was received as a textual web socket frame.
      */
-    data class Text(
-        val text: String
-    ) : FrameBody() {
+    data class Text(val text: String) : FrameBody() {
         constructor(utf8Bytes: ByteArray) : this(utf8Bytes.decodeToString())
 
         // Text frames must be encoded using UTF-8 as per WebSocket specification
@@ -35,9 +33,7 @@ sealed class FrameBody {
     /**
      * Represents the body of a [StompFrame] that was received as a binary web socket frame.
      */
-    data class Binary(
-        override val bytes: ByteArray
-    ) : FrameBody() {
+    data class Binary(override val bytes: ByteArray) : FrameBody() {
 
         @OptIn(ExperimentalIoApi::class)
         internal fun decodeAsText(charset: Charset): String = charset.newDecoder().decode(ByteReadPacket(bytes))

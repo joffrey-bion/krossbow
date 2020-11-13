@@ -19,7 +19,7 @@ import kotlin.reflect.KClass
  * Wraps this [StompSession] to add methods that can convert message bodies using the provided [converter].
  */
 fun StompSession.withTextConversions(converter: TextMessageConverter): StompSessionWithClassConversions =
-        StompSessionWithClassToTextConversions(this, converter)
+    StompSessionWithClassToTextConversions(this, converter)
 
 /**
  * Converts between text and objects based on a [KClass].
@@ -49,7 +49,7 @@ interface TextMessageConverter {
 
 internal class StompSessionWithClassToTextConversions(
     private val session: StompSession,
-    private val converter: TextMessageConverter
+    private val converter: TextMessageConverter,
 ) : StompSession by session, StompSessionWithClassConversions {
 
     private val charset: Charset = extractCharset(converter.mimeType) ?: Charsets.UTF_8
@@ -58,7 +58,7 @@ internal class StompSessionWithClassToTextConversions(
     override suspend fun <T : Any> convertAndSend(
         headers: StompSendHeaders,
         body: T?,
-        bodyType: KClass<T>
+        bodyType: KClass<T>,
     ): StompReceipt? {
         if (headers.contentType == null) {
             headers.contentType = converter.mimeType

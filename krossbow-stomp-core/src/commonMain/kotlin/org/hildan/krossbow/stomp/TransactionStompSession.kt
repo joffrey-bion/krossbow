@@ -9,7 +9,7 @@ import org.hildan.krossbow.stomp.headers.StompSendHeaders
  */
 internal class TransactionStompSession(
     private val session: StompSession,
-    private val transactionId: String
+    private val transactionId: String,
 ) : StompSession by session {
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {

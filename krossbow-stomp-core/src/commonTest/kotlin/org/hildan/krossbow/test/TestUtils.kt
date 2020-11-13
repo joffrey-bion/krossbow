@@ -10,7 +10,7 @@ import kotlin.test.fail
 suspend fun <T : Throwable> TestCoroutineScope.assertTimesOutWith(
     expectedExceptionClass: KClass<T>,
     expectedTimeoutMillis: Long,
-    block: suspend () -> Unit
+    block: suspend () -> Unit,
 ): T {
     val scope = this
     val deferred = scope.async {
@@ -23,27 +23,33 @@ suspend fun <T : Throwable> TestCoroutineScope.assertTimesOutWith(
         val result = deferred.await()
         if (result.isFailure) {
             val ex = result.exceptionOrNull()!!
-            fail("expected time out with ${expectedExceptionClass.simpleName} (after ${expectedTimeoutMillis}ms) but " +
-                    "another exception was thrown before that: ${ex::class.simpleName}: ${ex.message}")
+            fail(
+                "expected time out with ${expectedExceptionClass.simpleName} (after ${expectedTimeoutMillis}ms) but " +
+                    "another exception was thrown before that: ${ex::class.simpleName}: ${ex.message}"
+            )
         } else {
-            fail("expected time out after ${expectedTimeoutMillis}ms (with ${expectedExceptionClass.simpleName}) but " +
-                    "the block completed successfully before that time")
+            fail(
+                "expected time out after ${expectedTimeoutMillis}ms (with ${expectedExceptionClass.simpleName}) but " + "the block completed successfully before that time"
+            )
         }
     }
     advanceTimeBy(1)
     if (deferred.isActive) {
-        fail("expected time out after ${expectedTimeoutMillis}ms (with ${expectedExceptionClass.simpleName}) but " +
-                "nothing happened (block still suspended)")
+        fail(
+            "expected time out after ${expectedTimeoutMillis}ms (with ${expectedExceptionClass.simpleName}) but " + "nothing happened (block still suspended)"
+        )
     }
     val result = deferred.await()
     if (!result.isFailure) {
-        fail("expected time out after ${expectedTimeoutMillis}ms (with ${expectedExceptionClass.simpleName}) but " +
-                "the block completed successfully (right on time!)")
+        fail(
+            "expected time out after ${expectedTimeoutMillis}ms (with ${expectedExceptionClass.simpleName}) but " + "the block completed successfully (right on time!)"
+        )
     }
     val ex = result.exceptionOrNull()!!
     if (!expectedExceptionClass.isInstance(ex)) {
-        fail("expected time out with ${expectedExceptionClass.simpleName} (after ${expectedTimeoutMillis}ms) but " +
-                "an exception of type ${ex::class.simpleName} was thrown instead (at the right time)")
+        fail(
+            "expected time out with ${expectedExceptionClass.simpleName} (after ${expectedTimeoutMillis}ms) but " + "an exception of type ${ex::class.simpleName} was thrown instead (at the right time)"
+        )
     }
     return expectedExceptionClass.cast(ex)
 }

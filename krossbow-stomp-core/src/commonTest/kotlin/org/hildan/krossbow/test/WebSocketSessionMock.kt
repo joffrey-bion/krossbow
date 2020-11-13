@@ -3,12 +3,7 @@ package org.hildan.krossbow.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.receiveOrNull
-import org.hildan.krossbow.stomp.frame.FrameBody
-import org.hildan.krossbow.stomp.frame.StompCommand
-import org.hildan.krossbow.stomp.frame.StompDecoder
-import org.hildan.krossbow.stomp.frame.StompFrame
-import org.hildan.krossbow.stomp.frame.encodeToBytes
-import org.hildan.krossbow.stomp.frame.encodeToText
+import org.hildan.krossbow.stomp.frame.*
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
@@ -20,6 +15,9 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class WebSocketSessionMock : WebSocketSession {
+
+    override val url: String
+        get() = "dummy-url"
 
     private val listener = WebSocketListenerChannelAdapter()
 
@@ -108,9 +106,8 @@ suspend fun WebSocketSessionMock.simulateErrorFrameReceived(errorMessage: String
     }
     assertTrue(
         result.isSuccess,
-        "Calling the listener with an error frame is the responsibility of the web " +
-                "socket implementation, and is done from a thread that we don't control, so " +
-                "we don't want that to fail."
+        "Calling the listener with an error frame is the responsibility of the web socket implementation, and " +
+            "is done from a thread that we don't control, so we don't want that to fail."
     )
     return errorFrame
 }

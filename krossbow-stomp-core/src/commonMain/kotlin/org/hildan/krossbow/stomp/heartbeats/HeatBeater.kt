@@ -12,7 +12,7 @@ internal class HeartBeater(
     private val heartBeat: HeartBeat,
     private val tolerance: HeartBeatTolerance,
     private val sendHeartBeat: suspend () -> Unit,
-    private val onMissingHeartBeat: suspend () -> Unit
+    private val onMissingHeartBeat: suspend () -> Unit,
 ) {
     private val outgoingTicker: Ticker = createOutgoingHeartBeatsTicker()
     private val incomingTicker: Ticker = createIncomingHeartBeatsTicker()
@@ -47,7 +47,7 @@ internal class HeartBeater(
 
 private class Ticker(
     val periodMillis: Long,
-    val onTick: suspend () -> Unit
+    val onTick: suspend () -> Unit,
 ) {
     private val resetEvents = Channel<Unit>()
 

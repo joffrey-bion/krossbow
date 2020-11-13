@@ -21,7 +21,7 @@ class HeartBeaterTest {
 
     private class HeartBeaterConsumer(
         heartBeat: HeartBeat,
-        tolerance: HeartBeatTolerance = HeartBeatTolerance(TEST_OUTGOING_MARGIN, TEST_INCOMING_MARGIN)
+        tolerance: HeartBeatTolerance = HeartBeatTolerance(TEST_OUTGOING_MARGIN, TEST_INCOMING_MARGIN),
     ) {
         val sent = Channel<Unit>()
         val received = Channel<Unit>()

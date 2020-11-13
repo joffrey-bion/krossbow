@@ -5,7 +5,7 @@ package org.hildan.krossbow.stomp.frame
  */
 enum class StompCommand(
     internal val text: String,
-    internal val supportsHeaderEscapes: Boolean = true
+    internal val supportsHeaderEscapes: Boolean = true,
 ) {
     STOMP("STOMP"),
     // The CONNECT and CONNECTED frames do not escape the carriage return, line feed or colon octets

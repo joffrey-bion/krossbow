@@ -187,7 +187,7 @@ data class StompReceipt(
  * a [LostReceiptException] is thrown.
  */
 suspend fun StompSession.sendBinary(destination: String, body: ByteArray?): StompReceipt? =
-        send(StompSendHeaders(destination), body?.let { FrameBody.Binary(it) })
+    send(StompSendHeaders(destination), body?.let { FrameBody.Binary(it) })
 
 /**
  * Sends a SEND frame to the server at the given [destination] with the given textual [body].
@@ -199,7 +199,7 @@ suspend fun StompSession.sendBinary(destination: String, body: ByteArray?): Stom
  * a [LostReceiptException] is thrown.
  */
 suspend fun StompSession.sendText(destination: String, body: String?): StompReceipt? =
-        send(StompSendHeaders(destination), body?.let { FrameBody.Text(it) })
+    send(StompSendHeaders(destination), body?.let { FrameBody.Text(it) })
 
 /**
  * Sends a SEND frame to the server at the given [destination] without body.

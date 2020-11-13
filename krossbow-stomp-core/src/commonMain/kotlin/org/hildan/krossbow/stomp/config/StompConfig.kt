@@ -111,7 +111,7 @@ data class HeartBeat(
      * The value 0 means it does not want to receive heart-beats, otherwise it is the desired number of milliseconds
      * between heart-beats.
      */
-    val expectedPeriodMillis: Int = 0
+    val expectedPeriodMillis: Int = 0,
 )
 
 /**
@@ -139,5 +139,5 @@ data class HeartBeatTolerance(
      *
      * By default, we expect the server to send heart beats on time, so we add some margin in our own expectation.
      */
-    val incomingMarginMillis: Int = 500
+    val incomingMarginMillis: Int = 500,
 )

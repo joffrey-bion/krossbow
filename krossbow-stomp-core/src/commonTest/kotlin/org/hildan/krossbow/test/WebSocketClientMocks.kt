@@ -13,17 +13,16 @@ import org.hildan.krossbow.websocket.WebSocketSession
 
 suspend fun connectWithMocks(
     connectedHeaders: StompConnectedHeaders = StompConnectedHeaders(),
-    configure: StompConfig.() -> Unit = {}
-): Pair<WebSocketSessionMock, StompSession> =
-        coroutineScope {
-            val wsSession = WebSocketSessionMock()
-            val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession), configure)
-            val session = async { stompClient.connect("dummy URL") }
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
-            wsSession.simulateConnectedFrameReceived(connectedHeaders)
-            val stompSession = session.await()
-            Pair(wsSession, stompSession)
-        }
+    configure: StompConfig.() -> Unit = {},
+): Pair<WebSocketSessionMock, StompSession> = coroutineScope {
+    val wsSession = WebSocketSessionMock()
+    val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession), configure)
+    val session = async { stompClient.connect("dummy URL") }
+    wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+    wsSession.simulateConnectedFrameReceived(connectedHeaders)
+    val stompSession = session.await()
+    Pair(wsSession, stompSession)
+}
 
 class ImmediatelySucceedingWebSocketClient(
     private val session: WebSocketSessionMock = WebSocketSessionMock()

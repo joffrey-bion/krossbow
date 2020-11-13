@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
  * Wraps this [StompSession] to add methods that can convert message bodies using the provided Jackson [objectMapper].
  */
 fun StompSession.withJacksonConversions(
-    objectMapper: ObjectMapper = jacksonObjectMapper()
+    objectMapper: ObjectMapper = jacksonObjectMapper(),
 ): StompSessionWithClassConversions = withTextConversions(JacksonConverter(objectMapper))
 
 private class JacksonConverter(private val objectMapper: ObjectMapper) : TextMessageConverter {
@@ -19,5 +19,5 @@ private class JacksonConverter(private val objectMapper: ObjectMapper) : TextMes
     override fun <T : Any> convertToString(body: T, bodyType: KClass<T>): String = objectMapper.writeValueAsString(body)
 
     override fun <T : Any> convertFromString(body: String, bodyType: KClass<T>): T =
-            objectMapper.readValue(body, bodyType.java)
+        objectMapper.readValue(body, bodyType.java)
 }
