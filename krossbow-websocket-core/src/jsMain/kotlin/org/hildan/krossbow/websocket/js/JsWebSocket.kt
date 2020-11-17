@@ -1,6 +1,7 @@
 package org.hildan.krossbow.websocket.js
 
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -43,7 +44,8 @@ open class JsWebSocketClientAdapter(
                 val ws = newWebSocket(url)
                 ws.binaryType = BinaryType.ARRAYBUFFER // to receive arraybuffer instead of blob
                 var pendingConnect = true
-                val listener = WebSocketListenerChannelAdapter()
+                // unlimited buffer size because we have no means for backpressure anyway
+                val listener = WebSocketListenerChannelAdapter(bufferSize = Channel.UNLIMITED)
                 val wsSession = JsWebSocketSession(ws, listener.incomingFrames)
                 ws.onopen = {
                     pendingConnect = false
