@@ -4,7 +4,7 @@ import kotlinx.io.core.BytePacketBuilder
 import kotlinx.io.core.readBytes
 import kotlinx.io.core.writeFully
 
-class PartialBinaryMessageHandler(
+internal class PartialBinaryMessageHandler(
     private val onMessageComplete: suspend (ByteArray) -> Unit
 ) {
     private val bytesBuilder = BytePacketBuilder()
@@ -21,7 +21,7 @@ class PartialBinaryMessageHandler(
     }
 }
 
-class PartialTextMessageHandler(
+internal class PartialTextMessageHandler(
     private val onMessageComplete: suspend (CharSequence) -> Unit
 ) {
     private val textBuilder = StringBuilder()

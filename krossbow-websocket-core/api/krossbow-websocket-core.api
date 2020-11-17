@@ -2,18 +2,6 @@ public final class org/hildan/krossbow/websocket/DefaultJvmClientKt {
 	public static final fun defaultWebSocketClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
 }
 
-public final class org/hildan/krossbow/websocket/PartialBinaryMessageHandler {
-	public fun <init> (Lkotlin/jvm/functions/Function2;)V
-	public final fun processMessage ([BZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun processMessage$default (Lorg/hildan/krossbow/websocket/PartialBinaryMessageHandler;[BZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-}
-
-public final class org/hildan/krossbow/websocket/PartialTextMessageHandler {
-	public fun <init> (Lkotlin/jvm/functions/Function2;)V
-	public final fun processMessage (Ljava/lang/CharSequence;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun processMessage$default (Lorg/hildan/krossbow/websocket/PartialTextMessageHandler;Ljava/lang/CharSequence;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-}
-
 public abstract interface class org/hildan/krossbow/websocket/WebSocketClient {
 	public abstract fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
