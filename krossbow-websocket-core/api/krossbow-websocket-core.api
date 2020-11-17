@@ -75,6 +75,8 @@ public final class org/hildan/krossbow/websocket/WebSocketFrame$Text : org/hilda
 
 public final class org/hildan/krossbow/websocket/WebSocketListenerChannelAdapter {
 	public fun <init> ()V
+	public fun <init> (ILkotlinx/coroutines/channels/BufferOverflow;)V
+	public synthetic fun <init> (ILkotlinx/coroutines/channels/BufferOverflow;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getIncomingFrames ()Lkotlinx/coroutines/channels/ReceiveChannel;
 	public final fun onBinaryMessage ([BZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun onBinaryMessage$default (Lorg/hildan/krossbow/websocket/WebSocketListenerChannelAdapter;[BZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
