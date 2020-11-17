@@ -48,12 +48,3 @@ class WebSocketListenerChannelAdapter {
         frames.close(WebSocketException(error?.message ?: "web socket error", cause = error))
     }
 }
-
-sealed class WebSocketFrame {
-
-    data class Text(val text: String) : WebSocketFrame()
-
-    class Binary(val bytes: ByteArray) : WebSocketFrame()
-
-    data class Close(val code: Int, val reason: String?) : WebSocketFrame()
-}
