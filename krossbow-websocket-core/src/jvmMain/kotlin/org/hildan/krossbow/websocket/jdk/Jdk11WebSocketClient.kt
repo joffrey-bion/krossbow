@@ -6,11 +6,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketConnectionException
-import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
-import org.hildan.krossbow.websocket.WebSocketSession
+import org.hildan.krossbow.websocket.*
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.WebSocket
@@ -22,19 +18,18 @@ import kotlin.coroutines.CoroutineContext
  * A [WebSocketClient] implementation using JDK11's async web socket API.
  */
 class Jdk11WebSocketClient(
-    private val webSocketBuilder: WebSocket.Builder = HttpClient.newHttpClient().newWebSocketBuilder(),
-    configure: WebSocket.Builder.() -> Unit = {}
+    private val httpClient: HttpClient = HttpClient.newHttpClient(),
+    private val configureWebSocket: WebSocket.Builder.() -> Unit = {}
 ) : WebSocketClient {
-
-    init {
-        webSocketBuilder.configure()
-    }
 
     override suspend fun connect(url: String): WebSocketSession {
         try {
             val listener = WebSocketListenerChannelAdapter()
             val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
-            val webSocket = webSocketBuilder.buildAsync(URI(url), jdk11WebSocketListener).await()
+            val webSocket = httpClient.newWebSocketBuilder()
+                    .apply { configureWebSocket() }
+                    .buildAsync(URI(url), jdk11WebSocketListener)
+                    .await()
             return Jdk11WebSocketSession(webSocket, url, listener.incomingFrames)
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here

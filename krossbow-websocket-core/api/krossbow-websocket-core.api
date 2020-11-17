@@ -102,8 +102,8 @@ public final class org/hildan/krossbow/websocket/WebSocketSession$DefaultImpls {
 
 public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClient : org/hildan/krossbow/websocket/WebSocketClient {
 	public fun <init> ()V
-	public fun <init> (Ljava/net/http/WebSocket$Builder;Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun <init> (Ljava/net/http/WebSocket$Builder;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/net/http/HttpClient;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Ljava/net/http/HttpClient;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
