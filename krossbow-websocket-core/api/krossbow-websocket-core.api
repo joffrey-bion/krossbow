@@ -62,6 +62,16 @@ public final class org/hildan/krossbow/websocket/WebSocketFrame$Close : org/hild
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class org/hildan/krossbow/websocket/WebSocketFrame$Ping : org/hildan/krossbow/websocket/WebSocketFrame {
+	public fun <init> ([B)V
+	public final fun getBytes ()[B
+}
+
+public final class org/hildan/krossbow/websocket/WebSocketFrame$Pong : org/hildan/krossbow/websocket/WebSocketFrame {
+	public fun <init> ([B)V
+	public final fun getBytes ()[B
+}
+
 public final class org/hildan/krossbow/websocket/WebSocketFrame$Text : org/hildan/krossbow/websocket/WebSocketFrame {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
@@ -83,6 +93,8 @@ public final class org/hildan/krossbow/websocket/WebSocketListenerChannelAdapter
 	public final fun onClose (ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun onError (Ljava/lang/String;)V
 	public final fun onError (Ljava/lang/Throwable;)V
+	public final fun onPing ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun onPong ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun onTextMessage (Ljava/lang/CharSequence;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun onTextMessage$default (Lorg/hildan/krossbow/websocket/WebSocketListenerChannelAdapter;Ljava/lang/CharSequence;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
@@ -100,6 +112,15 @@ public abstract interface class org/hildan/krossbow/websocket/WebSocketSession {
 public final class org/hildan/krossbow/websocket/WebSocketSession$DefaultImpls {
 	public static synthetic fun close$default (Lorg/hildan/krossbow/websocket/WebSocketSession;ILjava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static fun getHost (Lorg/hildan/krossbow/websocket/WebSocketSession;)Ljava/lang/String;
+}
+
+public abstract interface class org/hildan/krossbow/websocket/WebSocketSessionWithPingPong : org/hildan/krossbow/websocket/WebSocketSession {
+	public abstract fun sendPing ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun sendPong ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/websocket/WebSocketSessionWithPingPong$DefaultImpls {
+	public static fun getHost (Lorg/hildan/krossbow/websocket/WebSocketSessionWithPingPong;)Ljava/lang/String;
 }
 
 public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClient : org/hildan/krossbow/websocket/WebSocketClient {

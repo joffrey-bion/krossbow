@@ -38,6 +38,14 @@ class WebSocketListenerChannelAdapter(
         partialTextMessageHandler.processMessage(text, isLast)
     }
 
+    suspend fun onPing(bytes: ByteArray) {
+        frames.send(WebSocketFrame.Ping(bytes))
+    }
+
+    suspend fun onPong(bytes: ByteArray) {
+        frames.send(WebSocketFrame.Pong(bytes))
+    }
+
     suspend fun onClose(code: Int, reason: String?) {
         frames.send(WebSocketFrame.Close(code, reason))
         frames.close()

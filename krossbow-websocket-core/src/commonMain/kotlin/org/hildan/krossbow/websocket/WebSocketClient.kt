@@ -74,6 +74,23 @@ interface WebSocketSession {
     suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
 }
 
+interface WebSocketSessionWithPingPong : WebSocketSession {
+
+    /**
+     * Sends a web socket ping frame.
+     */
+    suspend fun sendPing(frameData: ByteArray)
+
+    /**
+     * Sends a web socket pong frame.
+     *
+     * Note that implementations usually take care of sending Pong frames corresponding to each received Ping frame, so
+     * applications should not bother dealing with Pongs in general.
+     * Unsollicited Pong frames may be sent, however, to serve as unidirectional heart beats.
+     */
+    suspend fun sendPong(frameData: ByteArray)
+}
+
 /**
  * A web socket frame.
  */
@@ -88,6 +105,16 @@ sealed class WebSocketFrame {
      * A web socket binary frame (0x2).
      */
     class Binary(val bytes: ByteArray) : WebSocketFrame()
+
+    /**
+     * A web socket ping frame (0x9).
+     */
+    class Ping(val bytes: ByteArray) : WebSocketFrame()
+
+    /**
+     * A web socket pong frame (0xA).
+     */
+    class Pong(val bytes: ByteArray) : WebSocketFrame()
 
     /**
      * A web socket close frame (0x8).

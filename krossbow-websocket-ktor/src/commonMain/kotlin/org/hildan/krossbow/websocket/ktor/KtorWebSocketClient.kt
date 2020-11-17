@@ -1,38 +1,26 @@
 package org.hildan.krossbow.websocket.ktor
 
-import io.ktor.client.HttpClient
-import io.ktor.client.features.websocket.DefaultClientWebSocketSession
-import io.ktor.client.features.websocket.WebSockets
-import io.ktor.client.features.websocket.webSocketSession
-import io.ktor.http.cio.websocket.CloseReason
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.close
-import io.ktor.http.cio.websocket.readBytes
-import io.ktor.http.cio.websocket.readReason
-import io.ktor.http.cio.websocket.readText
-import io.ktor.http.takeFrom
-import io.ktor.util.KtorExperimentalAPI
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
+import io.ktor.client.*
+import io.ktor.client.features.websocket.*
+import io.ktor.http.*
+import io.ktor.http.cio.websocket.*
+import io.ktor.util.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.produceIn
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketSession
+import org.hildan.krossbow.websocket.WebSocketSessionWithPingPong
 import kotlin.coroutines.EmptyCoroutineContext
 
 class KtorWebSocketClient @OptIn(KtorExperimentalAPI::class) constructor(
     private val httpClient: HttpClient = HttpClient { install(WebSockets) }
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketSession {
+    override suspend fun connect(url: String): WebSocketSessionWithPingPong {
         val wsKtorSession = httpClient.webSocketSession {
             this.url.takeFrom(url)
         }
@@ -42,7 +30,7 @@ class KtorWebSocketClient @OptIn(KtorExperimentalAPI::class) constructor(
 
 private class KtorWebSocketSessionAdapter(
     private val wsSession: DefaultClientWebSocketSession
-) : WebSocketSession {
+) : WebSocketSessionWithPingPong {
 
     private val scope = CoroutineScope(EmptyCoroutineContext + Job() + CoroutineName("krossbow-ktor-ws-frames-mapper"))
 
@@ -55,7 +43,7 @@ private class KtorWebSocketSessionAdapter(
 
     @OptIn(FlowPreview::class)
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
-        get() = wsSession.incoming.consumeAsFlow().mapNotNull { it.toKrossbowFrame() }.produceIn(scope)
+        get() = wsSession.incoming.consumeAsFlow().map { it.toKrossbowFrame() }.produceIn(scope)
 
     override suspend fun sendText(frameText: String) {
         wsSession.outgoing.send(Frame.Text(frameText))
@@ -65,17 +53,26 @@ private class KtorWebSocketSessionAdapter(
         wsSession.outgoing.send(Frame.Binary(fin = true, data = frameData))
     }
 
+    override suspend fun sendPing(frameData: ByteArray) {
+        wsSession.outgoing.send(Frame.Ping(frameData))
+    }
+
+    override suspend fun sendPong(frameData: ByteArray) {
+        wsSession.outgoing.send(Frame.Pong(frameData))
+    }
+
     override suspend fun close(code: Int, reason: String?) {
         wsSession.close(CloseReason(code.toShort(), reason ?: ""))
         scope.cancel()
     }
 }
 
-private fun Frame.toKrossbowFrame(): WebSocketFrame? = when (this) {
+private fun Frame.toKrossbowFrame(): WebSocketFrame = when (this) {
     is Frame.Text -> WebSocketFrame.Text(readText())
     is Frame.Binary -> WebSocketFrame.Binary(readBytes())
+    is Frame.Ping -> WebSocketFrame.Ping(readBytes())
+    is Frame.Pong -> WebSocketFrame.Pong(readBytes())
     is Frame.Close -> toKrossbowCloseFrame()
-    else -> null // we ignore Ping/Pong because it's supposed to be handled by the WS implementation
 }
 
 private fun Frame.Close.toKrossbowCloseFrame(): WebSocketFrame.Close {

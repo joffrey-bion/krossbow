@@ -9,6 +9,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
+import org.hildan.krossbow.websocket.WebSocketSessionWithPingPong
 import org.springframework.web.socket.BinaryMessage
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.PingMessage
@@ -21,9 +22,9 @@ import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport
 import org.springframework.web.socket.sockjs.client.SockJsClient
 import org.springframework.web.socket.sockjs.client.Transport
 import org.springframework.web.socket.sockjs.client.WebSocketTransport
+import java.nio.ByteBuffer
 import java.util.concurrent.Executors
 import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
-import org.hildan.krossbow.websocket.WebSocketSession as KrossbowWebSocketSession
 import org.springframework.web.socket.WebSocketSession as SpringWebSocketSession
 import org.springframework.web.socket.client.WebSocketClient as SpringWebSocketClient
 
@@ -38,7 +39,7 @@ private fun defaultWsTransports(): List<Transport> = listOf(
 
 open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClient) : KrossbowWebSocketClient {
 
-    override suspend fun connect(url: String): KrossbowWebSocketSession {
+    override suspend fun connect(url: String): WebSocketSessionWithPingPong {
         val handler = KrossbowToSpringHandlerAdapter()
         val springSession = client.doHandshake(handler, url).completable().await()
         return SpringToKrossbowSessionAdapter(springSession, handler.channelListener.incomingFrames)
@@ -54,10 +55,10 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
     override fun handleMessage(session: SpringWebSocketSession, message: WebSocketMessage<*>) {
         runBlocking {
             when (message) {
-                is PingMessage -> Unit
-                is PongMessage -> Unit
-                is BinaryMessage -> channelListener.onBinaryMessage(message.payload.array(), message.isLast)
                 is TextMessage -> channelListener.onTextMessage(message.payload, message.isLast)
+                is BinaryMessage -> channelListener.onBinaryMessage(message.payload.array(), message.isLast)
+                is PingMessage -> channelListener.onPing(message.payload.array())
+                is PongMessage -> channelListener.onPong(message.payload.array())
                 else -> channelListener.onError("Unsupported Spring websocket message type: ${message.javaClass}")
             }
         }
@@ -81,10 +82,11 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
     override fun supportsPartialMessages(): Boolean = true
 }
 
+@Suppress("BlockingMethodInNonBlockingContext")
 private class SpringToKrossbowSessionAdapter(
     private val session: SpringWebSocketSession,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
-) : KrossbowWebSocketSession {
+) : WebSocketSessionWithPingPong {
 
     private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
@@ -103,6 +105,18 @@ private class SpringToKrossbowSessionAdapter(
     override suspend fun sendBinary(frameData: ByteArray) {
         withContext(dispatcher) {
             session.sendMessage(BinaryMessage(frameData, true))
+        }
+    }
+
+    override suspend fun sendPing(frameData: ByteArray) {
+        withContext(dispatcher) {
+            session.sendMessage(PingMessage(ByteBuffer.wrap(frameData)))
+        }
+    }
+
+    override suspend fun sendPong(frameData: ByteArray) {
+        withContext(dispatcher) {
+            session.sendMessage(PongMessage(ByteBuffer.wrap(frameData)))
         }
     }
 

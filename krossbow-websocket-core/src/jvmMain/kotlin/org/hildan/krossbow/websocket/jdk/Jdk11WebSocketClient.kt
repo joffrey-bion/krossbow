@@ -22,7 +22,7 @@ class Jdk11WebSocketClient(
     private val configureWebSocket: WebSocket.Builder.() -> Unit = {}
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketSession {
+    override suspend fun connect(url: String): WebSocketSessionWithPingPong {
         try {
             val listener = WebSocketListenerChannelAdapter()
             val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
@@ -62,6 +62,16 @@ private class Jdk11WebSocketListener(
         webSocket.request(1)
     }
 
+    override fun onPing(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = future {
+        listener.onPing(message.toByteArray())
+        webSocket.request(1)
+    }
+
+    override fun onPong(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = future {
+        listener.onPong(message.toByteArray())
+        webSocket.request(1)
+    }
+
     override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? = future {
         listener.onClose(statusCode, reason)
         job.cancel()
@@ -86,7 +96,7 @@ private class Jdk11WebSocketSession(
     private val webSocket: WebSocket,
     override val url: String,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
-) : WebSocketSession {
+) : WebSocketSessionWithPingPong {
 
     override val canSend: Boolean
         get() = !webSocket.isOutputClosed
@@ -97,6 +107,14 @@ private class Jdk11WebSocketSession(
 
     override suspend fun sendBinary(frameData: ByteArray) {
         webSocket.sendBinary(ByteBuffer.wrap(frameData), true).await()
+    }
+
+    override suspend fun sendPing(frameData: ByteArray) {
+        webSocket.sendPing(ByteBuffer.wrap(frameData)).await()
+    }
+
+    override suspend fun sendPong(frameData: ByteArray) {
+        webSocket.sendPong(ByteBuffer.wrap(frameData)).await()
     }
 
     override suspend fun close(code: Int, reason: String?) {

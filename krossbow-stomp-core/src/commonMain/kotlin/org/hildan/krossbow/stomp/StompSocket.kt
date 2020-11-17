@@ -81,7 +81,7 @@ internal class StompSocket(
         if (wsFrame.isHeartBeat()) {
             return // not an actual STOMP frame
         }
-        val f = decodeFrame(wsFrame)
+        val f = decodeFrame(wsFrame) ?: return // ping/pong frame
         config.instrumentation?.onFrameDecoded(wsFrame, f)
         if (f is StompFrame.Error) {
             throw StompErrorFrameReceived(f)
@@ -92,9 +92,10 @@ internal class StompSocket(
         stompFramesChannel.send(f)
     }
 
-    private fun decodeFrame(f: WebSocketFrame): StompFrame = when (f) {
+    private fun decodeFrame(f: WebSocketFrame): StompFrame? = when (f) {
         is WebSocketFrame.Text -> StompDecoder.decode(f.text)
         is WebSocketFrame.Binary -> StompDecoder.decode(f.bytes)
+        is WebSocketFrame.Ping, is WebSocketFrame.Pong -> null
         is WebSocketFrame.Close -> throw WebSocketClosedUnexpectedly(f.code, f.reason)
     }
 
