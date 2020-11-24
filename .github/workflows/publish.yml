@@ -1,8 +1,9 @@
 name: Publish version
 
 on:
-  push:
-    tags: [ '*' ]
+  release:
+    types:
+      - created
 
 jobs:
   publish:
@@ -38,4 +39,4 @@ jobs:
           BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
           OSSRH_USER_TOKEN: ${{ secrets.OSSRH_USER_TOKEN }}
           OSSRH_KEY: ${{ secrets.OSSRH_KEY }}
-        run: ./gradlew bintrayUpload
+        run: ./gradlew -Pversion=${{ github.event.release.tag_name }} bintrayUpload
