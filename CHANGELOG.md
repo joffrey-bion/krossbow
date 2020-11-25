@@ -1,5 +1,14 @@
 # Change Log
 
+## [1.1.1](https://github.com/joffrey-bion/krossbow/tree/1.1.1) (2020-11-25)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.0...1.1.1)
+
+**Implemented enhancements:**
+
+- Upgrade to Kotlinx Serialization 1.0.1 [\#85](https://github.com/joffrey-bion/krossbow/issues/85)
+- Support PING/PONG web socket frames for engines that support it [\#84](https://github.com/joffrey-bion/krossbow/issues/84)
+- Add configurable web socket frame buffer [\#83](https://github.com/joffrey-bion/krossbow/issues/83)
+
 ## [1.1.0](https://github.com/joffrey-bion/krossbow/tree/1.1.0) (2020-11-13)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.0.0...1.1.0)
 
@@ -47,7 +56,7 @@
 
 - Add adapter for Ktor's websocket implementation [\#69](https://github.com/joffrey-bion/krossbow/issues/69)
 
-## [0.40.0](https://github.com/joffrey-bion/krossbow/tree/0.40.0) (2020-09-13)
+## [0.40.0](https://github.com/joffrey-bion/krossbow/tree/0.40.0) (2020-09-12)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.32.0...0.40.0)
 
 **Implemented enhancements:**
@@ -126,7 +135,7 @@
 
 - Should not send UNSUBSCRIBE frames after DISCONNECT [\#54](https://github.com/joffrey-bion/krossbow/issues/54)
 
-## [0.20.0](https://github.com/joffrey-bion/krossbow/tree/0.20.0) (2020-05-05)
+## [0.20.0](https://github.com/joffrey-bion/krossbow/tree/0.20.0) (2020-05-04)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.12.0...0.20.0)
 
 **Fixed bugs:**
@@ -253,7 +262,7 @@
 
 - Absent payloads API is not public [\#17](https://github.com/joffrey-bion/krossbow/issues/17)
 
-## [0.3.0](https://github.com/joffrey-bion/krossbow/tree/0.3.0) (2019-07-07)
+## [0.3.0](https://github.com/joffrey-bion/krossbow/tree/0.3.0) (2019-07-06)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.2.1...0.3.0)
 
 **Implemented enhancements:**
@@ -272,7 +281,7 @@
 - Publish artifacts to Maven Central [\#12](https://github.com/joffrey-bion/krossbow/issues/12)
 - Allow null payloads in send\(\) [\#8](https://github.com/joffrey-bion/krossbow/issues/8)
 
-## [0.2.0](https://github.com/joffrey-bion/krossbow/tree/0.2.0) (2019-07-06)
+## [0.2.0](https://github.com/joffrey-bion/krossbow/tree/0.2.0) (2019-07-05)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.1.2...0.2.0)
 
 **Implemented enhancements:**
@@ -281,7 +290,7 @@
 - Make connect\(\) function actually non\-blocking by avoiding get\(\) [\#9](https://github.com/joffrey-bion/krossbow/issues/9)
 - Make send\(\) function actually suspend until RECEIPT is received [\#7](https://github.com/joffrey-bion/krossbow/issues/7)
 
-## [0.1.2](https://github.com/joffrey-bion/krossbow/tree/0.1.2) (2019-07-02)
+## [0.1.2](https://github.com/joffrey-bion/krossbow/tree/0.1.2) (2019-07-01)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.1.1...0.1.2)
 
 **Implemented enhancements:**
