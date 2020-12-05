@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.1.2](https://github.com/joffrey-bion/krossbow/tree/1.1.2) (2020-12-05)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.1...1.1.2)
+
+**Fixed bugs:**
+
+- Invalid STOMP frame error for UTF\-8 body [\#86](https://github.com/joffrey-bion/krossbow/issues/86)
+
 ## [1.1.1](https://github.com/joffrey-bion/krossbow/tree/1.1.1) (2020-11-25)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.0...1.1.1)
 
