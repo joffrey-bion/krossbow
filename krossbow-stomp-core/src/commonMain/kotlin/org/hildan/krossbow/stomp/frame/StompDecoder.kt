@@ -1,13 +1,6 @@
 package org.hildan.krossbow.stomp.frame
 
-import kotlinx.io.core.ByteReadPacket
-import kotlinx.io.core.Input
-import kotlinx.io.core.buildPacket
-import kotlinx.io.core.readBytes
-import kotlinx.io.core.readText
-import kotlinx.io.core.readUTF8Line
-import kotlinx.io.core.readUntilDelimiter
-import kotlinx.io.core.use
+import kotlinx.io.core.*
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 import org.hildan.krossbow.stomp.headers.StompHeaders
 import org.hildan.krossbow.stomp.headers.asStompHeaders
@@ -18,9 +11,10 @@ internal object StompDecoder {
 
     private val MAX_COMMAND_LENGTH = StompCommand.values().map { it.text.length }.maxOrNull()!!
 
-    fun decode(frameBytes: ByteArray): StompFrame = ByteReadPacket(frameBytes).use { it.readStompFrame(true) }
+    fun decode(frameBytes: ByteArray, binary: Boolean = true): StompFrame =
+        ByteReadPacket(frameBytes).use { it.readStompFrame(binary) }
 
-    fun decode(frameText: CharSequence): StompFrame = buildPacket { append(frameText) }.use { it.readStompFrame(false) }
+    fun decode(frameText: CharSequence): StompFrame = decode(frameText.toString().encodeToByteArray(), binary = false)
 
     private fun Input.readStompFrame(isBinary: Boolean): StompFrame {
         try {

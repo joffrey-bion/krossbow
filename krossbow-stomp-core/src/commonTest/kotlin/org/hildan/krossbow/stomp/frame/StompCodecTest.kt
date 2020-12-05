@@ -252,6 +252,58 @@ class StompCodecTest {
         assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
+    @Test
+    fun message_bodyUtf8_withContentLength() {
+        val frameText = """
+            MESSAGE
+            destination:/topic/dest
+            message-id:456
+            subscription:123
+            content-length:2
+            
+            é$nullChar
+        """.trimIndent()
+
+        val headers = StompMessageHeaders(
+            destination = "/topic/dest",
+            messageId = "456",
+            subscription = "123",
+        ).apply {
+            contentLength = 2
+        }
+        val bodyText = "é"
+        val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        assertEncodingDecoding(frameText, textFrame, binFrame)
+    }
+
+    @Test
+    fun message_bodyUtf8Json_withContentLength() {
+        val frameText = """
+            MESSAGE
+            destination:/topic/dest
+            message-id:456
+            subscription:123
+            content-length:13
+            content-type:application/json
+            
+            {"test":"é"}$nullChar
+        """.trimIndent()
+
+        val headers = StompMessageHeaders(
+            destination = "/topic/dest",
+            messageId = "456",
+            subscription = "123",
+        ).apply {
+            contentLength = 13
+            contentType = "application/json"
+        }
+        val bodyText = """{"test":"é"}"""
+        val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        assertEncodingDecoding(frameText, textFrame, binFrame)
+    }
+
     private fun assertEncodingDecoding(frameText: String, textFrame: StompFrame, binFrame: StompFrame) {
         assertEquals(textFrame, StompDecoder.decode(frameText))
         assertEquals(binFrame, StompDecoder.decode(frameText.encodeToByteArray()))
