@@ -18,8 +18,8 @@ dependencies {
     // Low-level implementation required by Spring's client
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.17")
 
-    implementation(kotlin("test"))
-    implementation(kotlin("test-junit"))
+    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit"))
     testImplementation(project(":krossbow-websocket-test"))
 }
 
