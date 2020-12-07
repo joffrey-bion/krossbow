@@ -1,4 +1,5 @@
 import org.hildan.github.changelog.builder.DEFAULT_EXCLUDED_LABELS
+import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
 
 plugins {
     val kotlinVersion = "1.5.21"
@@ -13,6 +14,13 @@ plugins {
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
+    id("com.avast.gradle.docker-compose") version "0.14.9"
+}
+
+// autobahn test server for websocket tests
+dockerCompose {
+    useComposeFiles.set(listOf(file("$rootDir/autobahn/docker-compose.yml").toString()))
+    buildBeforeUp.set(false)
 }
 
 allprojects {
@@ -30,6 +38,14 @@ allprojects {
         tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
             dokkaSourceSets.findByName("jsMain")?.suppress?.set(true)
             dokkaSourceSets.findByName("jsTest")?.suppress?.set(true)
+        }
+
+        // ensure autobahn test server is launched for websocket tests
+        tasks.withType<AbstractTestTask>().configureEach {
+            rootProject.dockerCompose.isRequiredBy(this)
+        }
+        tasks.withType<KotlinJvmTest>().configureEach {
+            rootProject.dockerCompose.exposeAsEnvironment(this)
         }
     }
 }

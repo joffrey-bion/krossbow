@@ -10,6 +10,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${libs.versions.coroutines}")
 
     api("com.squareup.okhttp3:okhttp:4.9.0")
+
+    testImplementation(projects.krossbowWebsocketTest)
+    testImplementation(kotlin("test"))
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

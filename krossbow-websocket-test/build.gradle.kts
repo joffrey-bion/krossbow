@@ -1,8 +1,11 @@
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization")
 }
 
 description = "Test utilities for Krossbow WebSocket adapter implementations."
+
+val serializationVersion = "1.2.0"
 
 kotlin {
     jvm()
@@ -21,6 +24,8 @@ kotlin {
             dependencies {
                 api(project(":krossbow-websocket-core"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))

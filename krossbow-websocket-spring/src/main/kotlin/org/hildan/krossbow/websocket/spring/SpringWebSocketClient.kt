@@ -1,6 +1,7 @@
 package org.hildan.krossbow.websocket.spring
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch

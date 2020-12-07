@@ -10,6 +10,10 @@ import kotlinx.coroutines.withTimeout
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 
+actual fun getDefaultAutobahnTestServerHost(): String? = System.getenv("AUTOBAHN_SERVER_HOST")
+
+actual fun getDefaultAutobahnTestServerPort(): Int? = System.getenv("AUTOBAHN_SERVER_TCP_9001")?.toInt()
+
 actual fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit) = runBlocking { block() }
 
 internal actual suspend fun runAlongEchoWSServer(block: suspend (port: Int) -> Unit) {
