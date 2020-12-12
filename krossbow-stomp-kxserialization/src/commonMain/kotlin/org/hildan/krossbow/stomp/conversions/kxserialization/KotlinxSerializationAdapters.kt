@@ -19,7 +19,7 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
  * The STOMP frames sent by the returned session have a binary body (of type [FrameBody.Binary]).
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType].
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun StompSession.withBinaryConversions(format: BinaryFormat, mediaType: String): StompSessionWithKxSerialization =
     StompSessionWithBinaryConversions(this, format, mediaType)
 
@@ -30,7 +30,7 @@ fun StompSession.withBinaryConversions(format: BinaryFormat, mediaType: String):
  * The STOMP frames sent by the returned session have a textual body (of type [FrameBody.Text]).
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType].
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun StompSession.withTextConversions(format: StringFormat, mediaType: String): StompSessionWithKxSerialization =
     StompSessionWithTextConversions(this, format, mediaType)
 
@@ -41,7 +41,7 @@ fun StompSession.withTextConversions(format: StringFormat, mediaType: String): S
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType] (defaulting to
  * "application/json;charset=utf-8").
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun StompSession.withJsonConversions(
     json: Json = Json {},
     mediaType: String = "application/json;charset=utf-8",
@@ -91,7 +91,7 @@ private abstract class BaseStompSessionWithConversions(
     ): T?
 }
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 private class StompSessionWithBinaryConversions(
     session: StompSession,
     val format: BinaryFormat,
@@ -105,7 +105,7 @@ private class StompSessionWithBinaryConversions(
         frame.body?.bytes?.let { format.decodeFromByteArray(deserializer, it) }
 }
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 private class StompSessionWithTextConversions(
     session: StompSession,
     val format: StringFormat,
