@@ -30,5 +30,6 @@ Artifacts used:
 - [ ] `krossbow-websocket-sockjs`
 - [ ] `krossbow-websocket-spring`
 - [ ] `krossbow-websocket-okhttp`
+- [ ] `krossbow-websocket-ktor`
 
 If you can, please provide a bit of context about what you were trying to achieve (it helps to have use cases in mind when fixing the problem or adding new features).
