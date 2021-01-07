@@ -6,7 +6,7 @@ Different web socket implementations can be used in Krossbow as long as they mat
 
 This core module already adapts some built-in implementations on each platform to this common interface:
 
-- JS: the browser's native [`WebSocket` API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
+- JS: the browser's native [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
 - JVM: the built-in JDK11 asynchronous
 [`java.net.http.WebSocket`](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/WebSocket.html) 
 

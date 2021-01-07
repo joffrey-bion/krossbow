@@ -43,23 +43,29 @@ Additional features:
 
 If you find a bug or a feature that's missing compared to the specification, please open an issue.
 
-## Project structure
+## Modules
  
 This project contains the following modules:
-- `krossbow-stomp-core`: the multiplatform STOMP client to use as a STOMP library in common, JVM or JS projects. It
- implements the STOMP 1.2 protocol on top of a websocket API defined by the `krossbow-websocket-core` module.
-- `krossbow-stomp-jackson`: a superset of `krossbow-stomp-core` adding JSON conversion features using Jackson (JVM only)
-- `krossbow-stomp-kxserialization`: a superset of `krossbow-stomp-core` adding conversion features using Kotlinx
- Serialization library (multiplatform)
-- `krossbow-websocket-core`: a common WebSocket API that the STOMP client relies on, to enable the use of custom
- WebSocket clients. This also provides a default JS client implementations using the Browser's native WebSocket, and
-  a JVM 11+ implementation using the async WebSocket API.
-- `krossbow-websocket-ktor`: a multiplatform `WebSocketClient` implementation based on Ktor's `HttpClient`.
-- `krossbow-websocket-sockjs`: a multiplatform `WebSocketClient` implementation for use with SockJS servers. It uses
- Spring's SockJSClient on JVM, and npm `sockjs-client` for JavaScript (NodeJS and browser).
-- `krossbow-websocket-spring`: a JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides
- both a normal WebSocket client and a SockJS one.
-- `krossbow-websocket-okhttp`: a JVM implementation of the web socket API using OkHttp's WebSocketClient.
+- [`krossbow-stomp-core`](./krossbow-stomp-core): the multiplatform STOMP client to use as a STOMP library in common, 
+  JVM or JS projects.
+  It implements the STOMP 1.2 protocol on top of a websocket API defined by the `krossbow-websocket-core` module.
+- [`krossbow-stomp-jackson`](./krossbow-stomp-jackson): a superset of `krossbow-stomp-core` adding JSON conversion 
+  features using Jackson (JVM only)
+- [`krossbow-stomp-kxserialization`](./krossbow-stomp-kxserialization): a superset of `krossbow-stomp-core` adding 
+  conversion features using Kotlinx Serialization library (multiplatform)
+- [`krossbow-websocket-core`](./krossbow-websocket-core): a common WebSocket API that the STOMP client relies on, to 
+  enable the use of custom WebSocket clients.
+  This also provides a default JS client implementations using the Browser's native WebSocket, and a JVM 11+
+  implementation using the async WebSocket API.
+- [`krossbow-websocket-ktor`](./krossbow-websocket-ktor): a multiplatform `WebSocketClient` implementation based on 
+  Ktor's `HttpClient`.
+- [`krossbow-websocket-okhttp`](./krossbow-websocket-okhttp): a JVM implementation of the web socket API using OkHttp's
+  WebSocketClient.
+- [`krossbow-websocket-sockjs`](./krossbow-websocket-sockjs): a multiplatform `WebSocketClient` implementation for use 
+  with SockJS servers.
+  It uses Spring's SockJSClient on JVM, and npm `sockjs-client` for JavaScript (NodeJS and browser).
+- [`krossbow-websocket-spring`](./krossbow-websocket-spring): a JVM 8+ implementation of the web socket API using 
+  Spring's WebSocketClient. Provides both a normal WebSocket client and a SockJS one.
 
 ## STOMP Usage
 
@@ -91,8 +97,8 @@ collectorJob.cancel()
 session.disconnect()
 ```
 
-If you want to disconnect automatically in case of exception or normal termination, you can use a `try`/`finally` block,
-or use `StompSession.use()`, which is similar to `Closeable.use()`:
+If you want to disconnect automatically in case of exception or normal termination, you can use 
+a `try`/`finally` block, or use `StompSession.use()`, which is similar to `Closeable.use()`:
 
 ```kotlin
 import kotlinx.coroutines.flow.*
@@ -115,15 +121,13 @@ session.use { // this: StompSession
 
 ### Using body conversions
 
-You can use STOMP with basic text as frame bodies, but it really becomes interesting when you can convert the frame
-bodies back and forth into Kotlin objects.
+You can use STOMP with basic text as frame bodies, but it really becomes interesting when you can
+convert the frame bodies back and forth into Kotlin objects.
 
 #### Using Kotlinx Serialization conversions
 
 Krossbow comes with built-in support for Kotlinx Serialization in order to support multiplatform conversions.
-
-You will need to use the `krossbow-stomp-kxserialization` module to add these capabilities (you don't need the core
-module anymore as it is transitively brought by this one).
+This is provided by [the `krossbow-stomp-kxserialization` module](./krossbow-stomp-kxserialization/README.md).
 
 Call `withJsonConversions` to add JSON conversions capabilities to your `StompSession`.
 Then, use `convertAndSend` and `subscribe` overloads with serializers to use these conversions:
@@ -152,18 +156,13 @@ jsonStompSession.use {
 }
 ```
 
-Note that `withJsonConversions()` takes an optional `Json` argument to customize the serialization configuration.
-
-You can also use the more general `withTextConversions()` and `withBinaryConversions()` methods with the various
-serialization formats provided by Kotlinx Serialization.
+More info in the [`krossbow-stomp-kxserialization` module's README](./krossbow-stomp-kxserialization/README.md).
 
 #### Using Jackson conversions (JVM only)
 
-If you're only targeting the JVM, you can use Jackson instead of Kotlinx Serialization to use reflection instead of
- manually provided serializers.
- 
-You will need to use the `krossbow-stomp-jackson` module to add these capabilities (you don't need the core
- module anymore as it is transitively brought by this one).
+If you're only targeting the JVM, you can use Jackson instead of Kotlinx Serialization to use 
+reflection instead of manually provided serializers.
+This is provided by [the `krossbow-stomp-jackson` module](./krossbow-stomp-jackson/README.md).
 
 ```kotlin
 StompClient().connect(url).withJacksonConversions().use {
@@ -178,11 +177,12 @@ StompClient().connect(url).withJacksonConversions().use {
 
 #### Using custom text conversions
 
-If you want to use your own text conversion, you can implement `TextMessageConverter` without any additional module
-, and use `withTextConversions` to wrap your `StompSession` into a `StompSessionWithClassToTextConversions`.
+If you want to use your own text conversion, you can implement `TextMessageConverter` without 
+any additional module, and use `withTextConversions` to wrap your `StompSession` into a 
+`StompSessionWithClassToTextConversions`.
 
-**Warning:** reflection-based conversions are very likely to behave poorly on the JS platform. It is usually safer to
- rely on Kotlinx Serialization for multiplatform conversions.
+**Warning:** reflection-based conversions are very likely to behave poorly on the JS platform.
+It is usually safer to rely on Kotlinx Serialization for multiplatform conversions.
 
 ```kotlin
 val myConverter = object : TextMessageConverter {
@@ -214,8 +214,8 @@ This library was built using Kotlin 1.3 up to version 0.21.1.
 
 ### Picking a web socket implementation
 
-The `krossbow-websocket-core` artifact defines a general web socket API, and provides basic JS/JVM implementations
- without third-party dependencies.
+The `krossbow-websocket-core` artifact defines a general web socket API, and provides 
+basic JS/JVM implementations without third-party dependencies.
 Other artifacts provide more implementations supporting more platforms by depending on third party libraries:
 
 | Artifact                    |           Browser          |           NodeJS           |                JVM8+ (blocking)               |   JVM11+ (async)   | Dependencies |
@@ -234,32 +234,26 @@ Other artifacts provide more implementations supporting more platforms by depend
 
 ### Adding the dependency
 
-All the modules are currently published to Bintray JCenter.
+All the modules are currently published to Bintray **JCenter**.
 They are not available on Maven Central yet because of Javadoc generation issues/Dokka misconfiguration.
-They are not yet available on npm yet.
+They are not available on npm.
 
 If you are using STOMP and have no special requirements for the web socket implementation, `krossbow-websocket-core` 
 doesn't need to be explicitly declared as dependency because it is transitively pulled by all `krossbow-stomp-xxx` 
-artifacts.
-
-Using Gradle for a single platform project, add the relevant artifact (with platform suffix):
-
-```kotlin
-// jvm project
-implementation("org.hildan.krossbow:krossbow-stomp-core-jvm:$krossbowVersion")
-
-// js project
-implementation("org.hildan.krossbow:krossbow-stomp-core-js:$krossbowVersion")
-```
-
-Using Gradle for a multi-platform project, since Kotlin 1.4 (and Krossbow version 0.30.0), you don't need to use the
-`metadata` artifact, nor do you need to declare all platform-dependent artifacts.
-Just add the non-suffixed version of the artifact to your `commonMain` source set:
+artifacts. 
+The simplest dependency declaration is therefore the following:
 
 ```kotlin
-// multiplatform project (commonMain source set)
 implementation("org.hildan.krossbow:krossbow-stomp-core:$krossbowVersion")
 ```
+
+If you need additional modules, have a look at the README of the relevant module for dependency information.
+
+#### Multiplatform
+
+Since Kotlin 1.4 (and Krossbow version 0.30.0), you don't need to use the
+`metadata` artifact, nor do you need to declare all platform-specific artifacts.
+Just add the non-suffixed version of the artifact to your `commonMain` source set.
 
 ## Contribute
 

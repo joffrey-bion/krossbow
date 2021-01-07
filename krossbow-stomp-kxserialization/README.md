@@ -12,7 +12,9 @@ The main additions that this module brings are the extension functions:
 which turn your `StompSession` into a `StompSessionWithKxSerialization`.
 
 This new session type has additional methods that use Kotlinx Serialization's serializers to serialize/deserialize your
-objects using the format of your choice (JSON, protobuf, etc.):
+objects using the format of your choice (JSON, protobuf, etc.).
+
+You can for instance use `convertAndSend` and `subscribe` overloads with serializers like this:
 
 ```kotlin
 import org.hildan.krossbow.stomp.*
@@ -44,18 +46,21 @@ You will need to declare the `krossbow-stomp-kxserialization` module dependency 
 need the core module anymore as it is transitively brought by this one):
 
 ```
-// for a common module in a multiplatform project (no need to declare anything in JVM or JS source sets)
 implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:$krossbowVersion")
-
-// for a JVM dependency in a JVM or Android project
-implementation("org.hildan.krossbow:krossbow-stomp-kxserialization-jvm:$krossbowVersion")
-
-// for a JS dependency in a JS project
-implementation("org.hildan.krossbow:krossbow-stomp-kxserialization-js:$krossbowVersion")
 ```
+
+### Peer dependencies
 
 To avoid adding unnecessary runtime dependencies on consumers of Krossbow, `kotlinx-serialization-json` is not
  transitively brought by `krossbow-stomp-serialization` (since Krossbow 0.42.0, using Kotlinx Serialization 1.0.0-RC2).
  
 You need to add yourself the relevant Kotlinx Serialization dependency corresponding to the format you want to use.
-In the case of JSON, that would be `kotlinx-serialization-json`.
+In the case of JSON, that would be `kotlinx-serialization-json`:
+
+```
+implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:$krossbowVersion")
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+```
+
+See the [Kotlinx Serialization doc](https://github.com/Kotlin/kotlinx.serialization#dependency-on-the-json-library)
+for more information about this.

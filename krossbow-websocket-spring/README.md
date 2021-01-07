@@ -12,3 +12,11 @@ On top of that, 2 pre-configured clients are provided:
  the JSR-356 (`javax.websocket.*`).
 - `SpringSockJSWebSocketClient`: an implementation using the SockJS protocol (requires a SockJS server), based on
  the standard web socket client, with the ability to fall back to other transports (like `RestTemplateXhrTransport`).
+
+## Dependency
+
+You will need to declare the `krossbow-websocket-spring` module dependency:
+
+```
+implementation("org.hildan.krossbow:krossbow-websocket-spring:$krossbowVersion")
+```
