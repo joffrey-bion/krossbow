@@ -5,7 +5,7 @@ import org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact
 import org.hildan.github.changelog.generator.DEFAULT_EXCLUDED_LABELS
 
 plugins {
-    val kotlinVersion = "1.4.10"
+    val kotlinVersion = "1.4.20"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
