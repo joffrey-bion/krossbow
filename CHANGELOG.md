@@ -1,5 +1,16 @@
 # Change Log
 
+## [1.1.3](https://github.com/joffrey-bion/krossbow/tree/1.1.3) (2021-01-08)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.2...1.1.3)
+
+**Closed issues:**
+
+- Upgrade to Kotlin 1.4.20 [\#89](https://github.com/joffrey-bion/krossbow/issues/89)
+
+**Implemented enhancements:**
+
+- Stop transferring experimental status of Kotlinx Serialization [\#87](https://github.com/joffrey-bion/krossbow/issues/87)
+
 ## [1.1.2](https://github.com/joffrey-bion/krossbow/tree/1.1.2) (2020-12-05)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.1...1.1.2)
 
