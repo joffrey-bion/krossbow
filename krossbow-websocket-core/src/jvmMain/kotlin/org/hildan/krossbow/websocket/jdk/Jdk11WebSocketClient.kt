@@ -1,8 +1,6 @@
 package org.hildan.krossbow.websocket.jdk
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
@@ -12,6 +10,7 @@ import java.net.http.HttpClient
 import java.net.http.WebSocket
 import java.nio.ByteBuffer
 import java.util.concurrent.CompletionStage
+import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -98,26 +97,41 @@ private class Jdk11WebSocketSession(
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : WebSocketSessionWithPingPong {
 
+    // JDK11's WebSocket is not thread safe, so we ensure we send frames from a single thread only
+    private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    private val websocketSendContext = dispatcher + CoroutineName("krossbow-jdk11-websocket-sender")
+
     override val canSend: Boolean
         get() = !webSocket.isOutputClosed
 
     override suspend fun sendText(frameText: String) {
-        webSocket.sendText(frameText, true).await()
+        withContext(websocketSendContext) {
+            webSocket.sendText(frameText, true).await()
+        }
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
-        webSocket.sendBinary(ByteBuffer.wrap(frameData), true).await()
+        withContext(websocketSendContext) {
+            webSocket.sendBinary(ByteBuffer.wrap(frameData), true).await()
+        }
     }
 
     override suspend fun sendPing(frameData: ByteArray) {
-        webSocket.sendPing(ByteBuffer.wrap(frameData)).await()
+        withContext(websocketSendContext) {
+            webSocket.sendPing(ByteBuffer.wrap(frameData)).await()
+        }
     }
 
     override suspend fun sendPong(frameData: ByteArray) {
-        webSocket.sendPong(ByteBuffer.wrap(frameData)).await()
+        withContext(websocketSendContext) {
+            webSocket.sendPong(ByteBuffer.wrap(frameData)).await()
+        }
     }
 
     override suspend fun close(code: Int, reason: String?) {
-        webSocket.sendClose(code, reason ?: "").await()
+        withContext(websocketSendContext) {
+            webSocket.sendClose(code, reason ?: "").await()
+        }
+        dispatcher.close()
     }
 }

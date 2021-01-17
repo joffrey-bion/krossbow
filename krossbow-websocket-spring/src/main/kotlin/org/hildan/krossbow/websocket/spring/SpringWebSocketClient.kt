@@ -1,12 +1,8 @@
 package org.hildan.krossbow.websocket.spring
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.await
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketSessionWithPingPong
@@ -88,7 +84,9 @@ private class SpringToKrossbowSessionAdapter(
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : WebSocketSessionWithPingPong {
 
+    // Spring's web socket is not thread safe, so we ensure we send frames from a single thread only
     private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    private val websocketSendContext = dispatcher + CoroutineName("krossbow-websocket-spring-sender")
 
     override val url: String
         get() = session.uri?.toString()!!
@@ -97,31 +95,31 @@ private class SpringToKrossbowSessionAdapter(
         get() = session.isOpen
 
     override suspend fun sendText(frameText: String) {
-        withContext(dispatcher) {
+        withContext(websocketSendContext) {
             session.sendMessage(TextMessage(frameText, true))
         }
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
-        withContext(dispatcher) {
+        withContext(websocketSendContext) {
             session.sendMessage(BinaryMessage(frameData, true))
         }
     }
 
     override suspend fun sendPing(frameData: ByteArray) {
-        withContext(dispatcher) {
+        withContext(websocketSendContext) {
             session.sendMessage(PingMessage(ByteBuffer.wrap(frameData)))
         }
     }
 
     override suspend fun sendPong(frameData: ByteArray) {
-        withContext(dispatcher) {
+        withContext(websocketSendContext) {
             session.sendMessage(PongMessage(ByteBuffer.wrap(frameData)))
         }
     }
 
     override suspend fun close(code: Int, reason: String?) {
-        withContext(dispatcher) {
+        withContext(websocketSendContext) {
             session.close(CloseStatus(code, reason))
         }
         dispatcher.close()
