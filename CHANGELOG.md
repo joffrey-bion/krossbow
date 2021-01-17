@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.1.4](https://github.com/joffrey-bion/krossbow/tree/1.1.4) (2021-01-17)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.3...1.1.4)
+
+**Fixed bugs:**
+
+- Make JDK11 WebSocket thread safe [\#91](https://github.com/joffrey-bion/krossbow/issues/91)
+
 ## [1.1.3](https://github.com/joffrey-bion/krossbow/tree/1.1.3) (2021-01-08)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.2...1.1.3)
 
