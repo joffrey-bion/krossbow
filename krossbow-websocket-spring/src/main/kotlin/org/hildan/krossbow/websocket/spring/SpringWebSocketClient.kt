@@ -3,6 +3,10 @@ package org.hildan.krossbow.websocket.spring
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.await
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketSessionWithPingPong
@@ -19,7 +23,6 @@ import org.springframework.web.socket.sockjs.client.SockJsClient
 import org.springframework.web.socket.sockjs.client.Transport
 import org.springframework.web.socket.sockjs.client.WebSocketTransport
 import java.nio.ByteBuffer
-import java.util.concurrent.Executors
 import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
 import org.springframework.web.socket.WebSocketSession as SpringWebSocketSession
 import org.springframework.web.socket.client.WebSocketClient as SpringWebSocketClient
@@ -70,7 +73,7 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
         // Source: org.glassfish.tyrus.core.ProtocolHandler.close()
         // This means that if no receiver is listening on the incoming frames channel, onClose() here may suspend
         // forever. That's why we need an asynchronous dispatch of onClose() here.
-        GlobalScope.launch {
+        GlobalScope.launch(CoroutineName("krossbow-websocket-spring-onClose")) {
             channelListener.onClose(closeStatus.code, closeStatus.reason)
         }
     }
@@ -84,9 +87,7 @@ private class SpringToKrossbowSessionAdapter(
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : WebSocketSessionWithPingPong {
 
-    // Spring's web socket is not thread safe, so we ensure we send frames from a single thread only
-    private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-    private val websocketSendContext = dispatcher + CoroutineName("krossbow-websocket-spring-sender")
+    private val mutex = Mutex()
 
     override val url: String
         get() = session.uri?.toString()!!
@@ -95,33 +96,32 @@ private class SpringToKrossbowSessionAdapter(
         get() = session.isOpen
 
     override suspend fun sendText(frameText: String) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             session.sendMessage(TextMessage(frameText, true))
         }
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             session.sendMessage(BinaryMessage(frameData, true))
         }
     }
 
     override suspend fun sendPing(frameData: ByteArray) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             session.sendMessage(PingMessage(ByteBuffer.wrap(frameData)))
         }
     }
 
     override suspend fun sendPong(frameData: ByteArray) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             session.sendMessage(PongMessage(ByteBuffer.wrap(frameData)))
         }
     }
 
     override suspend fun close(code: Int, reason: String?) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             session.close(CloseStatus(code, reason))
         }
-        dispatcher.close()
     }
 }

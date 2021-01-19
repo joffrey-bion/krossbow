@@ -4,13 +4,14 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.hildan.krossbow.websocket.*
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.WebSocket
 import java.nio.ByteBuffer
 import java.util.concurrent.CompletionStage
-import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -97,41 +98,38 @@ private class Jdk11WebSocketSession(
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
 ) : WebSocketSessionWithPingPong {
 
-    // JDK11's WebSocket is not thread safe, so we ensure we send frames from a single thread only
-    private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-    private val websocketSendContext = dispatcher + CoroutineName("krossbow-jdk11-websocket-sender")
+    private val mutex = Mutex()
 
     override val canSend: Boolean
         get() = !webSocket.isOutputClosed
 
     override suspend fun sendText(frameText: String) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             webSocket.sendText(frameText, true).await()
         }
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             webSocket.sendBinary(ByteBuffer.wrap(frameData), true).await()
         }
     }
 
     override suspend fun sendPing(frameData: ByteArray) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             webSocket.sendPing(ByteBuffer.wrap(frameData)).await()
         }
     }
 
     override suspend fun sendPong(frameData: ByteArray) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             webSocket.sendPong(ByteBuffer.wrap(frameData)).await()
         }
     }
 
     override suspend fun close(code: Int, reason: String?) {
-        withContext(websocketSendContext) {
+        mutex.withLock {
             webSocket.sendClose(code, reason ?: "").await()
         }
-        dispatcher.close()
     }
 }
