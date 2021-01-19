@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.1.5](https://github.com/joffrey-bion/krossbow/tree/1.1.5) (2021-01-19)
+[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.4...1.1.5)
+
+**Implemented enhancements:**
+
+- Improve performance of Spring and JDK11 websocket with mutex instead of thread [\#92](https://github.com/joffrey-bion/krossbow/issues/92)
+
 ## [1.1.4](https://github.com/joffrey-bion/krossbow/tree/1.1.4) (2021-01-17)
 [Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.3...1.1.4)
 
