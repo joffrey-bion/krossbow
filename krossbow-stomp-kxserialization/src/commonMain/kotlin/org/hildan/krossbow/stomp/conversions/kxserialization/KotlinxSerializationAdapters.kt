@@ -41,7 +41,6 @@ fun StompSession.withTextConversions(format: StringFormat, mediaType: String): S
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType] (defaulting to
  * "application/json;charset=utf-8").
  */
-@OptIn(ExperimentalSerializationApi::class)
 fun StompSession.withJsonConversions(
     json: Json = Json {},
     mediaType: String = "application/json;charset=utf-8",
