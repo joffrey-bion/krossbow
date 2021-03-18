@@ -5,13 +5,13 @@ import org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact
 import org.hildan.github.changelog.generator.DEFAULT_EXCLUDED_LABELS
 
 plugins {
-    val kotlinVersion = "1.4.20"
+    val kotlinVersion = "1.4.31"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
-    id("org.jetbrains.dokka") version kotlinVersion apply false
+    id("org.jetbrains.dokka") version "1.4.30" apply false
     id("com.jfrog.bintray") version "1.8.5" apply false
     id("org.hildan.github.changelog") version "0.8.0"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.2.3"
