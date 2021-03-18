@@ -2,7 +2,7 @@ import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayExtension.*
 import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 import org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact
-import org.hildan.github.changelog.generator.DEFAULT_EXCLUDED_LABELS
+import org.hildan.github.changelog.builder.DEFAULT_EXCLUDED_LABELS
 
 plugins {
     val kotlinVersion = "1.4.31"
@@ -13,7 +13,7 @@ plugins {
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jetbrains.dokka") version "1.4.30" apply false
     id("com.jfrog.bintray") version "1.8.5" apply false
-    id("org.hildan.github.changelog") version "0.8.0"
+    id("org.hildan.github.changelog") version "1.6.0"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.2.3"
 }
 
