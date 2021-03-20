@@ -1,6 +1,6 @@
 # Krossbow
 
-[![Bintray Download](https://img.shields.io/bintray/v/joffrey-bion/maven/krossbow-stomp-core)](https://bintray.com/joffrey-bion/maven/krossbow-stomp-core/_latestVersion)
+[![Maven central version](https://img.shields.io/maven-central/v/org.hildan.krossbow/krossbow-stomp-core.svg)](http://mvnrepository.com/artifact/org.hildan.krossbow/krossbow-stomp-core)
 [![Github Build](https://img.shields.io/github/workflow/status/joffrey-bion/krossbow/CI%20Build?label=build&logo=github)](https://github.com/joffrey-bion/krossbow/actions?query=workflow%3A%22CI+Build%22)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/joffrey-bion/krossbow/blob/master/LICENSE)
 
@@ -234,9 +234,7 @@ Other artifacts provide more implementations supporting more platforms by depend
 
 ### Adding the dependency
 
-All the modules are currently published to Bintray **JCenter**.
-They are not available on Maven Central yet because of Javadoc generation issues/Dokka misconfiguration.
-They are not available on npm.
+All the modules are published to Maven Central. They are not available on npm.
 
 If you are using STOMP and have no special requirements for the web socket implementation, `krossbow-websocket-core` 
 doesn't need to be explicitly declared as dependency because it is transitively pulled by all `krossbow-stomp-xxx` 
