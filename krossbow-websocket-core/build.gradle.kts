@@ -1,8 +1,5 @@
-// import java.net.URL
-
 plugins {
     kotlin("multiplatform")
-    // id("org.jetbrains.dokka")
 }
 
 description = "WebSocket client API used by the Krossbow STOMP client, with default JS and JVM implementations."

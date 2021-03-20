@@ -23,11 +23,6 @@ dependencies {
     testImplementation(project(":krossbow-websocket-test"))
 }
 
-val dokkaJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaHtml)
-}
-
 val sourcesJar by tasks.creating(Jar::class) {
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
@@ -41,7 +36,6 @@ publishing {
             version = project.version.toString()
 
             from(components["kotlin"])
-            artifact(dokkaJar)
             artifact(sourcesJar)
         }
     }

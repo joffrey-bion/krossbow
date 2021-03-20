@@ -26,6 +26,11 @@ allprojects {
 
     apply(plugin = "org.jetbrains.dokka")
 
+    val dokkaJar by tasks.creating(Jar::class) {
+        archiveClassifier.set("javadoc")
+        from(tasks.findByName("dokkaHtml"))
+    }
+
     afterEvaluate {
         // suppressing Dokka generation for JS because of the annoying ZipException on NPM dependencies
         // https://github.com/Kotlin/dokka/issues/537
@@ -73,6 +78,7 @@ subprojects {
     afterEvaluate {
         val publications = extensions.getByType<PublishingExtension>().publications
         publications.filterIsInstance<MavenPublication>().forEach { pub ->
+            pub.artifact(tasks.findByName("dokkaJar"))
             pub.configurePomForMavenCentral(project)
         }
 
