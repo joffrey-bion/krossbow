@@ -1,21 +1,29 @@
 # Change Log
 
+## [1.2.0](https://github.com/joffrey-bion/krossbow/tree/1.2.0) (2021-03-20)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.1.5...1.2.0)
+
+**Implemented enhancements:**
+
+- Upgrade Kotlinx Serialization to 1.1.0 [\#96](https://github.com/joffrey-bion/krossbow/issues/96)
+- Upgrade Kotlin to 1.4.31 [\#95](https://github.com/joffrey-bion/krossbow/issues/95)
+
 ## [1.1.5](https://github.com/joffrey-bion/krossbow/tree/1.1.5) (2021-01-19)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.4...1.1.5)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.1.4...1.1.5)
 
 **Implemented enhancements:**
 
 - Improve performance of Spring and JDK11 websocket with mutex instead of thread [\#92](https://github.com/joffrey-bion/krossbow/issues/92)
 
 ## [1.1.4](https://github.com/joffrey-bion/krossbow/tree/1.1.4) (2021-01-17)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.3...1.1.4)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.1.3...1.1.4)
 
 **Fixed bugs:**
 
 - Make JDK11 WebSocket thread safe [\#91](https://github.com/joffrey-bion/krossbow/issues/91)
 
 ## [1.1.3](https://github.com/joffrey-bion/krossbow/tree/1.1.3) (2021-01-08)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.2...1.1.3)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.1.2...1.1.3)
 
 **Closed issues:**
 
@@ -26,14 +34,14 @@
 - Stop transferring experimental status of Kotlinx Serialization [\#87](https://github.com/joffrey-bion/krossbow/issues/87)
 
 ## [1.1.2](https://github.com/joffrey-bion/krossbow/tree/1.1.2) (2020-12-05)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.1...1.1.2)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.1.1...1.1.2)
 
 **Fixed bugs:**
 
 - Invalid STOMP frame error for UTF\-8 body [\#86](https://github.com/joffrey-bion/krossbow/issues/86)
 
 ## [1.1.1](https://github.com/joffrey-bion/krossbow/tree/1.1.1) (2020-11-25)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.1.0...1.1.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.1.0...1.1.1)
 
 **Implemented enhancements:**
 
@@ -42,7 +50,7 @@
 - Add configurable web socket frame buffer [\#83](https://github.com/joffrey-bion/krossbow/issues/83)
 
 ## [1.1.0](https://github.com/joffrey-bion/krossbow/tree/1.1.0) (2020-11-13)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/1.0.0...1.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.0.0...1.1.0)
 
 **Implemented enhancements:**
 
@@ -50,7 +58,7 @@
 - Add WebSocketSession.stomp\(\) extension [\#81](https://github.com/joffrey-bion/krossbow/issues/81)
 
 ## [1.0.0](https://github.com/joffrey-bion/krossbow/tree/1.0.0) (2020-10-31)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.43.0...1.0.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.43.0...1.0.0)
 
 **Implemented enhancements:**
 
@@ -62,7 +70,7 @@
 - Upgrade coroutines to 1.4.0 [\#75](https://github.com/joffrey-bion/krossbow/issues/75)
 
 ## [0.43.0](https://github.com/joffrey-bion/krossbow/tree/0.43.0) (2020-10-10)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.42.0...0.43.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.42.0...0.43.0)
 
 **Closed issues:**
 
@@ -75,35 +83,35 @@
 - JDK11 websocket adapter doesn't let the received CLOSE frame through [\#71](https://github.com/joffrey-bion/krossbow/issues/71)
 
 ## [0.42.0](https://github.com/joffrey-bion/krossbow/tree/0.42.0) (2020-09-23)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.41.0...0.42.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.41.0...0.42.0)
 
 **Closed issues:**
 
 - Upgrade to Kotlinx Serialization 1.0.0\-RC2 [\#70](https://github.com/joffrey-bion/krossbow/issues/70)
 
 ## [0.41.0](https://github.com/joffrey-bion/krossbow/tree/0.41.0) (2020-09-13)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.40.0...0.41.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.40.0...0.41.0)
 
 **Implemented enhancements:**
 
 - Add adapter for Ktor's websocket implementation [\#69](https://github.com/joffrey-bion/krossbow/issues/69)
 
 ## [0.40.0](https://github.com/joffrey-bion/krossbow/tree/0.40.0) (2020-09-12)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.32.0...0.40.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.32.0...0.40.0)
 
 **Implemented enhancements:**
 
 - Make subscribe methods suspending [\#68](https://github.com/joffrey-bion/krossbow/issues/68)
 
 ## [0.32.0](https://github.com/joffrey-bion/krossbow/tree/0.32.0) (2020-09-07)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.31.0...0.32.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.31.0...0.32.0)
 
 **Implemented enhancements:**
 
 - Add instrumentation option to monitor/log/debug internal events [\#67](https://github.com/joffrey-bion/krossbow/issues/67)
 
 ## [0.31.0](https://github.com/joffrey-bion/krossbow/tree/0.31.0) (2020-09-04)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.30.1...0.31.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.30.1...0.31.0)
 
 **Implemented enhancements:**
 
@@ -114,28 +122,28 @@
 - Add custom headers support to CONNECT frame [\#65](https://github.com/joffrey-bion/krossbow/pull/65) ([@Mostrapotski](https://github.com/Mostrapotski))
 
 ## [0.30.1](https://github.com/joffrey-bion/krossbow/tree/0.30.1) (2020-08-31)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.30.0...0.30.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.30.0...0.30.1)
 
 **Fixed bugs:**
 
 - Gradle metadata not published correctly [\#63](https://github.com/joffrey-bion/krossbow/issues/63)
 
 ## [0.30.0](https://github.com/joffrey-bion/krossbow/tree/0.30.0) (2020-08-30)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.21.1...0.30.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.21.1...0.30.0)
 
 **Closed issues:**
 
 - Migrate to Kotlin 1.4 & Serialization 1.0.0\-RC [\#62](https://github.com/joffrey-bion/krossbow/issues/62)
 
 ## [0.21.1](https://github.com/joffrey-bion/krossbow/tree/0.21.1) (2020-06-02)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.21.0...0.21.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.21.0...0.21.1)
 
 **Fixed bugs:**
 
 - Incorrect heart beats periods [\#60](https://github.com/joffrey-bion/krossbow/issues/60)
 
 ## [0.21.0](https://github.com/joffrey-bion/krossbow/tree/0.21.0) (2020-06-02)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.3...0.21.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.20.3...0.21.0)
 
 **Fixed bugs:**
 
@@ -146,14 +154,14 @@
 - Make the heartbeats margins configurable [\#59](https://github.com/joffrey-bion/krossbow/issues/59)
 
 ## [0.20.3](https://github.com/joffrey-bion/krossbow/tree/0.20.3) (2020-05-15)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.2...0.20.3)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.20.2...0.20.3)
 
 **Fixed bugs:**
 
 - Web socket close\(\) attempted on closed socket [\#57](https://github.com/joffrey-bion/krossbow/issues/57)
 
 ## [0.20.2](https://github.com/joffrey-bion/krossbow/tree/0.20.2) (2020-05-15)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.1...0.20.2)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.20.1...0.20.2)
 
 **Fixed bugs:**
 
@@ -161,14 +169,14 @@
 - Spring web socket adapter is not thread safe [\#55](https://github.com/joffrey-bion/krossbow/issues/55)
 
 ## [0.20.1](https://github.com/joffrey-bion/krossbow/tree/0.20.1) (2020-05-10)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.20.0...0.20.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.20.0...0.20.1)
 
 **Fixed bugs:**
 
 - Should not send UNSUBSCRIBE frames after DISCONNECT [\#54](https://github.com/joffrey-bion/krossbow/issues/54)
 
 ## [0.20.0](https://github.com/joffrey-bion/krossbow/tree/0.20.0) (2020-05-04)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.12.0...0.20.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.12.0...0.20.0)
 
 **Fixed bugs:**
 
@@ -180,7 +188,7 @@
 - Add base adapters to support all Kotlinx Serialization formats [\#52](https://github.com/joffrey-bion/krossbow/issues/52)
 
 ## [0.12.0](https://github.com/joffrey-bion/krossbow/tree/0.12.0) (2020-04-24)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.11.1...0.12.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.11.1...0.12.0)
 
 **Fixed bugs:**
 
@@ -193,7 +201,7 @@
 - Add support for ACK/NACK frames [\#44](https://github.com/joffrey-bion/krossbow/issues/44)
 
 ## [0.11.1](https://github.com/joffrey-bion/krossbow/tree/0.11.1) (2020-04-15)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.11.0...0.11.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.11.0...0.11.1)
 
 **Fixed bugs:**
 
@@ -202,7 +210,7 @@
 - Race condition issues with Jdk11 partial frames [\#42](https://github.com/joffrey-bion/krossbow/issues/42)
 
 ## [0.11.0](https://github.com/joffrey-bion/krossbow/tree/0.11.0) (2020-04-12)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.3...0.11.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.10.3...0.11.0)
 
 **Implemented enhancements:**
 
@@ -211,7 +219,7 @@
 - Add support for websocket frame splitting in common code [\#36](https://github.com/joffrey-bion/krossbow/issues/36)
 
 ## [0.10.3](https://github.com/joffrey-bion/krossbow/tree/0.10.3) (2020-03-27)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.2...0.10.3)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.10.2...0.10.3)
 
 **Implemented enhancements:**
 
@@ -219,7 +227,7 @@
 - Upgrade Jackson to 2.10.0 [\#38](https://github.com/joffrey-bion/krossbow/issues/38)
 
 ## [0.10.2](https://github.com/joffrey-bion/krossbow/tree/0.10.2) (2020-03-19)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.1...0.10.2)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.10.1...0.10.2)
 
 **Implemented enhancements:**
 
@@ -229,7 +237,7 @@
 - Add JDK11 async WebSocket bridge [\#27](https://github.com/joffrey-bion/krossbow/issues/27)
 
 ## [0.10.1](https://github.com/joffrey-bion/krossbow/tree/0.10.1) (2020-03-12)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.10.0...0.10.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.10.0...0.10.1)
 
 **Fixed bugs:**
 
@@ -242,7 +250,7 @@
 - Improve error handling [\#26](https://github.com/joffrey-bion/krossbow/issues/26)
 
 ## [0.10.0](https://github.com/joffrey-bion/krossbow/tree/0.10.0) (2020-03-09)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.4.2...0.10.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.4.2...0.10.0)
 
 **Implemented enhancements:**
 
@@ -251,14 +259,14 @@
 - Implement pure Kotlin STOMP protocol in common code [\#5](https://github.com/joffrey-bion/krossbow/issues/5)
 
 ## [0.4.2](https://github.com/joffrey-bion/krossbow/tree/0.4.2) (2020-01-23)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.4.1...0.4.2)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.4.1...0.4.2)
 
 **Implemented enhancements:**
 
 - Expose Kotlinx.Serialization dependency [\#25](https://github.com/joffrey-bion/krossbow/issues/25)
 
 ## [0.4.1](https://github.com/joffrey-bion/krossbow/tree/0.4.1) (2019-12-31)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.4.0...0.4.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.4.0...0.4.1)
 
 **Fixed bugs:**
 
@@ -266,7 +274,7 @@
 - Ambiguous send\(\) overload for no\-payload calls [\#23](https://github.com/joffrey-bion/krossbow/issues/23)
 
 ## [0.4.0](https://github.com/joffrey-bion/krossbow/tree/0.4.0) (2019-12-04)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.3.2...0.4.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.3.2...0.4.0)
 
 **Fixed bugs:**
 
@@ -277,7 +285,7 @@
 - Allow subscriptions for arbitrary/bytes/string payload [\#15](https://github.com/joffrey-bion/krossbow/issues/15)
 
 ## [0.3.2](https://github.com/joffrey-bion/krossbow/tree/0.3.2) (2019-07-12)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.3.1...0.3.2)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.3.1...0.3.2)
 
 **Fixed bugs:**
 
@@ -288,21 +296,21 @@
 - Allow null payloads for Unit type subscriptions [\#18](https://github.com/joffrey-bion/krossbow/issues/18)
 
 ## [0.3.1](https://github.com/joffrey-bion/krossbow/tree/0.3.1) (2019-07-07)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.3.0...0.3.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.3.0...0.3.1)
 
 **Fixed bugs:**
 
 - Absent payloads API is not public [\#17](https://github.com/joffrey-bion/krossbow/issues/17)
 
 ## [0.3.0](https://github.com/joffrey-bion/krossbow/tree/0.3.0) (2019-07-06)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.2.1...0.3.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.2.1...0.3.0)
 
 **Implemented enhancements:**
 
 - Allow subscriptions for empty payloads [\#14](https://github.com/joffrey-bion/krossbow/issues/14)
 
 ## [0.2.1](https://github.com/joffrey-bion/krossbow/tree/0.2.1) (2019-07-06)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.2.0...0.2.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.2.0...0.2.1)
 
 **Fixed bugs:**
 
@@ -314,7 +322,7 @@
 - Allow null payloads in send\(\) [\#8](https://github.com/joffrey-bion/krossbow/issues/8)
 
 ## [0.2.0](https://github.com/joffrey-bion/krossbow/tree/0.2.0) (2019-07-05)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.1.2...0.2.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.1.2...0.2.0)
 
 **Implemented enhancements:**
 
@@ -323,20 +331,21 @@
 - Make send\(\) function actually suspend until RECEIPT is received [\#7](https://github.com/joffrey-bion/krossbow/issues/7)
 
 ## [0.1.2](https://github.com/joffrey-bion/krossbow/tree/0.1.2) (2019-07-01)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.1.1...0.1.2)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.1.1...0.1.2)
 
 **Implemented enhancements:**
 
 - Publish krossbow\-engine\-webstompjs artifact on Jcenter [\#10](https://github.com/joffrey-bion/krossbow/issues/10)
 
 ## [0.1.1](https://github.com/joffrey-bion/krossbow/tree/0.1.1) (2019-06-25)
-[Full Changelog](https://github.com/joffrey-bion/krossbow/compare/0.1.0...0.1.1)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.1.0...0.1.1)
 
 **Closed issues:**
 
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/fd4782f452d80f2a63b259cbf6fc6e17427a220e...0.1.0)
 
 **Implemented enhancements:**
 
