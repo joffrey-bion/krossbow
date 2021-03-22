@@ -2,17 +2,16 @@ package org.hildan.krossbow.stomp.conversions
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.io.charsets.Charset
-import kotlinx.io.charsets.Charsets
-import kotlinx.io.charsets.encodeToByteArray
-import kotlinx.io.core.ExperimentalIoApi
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.charsets.Charset
+import org.hildan.krossbow.stomp.charsets.Charsets
+import org.hildan.krossbow.stomp.charsets.encode
+import org.hildan.krossbow.stomp.charsets.extractCharset
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
-import org.hildan.krossbow.utils.extractCharset
 import kotlin.reflect.KClass
 
 /**
@@ -68,9 +67,8 @@ internal class StompSessionWithClassToTextConversions(
         return send(headers, frameBody)
     }
 
-    @OptIn(ExperimentalIoApi::class)
     private fun createBody(bodyText: String): FrameBody = if (sendBinaryFrames) {
-        FrameBody.Binary(charset.newEncoder().encodeToByteArray(bodyText))
+        FrameBody.Binary(charset.newEncoder().encode(bodyText))
     } else {
         FrameBody.Text(bodyText)
     }

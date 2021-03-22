@@ -1,9 +1,9 @@
 package org.hildan.krossbow.stomp.frame
 
-import kotlinx.io.charsets.Charset
-import kotlinx.io.charsets.Charsets
+import org.hildan.krossbow.stomp.charsets.Charset
+import org.hildan.krossbow.stomp.charsets.Charsets
 import org.hildan.krossbow.stomp.headers.*
-import org.hildan.krossbow.utils.extractCharset
+import org.hildan.krossbow.stomp.charsets.extractCharset
 
 /**
  * Represents a STOMP frame. The structure of STOMP frames is

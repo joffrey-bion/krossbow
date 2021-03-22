@@ -1,9 +1,7 @@
 package org.hildan.krossbow.stomp.frame
 
-import kotlinx.io.charsets.Charset
-import kotlinx.io.charsets.decode
-import kotlinx.io.core.ByteReadPacket
-import kotlinx.io.core.ExperimentalIoApi
+import org.hildan.krossbow.stomp.charsets.Charset
+import org.hildan.krossbow.stomp.charsets.decode
 
 /**
  * Represents the body of a [StompFrame].
@@ -35,8 +33,7 @@ sealed class FrameBody {
      */
     data class Binary(override val bytes: ByteArray) : FrameBody() {
 
-        @OptIn(ExperimentalIoApi::class)
-        internal fun decodeAsText(charset: Charset): String = charset.newDecoder().decode(ByteReadPacket(bytes))
+        internal fun decodeAsText(charset: Charset): String = charset.newDecoder().decode(bytes)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
