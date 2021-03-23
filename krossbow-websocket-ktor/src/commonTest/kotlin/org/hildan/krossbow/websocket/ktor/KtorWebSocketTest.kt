@@ -1,7 +1,7 @@
 package org.hildan.krossbow.websocket.ktor
 
 import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketSession
+import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.ktor.test.runSuspendingTest
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -13,10 +13,10 @@ class KtorWebSocketTest {
     @Test
     fun test_krossbow_ktor() = runSuspendingTest {
         val client = KtorWebSocketClient()
-        val session: WebSocketSession = client.connect("ws://echo.websocket.org")
-        session.sendText("hello")
-        val msg = session.incomingFrames.receive()
+        val connection: WebSocketConnection = client.connect("ws://echo.websocket.org")
+        connection.sendText("hello")
+        val msg = connection.incomingFrames.receive()
         assertEquals("hello", (msg as WebSocketFrame.Text).text)
-        session.close()
+        connection.close()
     }
 }

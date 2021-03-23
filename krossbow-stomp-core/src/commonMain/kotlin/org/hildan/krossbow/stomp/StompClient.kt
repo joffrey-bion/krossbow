@@ -5,7 +5,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketSession
+import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.defaultWebSocketClient
 import kotlin.coroutines.coroutineContext
 
@@ -64,7 +64,7 @@ class StompClient(
         return session ?: throw ConnectionTimeout(url, config.connectionTimeoutMillis)
     }
 
-    private suspend fun webSocketConnect(url: String): WebSocketSession {
+    private suspend fun webSocketConnect(url: String): WebSocketConnection {
         try {
             return webSocketClient.connect(url)
         } catch (e: CancellationException) {
@@ -77,7 +77,7 @@ class StompClient(
 }
 
 /**
- * Establishes a STOMP session over an existing [WebSocketSession].
+ * Establishes a STOMP session over an existing [WebSocketConnection].
  *
  * The behaviour of the STOMP protocol can be customized via the [config].
  * However, the semantics of [StompConfig.connectionTimeoutMillis] is slightly changed: it doesn't take into account
@@ -88,7 +88,7 @@ class StompClient(
  * The CONNECT/STOMP frame can be further customized by using [customHeaders], which may be useful for server-specific
  * behaviour, like token-based authentication.
  */
-suspend fun WebSocketSession.stomp(
+suspend fun WebSocketConnection.stomp(
     config: StompConfig,
     host: String = this.host,
     login: String? = null,
@@ -108,7 +108,7 @@ suspend fun WebSocketSession.stomp(
     return session ?: throw ConnectionTimeout(host, config.connectionTimeoutMillis)
 }
 
-internal suspend fun WebSocketSession.stomp(config: StompConfig, headers: StompConnectHeaders): StompSession {
+internal suspend fun WebSocketConnection.stomp(config: StompConfig, headers: StompConnectHeaders): StompSession {
     try {
         val stompSession = BaseStompSession(config, StompSocket(this, config, coroutineContext))
         stompSession.connect(headers)

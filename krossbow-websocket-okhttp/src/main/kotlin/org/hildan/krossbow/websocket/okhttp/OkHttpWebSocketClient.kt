@@ -12,7 +12,7 @@ import okio.ByteString.Companion.toByteString
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
-import org.hildan.krossbow.websocket.WebSocketSession as KrossbowWebSocketSession
+import org.hildan.krossbow.websocket.WebSocketConnection as KrossbowWebSocketSession
 
 class OkHttpWebSocketClient(
     private val client: OkHttpClient = OkHttpClient()
@@ -23,7 +23,7 @@ class OkHttpWebSocketClient(
         val channelListener = WebSocketListenerChannelAdapter()
         val okHttpListener = KrossbowToOkHttpListenerAdapter(channelListener)
         val okWebsocket = withContext(Dispatchers.IO) { client.newWebSocket(request, okHttpListener) }
-        return OkHttpSocketToKrossbowSessionAdapter(okWebsocket, channelListener.incomingFrames)
+        return OkHttpSocketToKrossbowConnectionAdapter(okWebsocket, channelListener.incomingFrames)
     }
 }
 
@@ -48,7 +48,7 @@ private class KrossbowToOkHttpListenerAdapter(
     }
 }
 
-private class OkHttpSocketToKrossbowSessionAdapter(
+private class OkHttpSocketToKrossbowConnectionAdapter(
     private val okSocket: WebSocket,
     framesChannel: ReceiveChannel<WebSocketFrame>
 ) : KrossbowWebSocketSession {

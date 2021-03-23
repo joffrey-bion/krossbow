@@ -13,24 +13,24 @@ import kotlinx.coroutines.flow.produceIn
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketSessionWithPingPong
+import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
 import kotlin.coroutines.EmptyCoroutineContext
 
 class KtorWebSocketClient @OptIn(KtorExperimentalAPI::class) constructor(
     private val httpClient: HttpClient = HttpClient { install(WebSockets) }
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketSessionWithPingPong {
+    override suspend fun connect(url: String): WebSocketConnectionWithPingPong {
         val wsKtorSession = httpClient.webSocketSession {
             this.url.takeFrom(url)
         }
-        return KtorWebSocketSessionAdapter(wsKtorSession)
+        return KtorWebSocketConnectionAdapter(wsKtorSession)
     }
 }
 
-private class KtorWebSocketSessionAdapter(
+private class KtorWebSocketConnectionAdapter(
     private val wsSession: DefaultClientWebSocketSession
-) : WebSocketSessionWithPingPong {
+) : WebSocketConnectionWithPingPong {
 
     private val scope = CoroutineScope(EmptyCoroutineContext + Job() + CoroutineName("krossbow-ktor-ws-frames-mapper"))
 

@@ -11,7 +11,7 @@ import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.test.ImmediatelyFailingWebSocketClient
 import org.hildan.krossbow.test.ImmediatelySucceedingWebSocketClient
 import org.hildan.krossbow.test.ManuallyConnectingWebSocketClient
-import org.hildan.krossbow.test.WebSocketSessionMock
+import org.hildan.krossbow.test.WebSocketConnectionMock
 import org.hildan.krossbow.test.assertTimesOutWith
 import org.hildan.krossbow.test.simulateConnectedFrameReceived
 import org.hildan.krossbow.test.simulateErrorFrameReceived
@@ -37,7 +37,7 @@ class StompClientTest {
         wsClient.waitForConnectCall()
         assertFalse(deferredStompSession.isCompleted, "connect() call should wait for web socket connection")
 
-        val wsSession = WebSocketSessionMock()
+        val wsSession = WebSocketConnectionMock()
         wsClient.simulateSuccessfulConnection(wsSession)
         wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
         assertFalse(deferredStompSession.isCompleted, "connect() call should wait for STOMP connection")
@@ -106,7 +106,7 @@ class StompClientTest {
         connectCall: suspend (StompClient) -> Unit,
     ) {
         coroutineScope {
-            val wsSession = WebSocketSessionMock()
+            val wsSession = WebSocketConnectionMock()
             val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession), configureClient)
 
             launch { connectCall(stompClient) }
@@ -154,7 +154,7 @@ class StompClientTest {
 
     @Test
     fun connect_failsIfErrorFrameReceived() = runBlockingTest {
-        val wsSession = WebSocketSessionMock()
+        val wsSession = WebSocketConnectionMock()
         val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession))
 
         launch {

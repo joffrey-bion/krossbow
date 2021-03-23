@@ -22,7 +22,7 @@ class Jdk11WebSocketClient(
     private val configureWebSocket: WebSocket.Builder.() -> Unit = {}
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketSessionWithPingPong {
+    override suspend fun connect(url: String): WebSocketConnectionWithPingPong {
         try {
             val listener = WebSocketListenerChannelAdapter()
             val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
@@ -30,7 +30,7 @@ class Jdk11WebSocketClient(
                     .apply { configureWebSocket() }
                     .buildAsync(URI(url), jdk11WebSocketListener)
                     .await()
-            return Jdk11WebSocketSession(webSocket, url, listener.incomingFrames)
+            return Jdk11WebSocketConnection(webSocket, url, listener.incomingFrames)
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here
         } catch (e: Exception) {
@@ -90,13 +90,13 @@ private fun ByteBuffer.toByteArray(): ByteArray {
 }
 
 /**
- * An adapter wrapping JDK11's async [WebSocket] as a [WebSocketSession].
+ * An adapter wrapping JDK11's async [WebSocket] as a [WebSocketConnection].
  */
-private class Jdk11WebSocketSession(
+private class Jdk11WebSocketConnection(
     private val webSocket: WebSocket,
     override val url: String,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
-) : WebSocketSessionWithPingPong {
+) : WebSocketConnectionWithPingPong {
 
     private val mutex = Mutex()
 

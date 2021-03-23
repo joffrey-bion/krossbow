@@ -9,13 +9,13 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
 import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketSession
+import org.hildan.krossbow.websocket.WebSocketConnection
 
 suspend fun connectWithMocks(
     connectedHeaders: StompConnectedHeaders = StompConnectedHeaders(),
     configure: StompConfig.() -> Unit = {},
-): Pair<WebSocketSessionMock, StompSession> = coroutineScope {
-    val wsSession = WebSocketSessionMock()
+): Pair<WebSocketConnectionMock, StompSession> = coroutineScope {
+    val wsSession = WebSocketConnectionMock()
     val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession), configure)
     val session = async { stompClient.connect("dummy URL") }
     wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
@@ -25,23 +25,23 @@ suspend fun connectWithMocks(
 }
 
 class ImmediatelySucceedingWebSocketClient(
-    private val session: WebSocketSessionMock = WebSocketSessionMock()
+    private val session: WebSocketConnectionMock = WebSocketConnectionMock()
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketSession = session
+    override suspend fun connect(url: String): WebSocketConnection = session
 }
 
 class ImmediatelyFailingWebSocketClient(private val exception: Throwable) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketSession = throw exception
+    override suspend fun connect(url: String): WebSocketConnection = throw exception
 }
 
 class ManuallyConnectingWebSocketClient : WebSocketClient {
 
     private val connectEventChannel = Channel<Unit>()
-    private val connectedEventChannel = Channel<WebSocketSession>()
+    private val connectedEventChannel = Channel<WebSocketConnection>()
 
-    override suspend fun connect(url: String): WebSocketSession {
+    override suspend fun connect(url: String): WebSocketConnection {
         connectEventChannel.send(Unit)
         return connectedEventChannel.receive()
     }
@@ -50,7 +50,7 @@ class ManuallyConnectingWebSocketClient : WebSocketClient {
         connectEventChannel.receive()
     }
 
-    suspend fun simulateSuccessfulConnection(session: WebSocketSessionMock) {
+    suspend fun simulateSuccessfulConnection(session: WebSocketConnectionMock) {
         connectedEventChannel.send(session)
     }
 }

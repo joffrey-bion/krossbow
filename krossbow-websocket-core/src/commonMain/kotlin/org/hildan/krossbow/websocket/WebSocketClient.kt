@@ -10,8 +10,8 @@ expect fun defaultWebSocketClient(): WebSocketClient
 /**
  * A web socket client.
  *
- * The client is used to connect to the server and create a [WebSocketSession].
- * Then, most of the interactions are done through the [WebSocketSession] until it is [closed][WebSocketSession.close].
+ * The client is used to connect to the server and create a [WebSocketConnection].
+ * Then, most of the interactions are done through the [WebSocketConnection] until it is [closed][WebSocketConnection.close].
  *
  * The same client can be reused to start multiple sessions, unless specified otherwise by the implementation.
  */
@@ -20,13 +20,15 @@ interface WebSocketClient {
     /**
      * Opens a web socket connection and suspends until the connection is OPEN.
      */
-    suspend fun connect(url: String): WebSocketSession
+    suspend fun connect(url: String): WebSocketConnection
 }
 
 /**
- * A session to interact with another endpoint via a web socket.
+ * Represents a web socket connection to another endpoint.
+ *
+ * Implementations must be safe to call concurrently.
  */
-interface WebSocketSession {
+interface WebSocketConnection {
 
     /**
      * The URL that was used to connect this web socket.
@@ -74,7 +76,7 @@ interface WebSocketSession {
     suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
 }
 
-interface WebSocketSessionWithPingPong : WebSocketSession {
+interface WebSocketConnectionWithPingPong : WebSocketConnection {
 
     /**
      * Sends a web socket ping frame.

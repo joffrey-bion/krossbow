@@ -9,12 +9,12 @@ import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
-import org.hildan.krossbow.websocket.WebSocketSession
+import org.hildan.krossbow.websocket.WebSocketConnection
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-class WebSocketSessionMock : WebSocketSession {
+class WebSocketConnectionMock : WebSocketConnection {
 
     override val url: String
         get() = "dummy-url"
@@ -91,15 +91,15 @@ class WebSocketSessionMock : WebSocketSession {
     }
 }
 
-suspend fun WebSocketSessionMock.simulateTextStompFrameReceived(frame: StompFrame) {
+suspend fun WebSocketConnectionMock.simulateTextStompFrameReceived(frame: StompFrame) {
     simulateTextFrameReceived(frame.encodeToText())
 }
 
-suspend fun WebSocketSessionMock.simulateBinaryStompFrameReceived(frame: StompFrame) {
+suspend fun WebSocketConnectionMock.simulateBinaryStompFrameReceived(frame: StompFrame) {
     simulateBinaryFrameReceived(frame.encodeToBytes())
 }
 
-suspend fun WebSocketSessionMock.simulateErrorFrameReceived(errorMessage: String): StompFrame.Error {
+suspend fun WebSocketConnectionMock.simulateErrorFrameReceived(errorMessage: String): StompFrame.Error {
     val errorFrame = StompFrame.Error(StompErrorHeaders(errorMessage), null)
     val result = runCatching {
         simulateTextStompFrameReceived(errorFrame)
@@ -112,7 +112,7 @@ suspend fun WebSocketSessionMock.simulateErrorFrameReceived(errorMessage: String
     return errorFrame
 }
 
-suspend fun WebSocketSessionMock.simulateMessageFrameReceived(
+suspend fun WebSocketConnectionMock.simulateMessageFrameReceived(
     subId: String,
     body: String?,
     destination: String = "/destination",
@@ -124,37 +124,37 @@ suspend fun WebSocketSessionMock.simulateMessageFrameReceived(
     return frame
 }
 
-suspend fun WebSocketSessionMock.simulateConnectedFrameReceived(
+suspend fun WebSocketConnectionMock.simulateConnectedFrameReceived(
     connectedHeaders: StompConnectedHeaders = StompConnectedHeaders()
 ) {
     val connectedFrame = StompFrame.Connected(connectedHeaders)
     simulateTextStompFrameReceived(connectedFrame)
 }
 
-suspend fun WebSocketSessionMock.simulateReceiptFrameReceived(receiptId: String) {
+suspend fun WebSocketConnectionMock.simulateReceiptFrameReceived(receiptId: String) {
     simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders(receiptId)))
 }
 
-suspend fun WebSocketSessionMock.waitForSendAndSimulateCompletion(expectedCommand: StompCommand): StompFrame {
+suspend fun WebSocketConnectionMock.waitForSendAndSimulateCompletion(expectedCommand: StompCommand): StompFrame {
     val frame = waitForSentFrameAndSimulateCompletion()
     assertEquals(expectedCommand, frame.command, "The next sent frame should be a $expectedCommand STOMP frame.")
     return frame
 }
 
-suspend fun WebSocketSessionMock.waitForSubscribeAndSimulateCompletion(): StompFrame.Subscribe {
+suspend fun WebSocketConnectionMock.waitForSubscribeAndSimulateCompletion(): StompFrame.Subscribe {
     val frame = waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
     assertTrue(frame is StompFrame.Subscribe)
     return frame
 }
 
-suspend fun WebSocketSessionMock.waitForUnsubscribeAndSimulateCompletion(expectedSubId: String): StompFrame.Unsubscribe {
+suspend fun WebSocketConnectionMock.waitForUnsubscribeAndSimulateCompletion(expectedSubId: String): StompFrame.Unsubscribe {
     val frame = waitForSendAndSimulateCompletion(StompCommand.UNSUBSCRIBE)
     assertTrue(frame is StompFrame.Unsubscribe)
     assertEquals(expectedSubId, frame.headers.id)
     return frame
 }
 
-suspend fun WebSocketSessionMock.waitForDisconnectAndSimulateCompletion(): StompFrame.Disconnect {
+suspend fun WebSocketConnectionMock.waitForDisconnectAndSimulateCompletion(): StompFrame.Disconnect {
     val frame = waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
     assertTrue(frame is StompFrame.Disconnect)
     return frame

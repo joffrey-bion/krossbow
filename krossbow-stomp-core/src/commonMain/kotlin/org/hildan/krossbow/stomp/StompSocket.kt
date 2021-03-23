@@ -24,7 +24,7 @@ import org.hildan.krossbow.stomp.heartbeats.isHeartBeat
 import org.hildan.krossbow.stomp.heartbeats.sendHeartBeat
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketSession
+import org.hildan.krossbow.websocket.WebSocketConnection
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -35,7 +35,7 @@ import kotlin.coroutines.EmptyCoroutineContext
  */
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 internal class StompSocket(
-    private val webSocketSession: WebSocketSession,
+    private val webSocketConnection: WebSocketConnection,
     private val config: StompConfig,
     coroutineContext: CoroutineContext = EmptyCoroutineContext
 ) {
@@ -60,7 +60,7 @@ internal class StompSocket(
 
     init {
         scope.launch(CoroutineName("stomp-frame-decoder")) {
-            webSocketSession.incomingFrames.consumeAsFlow()
+            webSocketConnection.incomingFrames.consumeAsFlow()
                 .catch { processUpstreamWebsocketException(it) }
                 .onEach { processWebSocketFrame(it) }
                 .catch { close(it) }
@@ -107,7 +107,7 @@ internal class StompSocket(
         heartBeater = HeartBeater(
             heartBeat = negotiatedHeartBeat,
             tolerance = config.heartBeatTolerance,
-            sendHeartBeat = { webSocketSession.sendHeartBeat() },
+            sendHeartBeat = { webSocketConnection.sendHeartBeat() },
             onMissingHeartBeat = { close(MissingHeartBeatException(negotiatedHeartBeat.expectedPeriodMillis)) }
         )
         heartBeater?.startIn(scope)
@@ -115,11 +115,11 @@ internal class StompSocket(
 
     suspend fun sendStompFrame(frame: StompFrame) {
         if (frame.body is FrameBody.Binary) {
-            webSocketSession.sendBinary(frame.encodeToBytes())
+            webSocketConnection.sendBinary(frame.encodeToBytes())
         } else {
             // Frames without body are also sent as text because the headers are always textual.
             // Also, some sockJS implementations don't support binary frames.
-            webSocketSession.sendText(frame.encodeToText())
+            webSocketConnection.sendText(frame.encodeToText())
         }
         heartBeater?.notifyMsgSent()
         config.instrumentation?.onStompFrameSent(frame)
@@ -132,7 +132,7 @@ internal class StompSocket(
         // However, the web socket did not error and we may need to close the output, so we don't discriminate
         // against StompErrorFrameReceived, and close anyway even in this case.
         if (cause !is WebSocketClosedUnexpectedly) {
-            webSocketSession.close(code = closeCodeFor(cause), reason = cause?.message)
+            webSocketConnection.close(code = closeCodeFor(cause), reason = cause?.message)
         }
         // this is reported even if the websocket was closed unexpectedly (it doesn't have to be us closing it)
         config.instrumentation?.onWebSocketClosed(cause)

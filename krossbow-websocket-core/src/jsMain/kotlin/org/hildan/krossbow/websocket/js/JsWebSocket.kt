@@ -8,7 +8,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketConnectionClosedException
 import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketSession
+import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.khronos.webgl.ArrayBuffer
@@ -29,7 +29,7 @@ import kotlin.coroutines.resumeWithException
 object BrowserWebSocketClient : JsWebSocketClientAdapter({ url -> WebSocket(url) })
 
 /**
- * A [WebSocketClient] adapting JavaScript [WebSocket] objects to [WebSocketSession]s.
+ * A [WebSocketClient] adapting JavaScript [WebSocket] objects to [WebSocketConnection]s.
  */
 open class JsWebSocketClientAdapter(
     /**
@@ -38,7 +38,7 @@ open class JsWebSocketClientAdapter(
     private val newWebSocket: (String) -> WebSocket
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketSession {
+    override suspend fun connect(url: String): WebSocketConnection {
         return suspendCancellableCoroutine { cont ->
             try {
                 val ws = newWebSocket(url)
@@ -46,7 +46,7 @@ open class JsWebSocketClientAdapter(
                 var pendingConnect = true
                 // unlimited buffer size because we have no means for backpressure anyway
                 val listener = WebSocketListenerChannelAdapter(bufferSize = Channel.UNLIMITED)
-                val wsSession = JsWebSocketSession(ws, listener.incomingFrames)
+                val wsSession = JsWebSocketConnection(ws, listener.incomingFrames)
                 ws.onopen = {
                     pendingConnect = false
                     cont.resume(wsSession)
@@ -96,12 +96,12 @@ open class JsWebSocketClientAdapter(
 }
 
 /**
- * A adapter wrapping a JavaScript [WebSocket] object as a [WebSocketSession].
+ * A adapter wrapping a JavaScript [WebSocket] object as a [WebSocketConnection].
  */
-private class JsWebSocketSession(
+private class JsWebSocketConnection(
     private val ws: WebSocket,
     override val incomingFrames: ReceiveChannel<WebSocketFrame>
-) : WebSocketSession {
+) : WebSocketConnection {
 
     override val url: String
         get() = ws.url
