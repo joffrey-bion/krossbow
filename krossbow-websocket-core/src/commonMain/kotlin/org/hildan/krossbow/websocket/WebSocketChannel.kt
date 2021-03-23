@@ -49,13 +49,16 @@ class WebSocketListenerChannelAdapter(
     suspend fun onClose(code: Int, reason: String?) {
         frames.send(WebSocketFrame.Close(code, reason))
         frames.close()
+        partialBinaryMessageHandler.close()
     }
 
     fun onError(message: String) {
         frames.close(WebSocketException(message))
+        partialBinaryMessageHandler.close()
     }
 
     fun onError(error: Throwable?) {
         frames.close(WebSocketException(error?.message ?: "web socket error", cause = error))
+        partialBinaryMessageHandler.close()
     }
 }

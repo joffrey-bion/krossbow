@@ -1,23 +1,25 @@
 package org.hildan.krossbow.websocket
 
-import kotlinx.io.core.BytePacketBuilder
-import kotlinx.io.core.readBytes
-import kotlinx.io.core.writeFully
+import okio.Buffer
 
 internal class PartialBinaryMessageHandler(
     private val onMessageComplete: suspend (ByteArray) -> Unit
 ) {
-    private val bytesBuilder = BytePacketBuilder()
+    private val buffer = Buffer()
 
     suspend fun processMessage(bytes: ByteArray, isLast: Boolean = true) {
         processPartialMessage(
             msg = bytes,
             isLast = isLast,
-            isBufferEmpty = bytesBuilder.isEmpty,
-            appendToBuffer = { bytesBuilder.writeFully(it) },
-            readAndClearBuffer = { bytesBuilder.build().readBytes() },
+            isBufferEmpty = buffer.exhausted(),
+            appendToBuffer = { buffer.write(it) },
+            readAndClearBuffer = { buffer.readByteArray() },
             onMessageComplete = { onMessageComplete(it) }
         )
+    }
+
+    fun close() {
+        buffer.close()
     }
 }
 

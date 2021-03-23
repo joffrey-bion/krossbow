@@ -19,7 +19,6 @@ kotlin {
             dependencies {
                 api(project(":krossbow-websocket-core"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
-                implementation("org.jetbrains.kotlinx:kotlinx-io:${Versions.kotlinxIO}")
 
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
@@ -27,8 +26,6 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:${Versions.kotlinxIO}")
-
                 // for the test server
                 implementation("com.pusher:java-websocket:1.4.1")
 
@@ -38,8 +35,6 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-io-js:${Versions.kotlinxIO}")
-
                 implementation(kotlin("test-js"))
             }
         }

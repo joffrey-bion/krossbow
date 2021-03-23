@@ -18,7 +18,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
-                implementation("org.jetbrains.kotlinx:kotlinx-io:${Versions.kotlinxIO}")
+                implementation("com.squareup.okio:okio-multiplatform:${Versions.okio}")
             }
         }
         val commonTest by getting {
@@ -31,7 +31,6 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutines}")
-                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:${Versions.kotlinxIO}")
             }
         }
         val jvmTest by getting {
@@ -39,11 +38,6 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
                 implementation("com.pusher:java-websocket:1.4.1")
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-io-js:${Versions.kotlinxIO}")
             }
         }
         val jsTest by getting {
