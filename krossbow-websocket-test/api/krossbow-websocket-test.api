@@ -1,3 +1,11 @@
+public final class org/hildan/krossbow/websocket/test/ControlledWebSocketClientMock : org/hildan/krossbow/websocket/WebSocketClient {
+	public fun <init> ()V
+	public fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun simulateFailedConnection (Ljava/lang/Throwable;)V
+	public final fun simulateSuccessfulConnection (Lorg/hildan/krossbow/websocket/test/WebSocketConnectionMock;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun waitForConnectCall (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public final class org/hildan/krossbow/websocket/test/EchoWebSocketServer : com/pusher/java_websocket/server/WebSocketServer {
 	public fun <init> ()V
 	public fun <init> (I)V
@@ -11,11 +19,36 @@ public final class org/hildan/krossbow/websocket/test/EchoWebSocketServer : com/
 	public static synthetic fun startAndAwaitPort$default (Lorg/hildan/krossbow/websocket/test/EchoWebSocketServer;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
+public final class org/hildan/krossbow/websocket/test/WebSocketClientMocksKt {
+	public static final fun webSocketClientMock (Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/websocket/WebSocketClient;
+	public static synthetic fun webSocketClientMock$default (Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/hildan/krossbow/websocket/WebSocketClient;
+}
+
 public abstract class org/hildan/krossbow/websocket/test/WebSocketClientTestSuite {
 	public fun <init> ()V
 	public abstract fun provideClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
 	public final fun setupClient ()V
 	public final fun testWithEchoServer ()V
+}
+
+public final class org/hildan/krossbow/websocket/test/WebSocketConnectionMock : org/hildan/krossbow/websocket/WebSocketConnection {
+	public fun <init> ()V
+	public fun close (ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun expectClose (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun expectNoClose ()V
+	public fun getCanSend ()Z
+	public final fun getClosed ()Z
+	public fun getHost ()Ljava/lang/String;
+	public fun getIncomingFrames ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public fun getUrl ()Ljava/lang/String;
+	public fun sendBinary ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun sendText (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun setClosed (Z)V
+	public final fun simulateBinaryFrameReceived ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun simulateClose (ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun simulateError (Ljava/lang/String;)V
+	public final fun simulateTextFrameReceived (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun waitForSentWsFrameAndSimulateCompletion (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/websocket/test/WebSocketTestUtilsJvmKt {

@@ -8,21 +8,12 @@ import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
-import org.hildan.krossbow.test.ImmediatelyFailingWebSocketClient
-import org.hildan.krossbow.test.ImmediatelySucceedingWebSocketClient
-import org.hildan.krossbow.test.ManuallyConnectingWebSocketClient
-import org.hildan.krossbow.test.WebSocketConnectionMock
 import org.hildan.krossbow.test.assertTimesOutWith
 import org.hildan.krossbow.test.simulateConnectedFrameReceived
 import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import org.hildan.krossbow.websocket.test.*
+import kotlin.test.*
 
 private const val TEST_CONNECTION_TIMEOUT: Long = 500
 
@@ -30,7 +21,7 @@ class StompClientTest {
 
     @Test
     fun connect_suspendsUntilConnectedFrame() = runBlockingTest {
-        val wsClient = ManuallyConnectingWebSocketClient()
+        val wsClient = ControlledWebSocketClientMock()
         val stompClient = StompClient(wsClient)
 
         val deferredStompSession = async { stompClient.connect("dummy") }
@@ -107,7 +98,7 @@ class StompClientTest {
     ) {
         coroutineScope {
             val wsSession = WebSocketConnectionMock()
-            val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession), configureClient)
+            val stompClient = StompClient(webSocketClientMock { wsSession }, configureClient)
 
             launch { connectCall(stompClient) }
             val frame = wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
@@ -122,7 +113,7 @@ class StompClientTest {
     @Test
     fun connect_timesOutIfWebSocketDoesNotConnect() = runBlockingTest {
         // this WS client will suspend on connect() until manually triggered (which is not done during this test)
-        val stompClient = StompClient(ManuallyConnectingWebSocketClient()) {
+        val stompClient = StompClient(ControlledWebSocketClientMock()) {
             connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
         }
         assertTimesOutWith(ConnectionTimeout::class, TEST_CONNECTION_TIMEOUT) {
@@ -132,7 +123,7 @@ class StompClientTest {
 
     @Test
     fun connect_timesOutIfConnectedFrameIsNotReceived() = runBlockingTest {
-        val stompClient = StompClient(ImmediatelySucceedingWebSocketClient()) {
+        val stompClient = StompClient(webSocketClientMock()) {
             connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
         }
         assertTimesOutWith(ConnectionTimeout::class, TEST_CONNECTION_TIMEOUT) {
@@ -143,7 +134,7 @@ class StompClientTest {
     @Test
     fun connect_failsIfWebSocketFailsToConnect() = runBlockingTest {
         val wsConnectionException = Exception("some web socket exception")
-        val stompClient = StompClient(ImmediatelyFailingWebSocketClient(wsConnectionException))
+        val stompClient = StompClient(webSocketClientMock { throw wsConnectionException })
         val exception = assertFailsWith(WebSocketConnectionException::class) {
             stompClient.connect("dummy")
         }
@@ -155,7 +146,7 @@ class StompClientTest {
     @Test
     fun connect_failsIfErrorFrameReceived() = runBlockingTest {
         val wsSession = WebSocketConnectionMock()
-        val stompClient = StompClient(ImmediatelySucceedingWebSocketClient(wsSession))
+        val stompClient = StompClient(webSocketClientMock { wsSession })
 
         launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
