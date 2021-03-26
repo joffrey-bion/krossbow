@@ -1,18 +1,12 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -30,7 +24,6 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
 import org.hildan.krossbow.utils.generateUuid
 
-@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class) // for broadcast channel
 internal class BaseStompSession(
     private val config: StompConfig,
     private val stompSocket: StompSocket,
@@ -103,6 +96,7 @@ internal class BaseStompSession(
             config.receiptTimeoutMillis
         }
 
+    @OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> {
         // generating the ID within the flow enables multiple concurrent collectors (because different subscription IDs)
         val headersWithId = headers.withId()
