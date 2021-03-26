@@ -6,7 +6,6 @@
 
 A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
 over web sockets.
-This project supports the JVM and JS targets (including browser and NodeJS).
 
 ## Supported targets
 
