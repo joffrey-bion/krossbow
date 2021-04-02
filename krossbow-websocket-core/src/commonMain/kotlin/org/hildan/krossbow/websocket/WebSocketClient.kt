@@ -69,7 +69,12 @@ interface WebSocketConnection {
     /**
      * Sends a web socket close frame with the given [code] and [reason], and closes the connection.
      *
-     * The [code] can be any of the [WebSocketCloseCodes] defined by the specification.
+     * The [code] can be any of the [WebSocketCloseCodes] defined by the specification, except
+     * [NO_STATUS_CODE][WebSocketCloseCodes.NO_STATUS_CODE] and [NO_CLOSE_FRAME][WebSocketCloseCodes.NO_CLOSE_FRAME]
+     * which are reserved for representing the absence of close code or close frame and should not be sent in a frame
+     * (as defined by the specification in
+     * [section 7.4.1 of RFC-6455](https://tools.ietf.org/html/rfc6455#section-7.4.1)).
+     *
      * The [reason] must not be longer that 123 bytes when encoded in UTF-8, due to the limit on control frames
      * defined by the web socket protocol specification [RFC-6455](https://tools.ietf.org/html/rfc6455#section-5.5).
      */
