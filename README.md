@@ -2,7 +2,7 @@
 
 [![Maven central version](https://img.shields.io/maven-central/v/org.hildan.krossbow/krossbow-stomp-core.svg)](http://mvnrepository.com/artifact/org.hildan.krossbow/krossbow-stomp-core)
 [![Github Build](https://img.shields.io/github/workflow/status/joffrey-bion/krossbow/CI%20Build?label=build&logo=github)](https://github.com/joffrey-bion/krossbow/actions?query=workflow%3A%22CI+Build%22)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/joffrey-bion/krossbow/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/joffrey-bion/krossbow/blob/main/LICENSE)
 
 A coroutine-based Kotlin multi-platform WebSocket client and [STOMP 1.2](https://stomp.github.io/index.html) client
 over web sockets.
