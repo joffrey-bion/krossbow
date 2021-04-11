@@ -11,28 +11,30 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        jdk-version: [11, 16]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        jdk-version: [ 11, 16 ]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK ${{ matrix.jdk-version }}
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'zulu'
-        java-version: ${{ matrix.jdk-version }}
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Gradle build cache
-      uses: actions/cache@v2.1.1
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-build-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: ${{ runner.os }}-gradle-build-
+      - name: Set up JDK ${{ matrix.jdk-version }}
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: ${{ matrix.jdk-version }}
 
-    - name: Gradle wrapper cache
-      uses: actions/cache@v2.1.1
-      with:
-        path: ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
+      - name: Gradle build cache
+        uses: actions/cache@v2.1.1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-build-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-build-
 
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Gradle wrapper cache
+        uses: actions/cache@v2.1.1
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
+
+      - name: Build with Gradle
+        run: ./gradlew build
