@@ -137,13 +137,13 @@ data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) : StompHe
         ack: AckMode = AckMode.AUTO,
         receipt: String? = null,
         customHeaders: Map<String, String> = emptyMap(),
-        ) : this(
+    ) : this(
         headersOf(
             DESTINATION to destination,
             ID to id,
             ACK to ack.headerValue,
             RECEIPT to receipt,
-            customHeaders = customHeaders
+            customHeaders = customHeaders,
         )
     )
 }
@@ -245,7 +245,7 @@ private fun String.toHeartBeat(): HeartBeat {
     val (minSendPeriod, expectedReceivePeriod) = split(',')
     return HeartBeat(
         minSendPeriodMillis = minSendPeriod.toInt(),
-        expectedPeriodMillis = expectedReceivePeriod.toInt()
+        expectedPeriodMillis = expectedReceivePeriod.toInt(),
     )
 }
 
