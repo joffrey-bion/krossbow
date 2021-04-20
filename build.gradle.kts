@@ -19,7 +19,8 @@ allprojects {
     group = "org.hildan.krossbow"
 
     repositories {
-        jcenter()
+        mavenCentral()
+        maven(url = "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") // for Dokka
     }
 
     apply(plugin = "org.jetbrains.dokka")
