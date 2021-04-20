@@ -136,12 +136,14 @@ data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) : StompHe
         id: String? = null, // not optional, but this allows generating it in subscription flows
         ack: AckMode = AckMode.AUTO,
         receipt: String? = null,
-    ) : this(
+        customHeaders: Map<String, String> = emptyMap(),
+        ) : this(
         headersOf(
             DESTINATION to destination,
             ID to id,
             ACK to ack.headerValue,
             RECEIPT to receipt,
+            customHeaders = customHeaders
         )
     )
 }
