@@ -50,6 +50,9 @@ nexusPublishing {
     repositories {
         sonatype()
     }
+    transitionCheckOptions {
+        maxRetries.set(90) // sometimes Sonatype takes more than 10min...
+    }
 }
 
 subprojects {
