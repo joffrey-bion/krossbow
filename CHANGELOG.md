@@ -1,5 +1,23 @@
 # Change Log
 
+## [1.3.0](https://github.com/joffrey-bion/krossbow/tree/1.3.0) (2021-04-20)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.2.0...1.3.0)
+
+**Closed issues:**
+
+- Remove dependency on kotlinx\-io's charsets [\#99](https://github.com/joffrey-bion/krossbow/issues/99)
+- Migrate from kotlinx\-io to okio [\#97](https://github.com/joffrey-bion/krossbow/issues/97)
+
+**Implemented enhancements:**
+
+- Upgrade coroutines to 1.4.3 [\#101](https://github.com/joffrey-bion/krossbow/issues/101)
+- Rename WebSocketSession to WebSocketConnection [\#100](https://github.com/joffrey-bion/krossbow/issues/100)
+- Feature \- WebSocket Reconnecting Strategy [\#94](https://github.com/joffrey-bion/krossbow/issues/94)
+
+**Merged pull requests:**
+
+- Add custom header support to SUBSCRIBE frame. [\#105](https://github.com/joffrey-bion/krossbow/pull/105) ([@jatsqi](https://github.com/jatsqi))
+
 ## [1.2.0](https://github.com/joffrey-bion/krossbow/tree/1.2.0) (2021-03-20)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.1.5...1.2.0)
 
@@ -345,7 +363,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/fd4782f452d80f2a63b259cbf6fc6e17427a220e...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/43a21ac9be563acee3f95489c0bb128726579e97...0.1.0)
 
 **Implemented enhancements:**
 
