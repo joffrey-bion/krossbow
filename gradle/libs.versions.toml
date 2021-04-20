@@ -1,0 +1,4 @@
+[versions]
+atomicFu = "0.14.4"
+coroutines = "1.4.3"
+okio = "2.10.0"

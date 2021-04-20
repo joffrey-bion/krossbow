@@ -18,7 +18,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":krossbow-websocket-core"))
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines}")
 
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))

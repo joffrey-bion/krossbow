@@ -25,6 +25,8 @@ include("krossbow-websocket-sockjs")
 include("krossbow-websocket-spring")
 include("krossbow-websocket-test")
 
+enableFeaturePreview("VERSION_CATALOGS")
+
 gradleEnterprise {
     buildScan {
         termsOfServiceUrl = "https://gradle.com/terms-of-service"
