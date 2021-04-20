@@ -1,8 +1,6 @@
 package org.hildan.krossbow.stomp.frame
 
-import org.hildan.krossbow.stomp.headers.StompConnectHeaders
-import org.hildan.krossbow.stomp.headers.StompMessageHeaders
-import org.hildan.krossbow.stomp.headers.StompSendHeaders
+import org.hildan.krossbow.stomp.headers.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -93,6 +91,30 @@ class StompCodecTest {
 
         val headers = StompConnectHeaders(host = "some.host", acceptVersion = listOf("1.0", "1.1", "1.2"))
         val frame = StompFrame.Connect(headers)
+        assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
+    fun subscribe_custom_headers() {
+        val frameText = """
+            SUBSCRIBE
+            destination:/topic/dest
+            id:0
+            ack:auto
+            receipt:message-1234
+            Authorization:Bearer -jwt-
+            
+            $nullChar
+        """.trimIndent()
+
+        val headers = StompSubscribeHeaders(
+                destination = "/topic/dest",
+                id = "0",
+                ack = AckMode.AUTO,
+                receipt = "message-1234",
+                customHeaders = mapOf("Authorization" to "Bearer -jwt-")
+        )
+        val frame = StompFrame.Subscribe(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
 
