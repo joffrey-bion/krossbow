@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.3.1](https://github.com/joffrey-bion/krossbow/tree/1.3.1) (2021-04-21)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.3.0...1.3.1)
+
+**Fixed bugs:**
+
+- subscribe\(\) does not respect custom headers when using generated ID [\#107](https://github.com/joffrey-bion/krossbow/issues/107)
+
 ## [1.3.0](https://github.com/joffrey-bion/krossbow/tree/1.3.0) (2021-04-20)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.2.0...1.3.0)
 
@@ -363,7 +370,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/43a21ac9be563acee3f95489c0bb128726579e97...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/6296851cf635f06b9b0c3b3973cf450193205062...0.1.0)
 
 **Implemented enhancements:**
 
