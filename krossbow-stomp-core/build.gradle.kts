@@ -29,7 +29,7 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                api(project(":krossbow-websocket-core"))
+                api(projects.krossbowWebsocketCore)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines.get()}")
                 implementation("com.squareup.okio:okio-multiplatform:${libs.versions.okio.get()}")
                 implementation("com.benasher44:uuid:0.1.0")
@@ -37,7 +37,7 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation(project(":krossbow-websocket-test"))
+                implementation(projects.krossbowWebsocketTest)
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 // For kotlinx-coroutines-test

@@ -23,7 +23,7 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation(project(":krossbow-websocket-test"))
+                implementation(projects.krossbowWebsocketTest)
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
             }

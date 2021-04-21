@@ -7,7 +7,7 @@ description = "An extension of Krossbow STOMP client using Jackson for message c
 val jacksonVersion = "2.11.3"
 
 dependencies {
-    api(project(":krossbow-stomp-core"))
+    api(projects.krossbowStompCore)
     api("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     api("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 

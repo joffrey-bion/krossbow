@@ -14,7 +14,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":krossbow-websocket-core"))
+                api(projects.krossbowWebsocketCore)
             }
         }
         val commonTest by getting {
@@ -25,7 +25,7 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                api(project(":krossbow-websocket-spring"))
+                api(projects.krossbowWebsocketSpring)
             }
         }
         val jvmTest by getting {

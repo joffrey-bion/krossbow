@@ -23,6 +23,7 @@ include("krossbow-websocket-spring")
 include("krossbow-websocket-test")
 
 enableFeaturePreview("VERSION_CATALOGS")
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 gradleEnterprise {
     buildScan {

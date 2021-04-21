@@ -5,7 +5,7 @@ plugins {
 description = "A Krossbow adapter for OkHttp's WebSocket client"
 
 dependencies {
-    api(project(":krossbow-websocket-core"))
+    api(projects.krossbowWebsocketCore)
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${libs.versions.coroutines}")
 

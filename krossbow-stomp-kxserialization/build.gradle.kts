@@ -16,7 +16,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":krossbow-stomp-core"))
+                api(projects.krossbowStompCore)
                 api("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
             }

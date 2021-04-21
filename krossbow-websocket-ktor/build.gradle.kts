@@ -16,7 +16,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":krossbow-websocket-core"))
+                api(projects.krossbowWebsocketCore)
                 api("io.ktor:ktor-client-websockets:$ktorVersion")
             }
         }

@@ -5,7 +5,7 @@ plugins {
 description = "A Krossbow adapter for Spring's default WebSocket client and SockJS client"
 
 dependencies {
-    api(project(":krossbow-websocket-core"))
+    api(projects.krossbowWebsocketCore)
 
     api("org.slf4j:slf4j-api:1.7.26")
 
@@ -20,7 +20,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
-    testImplementation(project(":krossbow-websocket-test"))
+    testImplementation(projects.krossbowWebsocketTest)
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
