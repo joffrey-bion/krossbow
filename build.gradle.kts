@@ -82,8 +82,7 @@ subprojects {
     }
 
     afterEvaluate {
-        val publications = extensions.getByType<PublishingExtension>().publications
-        publications.filterIsInstance<MavenPublication>().forEach { pub ->
+        publishing.publications.filterIsInstance<MavenPublication>().forEach { pub ->
             pub.artifact(dokkaJar)
             pub.configurePomForMavenCentral(project)
         }
