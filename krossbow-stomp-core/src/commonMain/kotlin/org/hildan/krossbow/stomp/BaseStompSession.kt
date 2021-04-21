@@ -11,17 +11,7 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
-import org.hildan.krossbow.stomp.headers.HeaderNames
-import org.hildan.krossbow.stomp.headers.StompAbortHeaders
-import org.hildan.krossbow.stomp.headers.StompAckHeaders
-import org.hildan.krossbow.stomp.headers.StompBeginHeaders
-import org.hildan.krossbow.stomp.headers.StompCommitHeaders
-import org.hildan.krossbow.stomp.headers.StompConnectHeaders
-import org.hildan.krossbow.stomp.headers.StompDisconnectHeaders
-import org.hildan.krossbow.stomp.headers.StompNackHeaders
-import org.hildan.krossbow.stomp.headers.StompSendHeaders
-import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
-import org.hildan.krossbow.stomp.headers.StompUnsubscribeHeaders
+import org.hildan.krossbow.stomp.headers.*
 import org.hildan.krossbow.utils.generateUuid
 
 internal class BaseStompSession(
@@ -174,5 +164,7 @@ private fun StompSubscribeHeaders.withId(): StompSubscribeHeaders {
     if (existingId != null) {
         return this
     }
-    return StompSubscribeHeaders(destination, generateUuid(), ack, receipt)
+    val rawHeadersCopy = HashMap(this)
+    rawHeadersCopy[HeaderNames.ID] = generateUuid()
+    return StompSubscribeHeaders(rawHeadersCopy.asStompHeaders())
 }
