@@ -4,7 +4,7 @@ plugins {
 
 description = "Multiplatform implementation of Krossbow's WebSocket API using Ktor's web sockets."
 
-val ktorVersion = "1.4.1"
+val ktorVersion = "1.5.4"
 
 kotlin {
     jvm()
