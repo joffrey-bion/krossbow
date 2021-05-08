@@ -7,7 +7,7 @@ plugins {
     kotlin("multiplatform") version kotlinVersion apply false
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
-    id("org.jetbrains.dokka") version "1.4.30" apply false
+    id("org.jetbrains.dokka") version "1.4.32" apply false
     id("org.hildan.github.changelog") version "1.6.0"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.2.3"
     `maven-publish`
@@ -20,7 +20,6 @@ allprojects {
 
     repositories {
         mavenCentral()
-        maven(url = "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") // for Dokka
     }
 
     apply(plugin = "org.jetbrains.dokka")
