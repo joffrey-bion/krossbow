@@ -3,9 +3,8 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
@@ -33,7 +32,7 @@ import kotlin.coroutines.EmptyCoroutineContext
  * It handles the frame conversions between web sockets and STOMP.
  * It manages heart beats and is aware of heart beat frames.
  */
-@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+@OptIn(ObsoleteCoroutinesApi::class) // TODO replace with SharedFlow.. maybe?
 internal class StompSocket(
     private val webSocketConnection: WebSocketConnection,
     private val config: StompConfig,

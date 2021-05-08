@@ -1,4 +1,4 @@
 [versions]
 atomicFu = "0.15.0"
-coroutines = "1.4.3"
+coroutines = "1.5.0"
 okio = "2.10.0"

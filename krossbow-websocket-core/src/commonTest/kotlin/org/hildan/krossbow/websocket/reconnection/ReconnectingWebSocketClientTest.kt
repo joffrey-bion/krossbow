@@ -10,8 +10,8 @@ import org.hildan.krossbow.websocket.test.WebSocketConnectionMock
 import org.hildan.krossbow.websocket.test.runSuspendingTest
 import org.hildan.krossbow.websocket.test.webSocketClientMock
 import kotlin.test.*
+import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlin.time.milliseconds
 
 @OptIn(ExperimentalTime::class)
 internal class ReconnectingWebSocketClientTest {
@@ -71,7 +71,7 @@ internal class ReconnectingWebSocketClientTest {
             }
         }
 
-        val reconnectingClient = baseClient.withAutoReconnect(delayStrategy = FixedDelay(1.milliseconds))
+        val reconnectingClient = baseClient.withAutoReconnect(delayStrategy = FixedDelay(Duration.milliseconds(1)))
         val connection = reconnectingClient.connect("dummy")
         assertEquals(1, connections.size, "base client should have provided 1 connection")
 
@@ -101,7 +101,7 @@ internal class ReconnectingWebSocketClientTest {
 
         var reconnected = false
         val reconnectingClient = baseClient.withAutoReconnect {
-            delayStrategy = FixedDelay(1.milliseconds)
+            delayStrategy = FixedDelay(Duration.milliseconds(1))
             afterReconnect {
                 reconnected = true
             }

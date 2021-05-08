@@ -62,6 +62,6 @@ private class Ticker(
     }
 
     fun reset() {
-        resetEvents.offer(Unit)
+        resetEvents.trySend(Unit)
     }
 }

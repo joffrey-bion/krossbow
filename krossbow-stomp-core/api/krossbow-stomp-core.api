@@ -236,6 +236,7 @@ public final class org/hildan/krossbow/stomp/frame/StompCommand$Companion {
 
 public abstract class org/hildan/krossbow/stomp/frame/StompFrame {
 	public static final field Companion Lorg/hildan/krossbow/stomp/frame/StompFrame$Companion;
+	public synthetic fun <init> (Lorg/hildan/krossbow/stomp/frame/StompCommand;Lorg/hildan/krossbow/stomp/headers/StompHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lorg/hildan/krossbow/stomp/frame/StompCommand;Lorg/hildan/krossbow/stomp/headers/StompHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getBody ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
 	public final fun getBodyAsText ()Ljava/lang/String;
@@ -492,7 +493,8 @@ public final class org/hildan/krossbow/stomp/headers/StompAbortHeaders : org/hil
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompAbortHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -508,7 +510,8 @@ public final class org/hildan/krossbow/stomp/headers/StompAbortHeaders : org/hil
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -531,7 +534,8 @@ public final class org/hildan/krossbow/stomp/headers/StompAckHeaders : org/hilda
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompAckHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -548,7 +552,8 @@ public final class org/hildan/krossbow/stomp/headers/StompAckHeaders : org/hilda
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -570,7 +575,8 @@ public final class org/hildan/krossbow/stomp/headers/StompBeginHeaders : org/hil
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompBeginHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -586,7 +592,8 @@ public final class org/hildan/krossbow/stomp/headers/StompBeginHeaders : org/hil
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -608,7 +615,8 @@ public final class org/hildan/krossbow/stomp/headers/StompCommitHeaders : org/hi
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompCommitHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -624,7 +632,8 @@ public final class org/hildan/krossbow/stomp/headers/StompCommitHeaders : org/hi
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -647,7 +656,8 @@ public final class org/hildan/krossbow/stomp/headers/StompConnectHeaders : org/h
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getAcceptVersion ()Ljava/util/List;
 	public fun getContentLength ()Ljava/lang/Integer;
@@ -667,7 +677,8 @@ public final class org/hildan/krossbow/stomp/headers/StompConnectHeaders : org/h
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -690,7 +701,8 @@ public final class org/hildan/krossbow/stomp/headers/StompConnectedHeaders : org
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompConnectedHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -709,7 +721,8 @@ public final class org/hildan/krossbow/stomp/headers/StompConnectedHeaders : org
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -732,7 +745,8 @@ public final class org/hildan/krossbow/stomp/headers/StompDisconnectHeaders : or
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompDisconnectHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -747,7 +761,8 @@ public final class org/hildan/krossbow/stomp/headers/StompDisconnectHeaders : or
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -770,7 +785,8 @@ public final class org/hildan/krossbow/stomp/headers/StompErrorHeaders : org/hil
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompErrorHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -787,7 +803,8 @@ public final class org/hildan/krossbow/stomp/headers/StompErrorHeaders : org/hil
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -819,7 +836,8 @@ public final class org/hildan/krossbow/stomp/headers/StompMessageHeaders : org/h
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompMessageHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getAck ()Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
@@ -838,7 +856,8 @@ public final class org/hildan/krossbow/stomp/headers/StompMessageHeaders : org/h
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -861,7 +880,8 @@ public final class org/hildan/krossbow/stomp/headers/StompNackHeaders : org/hild
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompNackHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -878,7 +898,8 @@ public final class org/hildan/krossbow/stomp/headers/StompNackHeaders : org/hild
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -900,7 +921,8 @@ public final class org/hildan/krossbow/stomp/headers/StompReceiptHeaders : org/h
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompReceiptHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -916,7 +938,8 @@ public final class org/hildan/krossbow/stomp/headers/StompReceiptHeaders : org/h
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -939,7 +962,8 @@ public final class org/hildan/krossbow/stomp/headers/StompSendHeaders : org/hild
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -956,7 +980,8 @@ public final class org/hildan/krossbow/stomp/headers/StompSendHeaders : org/hild
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -980,7 +1005,8 @@ public final class org/hildan/krossbow/stomp/headers/StompSubscribeHeaders : org
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getAck ()Lorg/hildan/krossbow/stomp/headers/AckMode;
 	public fun getContentLength ()Ljava/lang/Integer;
@@ -998,7 +1024,8 @@ public final class org/hildan/krossbow/stomp/headers/StompSubscribeHeaders : org
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V
@@ -1020,7 +1047,8 @@ public final class org/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders : o
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;Lorg/hildan/krossbow/stomp/headers/StompHeaders;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
 	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getContentLength ()Ljava/lang/Integer;
 	public fun getContentType ()Ljava/lang/String;
@@ -1036,7 +1064,8 @@ public final class org/hildan/krossbow/stomp/headers/StompUnsubscribeHeaders : o
 	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun putAll (Ljava/util/Map;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/String;
 	public fun remove (Ljava/lang/String;)Ljava/lang/String;
 	public fun setContentLength (Ljava/lang/Integer;)V
 	public fun setContentType (Ljava/lang/String;)V

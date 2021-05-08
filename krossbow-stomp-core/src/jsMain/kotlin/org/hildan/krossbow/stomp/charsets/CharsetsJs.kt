@@ -10,7 +10,7 @@ internal data class CharsetImpl(val name: String) : Charset(name) {
     override fun newDecoder(): CharsetDecoder = CharsetDecoderImpl(this)
 }
 
-internal actual fun String.toCharset() = when (toLowerCase().replace('_', '-')) {
+internal actual fun String.toCharset() = when (lowercase().replace('_', '-')) {
     "utf-8", "utf8" -> Charsets.UTF_8
     "iso-8859-1", "latin1" -> Charsets.ISO_8859_1
     else -> throw IllegalArgumentException("Charset $this is not supported")

@@ -15,8 +15,8 @@ internal fun WebSocketFrame.isHeartBeat(): Boolean = when (this) {
     else -> false
 }
 
-private const val CR = '\r'.toByte()
-private const val LF = '\n'.toByte()
+private const val CR = '\r'.code.toByte()
+private const val LF = '\n'.code.toByte()
 
 private fun ByteArray.isEOL() = when (size) {
     1 -> get(0) == LF

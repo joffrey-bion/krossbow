@@ -1,7 +1,7 @@
 import org.hildan.github.changelog.builder.DEFAULT_EXCLUDED_LABELS
 
 plugins {
-    val kotlinVersion = "1.4.31"
+    val kotlinVersion = "1.5.10"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
@@ -59,12 +59,8 @@ subprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
 
-    val compilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
-    }
     tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>> {
-        kotlinOptions.freeCompilerArgs += compilerArgs
+        kotlinOptions.freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
 
     tasks.withType<AbstractTestTask> {

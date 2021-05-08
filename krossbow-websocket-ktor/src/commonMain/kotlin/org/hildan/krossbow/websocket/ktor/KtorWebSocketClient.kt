@@ -73,6 +73,7 @@ private fun Frame.toKrossbowFrame(): WebSocketFrame = when (this) {
     is Frame.Ping -> WebSocketFrame.Ping(readBytes())
     is Frame.Pong -> WebSocketFrame.Pong(readBytes())
     is Frame.Close -> toKrossbowCloseFrame()
+    else -> error("Unknown frame type ${this::class.simpleName}")
 }
 
 private fun Frame.Close.toKrossbowCloseFrame(): WebSocketFrame.Close {

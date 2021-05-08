@@ -131,14 +131,14 @@ public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClient : org/
 }
 
 public final class org/hildan/krossbow/websocket/reconnection/ExponentialBackOff : org/hildan/krossbow/websocket/reconnection/RetryDelayStrategy {
-	public synthetic fun <init> (DDILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (DDLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun computeDelay-5sfh64U (I)D
+	public synthetic fun <init> (JDILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JDLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun computeDelay-5sfh64U (I)J
 }
 
 public final class org/hildan/krossbow/websocket/reconnection/FixedDelay : org/hildan/krossbow/websocket/reconnection/RetryDelayStrategy {
-	public synthetic fun <init> (DLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun computeDelay-5sfh64U (I)D
+	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun computeDelay-5sfh64U (I)J
 }
 
 public final class org/hildan/krossbow/websocket/reconnection/ReconnectConfig {
@@ -178,7 +178,7 @@ public final class org/hildan/krossbow/websocket/reconnection/ReconnectingWebSoc
 }
 
 public abstract interface class org/hildan/krossbow/websocket/reconnection/RetryDelayStrategy {
-	public abstract fun computeDelay-5sfh64U (I)D
+	public abstract fun computeDelay-5sfh64U (I)J
 }
 
 public final class org/hildan/krossbow/websocket/reconnection/WebSocketReconnectionException : org/hildan/krossbow/websocket/WebSocketConnectionException {

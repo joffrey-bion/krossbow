@@ -2,7 +2,6 @@ package org.hildan.krossbow.test
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.receiveOrNull
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.instrumentation.KrossbowInstrumentation
 import org.hildan.krossbow.websocket.WebSocketFrame
@@ -38,29 +37,31 @@ class KrossbowInstrumentationMock : KrossbowInstrumentation {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnWebsocketFrameReceived(): WebSocketFrame {
-        return wsFramesChannel.receiveOrNull() ?: fail("Expected onWebSocketFrameReceived to be called")
+        return wsFramesChannel.expectElement("Expected onWebSocketFrameReceived to be called")
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnFrameDecoded(): StompFrame {
-        return decodedFramesChannel.receiveOrNull() ?: fail("Expected onFrameDecoded to be called")
+        return decodedFramesChannel.expectElement("Expected onFrameDecoded to be called")
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnStompFrameSent(): StompFrame {
-        return sentFramesChannel.receiveOrNull() ?: fail("Expected onStompFrameSent to be called")
+        return sentFramesChannel.expectElement("Expected onStompFrameSent to be called")
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnWebSocketClosed(): Throwable? {
-        val closeEvent = closeCausesChannel.receiveOrNull() ?: fail("Expected onWebSocketClosed to be called")
+        val closeEvent = closeCausesChannel.expectElement("Expected onWebSocketClosed to be called")
         return closeEvent.cause
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnWebSocketClientError(): Throwable {
-        return wsErrorsChannel.receiveOrNull() ?: fail("Expected onWebSocketClientError to be called")
+        return wsErrorsChannel.expectElement("Expected onWebSocketClientError to be called")
     }
+
+    private suspend fun <T> Channel<T>.expectElement(message: String) = receiveCatching().getOrNull() ?: fail(message)
 }
 
 private data class CloseEvent(val cause: Throwable?)

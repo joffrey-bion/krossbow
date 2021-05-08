@@ -1,8 +1,6 @@
 package org.hildan.krossbow.websocket.test
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.receiveOrNull
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
@@ -46,15 +44,14 @@ class WebSocketConnectionMock : WebSocketConnection {
      */
     suspend fun waitForSentWsFrameAndSimulateCompletion(): WebSocketFrame = sentFrames.receive()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectClose() {
-        closeEvent.receiveOrNull() ?: fail("expected web socket close")
+        if (!closeEvent.receiveCatching().isSuccess) {
+            fail("expected web socket close")
+        }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     fun expectNoClose() {
-        val e = closeEvent.poll()
-        if (e != null) {
+        if (closeEvent.tryReceive().isSuccess) {
             fail("the web socket close() method should not have been called")
         }
     }

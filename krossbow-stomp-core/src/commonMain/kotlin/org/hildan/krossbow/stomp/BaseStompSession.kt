@@ -86,7 +86,7 @@ internal class BaseStompSession(
             config.receiptTimeoutMillis
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class) // for broadcast channel
+    @OptIn(ObsoleteCoroutinesApi::class) // for broadcast channel
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> {
         // generating the ID within the flow enables multiple concurrent collectors (because different subscription IDs)
         val headersWithId = headers.withId()

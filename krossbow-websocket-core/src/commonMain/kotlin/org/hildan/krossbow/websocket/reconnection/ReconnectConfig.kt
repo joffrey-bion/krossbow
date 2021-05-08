@@ -1,8 +1,8 @@
 package org.hildan.krossbow.websocket.reconnection
 
 import org.hildan.krossbow.websocket.WebSocketConnection
+import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlin.time.seconds
 
 /**
  * The default value for the maximum number of reconnection attempts before giving up.
@@ -13,7 +13,7 @@ internal const val DEFAULT_MAX_ATTEMPTS = 5
  * The default value for the maximum number of reconnection attempts before giving up.
  */
 @OptIn(ExperimentalTime::class)
-internal val DEFAULT_DELAY_STRATEGY = FixedDelay(1.seconds)
+internal val DEFAULT_DELAY_STRATEGY = FixedDelay(Duration.seconds(1))
 
 /**
  * Builds a [ReconnectConfig].

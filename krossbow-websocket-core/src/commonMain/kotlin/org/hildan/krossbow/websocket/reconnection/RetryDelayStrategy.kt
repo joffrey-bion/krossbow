@@ -3,7 +3,6 @@ package org.hildan.krossbow.websocket.reconnection
 import kotlin.math.pow
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlin.time.seconds
 
 /**
  * Defines the time to wait before each attempt in a retry mechanism.
@@ -36,7 +35,7 @@ class ExponentialBackOff(
     /**
      * The time to wait before the first attempt.
      */
-    private val initialDelay: Duration = 1.seconds,
+    private val initialDelay: Duration = Duration.seconds(1),
     /**
      * The multiplier to use to increase the delay for subsequent attempts.
      */

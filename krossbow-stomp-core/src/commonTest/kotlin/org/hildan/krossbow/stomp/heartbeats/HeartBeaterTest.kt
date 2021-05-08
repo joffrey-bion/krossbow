@@ -7,7 +7,6 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.HeartBeatTolerance
 import kotlin.test.Test
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 private const val TEST_PERIOD_CONFIG = 5000
@@ -63,9 +62,9 @@ class HeartBeaterTest {
         advanceTimeBy(TEST_SEND_PERIOD - 1)
         assertTrue(hbc.sent.isEmpty, "should NOT have sent a heartbeat before 1st period of inactivity")
         advanceTimeBy(1)
-        assertNotNull(hbc.sent.poll(), "should have sent a heartbeat after 1st period of inactivity")
+        assertTrue(hbc.sent.tryReceive().isSuccess, "should have sent a heartbeat after 1st period of inactivity")
         advanceTimeBy(TEST_SEND_PERIOD)
-        assertNotNull(hbc.sent.poll(), "should have sent a heartbeat after 2nd period of inactivity")
+        assertTrue(hbc.sent.tryReceive().isSuccess, "should have sent a heartbeat after 2nd period of inactivity")
 
         repeat(3) {
             hbc.heartBeater.notifyMsgSent()
@@ -75,7 +74,7 @@ class HeartBeaterTest {
 
         hbc.heartBeater.notifyMsgSent()
         advanceTimeBy(TEST_SEND_PERIOD)
-        assertNotNull(hbc.sent.poll(), "should have sent a heartbeat after 3rd period of inactivity")
+        assertTrue(hbc.sent.tryReceive().isSuccess, "should have sent a heartbeat after 3rd period of inactivity")
 
         assertTrue(hbc.received.isEmpty, "shouldn't have received any heart beat")
         job.cancel()
@@ -96,9 +95,9 @@ class HeartBeaterTest {
 
         val job = hbc.heartBeater.startIn(this)
         delay(TEST_RECEIVED_PERIOD)
-        assertNotNull(hbc.received.poll(), "should have received a heartbeat after 1st period of inactivity")
+        assertTrue(hbc.received.tryReceive().isSuccess, "should have received a heartbeat after 1st period of inactivity")
         delay(TEST_RECEIVED_PERIOD)
-        assertNotNull(hbc.received.poll(), "should have received a heartbeat after 2nd period of inactivity")
+        assertTrue(hbc.received.tryReceive().isSuccess, "should have received a heartbeat after 2nd period of inactivity")
         repeat(3) {
             hbc.heartBeater.notifyMsgReceived()
             delay(TEST_RECEIVED_PERIOD / 2)
@@ -107,7 +106,7 @@ class HeartBeaterTest {
 
         hbc.heartBeater.notifyMsgReceived()
         delay(TEST_RECEIVED_PERIOD)
-        assertNotNull(hbc.received.poll(), "should have received a heartbeat after 3rd period of inactivity")
+        assertTrue(hbc.received.tryReceive().isSuccess, "should have received a heartbeat after 3rd period of inactivity")
 
         assertTrue(hbc.sent.isEmpty, "shouldn't have sent any heart beat")
         job.cancel()
