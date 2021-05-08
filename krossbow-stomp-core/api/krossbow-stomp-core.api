@@ -77,7 +77,7 @@ public final class org/hildan/krossbow/stomp/StompSessionKt {
 	public static final fun subscribe (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun subscribeBinary (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun subscribeText (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun use (Lorg/hildan/krossbow/stomp/StompSession;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun use (Lorg/hildan/krossbow/stomp/StompSession;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun withTransaction (Lorg/hildan/krossbow/stomp/StompSession;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 

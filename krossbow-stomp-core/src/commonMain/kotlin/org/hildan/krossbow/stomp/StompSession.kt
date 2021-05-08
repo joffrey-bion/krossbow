@@ -281,9 +281,9 @@ suspend fun <T> StompSession.withTransaction(block: suspend StompSession.(transa
  * Executes the given block on this [StompSession], and [disconnects][StompSession.disconnect] from the session whether
  * the block terminated normally or exceptionally.
  */
-suspend fun <S : StompSession, T> S.use(block: suspend S.() -> T): T {
+suspend inline fun <S : StompSession, R> S.use(block: (S) -> R): R {
     try {
-        return block()
+        return block(this)
     } finally {
         disconnect()
     }
