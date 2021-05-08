@@ -8,11 +8,11 @@ into a `StompSessionWithClassConversions`.
 This new session type has additional methods that use reflection to convert your objects into JSON and back:
  
 ```kotlin
-StompClient().connect(url).withJacksonConversions().use {
-    convertAndSend("/some/destination", Person("Bob", 42)) 
+StompClient().connect(url).withJacksonConversions().use { session ->
+    session.convertAndSend("/some/destination", Person("Bob", 42)) 
 
-    val subscription: Flow<MyMessage> = subscribe<MyMessage>("/some/topic/destination")
-    val firstMessage: MyMessage = subscription.first()
+    val messages: Flow<MyMessage> = session.subscribe<MyMessage>("/some/topic/destination")
+    val firstMessage: MyMessage = messages.first()
 
     println("Received: $firstMessage")
 }

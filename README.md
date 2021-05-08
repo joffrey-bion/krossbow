@@ -106,10 +106,10 @@ import org.hildan.krossbow.stomp.*
 val client = StompClient() // custom WebSocketClient and other config can be passed in here
 val session: StompSession = client.connect(url) // optional login/passcode can be provided here
 
-session.use { // this: StompSession
-    sendText("/some/destination", "Basic text message") 
+session.use { s ->
+    s.sendText("/some/destination", "Basic text message") 
 
-    val subscription: Flow<String> = subscribeText("/some/topic/destination")
+    val subscription: Flow<String> = s.subscribeText("/some/topic/destination")
 
     // terminal operators that finish early (like first) also trigger UNSUBSCRIBE automatically
     val firstMessage: String = subscription.first()
@@ -143,11 +143,11 @@ data class MyMessage(val timestamp: Long, val author: String, val content: Strin
 val session = StompClient().connect(url)
 val jsonStompSession = session.withJsonConversions() // adds convenience methods for kotlinx.serialization's conversions
 
-jsonStompSession.use {
-    convertAndSend("/some/destination", Person("Bob", 42), Person.serializer()) 
+jsonStompSession.use { s ->
+    s.convertAndSend("/some/destination", Person("Bob", 42), Person.serializer()) 
 
     // overloads without explicit serializers exist, but should be avoided if you also target JavaScript
-    val subscription: Flow<MyMessage> = subscribe("/some/topic/destination", MyMessage.serializer())
+    val subscription: Flow<MyMessage> = s.subscribe("/some/topic/destination", MyMessage.serializer())
     
     subscription.collect { msg ->
         println("Received message from ${msg.author}: ${msg.content}")
@@ -164,11 +164,11 @@ reflection instead of manually provided serializers.
 This is provided by [the `krossbow-stomp-jackson` module](./krossbow-stomp-jackson/README.md).
 
 ```kotlin
-StompClient().connect(url).withJacksonConversions().use {
-    convertAndSend("/some/destination", Person("Bob", 42)) 
+StompClient().connect(url).withJacksonConversions().use { session ->
+    session.convertAndSend("/some/destination", Person("Bob", 42)) 
 
-    val subscription: Flow<MyMessage> = subscribe<MyMessage>("/some/topic/destination")
-    val firstMessage: MyMessage = subscription.first()
+    val messages: Flow<MyMessage> = session.subscribe<MyMessage>("/some/topic/destination")
+    val firstMessage: MyMessage = messages.first()
 
     println("Received: $firstMessage")
 }
@@ -196,11 +196,11 @@ val myConverter = object : TextMessageConverter {
     }
 }
 
-StompClient().connect(url).withTextConversions(myConverter).use {
-    convertAndSend("/some/destination", MyPojo("Custom", 42)) 
+StompClient().connect(url).withTextConversions(myConverter).use { session ->
+    session.convertAndSend("/some/destination", MyPojo("Custom", 42)) 
 
-    val subscription = subscribe<MyMessage>("/some/topic/destination")
-    val firstMessage: MyMessage = subscription.first()
+    val messages = session.subscribe<MyMessage>("/some/topic/destination")
+    val firstMessage: MyMessage = messages.first()
 
     println("Received: $firstMessage")
 }

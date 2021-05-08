@@ -28,13 +28,13 @@ data class MyMessage(val timestamp: Long, val author: String, val content: Strin
 val session = StompClient().connect(url)
 val jsonStompSession = session.withJsonConversions() // adds convenience methods for kotlinx.serialization's conversions
 
-jsonStompSession.use {
-    convertAndSend("/some/destination", Person("Bob", 42), Person.serializer()) 
+jsonStompSession.use { s ->
+    s.convertAndSend("/some/destination", Person("Bob", 42), Person.serializer()) 
 
     // overloads without explicit serializers exist, but should be avoided if you also target JavaScript
-    val subscription: Flow<MyMessage> = subscribe("/some/topic/destination", MyMessage.serializer())
-    
-    subscription.collect { msg ->
+    val messages: Flow<MyMessage> = s.subscribe("/some/topic/destination", MyMessage.serializer())
+
+    messages.collect { msg ->
         println("Received message from ${msg.author}: ${msg.content}")
     }
 }
