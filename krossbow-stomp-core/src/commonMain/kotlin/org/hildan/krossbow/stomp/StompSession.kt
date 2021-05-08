@@ -264,7 +264,7 @@ suspend fun StompSession.subscribeBinary(destination: String): Flow<ByteArray> =
  * The transaction is committed if the block executes successfully, and aborted in case of exception.
  * Any exception thrown by the block is re-thrown after sending the ABORT frame.
  */
-suspend fun <T> StompSession.withTransaction(block: StompSession.(transactionId: String) -> T): T {
+suspend fun <T> StompSession.withTransaction(block: suspend StompSession.(transactionId: String) -> T): T {
     val transactionId = generateUuid()
     begin(transactionId)
     try {
