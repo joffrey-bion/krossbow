@@ -9,7 +9,7 @@ assignees: ''
 
 **Describe the bug**
 
-A clear and concise description of what the bug is, including what happens and what you expected.
+Please describe what you expected and what happened instead.
 
 **Reproduction and additional details**
 
@@ -21,7 +21,7 @@ Please add anything you think could be useful to help debug the problem.
 
 Kotlin version:
 Krossbow version:
-Kotlin target: *(e.g. browser, NodeJS, JVM, Android, a multiplatform combination?)*
+Kotlin target(s): *(e.g. browser, NodeJS, JVM, Android, a multiplatform combination?)*
 Artifacts used:
 - [x] `krossbow-stomp-core`
 - [ ] `krossbow-stomp-jackson`
