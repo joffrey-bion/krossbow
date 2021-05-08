@@ -1,18 +1,12 @@
 package org.hildan.krossbow.stomp.heartbeats
 
-import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketConnection
 
 // If the sender has no real STOMP frame to send, it MUST send an end-of-line (EOL)
 // https://stomp.github.io/stomp-specification-1.2.html#Heart-beating
-
 internal suspend fun WebSocketConnection.sendHeartBeat() {
     sendText("\n")
-}
-
-internal suspend fun WebSocketConnection.closeForMissingHeartBeat() {
-    close(WebSocketCloseCodes.PROTOCOL_ERROR, "Missing heart beat")
 }
 
 internal fun WebSocketFrame.isHeartBeat(): Boolean = when (this) {
