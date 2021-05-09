@@ -2,6 +2,18 @@ public final class org/hildan/krossbow/websocket/DefaultJvmClientKt {
 	public static final fun defaultWebSocketClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
 }
 
+public final class org/hildan/krossbow/websocket/UnboundedWsListenerChannelAdapter {
+	public fun <init> ()V
+	public final fun getIncomingFrames ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public final fun onBinaryMessage-JP2dKIU ([B)Ljava/lang/Object;
+	public final fun onClose-Mj0NB7M (ILjava/lang/String;)Ljava/lang/Object;
+	public final fun onError (Ljava/lang/String;)V
+	public final fun onError (Ljava/lang/Throwable;)V
+	public final fun onPing-JP2dKIU ([B)Ljava/lang/Object;
+	public final fun onPong-JP2dKIU ([B)Ljava/lang/Object;
+	public final fun onTextMessage-JP2dKIU (Ljava/lang/String;)Ljava/lang/Object;
+}
+
 public abstract interface class org/hildan/krossbow/websocket/WebSocketClient {
 	public abstract fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }

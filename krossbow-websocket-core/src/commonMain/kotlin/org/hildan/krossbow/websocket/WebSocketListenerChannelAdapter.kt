@@ -2,6 +2,7 @@ package org.hildan.krossbow.websocket
 
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.ReceiveChannel
 
 /**
@@ -60,5 +61,45 @@ class WebSocketListenerChannelAdapter(
     fun onError(error: Throwable?) {
         frames.close(WebSocketException(error?.message ?: "web socket error", cause = error))
         partialBinaryMessageHandler.close()
+    }
+}
+
+/**
+ * An adapter similar to [WebSocketListenerChannelAdapter], but with an unlimited buffer and non-suspending callback
+ * functions. This is useful for bridging implementations that do not support backpressure (like the browser
+ * WebSocket API).
+ *
+ * This implementation does not support partial messages.
+ */
+class UnboundedWsListenerChannelAdapter {
+    /**
+     * The channel of incoming web socket frames.
+     * This channel is closed when the web socket connection is closed
+     */
+    val incomingFrames: ReceiveChannel<WebSocketFrame>
+        get() = frames
+
+    private val frames: Channel<WebSocketFrame> = Channel(capacity = Channel.UNLIMITED)
+
+    fun onBinaryMessage(bytes: ByteArray) = frames.trySend(WebSocketFrame.Binary(bytes))
+
+    fun onTextMessage(text: String) = frames.trySend(WebSocketFrame.Text(text))
+
+    fun onPing(bytes: ByteArray) = frames.trySend(WebSocketFrame.Ping(bytes))
+
+    fun onPong(bytes: ByteArray)= frames.trySend(WebSocketFrame.Pong(bytes))
+
+    fun onClose(code: Int, reason: String?): ChannelResult<Unit> {
+        val result = frames.trySend(WebSocketFrame.Close(code, reason))
+        frames.close()
+        return result
+    }
+
+    fun onError(message: String) {
+        frames.close(WebSocketException(message))
+    }
+
+    fun onError(error: Throwable?) {
+        frames.close(WebSocketException(error?.message ?: "web socket error", cause = error))
     }
 }

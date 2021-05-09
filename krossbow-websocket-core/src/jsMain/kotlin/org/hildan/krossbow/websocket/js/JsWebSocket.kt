@@ -1,14 +1,11 @@
 package org.hildan.krossbow.websocket.js
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
-import org.hildan.krossbow.websocket.WebSocketConnectionClosedException
+import org.hildan.krossbow.websocket.UnboundedWsListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
+import org.hildan.krossbow.websocket.WebSocketConnectionClosedException
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.khronos.webgl.ArrayBuffer
@@ -44,8 +41,9 @@ open class JsWebSocketClientAdapter(
                 val ws = newWebSocket(url)
                 ws.binaryType = BinaryType.ARRAYBUFFER // to receive arraybuffer instead of blob
                 var pendingConnect = true
-                // unlimited buffer size because we have no means for backpressure anyway
-                val listener = WebSocketListenerChannelAdapter(bufferSize = Channel.UNLIMITED)
+                // We use unlimited buffer size because we have no means for backpressure anyway
+                // (see motivation for https://www.chromestatus.com/feature/5189728691290112)
+                val listener = UnboundedWsListenerChannelAdapter()
                 val wsSession = JsWebSocketConnection(ws, listener.incomingFrames)
                 ws.onopen = {
                     pendingConnect = false
@@ -58,9 +56,7 @@ open class JsWebSocketClientAdapter(
                         pendingConnect = false
                         cont.resumeWithException(WebSocketConnectionClosedException(url, code, closeEvent.reason))
                     } else {
-                        GlobalScope.launch {
-                            listener.onClose(code, closeEvent.reason)
-                        }
+                        listener.onClose(code, closeEvent.reason)
                     }
                 }
                 ws.onerror = { event ->
@@ -69,22 +65,18 @@ open class JsWebSocketClientAdapter(
                         pendingConnect = false
                         cont.resumeWithException(WebSocketConnectionException(url, errorEvent.message))
                     } else {
-                        GlobalScope.launch {
-                            listener.onError(errorEvent.message)
-                        }
+                        listener.onError(errorEvent.message)
                     }
                 }
                 ws.onmessage = { event ->
-                    GlobalScope.launch {
-                        // Types defined by the specification here:
-                        // https://html.spec.whatwg.org/multipage/web-sockets.html#feedback-from-the-protocol
-                        // Because ws.binaryType was set to ARRAYBUFFER, we should never receive Blob objects
-                        when (val body = event.data) {
-                            is String -> listener.onTextMessage(body)
-                            is ArrayBuffer -> listener.onBinaryMessage(body.toByteArray())
-                            null -> listener.onTextMessage("")
-                            else -> listener.onError("Unknown socket frame body type: ${body::class.js}")
-                        }
+                    // Types defined by the specification here:
+                    // https://html.spec.whatwg.org/multipage/web-sockets.html#feedback-from-the-protocol
+                    // Because ws.binaryType was set to ARRAYBUFFER, we should never receive Blob objects
+                    when (val body = event.data) {
+                        is ArrayBuffer -> listener.onBinaryMessage(body.toByteArray())
+                        is String -> listener.onTextMessage(body)
+                        null -> listener.onTextMessage("")
+                        else -> listener.onError("Unknown socket frame body type: ${body::class.js}")
                     }
                 }
             } catch (e: Exception) {
