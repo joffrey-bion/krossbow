@@ -34,27 +34,15 @@ class MockStompSession : StompSession {
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> =
         incomingFrames.consumeAsFlow()
 
-    override suspend fun ack(ackId: String, transactionId: String?) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun ack(ackId: String, transactionId: String?) = error("This mock doesn't support this method")
 
-    override suspend fun nack(ackId: String, transactionId: String?) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun nack(ackId: String, transactionId: String?) = error("This mock doesn't support this method")
 
-    override suspend fun begin(transactionId: String) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun begin(transactionId: String) = error("This mock doesn't support this method")
 
-    override suspend fun commit(transactionId: String) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun commit(transactionId: String) = error("This mock doesn't support this method")
 
-    override suspend fun abort(transactionId: String) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun abort(transactionId: String) = error("This mock doesn't support this method")
 
-    override suspend fun disconnect() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun disconnect() = error("This mock doesn't support this method")
 }
