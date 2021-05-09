@@ -92,21 +92,34 @@ suspend fun WebSocketConnectionMock.waitForSendAndSimulateCompletion(expectedCom
     return frame
 }
 
-suspend fun WebSocketConnectionMock.waitForSubscribeAndSimulateCompletion(): StompFrame.Subscribe {
-    val frame = waitForSendAndSimulateCompletion(StompCommand.SUBSCRIBE)
-    assertTrue(frame is StompFrame.Subscribe, "The next sent frame should be of type StompFrame.Subscribe")
+suspend inline fun <reified T : StompFrame> WebSocketConnectionMock.waitForTypedCommandAndSimulateCompletion(
+    expectedCommand: StompCommand
+): T {
+    val frame = waitForSendAndSimulateCompletion(expectedCommand)
+    assertTrue(frame is T, "The next sent frame should be of type ${T::class.simpleName}")
     return frame
 }
 
+suspend fun WebSocketConnectionMock.waitForSendAndSimulateCompletion(): StompFrame.Send =
+    waitForTypedCommandAndSimulateCompletion(StompCommand.SEND)
+
+suspend fun WebSocketConnectionMock.waitForBeginAndSimulateCompletion(): StompFrame.Begin =
+    waitForTypedCommandAndSimulateCompletion(StompCommand.BEGIN)
+
+suspend fun WebSocketConnectionMock.waitForCommitAndSimulateCompletion(): StompFrame.Commit =
+    waitForTypedCommandAndSimulateCompletion(StompCommand.COMMIT)
+
+suspend fun WebSocketConnectionMock.waitForAbortAndSimulateCompletion(): StompFrame.Abort =
+    waitForTypedCommandAndSimulateCompletion(StompCommand.ABORT)
+
+suspend fun WebSocketConnectionMock.waitForSubscribeAndSimulateCompletion(): StompFrame.Subscribe =
+    waitForTypedCommandAndSimulateCompletion(StompCommand.SUBSCRIBE)
+
 suspend fun WebSocketConnectionMock.waitForUnsubscribeAndSimulateCompletion(expectedSubId: String): StompFrame.Unsubscribe {
-    val frame = waitForSendAndSimulateCompletion(StompCommand.UNSUBSCRIBE)
-    assertTrue(frame is StompFrame.Unsubscribe, "The next sent frame should be of type StompFrame.Unsubscribe")
+    val frame = waitForTypedCommandAndSimulateCompletion<StompFrame.Unsubscribe>(StompCommand.UNSUBSCRIBE)
     assertEquals(expectedSubId, frame.headers.id, "The subscription ID doesn't match")
     return frame
 }
 
-suspend fun WebSocketConnectionMock.waitForDisconnectAndSimulateCompletion(): StompFrame.Disconnect {
-    val frame = waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
-    assertTrue(frame is StompFrame.Disconnect, "The next sent frame should be of type StompFrame.Disconnect")
-    return frame
-}
+suspend fun WebSocketConnectionMock.waitForDisconnectAndSimulateCompletion(): StompFrame.Disconnect =
+    waitForTypedCommandAndSimulateCompletion(StompCommand.DISCONNECT)

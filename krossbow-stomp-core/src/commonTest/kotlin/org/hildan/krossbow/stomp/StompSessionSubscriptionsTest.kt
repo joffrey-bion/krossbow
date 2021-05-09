@@ -1,6 +1,7 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -20,6 +21,94 @@ import org.hildan.krossbow.websocket.WebSocketException
 import kotlin.test.*
 
 class StompSessionSubscriptionsTest {
+
+    @Test
+    fun subscribe_suspendsUntilSubscribeFrameIsSent() = runBlockingTest {
+        val (wsSession, stompSession) = connectWithMocks()
+
+        val deferredFlow = async(start = CoroutineStart.UNDISPATCHED) { stompSession.subscribeText("/dest") }
+        delay(10)
+        assertFalse(deferredFlow.isCompleted, "subscribe() should not return until SUBSCRIBE frame is sent")
+        wsSession.waitForSubscribeAndSimulateCompletion()
+        assertTrue(deferredFlow.isCompleted, "subscribe() should return when SUBSCRIBE frame is sent")
+
+        launch {
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.expectClose()
+        }
+        stompSession.disconnect()
+    }
+
+    @Test
+    fun subscribeWithReceipt_suspendsUntilReceiptIsReceived() = runBlockingTest {
+        val (wsSession, stompSession) = connectWithMocks()
+
+        val receiptId = "my-receipt"
+        val deferredFlow = async(start = CoroutineStart.UNDISPATCHED) {
+            val headers = StompSubscribeHeaders(destination = "/dest", receipt = receiptId)
+            stompSession.subscribe(headers)
+        }
+        delay(10)
+        assertFalse(deferredFlow.isCompleted, "subscribe() should not return until SUBSCRIBE frame is sent")
+        wsSession.waitForSubscribeAndSimulateCompletion()
+        delay(10)
+        assertFalse(deferredFlow.isCompleted, "subscribe() should not return until the RECEIPT is received")
+        wsSession.simulateReceiptFrameReceived("not-my-receipt")
+        delay(10)
+        assertFalse(deferredFlow.isCompleted, "subscribe() should not return until the correct RECEIPT is received")
+        wsSession.simulateReceiptFrameReceived(receiptId)
+        assertTrue(deferredFlow.isCompleted, "subscribe() call should return when SUBSCRIBE frame is sent")
+
+        launch {
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.expectClose()
+        }
+        stompSession.disconnect()
+    }
+
+    @Test
+    fun subscribe_doesntLoseMessagesIfFlowIsNotCollectedImmediately() = runBlockingTest {
+        val (wsSession, stompSession) = connectWithMocks()
+
+        val subFrame = async { wsSession.waitForSubscribeAndSimulateCompletion() }
+        val messages = stompSession.subscribeText("/dest")
+
+        val subId = subFrame.await().headers.id
+        wsSession.simulateMessageFrameReceived(subId, "HELLO")
+
+        launch {
+            wsSession.waitForUnsubscribeAndSimulateCompletion(subId)
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.expectClose()
+        }
+        val message = messages.first()
+        assertEquals("HELLO", message)
+        stompSession.disconnect()
+    }
+
+    @Test
+    fun subscribeSendCollect_shouldNotLoseMessages() = runBlockingTest {
+        val (wsSession, stompSession) = connectWithMocks()
+
+        launch {
+            val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+            val subId = subFrame.headers.id
+
+            // we simulate that a SEND frame triggers a MESSAGE frame on the subscription
+            val sendFrame = wsSession.waitForSendAndSimulateCompletion()
+            wsSession.simulateMessageFrameReceived(subId, sendFrame.bodyAsText)
+
+            wsSession.waitForUnsubscribeAndSimulateCompletion(subId)
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.expectClose()
+        }
+        val messages = stompSession.subscribeText("/sub")
+        stompSession.sendText("/send", "HELLO")
+
+        val message = messages.first()
+        assertEquals("HELLO", message)
+        stompSession.disconnect()
+    }
 
     @Test
     fun subscribe_headersAreRespected() = runBlockingTest {
@@ -104,7 +193,6 @@ class StompSessionSubscriptionsTest {
         assertTrue(wsSession.closed, "disconnect() should close the web socket session")
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun subscription_takeOperatorUnsubscribes() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks()
