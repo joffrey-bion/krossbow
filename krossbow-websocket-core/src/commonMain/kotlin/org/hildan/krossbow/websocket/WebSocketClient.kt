@@ -43,11 +43,12 @@ interface WebSocketConnection {
 
     /**
      * Whether it is safe to send messages through this web socket.
-     * If this is false, sending frames should not be attempted and may fail.
+     * If this is false, sending frames should not be attempted and may throw an exception.
      *
      * This is usually based on the underlying web socket implementation "closed for send" status.
      * However, some web socket implementations like OkHttp don't expose their status but always allow calls to their
      * `send` methods (which are turned into no-ops when the web socket is closed).
+     * For such implementations, `canSend` always returns `true`.
      */
     val canSend: Boolean
 
