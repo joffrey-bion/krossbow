@@ -1,5 +1,20 @@
 # Change Log
 
+## [1.4.0](https://github.com/joffrey-bion/krossbow/tree/1.4.0) (2021-05-11)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.3.1...1.4.0)
+
+**Closed issues:**
+
+- Add typealias for WebSocketSession \(renamed to WebSocketConnection\) [\#121](https://github.com/joffrey-bion/krossbow/issues/121)
+
+**Implemented enhancements:**
+
+- Upgrade Dokka to 1.4.32 [\#113](https://github.com/joffrey-bion/krossbow/issues/113)
+- Upgrade Jackson to 2.12.3 [\#112](https://github.com/joffrey-bion/krossbow/issues/112)
+- Upgrade spring\-websocket to 5.3.6 [\#111](https://github.com/joffrey-bion/krossbow/issues/111)
+- Upgrade Ktor to 1.5.4 [\#110](https://github.com/joffrey-bion/krossbow/issues/110)
+- Upgrade Atomicfu to 0.15.0 [\#108](https://github.com/joffrey-bion/krossbow/issues/108)
+
 ## [1.3.1](https://github.com/joffrey-bion/krossbow/tree/1.3.1) (2021-04-21)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.3.0...1.3.1)
 
@@ -370,7 +385,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/6296851cf635f06b9b0c3b3973cf450193205062...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/25362a4ce46d4d773636165cd1a2739d4f3329ae...0.1.0)
 
 **Implemented enhancements:**
 
