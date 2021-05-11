@@ -23,6 +23,9 @@ interface WebSocketClient {
     suspend fun connect(url: String): WebSocketConnection
 }
 
+@Deprecated("This has been renamed to WebSocketConnection", ReplaceWith("WebSocketConnection"))
+typealias WebSocketSession = WebSocketConnection
+
 /**
  * Represents a web socket connection to another endpoint.
  *
