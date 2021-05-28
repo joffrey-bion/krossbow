@@ -12,7 +12,6 @@ dependencies {
     api("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
     testImplementation(kotlin("test"))
-    testImplementation(kotlin("test-junit"))
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

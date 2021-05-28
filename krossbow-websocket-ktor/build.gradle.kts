@@ -22,21 +22,17 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:atomicfu:${libs.versions.atomicFu.get()}")
             }
         }
         val jvmTest by getting {
             dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
             }
         }
         val jsTest by getting {
             dependencies {
-                implementation(kotlin("test-js"))
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
             }
         }

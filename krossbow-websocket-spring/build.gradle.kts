@@ -19,7 +19,6 @@ dependencies {
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.17")
 
     testImplementation(kotlin("test"))
-    testImplementation(kotlin("test-junit"))
     testImplementation(projects.krossbowWebsocketTest)
 }
 

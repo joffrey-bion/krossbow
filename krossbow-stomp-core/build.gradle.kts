@@ -38,22 +38,14 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(projects.krossbowWebsocketTest)
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
                 // For kotlinx-coroutines-test
                 implementation("org.jetbrains.kotlinx:atomicfu:${libs.versions.atomicFu.get()}")
             }
         }
         val jvmTest by getting {
             dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
                 implementation("uk.org.lidalia:slf4j-test:1.1.0")
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
             }
         }
     }
