@@ -1,5 +1,23 @@
 # Change Log
 
+## [2.0.0](https://github.com/joffrey-bion/krossbow/tree/2.0.0) (2021-05-28)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/1.4.0...2.0.0)
+
+**Closed issues:**
+
+- Align StompSession.use with Closeable.use [\#106](https://github.com/joffrey-bion/krossbow/issues/106)
+
+**Fixed bugs:**
+
+- withTransaction doesn't allow suspending calls inside [\#114](https://github.com/joffrey-bion/krossbow/issues/114)
+
+**Implemented enhancements:**
+
+- Upgrade to Ktor 1.6.0 \(Kotlin 1.5\) [\#119](https://github.com/joffrey-bion/krossbow/issues/119)
+- Upgrade kotlin coroutines to 1.5.0 [\#117](https://github.com/joffrey-bion/krossbow/issues/117)
+- Upgrade to Kotlinx Serialization 1.2.0 [\#115](https://github.com/joffrey-bion/krossbow/issues/115)
+- Upgrade Kotlin to 1.5 [\#109](https://github.com/joffrey-bion/krossbow/issues/109)
+
 ## [1.4.0](https://github.com/joffrey-bion/krossbow/tree/1.4.0) (2021-05-11)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.3.1...1.4.0)
 
@@ -385,7 +403,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/25362a4ce46d4d773636165cd1a2739d4f3329ae...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/90ae986cd240dcaf4c4916ded36d22bcc7522759...0.1.0)
 
 **Implemented enhancements:**
 
