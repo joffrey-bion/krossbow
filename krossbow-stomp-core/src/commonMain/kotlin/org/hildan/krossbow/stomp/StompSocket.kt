@@ -3,11 +3,7 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.config.HeartBeat
@@ -32,20 +28,16 @@ import kotlin.coroutines.EmptyCoroutineContext
  * It handles the frame conversions between web sockets and STOMP.
  * It manages heart beats and is aware of heart beat frames.
  */
-@OptIn(ObsoleteCoroutinesApi::class) // TODO replace with SharedFlow.. maybe?
 internal class StompSocket(
     private val webSocketConnection: WebSocketConnection,
     private val config: StompConfig,
     coroutineContext: CoroutineContext = EmptyCoroutineContext
 ) {
-    private val scope = CoroutineScope(coroutineContext + Job() + CoroutineName("stomp-socket"))
+    private val scope = CoroutineScope(coroutineContext + CoroutineName("stomp-socket"))
 
     private var heartBeater: HeartBeater? = null
 
-    /**
-     * The [BroadcastChannel] of decoded STOMP frames.
-     */
-    val stompFramesChannel = BroadcastChannel<StompFrame>(Channel.BUFFERED)
+    private val _stompFrames = MutableSharedFlow<StompFrame>()
 
     /**
      * The [Flow] of decoded STOMP frames.
@@ -55,7 +47,7 @@ internal class StompSocket(
      * Cancellation of one collector results in the cancellation of the corresponding subscription but doesn't fail
      * the others.
      */
-    val stompFramesFlow: Flow<StompFrame> = stompFramesChannel.asFlow()
+    val stompFrames: SharedFlow<StompFrame> = _stompFrames
 
     init {
         scope.launch(CoroutineName("stomp-frame-decoder")) {
@@ -88,7 +80,7 @@ internal class StompSocket(
         if (f is StompFrame.Connected) {
             initHeartBeats(f.headers.heartBeat)
         }
-        stompFramesChannel.send(f)
+        _stompFrames.emit(f)
     }
 
     private fun decodeFrame(f: WebSocketFrame): StompFrame? = when (f) {

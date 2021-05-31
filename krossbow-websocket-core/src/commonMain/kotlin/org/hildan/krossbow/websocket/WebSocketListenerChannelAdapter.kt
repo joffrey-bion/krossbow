@@ -66,7 +66,7 @@ class WebSocketListenerChannelAdapter(
 
 /**
  * An adapter similar to [WebSocketListenerChannelAdapter], but with an unlimited buffer and non-suspending callback
- * functions. This is useful for bridging implementations that do not support backpressure (like the browser
+ * functions. This is useful for bridging implementations that do not support backpressure (like the browser's
  * WebSocket API).
  *
  * This implementation does not support partial messages.
@@ -97,9 +97,5 @@ class UnboundedWsListenerChannelAdapter {
 
     fun onError(message: String) {
         frames.close(WebSocketException(message))
-    }
-
-    fun onError(error: Throwable?) {
-        frames.close(WebSocketException(error?.message ?: "web socket error", cause = error))
     }
 }

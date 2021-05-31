@@ -6,13 +6,8 @@ import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.produceIn
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketCloseCodes
-import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
+import kotlinx.coroutines.flow.*
+import org.hildan.krossbow.websocket.*
 import kotlin.coroutines.EmptyCoroutineContext
 
 class KtorWebSocketClient(
@@ -31,7 +26,7 @@ private class KtorWebSocketConnectionAdapter(
     private val wsSession: DefaultClientWebSocketSession
 ) : WebSocketConnectionWithPingPong {
 
-    private val scope = CoroutineScope(EmptyCoroutineContext + Job() + CoroutineName("krossbow-ktor-ws-frames-mapper"))
+    private val scope = CoroutineScope(EmptyCoroutineContext + CoroutineName("krossbow-ktor-ws-frames-mapper"))
 
     override val url: String
         get() = wsSession.call.request.url.toString()
@@ -40,9 +35,13 @@ private class KtorWebSocketConnectionAdapter(
     override val canSend: Boolean
         get() = !wsSession.outgoing.isClosedForSend
 
-    @OptIn(FlowPreview::class)
-    override val incomingFrames: ReceiveChannel<WebSocketFrame>
-        get() = wsSession.incoming.consumeAsFlow().map { it.toKrossbowFrame() }.produceIn(scope)
+    override val incomingEvents: SharedFlow<WebSocketEvent>
+        get() = wsSession.incoming.consumeAsFlow()
+            .map {
+                it.fin
+                it.toKrossbowFrame() }
+            .catch { exception -> emit(WebSocketError(exception)) }
+            .shareIn(scope, SharingStarted.Eagerly)
 
     override suspend fun sendText(frameText: String) {
         wsSession.outgoing.send(Frame.Text(frameText))
@@ -66,7 +65,7 @@ private class KtorWebSocketConnectionAdapter(
     }
 }
 
-private fun Frame.toKrossbowFrame(): WebSocketFrame = when (this) {
+private fun Frame.toKrossbowFrame(): WebSocketEvent = when (this) {
     is Frame.Text -> WebSocketFrame.Text(readText())
     is Frame.Binary -> WebSocketFrame.Binary(readBytes())
     is Frame.Ping -> WebSocketFrame.Ping(readBytes())

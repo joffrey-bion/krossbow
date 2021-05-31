@@ -1,22 +1,17 @@
 package org.hildan.krossbow.websocket.spring
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
-import org.springframework.web.socket.BinaryMessage
-import org.springframework.web.socket.CloseStatus
-import org.springframework.web.socket.PingMessage
-import org.springframework.web.socket.PongMessage
-import org.springframework.web.socket.TextMessage
-import org.springframework.web.socket.WebSocketHandler
-import org.springframework.web.socket.WebSocketMessage
+import org.hildan.krossbow.websocket.WebSocketEvent
+import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
+import org.springframework.web.socket.*
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport
 import org.springframework.web.socket.sockjs.client.SockJsClient
@@ -64,7 +59,9 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
     }
 
     override fun handleTransportError(session: SpringWebSocketSession, exception: Throwable) {
-        channelListener.onError(exception)
+        runBlocking {
+            channelListener.onError(exception)
+        }
     }
 
     override fun afterConnectionClosed(session: SpringWebSocketSession, closeStatus: CloseStatus) {
@@ -84,7 +81,7 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
 @Suppress("BlockingMethodInNonBlockingContext")
 private class SpringSessionToKrossbowConnectionAdapter(
     private val session: SpringWebSocketSession,
-    override val incomingFrames: ReceiveChannel<WebSocketFrame>
+    override val incomingEvents: SharedFlow<WebSocketEvent>,
 ) : WebSocketConnectionWithPingPong {
 
     private val mutex = Mutex()

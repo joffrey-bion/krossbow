@@ -56,9 +56,9 @@ interface WebSocketConnection {
     val canSend: Boolean
 
     /**
-     * The channel of incoming web socket frames.
+     * The channel of incoming web socket frames and other events.
      */
-    val incomingFrames: ReceiveChannel<WebSocketFrame>
+    val incomingEvents: ReceiveChannel<WebSocketEvent>
 
     /**
      * Sends a web socket text frame.
@@ -85,6 +85,12 @@ interface WebSocketConnection {
     suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
 }
 
+/**
+ * A [WebSocketConnection] that also supports sending PING and PONG frames.
+ *
+ * Note that [WebSocketConnection] implementations usually already deal with responding PONG frames to PING requests
+ * from the server, so no action is mandatory or expected from clients in this respect.
+ */
 interface WebSocketConnectionWithPingPong : WebSocketConnection {
 
     /**
@@ -97,7 +103,7 @@ interface WebSocketConnectionWithPingPong : WebSocketConnection {
      *
      * Note that implementations usually take care of sending Pong frames corresponding to each received Ping frame, so
      * applications should not bother dealing with Pongs in general.
-     * Unsollicited Pong frames may be sent, however, to serve as unidirectional heart beats.
+     * Unsolicited Pong frames may be sent, however, to serve as unidirectional heart beats.
      */
     suspend fun sendPong(frameData: ByteArray)
 }

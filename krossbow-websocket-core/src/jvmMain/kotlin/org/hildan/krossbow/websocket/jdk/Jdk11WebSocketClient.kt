@@ -48,14 +48,14 @@ private class Jdk11WebSocketListener(
     override val coroutineContext: CoroutineContext
         get() = job
 
-    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? = future {
+    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*> = future {
         listener.onTextMessage(data, last)
         // The call to request(1) here is to ensure that onText() is not called again before the (potentially partial)
         // message has been processed
         webSocket.request(1)
     }
 
-    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? = future {
+    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*> = future {
         listener.onBinaryMessage(data.toByteArray(), last)
         // The call to request(1) here is to ensure that onBinary() is not called again before the (potentially partial)
         // message has been processed
@@ -72,7 +72,7 @@ private class Jdk11WebSocketListener(
         webSocket.request(1)
     }
 
-    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? = future {
+    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*> = future {
         listener.onClose(statusCode, reason)
         job.cancel()
     }
@@ -95,7 +95,7 @@ private fun ByteBuffer.toByteArray(): ByteArray {
 private class Jdk11WebSocketConnection(
     private val webSocket: WebSocket,
     override val url: String,
-    override val incomingFrames: ReceiveChannel<WebSocketFrame>
+    override val incomingEvents: ReceiveChannel<WebSocketFrame>
 ) : WebSocketConnectionWithPingPong {
 
     private val mutex = Mutex()

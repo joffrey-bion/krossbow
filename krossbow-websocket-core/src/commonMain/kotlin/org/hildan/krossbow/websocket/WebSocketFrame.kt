@@ -1,9 +1,19 @@
 package org.hildan.krossbow.websocket
 
 /**
+ * A web socket event, such as a [WebSocketFrame] or [WebSocketError].
+ */
+sealed class WebSocketEvent
+
+/**
+ * Represents an error on the web socket.
+ */
+data class WebSocketError(val error: Throwable?): WebSocketEvent()
+
+/**
  * A web socket frame.
  */
-sealed class WebSocketFrame {
+sealed class WebSocketFrame : WebSocketEvent() {
 
     /**
      * A web socket text frame (0x1).

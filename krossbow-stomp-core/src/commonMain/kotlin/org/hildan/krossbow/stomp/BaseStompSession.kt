@@ -2,7 +2,6 @@ package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
@@ -33,7 +32,7 @@ internal class BaseStompSession(
     }
 
     private suspend inline fun waitForConnectedFrame(): StompFrame.Connected =
-        stompSocket.stompFramesFlow.filterIsInstance<StompFrame.Connected>().firstOrNull()
+        stompSocket.stompFrames.filterIsInstance<StompFrame.Connected>().firstOrNull()
             ?: error("Frames channel closed unexpectedly while expecting the CONNECTED frame")
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
@@ -76,7 +75,7 @@ internal class BaseStompSession(
     }
 
     private suspend fun waitForReceipt(receiptId: String): StompFrame.Receipt =
-        stompSocket.stompFramesFlow.filterIsInstance<StompFrame.Receipt>().firstOrNull { it.headers.receiptId == receiptId }
+        stompSocket.stompFrames.filterIsInstance<StompFrame.Receipt>().firstOrNull { it.headers.receiptId == receiptId }
             ?: error("Frames channel closed unexpectedly while waiting for RECEIPT frame with id='$receiptId'")
 
     private val StompFrame.receiptTimeout: Long
