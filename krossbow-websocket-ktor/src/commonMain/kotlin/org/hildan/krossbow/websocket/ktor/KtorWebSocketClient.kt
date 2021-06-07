@@ -4,7 +4,6 @@ import io.ktor.client.*
 import io.ktor.client.features.websocket.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
-import io.ktor.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -16,7 +15,7 @@ import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
 import kotlin.coroutines.EmptyCoroutineContext
 
-class KtorWebSocketClient @OptIn(KtorExperimentalAPI::class) constructor(
+class KtorWebSocketClient(
     private val httpClient: HttpClient = HttpClient { install(WebSockets) }
 ) : WebSocketClient {
 
