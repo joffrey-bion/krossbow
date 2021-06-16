@@ -61,14 +61,14 @@ internal fun headersOf(
 }
 
 data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val host: String by header()
+    val host: String? by optionalHeader() // mandatory since 1.2, but forbidden in some 1.0 servers
     val acceptVersion: List<String> by acceptVersionHeader()
     val login: String? by optionalHeader()
     val passcode: String? by optionalHeader()
     val heartBeat: HeartBeat? by heartBeatHeader()
 
     constructor(
-        host: String,
+        host: String?,
         acceptVersion: List<String> = listOf("1.2"),
         login: String? = null,
         passcode: String? = null,

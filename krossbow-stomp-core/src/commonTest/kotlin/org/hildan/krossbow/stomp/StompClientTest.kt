@@ -104,6 +104,19 @@ class StompClientTest {
         }
     }
 
+    @Test
+    fun connect_sendsCorrectHeaders_withNoHostHeader() {
+        runBlockingTest {
+            val expectedHeaders = StompConnectHeaders(
+                host = null,
+                heartBeat = HeartBeat(),
+            )
+            testConnectHeaders(expectedHeaders) { client ->
+                client.connect("http://some.host/ws", host = null)
+            }
+        }
+    }
+
     private suspend fun testConnectHeaders(
         expectedHeaders: StompConnectHeaders,
         configureClient: StompConfig.() -> Unit = {},
@@ -149,9 +162,10 @@ class StompClientTest {
         val wsConnectionException = Exception("some web socket exception")
         val stompClient = StompClient(webSocketClientMock { throw wsConnectionException })
         val exception = assertFailsWith(WebSocketConnectionException::class) {
-            stompClient.connect("dummy")
+            stompClient.connect("wss://dummy.com")
         }
         assertNotNull(exception.cause, "ConnectException should have original exception as cause")
+        assertEquals("wss://dummy.com", exception.url)
         assertEquals(wsConnectionException::class, exception.cause!!::class)
         assertEquals(wsConnectionException.message, exception.cause?.message)
     }
@@ -168,8 +182,9 @@ class StompClientTest {
         }
 
         val exception = assertFailsWith(StompConnectionException::class) {
-            stompClient.connect("dummy")
+            stompClient.connect("wss://dummy.com/path")
         }
+        assertEquals("dummy.com", exception.host)
         assertNotNull(exception.cause, "StompConnectionException should have original exception as cause")
     }
 }

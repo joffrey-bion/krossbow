@@ -95,6 +95,20 @@ class StompCodecTest {
     }
 
     @Test
+    fun connect_without_host() {
+        val frameText = """
+            CONNECT
+            accept-version:1.2
+            
+            $nullChar
+        """.trimIndent()
+
+        val headers = StompConnectHeaders(host = null)
+        val frame = StompFrame.Connect(headers)
+        assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
     fun subscribe_custom_headers() {
         val frameText = """
             SUBSCRIBE

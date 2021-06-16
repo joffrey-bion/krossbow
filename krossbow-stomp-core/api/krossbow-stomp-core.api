@@ -36,6 +36,7 @@ public final class org/hildan/krossbow/stomp/StompClientKt {
 public final class org/hildan/krossbow/stomp/StompConnectionException : org/hildan/krossbow/stomp/ConnectionException {
 	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getHost ()Ljava/lang/String;
 }
 
 public final class org/hildan/krossbow/stomp/StompErrorFrameReceived : java/lang/Exception {

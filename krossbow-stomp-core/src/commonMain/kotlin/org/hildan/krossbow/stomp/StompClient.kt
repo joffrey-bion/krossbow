@@ -38,8 +38,13 @@ class StompClient(
      * If [login] and [passcode] are provided, they are used to connect at STOMP level (after the web socket
      * connection is established).
      *
-     * If [customStompConnectHeaders] is provided, its content will be included in the CONNECT/STOMP frame and
+     * If [customStompConnectHeaders] is provided, its content will be included in the CONNECT (or STOMP) frame and
      * might be used by the server for various usages, e.g. Authorization
+     *
+     * The `host` header of the CONNECT (or STOMP) frame can be customized via the [host] parameter.
+     * This header was introduced as mandatory since STOMP 1.1 and defaults to the host of the provided URL.
+     * Some old STOMP servers may refuse connections with a `host` header, in which case you can force it to null to
+     * prevent it from being sent.
      *
      * @throws ConnectionTimeout if this method takes longer than the configured
      * [timeout][StompConfig.connectionTimeoutMillis] (as a whole for both WS connect and STOMP connect)
@@ -48,7 +53,7 @@ class StompClient(
         url: String,
         login: String? = null,
         passcode: String? = null,
-        host: String = extractHost(url),
+        host: String? = extractHost(url),
         customStompConnectHeaders: Map<String, String> = emptyMap(),
     ): StompSession {
         val session = withTimeoutOrNull(config.connectionTimeoutMillis) {
@@ -91,7 +96,7 @@ class StompClient(
  */
 suspend fun WebSocketConnection.stomp(
     config: StompConfig,
-    host: String = this.host,
+    host: String? = this.host,
     login: String? = null,
     passcode: String? = null,
     customHeaders: Map<String, String> = emptyMap()
@@ -106,7 +111,7 @@ suspend fun WebSocketConnection.stomp(
         )
         stomp(config, connectHeaders)
     }
-    return session ?: throw ConnectionTimeout(host, config.connectionTimeoutMillis)
+    return session ?: throw ConnectionTimeout(host ?: "null", config.connectionTimeoutMillis)
 }
 
 internal suspend fun WebSocketConnection.stomp(config: StompConfig, headers: StompConnectHeaders): StompSession {
@@ -139,8 +144,8 @@ class WebSocketConnectionException(url: String, cause: Throwable? = null) :
 /**
  * Exception thrown when the connection attempt failed at STOMP protocol level.
  */
-class StompConnectionException(host: String, cause: Throwable? = null) :
-    ConnectionException(host, "Failed to connect at STOMP protocol level to $host", cause)
+class StompConnectionException(val host: String?, cause: Throwable? = null) :
+    ConnectionException(host ?: "null", "Failed to connect at STOMP protocol level to host '$host'", cause)
 
 /**
  * Exception thrown when something went wrong during the connection.
