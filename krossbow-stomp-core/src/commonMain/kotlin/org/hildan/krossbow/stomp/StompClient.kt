@@ -48,12 +48,13 @@ class StompClient(
         url: String,
         login: String? = null,
         passcode: String? = null,
+        host: String = extractHost(url),
         customStompConnectHeaders: Map<String, String> = emptyMap(),
     ): StompSession {
         val session = withTimeoutOrNull(config.connectionTimeoutMillis) {
             val wsSession = webSocketConnect(url)
             val connectHeaders = StompConnectHeaders(
-                host = extractHost(url),
+                host = host,
                 login = login,
                 passcode = passcode,
                 heartBeat = config.heartBeat,

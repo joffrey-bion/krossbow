@@ -24,8 +24,8 @@ public final class org/hildan/krossbow/stomp/StompClient {
 	public fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;)V
 	public synthetic fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lorg/hildan/krossbow/stomp/config/StompConfig;)V
-	public final fun connect (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun connect$default (Lorg/hildan/krossbow/stomp/StompClient;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun connect (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun connect$default (Lorg/hildan/krossbow/stomp/StompClient;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/stomp/StompClientKt {

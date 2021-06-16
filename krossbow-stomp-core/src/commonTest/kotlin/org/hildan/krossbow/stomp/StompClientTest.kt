@@ -91,6 +91,19 @@ class StompClientTest {
         }
     }
 
+    @Test
+    fun connect_sendsCorrectHeaders_withCustomHostHeader() {
+        runBlockingTest {
+            val expectedHeaders = StompConnectHeaders(
+                host = "custom",
+                heartBeat = HeartBeat(),
+            )
+            testConnectHeaders(expectedHeaders) { client ->
+                client.connect("http://some.host/ws", host = "custom")
+            }
+        }
+    }
+
     private suspend fun testConnectHeaders(
         expectedHeaders: StompConnectHeaders,
         configureClient: StompConfig.() -> Unit = {},
