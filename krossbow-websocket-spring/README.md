@@ -20,3 +20,49 @@ You will need to declare the `krossbow-websocket-spring` module dependency:
 ```
 implementation("org.hildan.krossbow:krossbow-websocket-spring:$krossbowVersion")
 ```
+
+## Usage with StompClient
+
+### Predefined clients
+
+To use one of the predefined Spring clients,
+you need to specify it when creating your `StompClient`:
+
+```kotlin
+val stompClient = StompClient(SpringDefaultWebSocketClient)
+```
+
+Or using the default SockJS client:
+
+```kotlin
+val stompClient = StompClient(SpringSockJSWebSocketClient)
+```
+
+### Custom SpringWebSocketClient
+
+You can also use your own `SpringWebSocketClient` by wrapping it in a `SpringWebSocketClientAdapter`:
+
+```kotlin
+// Pure Spring configuration
+val springWsClient = StandardWebSocketClient().apply {
+ taskExecutor = SimpleAsyncTaskExecutor("my-websocket-threads")
+ userProperties = mapOf("my-prop" to "someValue")
+}
+
+// Krossbow adapter
+val stompClient = StompClient(SpringWebSocketClientAdapter(springWsClient))
+```
+
+Another example of custom client, using Spring's SockJS client:
+
+```kotlin
+// Pure Spring configuration
+val transports = listOf(
+    WebSocketTransport(StandardWebSocketClient()),
+    RestTemplateXhrTransport(myCustomRestTemplate),
+)
+val sockJsClient = SockJsClient(transports)
+
+// Krossbow adapter
+val stompClient = StompClient(SpringWebSocketClientAdapter(sockJsClient))
+```

@@ -15,3 +15,24 @@ You will need to declare the `krossbow-websocket-ktor` module dependency to use 
 ```
 implementation("org.hildan.krossbow:krossbow-websocket-ktor:$krossbowVersion")
 ```
+
+## Usage with StompClient
+
+To use the `KtorWebSocketClient` instead of the platform default,
+you need to specify it when creating your `StompClient`:
+
+```kotlin
+val client = StompClient(KtorWebSocketClient())
+```
+
+You can customize the actual HTTP client used by Ktor behind the scenes by passing it to `KtorWebSocketClient`:
+
+```kotlin
+// You may configure Ktor HTTP client as you please,
+// but make sure at least the websocket feature is installed
+val httpClient = HttpClient {
+    install(WebSockets)
+}
+val wsClient = KtorWebSocketClient(httpClient)
+val stompClient = StompClient(wsClient)
+```
