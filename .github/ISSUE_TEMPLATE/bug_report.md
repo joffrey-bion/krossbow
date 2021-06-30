@@ -19,9 +19,10 @@ Please add anything you think could be useful to help debug the problem.
 
 **Context**
 
-Kotlin version:
-Krossbow version:
-Kotlin target(s): *(e.g. browser, NodeJS, JVM, Android, a multiplatform combination?)*
+* Krossbow version: 
+* Kotlin version: 
+* Kotlin target(s): 
+
 Artifacts used:
 - [x] `krossbow-stomp-core`
 - [ ] `krossbow-stomp-jackson`

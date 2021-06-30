@@ -15,4 +15,4 @@ assignees: ''
 
 **Describe alternatives you've considered**
 
-Is there a way -maybe inconvenient- to achieve your goal at the moment, or a workaround?
+(Is there a way -maybe inconvenient- to achieve your goal at the moment, or a workaround?)
