@@ -9,7 +9,7 @@ plugins {
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jetbrains.dokka") version "1.4.32" apply false
     id("org.hildan.github.changelog") version "1.6.0"
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.5.0"
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.6.0"
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
