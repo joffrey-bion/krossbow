@@ -1,5 +1,17 @@
 # Change Log
 
+## [2.2.0](https://github.com/joffrey-bion/krossbow/tree/2.2.0) (2021-07-27)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/2.1.0...2.2.0)
+
+**Fixed bugs:**
+
+- Send frame should suspend until delivery of the message  [\#125](https://github.com/joffrey-bion/krossbow/issues/125)
+
+**Implemented enhancements:**
+
+- Upgrade Dokka to version 1.5.0 [\#127](https://github.com/joffrey-bion/krossbow/issues/127)
+- Upgrade to Kotlin 1.5.21 [\#124](https://github.com/joffrey-bion/krossbow/issues/124)
+
 ## [2.1.0](https://github.com/joffrey-bion/krossbow/tree/2.1.0) (2021-06-16)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.0.0...2.1.0)
 
@@ -25,11 +37,6 @@
 - Upgrade kotlin coroutines to 1.5.0 [\#117](https://github.com/joffrey-bion/krossbow/issues/117)
 - Upgrade to Kotlinx Serialization 1.2.0 [\#115](https://github.com/joffrey-bion/krossbow/issues/115)
 - Upgrade Kotlin to 1.5 [\#109](https://github.com/joffrey-bion/krossbow/issues/109)
-- Upgrade Dokka to 1.4.32 [\#113](https://github.com/joffrey-bion/krossbow/issues/113)
-- Upgrade Jackson to 2.12.3 [\#112](https://github.com/joffrey-bion/krossbow/issues/112)
-- Upgrade spring\-websocket to 5.3.6 [\#111](https://github.com/joffrey-bion/krossbow/issues/111)
-- Upgrade Ktor to 1.5.4 [\#110](https://github.com/joffrey-bion/krossbow/issues/110)
-- Upgrade Atomicfu to 0.15.0 [\#108](https://github.com/joffrey-bion/krossbow/issues/108)
 
 ## [1.4.0](https://github.com/joffrey-bion/krossbow/tree/1.4.0) (2021-05-11)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.3.1...1.4.0)
@@ -37,6 +44,14 @@
 **Closed issues:**
 
 - Add typealias for WebSocketSession \(renamed to WebSocketConnection\) [\#121](https://github.com/joffrey-bion/krossbow/issues/121)
+
+**Implemented enhancements:**
+
+- Upgrade Dokka to 1.4.32 [\#113](https://github.com/joffrey-bion/krossbow/issues/113)
+- Upgrade Jackson to 2.12.3 [\#112](https://github.com/joffrey-bion/krossbow/issues/112)
+- Upgrade spring\-websocket to 5.3.6 [\#111](https://github.com/joffrey-bion/krossbow/issues/111)
+- Upgrade Ktor to 1.5.4 [\#110](https://github.com/joffrey-bion/krossbow/issues/110)
+- Upgrade Atomicfu to 0.15.0 [\#108](https://github.com/joffrey-bion/krossbow/issues/108)
 
 ## [1.3.1](https://github.com/joffrey-bion/krossbow/tree/1.3.1) (2021-04-21)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.3.0...1.3.1)
@@ -408,7 +423,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/d6f464a3f31e1e2687f77d4a5c6536b89e1be875...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/7ff0ed36f1be661df5b72d49c3560cd44ba9034f...0.1.0)
 
 **Implemented enhancements:**
 
