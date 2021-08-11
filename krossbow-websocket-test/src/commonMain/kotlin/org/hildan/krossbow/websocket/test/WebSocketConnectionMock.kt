@@ -20,7 +20,7 @@ class WebSocketConnectionMock : WebSocketConnection {
 
     private val sentFrames = Channel<WebSocketFrame>()
 
-    private val closeEvent = Channel<Unit>()
+    private val closeEvent = Channel<CloseEvent>()
 
     var closed = false
 
@@ -34,7 +34,7 @@ class WebSocketConnectionMock : WebSocketConnection {
 
     override suspend fun close(code: Int, reason: String?) {
         closed = true
-        closeEvent.send(Unit)
+        closeEvent.send(CloseEvent(code, reason))
     }
 
     /**
@@ -44,10 +44,12 @@ class WebSocketConnectionMock : WebSocketConnection {
      */
     suspend fun waitForSentWsFrameAndSimulateCompletion(): WebSocketFrame = sentFrames.receive()
 
-    suspend fun expectClose() {
-        if (!closeEvent.receiveCatching().isSuccess) {
+    suspend fun expectClose(): CloseEvent {
+        val receiveCatching = closeEvent.receiveCatching()
+        if (!receiveCatching.isSuccess) {
             fail("expected web socket close")
         }
+        return receiveCatching.getOrThrow()
     }
 
     fun expectNoClose() {
@@ -72,3 +74,5 @@ class WebSocketConnectionMock : WebSocketConnection {
         listener.onClose(code, reason)
     }
 }
+
+data class CloseEvent(val code: Int, val reason: String?)

@@ -24,6 +24,7 @@ import org.hildan.krossbow.stomp.heartbeats.sendHeartBeat
 import org.hildan.krossbow.websocket.WebSocketCloseCodes
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketConnection
+import org.hildan.krossbow.websocket.truncateToCloseFrameReasonLength
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -131,7 +132,10 @@ internal class StompSocket(
         // However, the web socket did not error and we may need to close the output, so we don't discriminate
         // against StompErrorFrameReceived, and close anyway even in this case.
         if (cause !is WebSocketClosedUnexpectedly) {
-            webSocketConnection.close(code = closeCodeFor(cause), reason = cause?.message)
+            webSocketConnection.close(
+                code = closeCodeFor(cause),
+                reason = cause?.message?.truncateToCloseFrameReasonLength(),
+            )
         }
         // this is reported even if the websocket was closed unexpectedly (it doesn't have to be us closing it)
         config.instrumentation?.onWebSocketClosed(cause)

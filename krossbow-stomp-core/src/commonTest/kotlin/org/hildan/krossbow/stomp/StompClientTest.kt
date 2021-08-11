@@ -187,4 +187,24 @@ class StompClientTest {
         assertEquals("dummy.com", exception.host)
         assertNotNull(exception.cause, "StompConnectionException should have original exception as cause")
     }
+
+    @Test
+    fun errorOnWebSocketShouldCloseTheSession_messageBiggerThanCloseReasonMaxLength() = runBlockingTest {
+        val errorMessage = "some web socket exception with a very long message that exceeds the maximum " +
+            "allowed length for the 'reason' in web socket close frames. It needs to be truncated."
+        val wsSession = WebSocketConnectionMock()
+        val stompClient = StompClient(webSocketClientMock { wsSession })
+
+        launch {
+            stompClient.connect("wss://dummy.com")
+        }
+        wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+        wsSession.simulateConnectedFrameReceived()
+        wsSession.simulateErrorFrameReceived(errorMessage)
+        val closeEvent = wsSession.expectClose()
+        val reason = closeEvent.reason
+        assertNotNull(reason, "Close reason should be present")
+        assertTrue(errorMessage.startsWith(reason), "Close reason should be based on the error message")
+        assertTrue(reason.encodeToByteArray().size <= 123, "Reason should be truncated to 123 bytes")
+    }
 }

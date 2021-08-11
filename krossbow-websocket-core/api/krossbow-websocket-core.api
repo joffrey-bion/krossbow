@@ -36,6 +36,12 @@ public final class org/hildan/krossbow/websocket/WebSocketCloseCodes {
 	public static final field TOO_BIG_TO_PROCESS I
 }
 
+public final class org/hildan/krossbow/websocket/WebSocketCloseReasonUtilsKt {
+	public static final field CLOSE_REASON_MAX_LENGTH_BYTES I
+	public static final fun truncateToCloseFrameReasonLength (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun truncateUtf8BytesLengthTo (Ljava/lang/String;I)Ljava/lang/String;
+}
+
 public abstract interface class org/hildan/krossbow/websocket/WebSocketConnection {
 	public abstract fun close (ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getCanSend ()Z
