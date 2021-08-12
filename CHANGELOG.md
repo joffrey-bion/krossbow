@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.2.1](https://github.com/joffrey-bion/krossbow/tree/2.2.1) (2021-08-12)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/2.2.0...2.2.1)
+
+**Fixed bugs:**
+
+-  java.lang.UnsupportedOperationException [\#129](https://github.com/joffrey-bion/krossbow/issues/129)
+
 ## [2.2.0](https://github.com/joffrey-bion/krossbow/tree/2.2.0) (2021-07-27)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.1.0...2.2.0)
 
@@ -423,7 +430,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/7ff0ed36f1be661df5b72d49c3560cd44ba9034f...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/111207940987bb63246f740deadba7c2baba3abe...0.1.0)
 
 **Implemented enhancements:**
 
