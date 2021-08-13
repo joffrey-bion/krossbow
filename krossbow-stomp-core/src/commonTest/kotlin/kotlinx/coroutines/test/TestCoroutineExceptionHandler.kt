@@ -5,6 +5,7 @@
 package kotlinx.coroutines.test
 
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.sync.Mutex
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
@@ -36,26 +37,37 @@ public interface UncaughtExceptionCaptor {
  */
 public class TestCoroutineExceptionHandler : AbstractCoroutineContextElement(CoroutineExceptionHandler),
     UncaughtExceptionCaptor, CoroutineExceptionHandler {
+    private val mutex = Mutex()
     private val _exceptions = mutableListOf<Throwable>()
 
     /** @suppress **/
     override fun handleException(context: CoroutineContext, exception: Throwable) {
-        synchronized(_exceptions) {
+        mutex.withActiveNonSuspendingLock {
             _exceptions += exception
         }
     }
 
     /** @suppress **/
     override val uncaughtExceptions: List<Throwable>
-        get() = synchronized(_exceptions) { _exceptions.toList() }
+        get() = mutex.withActiveNonSuspendingLock { _exceptions.toList() }
 
     /** @suppress **/
     override fun cleanupTestCoroutines() {
-        synchronized(_exceptions) {
+        mutex.withActiveNonSuspendingLock {
             val exception = _exceptions.firstOrNull() ?: return
             // log the rest
             _exceptions.drop(1).forEach { it.printStackTrace() }
             throw exception
         }
+    }
+}
+
+// horrible hack to replace synchronized(_exceptions) blocks
+inline fun <T> Mutex.withActiveNonSuspendingLock(action: () -> T): T {
+    while(!tryLock()) {
+        // retry
+    }
+    return action().also {
+        unlock()
     }
 }
