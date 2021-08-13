@@ -32,7 +32,7 @@ kotlin {
                 api(projects.krossbowWebsocketCore)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines.get()}")
                 implementation("com.squareup.okio:okio-multiplatform:${libs.versions.okio.get()}")
-                implementation("com.benasher44:uuid:0.1.0")
+                implementation("com.benasher44:uuid:0.3.0")
             }
         }
         val commonTest by getting {
