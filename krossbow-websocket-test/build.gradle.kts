@@ -11,6 +11,8 @@ kotlin {
         nodejs()
         browser()
     }
+    ios()
+
     sourceSets {
         all {
             languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")

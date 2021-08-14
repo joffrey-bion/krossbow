@@ -23,6 +23,8 @@ kotlin {
             }
         }
     }
+    ios()
+
     sourceSets {
         all {
             languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")

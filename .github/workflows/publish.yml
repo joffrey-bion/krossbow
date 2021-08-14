@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest # For iOS publications
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

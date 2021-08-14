@@ -9,7 +9,7 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest # For iOS tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
