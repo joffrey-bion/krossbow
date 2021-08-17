@@ -1,6 +1,5 @@
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 description = "A Kotlin multiplatform STOMP client with JVM, Browser, and NodeJS support"
