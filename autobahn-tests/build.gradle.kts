@@ -25,7 +25,7 @@ kotlin {
             }
         }
     }
-    ios()
+    setupNativeTargets()
 
     sourceSets {
         all {
@@ -43,11 +43,6 @@ kotlin {
                 // for autobahn test server HTTP endpoints
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.serialization)
-            }
-        }
-        val iosTest by getting {
-            dependencies {
-                implementation(libs.ktor.client.ios)
             }
         }
         val jvmTest by getting {
@@ -69,6 +64,15 @@ kotlin {
                 implementation(npm("ws", libs.versions.npm.ws.get()))
             }
         }
+
+        setupNativeSourceSets()
+
+        val nativeDarwinTest by getting {
+            dependencies {
+                // Ktor's iOS client works on all darwin targets including desktop macosX64
+                implementation(libs.ktor.client.ios)
+            }
+        }
     }
 }
 
@@ -85,7 +89,7 @@ tasks.withType<AbstractTestTask> {
 
 // provide autobahn test server coordinates to the tests (can vary if DOCKER_HOST is set - like on CI macOS)
 tasks.withType<org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest> {
-    // autobahn doesn't support parallel tests
+    // autobahn doesn't support parallel tests (/getCaseStatus fails with immediate Close frame)
     // https://github.com/crossbario/autobahn-testsuite/issues/119
     maxParallelForks = 1
 

@@ -12,7 +12,7 @@ kotlin {
         nodejs()
         browser()
     }
-    ios()
+    setupNativeTargets()
 
     sourceSets {
         all {
@@ -43,5 +43,6 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
+        setupNativeSourceSets()
     }
 }

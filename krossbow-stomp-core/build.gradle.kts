@@ -22,7 +22,7 @@ kotlin {
             }
         }
     }
-    ios()
+    setupNativeTargets()
 
     sourceSets {
         all {
@@ -48,5 +48,6 @@ kotlin {
                 implementation("uk.org.lidalia:slf4j-test:1.1.0")
             }
         }
+        setupNativeSourceSets()
     }
 }

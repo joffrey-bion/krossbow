@@ -32,7 +32,7 @@ Krossbow supports the following targets:
 * :white_check_mark: JVM
 * :white_check_mark: JS (browser & NodeJS)
 * :warning: Android (using JVM artifacts)
-* :white_check_mark: iOS (New!)
+* :white_check_mark: iOS, watchOS, tvOS
 * :x: Native Desktop
 
 The desktop Native targets are currently unsupported, due to a lack of native web socket implementations.

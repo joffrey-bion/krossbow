@@ -23,7 +23,7 @@ kotlin {
             }
         }
     }
-    ios()
+    setupNativeTargets()
 
     sourceSets {
         all {
@@ -58,5 +58,6 @@ kotlin {
                 implementation(npm("ws", libs.versions.npm.ws.get()))
             }
         }
+        setupNativeSourceSets()
     }
 }
