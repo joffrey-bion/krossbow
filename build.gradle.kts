@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
 
 plugins {
     val kotlinVersion = "1.5.30"
-    kotlin("jvm") version kotlinVersion apply false
-    kotlin("js") version kotlinVersion apply false
-    kotlin("multiplatform") version kotlinVersion apply false
+    kotlin("jvm") apply false
+    kotlin("js") apply false
+    kotlin("multiplatform") apply false
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jetbrains.dokka") version "1.5.0" apply false
