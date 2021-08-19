@@ -1,4 +1,5 @@
 public final class org/hildan/krossbow/websocket/DefaultJvmClientKt {
+	public static final fun default (Lorg/hildan/krossbow/websocket/WebSocketClient$Companion;)Lorg/hildan/krossbow/websocket/WebSocketClient;
 	public static final fun defaultWebSocketClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
 }
 
@@ -15,7 +16,11 @@ public final class org/hildan/krossbow/websocket/UnboundedWsListenerChannelAdapt
 }
 
 public abstract interface class org/hildan/krossbow/websocket/WebSocketClient {
+	public static final field Companion Lorg/hildan/krossbow/websocket/WebSocketClient$Companion;
 	public abstract fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/websocket/WebSocketClient$Companion {
 }
 
 public final class org/hildan/krossbow/websocket/WebSocketCloseCodes {

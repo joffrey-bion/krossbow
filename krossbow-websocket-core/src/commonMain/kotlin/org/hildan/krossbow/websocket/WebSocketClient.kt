@@ -2,10 +2,17 @@ package org.hildan.krossbow.websocket
 
 import kotlinx.coroutines.channels.ReceiveChannel
 
-/**
- * Gets a default [WebSocketClient] implementation for the current platform.
- */
+@Deprecated(
+    message = "This method pollutes the global namespace and will be removed in a future version. " +
+        "Please use WebSocketClient.default() factory function instead",
+    replaceWith = ReplaceWith("org.hildan.krossbow.websocket.WebSocketClient.default()"),
+)
 expect fun defaultWebSocketClient(): WebSocketClient
+
+/**
+ * Gets the default [WebSocketClient] implementation for the current platform.
+ */
+expect fun WebSocketClient.Companion.default(): WebSocketClient
 
 /**
  * A web socket client.
@@ -21,6 +28,8 @@ interface WebSocketClient {
      * Opens a web socket connection and suspends until the connection is OPEN.
      */
     suspend fun connect(url: String): WebSocketConnection
+
+    companion object
 }
 
 @Deprecated("This has been renamed to WebSocketConnection", ReplaceWith("WebSocketConnection"))

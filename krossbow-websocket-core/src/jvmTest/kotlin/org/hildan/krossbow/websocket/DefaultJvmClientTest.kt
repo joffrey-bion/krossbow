@@ -8,6 +8,6 @@ class DefaultJvmClientTest {
 
     @Test
     fun defaultClientTest() {
-        assertTrue(defaultWebSocketClient() is Jdk11WebSocketClient)
+        assertTrue(WebSocketClient.default() is Jdk11WebSocketClient)
     }
 }
