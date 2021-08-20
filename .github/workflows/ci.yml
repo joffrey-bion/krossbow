@@ -19,6 +19,12 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.jdk-version }}
 
+      # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
+      # (and it's necessary to run Autobahn tests)
+      - name: Install docker and docker-compose (missing on MacOS)
+        if: matrix.os == 'macOS-latest'
+        uses: ./.github/actions/setup-docker-macos
+
       - name: Build with Gradle
         uses: burrunan/gradle-cache-action@v1
         with:

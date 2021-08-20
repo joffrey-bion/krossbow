@@ -1,0 +1,21 @@
+name: 'Setup Docker MacOS'
+description: 'Sets up docker via docker-machine, and docker-compose on MacOS'
+runs:
+  using: "composite"
+  steps:
+    # https://github.com/saltzmanjoelh/RunDockerInMacOSAction/blob/a91b09d613f8d0aec2ff50afe9b25a0016618b47/.github/workflows/swift.yml
+    - shell: bash
+      run: |
+        # Setting up docker, docker-machine, and docker-compose
+        mkdir -p ~/.docker/machine/cache
+        curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso
+        brew install docker docker-machine docker-compose
+        docker-machine create --driver virtualbox default
+        # Exporting docker-machine environment for next actions
+        eval "$(docker-machine env default)"
+        echo DOCKER_TLS_VERIFY=${DOCKER_TLS_VERIFY} >> $GITHUB_ENV
+        echo DOCKER_HOST=${DOCKER_HOST} >> $GITHUB_ENV
+        echo DOCKER_CERT_PATH=${DOCKER_CERT_PATH} >> $GITHUB_ENV
+        echo DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME} >> $GITHUB_ENV
+        # Display environment for debug purposes
+        docker-machine env default

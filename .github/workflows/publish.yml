@@ -18,6 +18,11 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
+      # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
+      # (and it's necessary to run Autobahn tests)
+      - name: Install docker and docker-compose (missing on MacOS)
+        uses: ./.github/actions/setup-docker-macos
+
       # The publishToSonatype task and the repository release need to be in the same Gradle call
       # so that the closeAndRelease task knows which staging repository was created by publishToSonatype
       - name: Build and publish to OSS Sonatype and then Maven Central
