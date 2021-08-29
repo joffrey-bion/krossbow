@@ -12,7 +12,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${libs.versions.coroutines}")
 
     // For Spring's WebSocket clients
-    api("org.springframework:spring-websocket:5.3.6")
+    api("org.springframework:spring-websocket:5.3.9")
 
     // JSR 356 - Java API for WebSocket (reference implementation)
     // Low-level implementation required by Spring's client (javax.websocket.*)
