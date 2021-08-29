@@ -25,7 +25,7 @@ class StompSessionHeartBeatsTests {
             heartBeat = HeartBeat(0, 0)
             heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
         }
-        advanceTimeBy(1000 + 100 + 1)
+        advanceTimeBy(1000L + 100 + 1)
         assertFalse(wsSession.closed, "the web socket session should NOT be closed because server heart beats should " +
                 "be overruled by client config desiring no heart beats")
     }
@@ -38,7 +38,7 @@ class StompSessionHeartBeatsTests {
             heartBeat = HeartBeat(0, 1000)
             heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
         }
-        advanceTimeBy(1000 + 100 + 1)
+        advanceTimeBy(1000L + 100 + 1)
         assertFalse(wsSession.closed, "the web socket session should NOT be closed because expected heart beats " +
                 "should be overruled by the server response desiring no heart beats")
     }
@@ -51,7 +51,7 @@ class StompSessionHeartBeatsTests {
             heartBeat = HeartBeat(0, 1000)
             heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
         }
-        advanceTimeBy(1000 + 100 + 1)
+        advanceTimeBy(1000L + 100 + 1)
         assertFalse(wsSession.closed, "the web socket session should NOT be closed because expected heart beats " +
                 "should be overruled by the server response desiring no heart beats")
     }
@@ -66,7 +66,7 @@ class StompSessionHeartBeatsTests {
         }
         assertFalse(wsSession.closed, "the web socket session should NOT be closed before CLIENT heart beat timeout " +
                 "of 2000ms (this is the biggest one, so it should be chosen)")
-        advanceTimeBy(2000 + 100 + 1)
+        advanceTimeBy(2000L + 100 + 1)
         assertTrue(wsSession.closed, "the web socket session should be closed if no heart beat is received in time")
     }
 
@@ -80,7 +80,7 @@ class StompSessionHeartBeatsTests {
         }
         assertFalse(wsSession.closed, "the web socket session should NOT be closed before SERVER heart beat timeout " +
                 "of 2000ms (this is the biggest one, so it should be chosen)")
-        advanceTimeBy(2000 + 100 + 1)
+        advanceTimeBy(2000L + 100 + 1)
         assertTrue(wsSession.closed, "the web socket session should be closed if no heart beat is received in time")
     }
 
@@ -93,7 +93,7 @@ class StompSessionHeartBeatsTests {
             heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
         }
         assertFalse(wsSession.closed, "the web socket session should NOT be closed before heart beat timeout")
-        advanceTimeBy(1000 + 100 + 1)
+        advanceTimeBy(1000L + 100 + 1)
         assertTrue(wsSession.closed, "the web socket session should be closed if no heart beat is received in time")
     }
 
