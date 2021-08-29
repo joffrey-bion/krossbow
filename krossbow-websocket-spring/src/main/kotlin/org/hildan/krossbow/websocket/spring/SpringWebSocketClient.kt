@@ -68,12 +68,11 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
     }
 
     override fun afterConnectionClosed(session: SpringWebSocketSession, closeStatus: CloseStatus) {
-        // afterConnectionClosed is synchronously called by Tyrus implementation during a session.close() call.
-        // It is not called when receiving the server close frame when the closure is initiated on the client side.
+        // Note: afterConnectionClosed is synchronously called by Tyrus implementation during a session.close() call.
+        // It is not called when receiving the server close frame if the closure is initiated on the client side.
         // Source: org.glassfish.tyrus.core.ProtocolHandler.close()
-        // This means that if no receiver is listening on the incoming frames channel, onClose() here may suspend
-        // forever. That's why we need an asynchronous dispatch of onClose() here.
-        GlobalScope.launch(CoroutineName("krossbow-websocket-spring-onClose")) {
+        // This means that if no receiver is listening on the incoming frames channel, onClose() here may suspend forever
+        runBlocking {
             channelListener.onClose(closeStatus.code, closeStatus.reason)
         }
     }
