@@ -12,7 +12,6 @@ import java.net.http.HttpClient
 import java.net.http.WebSocket
 import java.nio.ByteBuffer
 import java.util.concurrent.CompletionStage
-import kotlin.coroutines.CoroutineContext
 
 /**
  * A [WebSocketClient] implementation using JDK11's async web socket API.
@@ -41,45 +40,42 @@ class Jdk11WebSocketClient(
 
 private class Jdk11WebSocketListener(
     private val listener: WebSocketListenerChannelAdapter
-) : WebSocket.Listener, CoroutineScope {
+) : WebSocket.Listener {
 
-    private val job = Job()
+    private val scope = CoroutineScope(Dispatchers.IO)
 
-    override val coroutineContext: CoroutineContext
-        get() = job
-
-    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*>? = future {
+    override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*> = scope.future {
         listener.onTextMessage(data, last)
         // The call to request(1) here is to ensure that onText() is not called again before the (potentially partial)
         // message has been processed
         webSocket.request(1)
     }
 
-    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*>? = future {
+    override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*> = scope.future {
         listener.onBinaryMessage(data.toByteArray(), last)
         // The call to request(1) here is to ensure that onBinary() is not called again before the (potentially partial)
         // message has been processed
         webSocket.request(1)
     }
 
-    override fun onPing(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = future {
+    override fun onPing(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = scope.future {
         listener.onPing(message.toByteArray())
         webSocket.request(1)
     }
 
-    override fun onPong(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = future {
+    override fun onPong(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = scope.future {
         listener.onPong(message.toByteArray())
         webSocket.request(1)
     }
 
-    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*>? = future {
+    override fun onClose(webSocket: WebSocket, statusCode: Int, reason: String?): CompletionStage<*> = scope.future {
         listener.onClose(statusCode, reason)
-        job.cancel()
+        scope.cancel()
     }
 
     override fun onError(webSocket: WebSocket, error: Throwable?) {
         listener.onError(error)
-        job.cancel()
+        scope.cancel()
     }
 }
 
