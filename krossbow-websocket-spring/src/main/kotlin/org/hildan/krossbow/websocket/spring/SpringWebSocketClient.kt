@@ -17,6 +17,7 @@ import org.springframework.web.socket.PongMessage
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.WebSocketMessage
+import org.springframework.web.socket.client.jetty.JettyWebSocketClient
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport
 import org.springframework.web.socket.sockjs.client.SockJsClient
@@ -28,6 +29,8 @@ import org.springframework.web.socket.WebSocketSession as SpringWebSocketSession
 import org.springframework.web.socket.client.WebSocketClient as SpringWebSocketClient
 
 object SpringDefaultWebSocketClient : SpringWebSocketClientAdapter(StandardWebSocketClient())
+
+object SpringJettyWebSocketClient : SpringWebSocketClientAdapter(JettyWebSocketClient().apply { start() })
 
 object SpringSockJSWebSocketClient : SpringWebSocketClientAdapter(SockJsClient(defaultWsTransports()))
 

@@ -2,6 +2,10 @@ public final class org/hildan/krossbow/websocket/spring/SpringDefaultWebSocketCl
 	public static final field INSTANCE Lorg/hildan/krossbow/websocket/spring/SpringDefaultWebSocketClient;
 }
 
+public final class org/hildan/krossbow/websocket/spring/SpringJettyWebSocketClient : org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter {
+	public static final field INSTANCE Lorg/hildan/krossbow/websocket/spring/SpringJettyWebSocketClient;
+}
+
 public final class org/hildan/krossbow/websocket/spring/SpringSockJSWebSocketClient : org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter {
 	public static final field INSTANCE Lorg/hildan/krossbow/websocket/spring/SpringSockJSWebSocketClient;
 }
