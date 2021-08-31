@@ -7,8 +7,6 @@ description = "A Krossbow adapter for Spring's default WebSocket client and Sock
 dependencies {
     api(projects.krossbowWebsocketCore)
 
-    api("org.slf4j:slf4j-api:1.7.26")
-
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${libs.versions.coroutines}")
 
     // For Spring's WebSocket clients
@@ -21,6 +19,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(projects.krossbowWebsocketTest)
+    testImplementation("org.slf4j:slf4j-simple:1.7.26")
 
     // Implementation of Jetty client (for jetty tests)
     testImplementation("org.eclipse.jetty.websocket:websocket-client:9.4.43.v20210629")
