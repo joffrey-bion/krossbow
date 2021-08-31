@@ -1,5 +1,6 @@
 package org.hildan.krossbow.websocket
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ChannelResult
@@ -47,7 +48,14 @@ class WebSocketListenerChannelAdapter(
         frames.send(WebSocketFrame.Pong(bytes))
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun onClose(code: Int, reason: String?) {
+        // At least with Spring's Jetty implementation, onClose may be called after onError
+        // (for instance, if frame parsing fails with unknown opcode).
+        // This means that this send(Close) can fail because the channel is already failed.
+        if (frames.isClosedForSend) {
+            return
+        }
         frames.send(WebSocketFrame.Close(code, reason))
         frames.close()
         partialBinaryMessageHandler.close()
