@@ -1,11 +1,5 @@
 import com.gradle.scan.plugin.BuildScanExtension
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-    }
-}
-
 plugins {
     id("com.gradle.enterprise") version "3.2.1"
 }
