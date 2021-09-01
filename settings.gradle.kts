@@ -28,30 +28,10 @@ gradleEnterprise {
         publishOnFailureIf(isCIBuild)
         tag(if (isCIBuild) "CI" else "local")
 
-        val isTravisBuild = !System.getenv("TRAVIS").isNullOrEmpty()
-        if (isTravisBuild) {
-            addTravisData()
-        }
-
         val isGithubActionsBuild = !System.getenv("GITHUB_ACTIONS").isNullOrEmpty()
         if (isGithubActionsBuild) {
             addGithubActionsData()
         }
-    }
-}
-
-fun BuildScanExtension.addTravisData() {
-    value("Build number", System.getenv("TRAVIS_BUILD_NUMBER"))
-    value("Branch", System.getenv("TRAVIS_BRANCH"))
-    value("Commit", System.getenv("TRAVIS_COMMIT"))
-    value("Commit msg", System.getenv("TRAVIS_COMMIT_MESSAGE"))
-    value("JDK", System.getenv("TRAVIS_JDK_VERSION"))
-
-    val tag = System.getenv("TRAVIS_TAG")
-    val isTagBuild = !tag.isNullOrEmpty()
-    if (isTagBuild) {
-        tag("tag")
-        value("Tag", tag)
     }
 }
 
