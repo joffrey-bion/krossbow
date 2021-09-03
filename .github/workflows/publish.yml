@@ -18,22 +18,10 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
-      - name: Gradle build cache
-        uses: actions/cache@v2.1.1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-build-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-build-
-
-      - name: Gradle wrapper cache
-        uses: actions/cache@v2.1.1
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
-
       # The publishToSonatype task and the repository release need to be in the same Gradle call
       # so that the closeAndRelease task knows which staging repository was created by publishToSonatype
       - name: Build and publish to OSS Sonatype and then Maven Central
+        uses: burrunan/gradle-cache-action@v1
         env:
           # GPG keys for signing plugin (sign maven artifacts)
           # see https://docs.gradle.org/current/userguide/signing_plugin.html#sec:in-memory-keys
@@ -43,4 +31,7 @@ jobs:
           # https://github.com/gradle-nexus/publish-plugin#publishing-to-maven-central-via-sonatype-ossrh
           ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.OSSRH_USER_TOKEN }}
           ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.OSSRH_KEY }}
-        run: ./gradlew -Pversion=${{ github.event.release.tag_name }} publishToSonatype closeAndReleaseSonatypeStagingRepository
+        with:
+          job-id: jdk11
+          arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository
+          properties: version=${{ github.event.release.tag_name }}
