@@ -39,5 +39,11 @@ kotlin {
                 implementation("com.pusher:java-websocket:1.4.1")
             }
         }
+        val jsTest by getting {
+            dependencies {
+                implementation(npm("isomorphic-ws", "4.0.1"))
+                implementation(npm("ws", "8.2.1"))
+            }
+        }
     }
 }
