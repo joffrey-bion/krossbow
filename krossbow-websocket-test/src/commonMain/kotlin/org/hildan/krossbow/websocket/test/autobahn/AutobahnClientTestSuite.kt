@@ -26,8 +26,8 @@ abstract class AutobahnClientTestSuite(
 
     constructor(
         agentUnderTest: String,
-        testServerHost: String = getDefaultAutobahnTestServerHost() ?: "localhost",
-        testServerPort: Int = getDefaultAutobahnTestServerPort() ?: 9001,
+        testServerHost: String = getDefaultAutobahnTestServerHost(),
+        testServerPort: Int = getDefaultAutobahnTestServerPort(),
     ) : this(agentUnderTest, testServerUrl = "ws://$testServerHost:$testServerPort")
 
     abstract fun provideClient(): WebSocketClient

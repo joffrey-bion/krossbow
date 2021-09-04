@@ -7,9 +7,9 @@ import kotlinx.coroutines.promise
 
 // FIXME this will not work on MacOS runners, we need to get info from docker compose service somehow.
 //   JVM-based tests can use the environment, but native and JS will have to find another way
-actual fun getDefaultAutobahnTestServerHost(): String? = "localhost"
+actual fun getDefaultAutobahnTestServerHost(): String = "localhost"
 
-actual fun getDefaultAutobahnTestServerPort(): Int? = 9001
+actual fun getDefaultAutobahnTestServerPort(): Int = 9001
 
 @OptIn(DelicateCoroutinesApi::class)
 actual fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit): dynamic = GlobalScope.promise { block() }

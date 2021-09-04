@@ -2,9 +2,9 @@ package org.hildan.krossbow.websocket.test
 
 import kotlinx.coroutines.CoroutineScope
 
-expect fun getDefaultAutobahnTestServerHost(): String?
+expect fun getDefaultAutobahnTestServerHost(): String
 
-expect fun getDefaultAutobahnTestServerPort(): Int?
+expect fun getDefaultAutobahnTestServerPort(): Int
 
 expect fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit)
 

@@ -66,7 +66,7 @@ public final class org/hildan/krossbow/websocket/test/WebSocketConnectionMock : 
 
 public final class org/hildan/krossbow/websocket/test/WebSocketTestUtilsJvmKt {
 	public static final fun getDefaultAutobahnTestServerHost ()Ljava/lang/String;
-	public static final fun getDefaultAutobahnTestServerPort ()Ljava/lang/Integer;
+	public static final fun getDefaultAutobahnTestServerPort ()I
 	public static final fun runSuspendingTest (Lkotlin/jvm/functions/Function2;)V
 }
 
