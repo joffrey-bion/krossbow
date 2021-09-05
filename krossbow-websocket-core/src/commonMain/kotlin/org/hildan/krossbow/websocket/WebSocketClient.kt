@@ -26,6 +26,8 @@ interface WebSocketClient {
 
     /**
      * Opens a web socket connection and suspends until the connection is OPEN.
+     *
+     * @throws WebSocketConnectionException if an error occurs during the connection.
      */
     suspend fun connect(url: String): WebSocketConnection
 

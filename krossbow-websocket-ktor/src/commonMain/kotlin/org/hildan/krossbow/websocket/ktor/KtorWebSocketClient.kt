@@ -9,10 +9,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.produceIn
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketCloseCodes
-import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
+import org.hildan.krossbow.websocket.*
 import kotlin.coroutines.EmptyCoroutineContext
 
 class KtorWebSocketClient(
@@ -20,10 +17,16 @@ class KtorWebSocketClient(
 ) : WebSocketClient {
 
     override suspend fun connect(url: String): WebSocketConnectionWithPingPong {
-        val wsKtorSession = httpClient.webSocketSession {
-            this.url.takeFrom(url)
+        try {
+            val wsKtorSession = httpClient.webSocketSession {
+                this.url.takeFrom(url)
+            }
+            return KtorWebSocketConnectionAdapter(wsKtorSession)
+        } catch (e: CancellationException) {
+            throw e // this is an upstream exception that we don't want to wrap here
+        } catch (e: Exception) {
+            throw WebSocketConnectionException(url, cause = e)
         }
-        return KtorWebSocketConnectionAdapter(wsKtorSession)
     }
 }
 

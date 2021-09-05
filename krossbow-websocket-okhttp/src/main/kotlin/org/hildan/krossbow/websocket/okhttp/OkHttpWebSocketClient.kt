@@ -9,6 +9,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
+import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
@@ -19,11 +20,17 @@ class OkHttpWebSocketClient(
 ) : KrossbowWebSocketClient {
 
     override suspend fun connect(url: String): KrossbowWebSocketSession {
-        val request = Request.Builder().url(url).build()
-        val channelListener = WebSocketListenerChannelAdapter()
-        val okHttpListener = KrossbowToOkHttpListenerAdapter(channelListener)
-        val okWebsocket = withContext(Dispatchers.IO) { client.newWebSocket(request, okHttpListener) }
-        return OkHttpSocketToKrossbowConnectionAdapter(okWebsocket, channelListener.incomingFrames)
+        try {
+            val request = Request.Builder().url(url).build()
+            val channelListener = WebSocketListenerChannelAdapter()
+            val okHttpListener = KrossbowToOkHttpListenerAdapter(channelListener)
+            val okWebsocket = withContext(Dispatchers.IO) { client.newWebSocket(request, okHttpListener) }
+            return OkHttpSocketToKrossbowConnectionAdapter(okWebsocket, channelListener.incomingFrames)
+        } catch (e: CancellationException) {
+            throw e // this is an upstream exception that we don't want to wrap here
+        } catch (e: Exception) {
+            throw WebSocketConnectionException(url, cause = e)
+        }
     }
 }
 

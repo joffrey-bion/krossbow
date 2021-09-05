@@ -1,13 +1,12 @@
 package org.hildan.krossbow.websocket.spring
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.future.await
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
 import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
@@ -43,9 +42,15 @@ private fun defaultWsTransports(): List<Transport> = listOf(
 open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClient) : KrossbowWebSocketClient {
 
     override suspend fun connect(url: String): WebSocketConnectionWithPingPong {
-        val handler = KrossbowToSpringHandlerAdapter()
-        val springSession = client.doHandshake(handler, url).completable().await()
-        return SpringSessionToKrossbowConnectionAdapter(springSession, handler.channelListener.incomingFrames)
+        try {
+            val handler = KrossbowToSpringHandlerAdapter()
+            val springSession = client.doHandshake(handler, url).completable().await()
+            return SpringSessionToKrossbowConnectionAdapter(springSession, handler.channelListener.incomingFrames)
+        } catch (e: CancellationException) {
+            throw e // this is an upstream exception that we don't want to wrap here
+        } catch (e: Exception) {
+            throw WebSocketConnectionException(url, cause = e)
+        }
     }
 }
 
