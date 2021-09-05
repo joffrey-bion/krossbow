@@ -210,12 +210,12 @@ abstract class AutobahnClientTestSuite(
 
     private suspend fun runAutobahnTestCase(case: AutobahnCase) {
         try {
-            val session = withTimeoutOrFail(1000, case, stepDescription = "connection to server") {
-                autobahnClientTester.connectForAutobahnTestCase(case.id)
-            }
-            withTimeoutOrFail(1000, case, stepDescription = "echo loop") {
+            withTimeout(2000) {
+                val session = autobahnClientTester.connectForAutobahnTestCase(case.id)
                 session.echoUntilClosed()
             }
+        } catch (e: TimeoutCancellationException) {
+            fail("Test case ${case.id} timed out", e)
         } catch (e: Exception) {
             assertTrue(case.expectFailure, "Unexpected exception during test case ${case.id}: $e")
         }
@@ -227,13 +227,6 @@ private suspend fun WebSocketConnection.echoUntilClosed() {
         echoFrame(it)
     }
 }
-
-private suspend fun <T> withTimeoutOrFail(
-    timeoutMs: Long,
-    testCase: AutobahnCase,
-    stepDescription: String,
-    block: suspend () -> T,
-): T = withTimeoutOrNull(timeoutMs) { block() } ?: fail("Test case ${testCase.id} timed out (step: $stepDescription)")
 
 private suspend fun WebSocketConnection.echoNFrames(n: Int) {
     repeat(n) {
@@ -258,14 +251,10 @@ The following methods could be used for a more precise behaviour check.
 
 private suspend fun WebSocketConnection.echoExactFrameCountAndExpectClosure(case: AutobahnCase) {
     // FIXME properly expect number of data frames, pings and pongs
-    withTimeoutOrFail(3000, case, "echo frames") {
-        echoNFrames(case.nExpectedFramesBeforeEnd)
-    }
-    withTimeoutOrFail(1000, case, "closing connection") {
-        when (case.end) {
-            CaseEnd.CLIENT_FORCE_CLOSE -> expectClientForceClosed()
-            CaseEnd.SERVER_CLOSE -> expectServerClosed()
-        }
+    echoNFrames(case.nExpectedFramesBeforeEnd)
+    when (case.end) {
+        CaseEnd.CLIENT_FORCE_CLOSE -> expectClientForceClosed()
+        CaseEnd.SERVER_CLOSE -> expectServerClosed()
     }
 }
 
