@@ -216,15 +216,8 @@ abstract class AutobahnClientTestSuite(
             withTimeoutOrFail(1000, case, stepDescription = "echo loop") {
                 session.echoUntilClosed()
             }
-        } catch (e: WebSocketException) {
-            assertTrue(case.expectFailure, "Unexpected exception during test case ${case.id}: $e")
         } catch (e: Exception) {
-            val message = "Exception during test case ${case.id} (expected: ${case.expectFailure}):\n${e.stackTraceToString()}"
-            // TODO check the actual failure more specifically, we might not expect *this one*
-            //  (different WS implementations may throw different exceptions, though)
-            if (!case.expectFailure) {
-                fail(message)
-            }
+            assertTrue(case.expectFailure, "Unexpected exception during test case ${case.id}: $e")
         }
     }
 }
