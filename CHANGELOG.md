@@ -1,11 +1,21 @@
 # Change Log
 
+## [2.4.0](https://github.com/joffrey-bion/krossbow/tree/2.4.0) (2021-09-05)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/2.3.0...2.4.0)
+
+**Implemented enhancements:**
+
+- Add adapter for Spring Jetty's implementation [\#134](https://github.com/joffrey-bion/krossbow/issues/134)
+- Upgrade spring\-websocket to version 5.3.9 [\#133](https://github.com/joffrey-bion/krossbow/issues/133)
+- Deprecate global defaultWebSocketClient\(\) in favor of WebSocketClient.default\(\) [\#132](https://github.com/joffrey-bion/krossbow/issues/132)
+- Upgrade Kotlin Coroutines to version 1.5.1 [\#131](https://github.com/joffrey-bion/krossbow/issues/131)
+
 ## [2.3.0](https://github.com/joffrey-bion/krossbow/tree/2.3.0) (2021-08-14)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.2.1...2.3.0)
 
 **Implemented enhancements:**
 
-- Publish common modules with iOS target [\#130](https://github.com/joffrey-bion/krossbow/issues/130)
+- Publish common modules with iOS target \(without built\-in iOS client\) [\#130](https://github.com/joffrey-bion/krossbow/issues/130)
 
 ## [2.2.1](https://github.com/joffrey-bion/krossbow/tree/2.2.1) (2021-08-12)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.2.0...2.2.1)
@@ -437,7 +447,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/e811af938476d453818bb3385c7565933b38b9dc...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/24eae554619cd8cbe8ddbf35fd1347b944be1f82...0.1.0)
 
 **Implemented enhancements:**
 
