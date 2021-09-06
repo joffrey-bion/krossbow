@@ -32,7 +32,7 @@ kotlin {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.okio.multiplatform)
+                implementation(libs.okio)
                 implementation(libs.uuid)
             }
         }

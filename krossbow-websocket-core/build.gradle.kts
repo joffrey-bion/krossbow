@@ -32,7 +32,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(libs.kotlinx.coroutines.core)
-                implementation(libs.okio.multiplatform)
+                implementation(libs.okio)
             }
         }
         val commonTest by getting {
