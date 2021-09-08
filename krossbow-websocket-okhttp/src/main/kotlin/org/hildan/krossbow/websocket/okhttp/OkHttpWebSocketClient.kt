@@ -65,7 +65,8 @@ private class KrossbowToOkHttpListenerAdapter(
         runBlocking { channelListener.onTextMessage(text) }
     }
 
-    override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+    // overriding onClosing and not onClosed because we want to receive the Close frame from the server directly
+    override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
         runBlocking { channelListener.onClose(code, reason) }
     }
 
