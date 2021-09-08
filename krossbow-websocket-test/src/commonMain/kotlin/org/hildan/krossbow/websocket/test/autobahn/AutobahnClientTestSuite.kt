@@ -213,7 +213,7 @@ abstract class AutobahnClientTestSuite(
             val session = withTimeoutOrFail(1000, case, stepDescription = "connection to server") {
                 autobahnClientTester.connectForAutobahnTestCase(case.id)
             }
-            withTimeoutOrFail(5000, case, stepDescription = "echo loop") {
+            withTimeoutOrFail(1000, case, stepDescription = "echo loop") {
                 session.echoUntilClosed()
             }
         } catch (e: WebSocketException) {
