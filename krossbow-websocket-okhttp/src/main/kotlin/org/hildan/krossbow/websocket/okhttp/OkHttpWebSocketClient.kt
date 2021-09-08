@@ -12,6 +12,9 @@ import okio.ByteString.Companion.toByteString
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection as KrossbowWebSocketSession
 
@@ -20,23 +23,39 @@ class OkHttpWebSocketClient(
 ) : KrossbowWebSocketClient {
 
     override suspend fun connect(url: String): KrossbowWebSocketSession {
-        try {
-            val request = Request.Builder().url(url).build()
-            val channelListener = WebSocketListenerChannelAdapter()
-            val okHttpListener = KrossbowToOkHttpListenerAdapter(channelListener)
-            val okWebsocket = withContext(Dispatchers.IO) { client.newWebSocket(request, okHttpListener) }
-            return OkHttpSocketToKrossbowConnectionAdapter(okWebsocket, channelListener.incomingFrames)
-        } catch (e: CancellationException) {
-            throw e // this is an upstream exception that we don't want to wrap here
-        } catch (e: Exception) {
-            throw WebSocketConnectionException(url, cause = e)
+        val request = Request.Builder().url(url).build()
+        val channelListener = WebSocketListenerChannelAdapter()
+
+        return suspendCancellableCoroutine { continuation ->
+            val okHttpListener = KrossbowToOkHttpListenerAdapter(continuation, channelListener)
+            val ws = client.newWebSocket(request, okHttpListener)
+            continuation.invokeOnCancellation {
+                ws.cancel()
+            }
         }
     }
 }
 
 private class KrossbowToOkHttpListenerAdapter(
-    private val channelListener: WebSocketListenerChannelAdapter
+    connectionContinuation: Continuation<KrossbowWebSocketSession>,
+    private val channelListener: WebSocketListenerChannelAdapter,
 ) : WebSocketListener() {
+    private var connectionContinuation: Continuation<KrossbowWebSocketSession>? = connectionContinuation
+
+    @Volatile
+    private var isConnecting = false
+
+    private inline fun completeConnection(resume: Continuation<KrossbowWebSocketSession>.() -> Unit) {
+        val cont = connectionContinuation ?: error("OkHttp connection continuation already consumed")
+        connectionContinuation = null // avoid leaking the continuation
+        isConnecting = false
+        cont.resume()
+    }
+
+    override fun onOpen(webSocket: WebSocket, response: Response) {
+        val krossbowConnection = OkHttpSocketToKrossbowConnectionAdapter(webSocket, channelListener.incomingFrames)
+        completeConnection { resume(krossbowConnection) }
+    }
 
     override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
         runBlocking { channelListener.onBinaryMessage(bytes.toByteArray()) }
@@ -51,7 +70,13 @@ private class KrossbowToOkHttpListenerAdapter(
     }
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-        channelListener.onError(t)
+        if (isConnecting) {
+            completeConnection {
+                resumeWithException(WebSocketConnectionException(webSocket.request().url.toString(), cause = t))
+            }
+        } else {
+            channelListener.onError(t)
+        }
     }
 }
 
