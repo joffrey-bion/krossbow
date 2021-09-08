@@ -22,10 +22,10 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                api(project(":krossbow-websocket-core"))
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines}")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+                api(projects.krossbowWebsocketCore)
+                api(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.serialization.core)
+                implementation(libs.kotlinx.serialization.json)
 
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))

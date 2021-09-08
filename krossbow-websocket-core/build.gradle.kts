@@ -19,8 +19,8 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines.get()}")
-                implementation("com.squareup.okio:okio-multiplatform:${libs.versions.okio.get()}")
+                api(libs.kotlinx.coroutines.core)
+                implementation(libs.okio.multiplatform)
             }
         }
         val commonTest by getting {
@@ -31,7 +31,7 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${libs.versions.coroutines.get()}")
+                api(libs.kotlinx.coroutines.jdk8)
             }
         }
         val jvmTest by getting {

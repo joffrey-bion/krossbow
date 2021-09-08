@@ -4,8 +4,6 @@ plugins {
 
 description = "Multiplatform implementation of Krossbow's WebSocket API using Ktor's web sockets."
 
-val ktorVersion = "1.6.0"
-
 kotlin {
     jvm()
     js {
@@ -17,23 +15,23 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.krossbowWebsocketCore)
-                api("io.ktor:ktor-client-websockets:$ktorVersion")
+                api(libs.ktor.client.websockets)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:atomicfu:${libs.versions.atomicFu.get()}")
+                implementation(libs.kotlinx.atomicfu)
             }
         }
         val jvmTest by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+                api(libs.ktor.client.okhttp)
             }
         }
         val jsTest by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:$ktorVersion")
+                api(libs.ktor.client.js)
             }
         }
     }

@@ -29,7 +29,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation(npm("sockjs-client", "1.5.0"))
+                implementation(npm("sockjs-client", libs.versions.npm.sockjs.client.get()))
             }
         }
     }

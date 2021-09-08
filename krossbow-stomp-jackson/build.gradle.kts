@@ -4,12 +4,10 @@ plugins {
 
 description = "An extension of Krossbow STOMP client using Jackson for message conversions"
 
-val jacksonVersion = "2.12.3"
-
 dependencies {
     api(projects.krossbowStompCore)
-    api("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
-    api("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    api(libs.jackson.core)
+    api(libs.jackson.module.kotlin)
 
     testImplementation(kotlin("test"))
 }

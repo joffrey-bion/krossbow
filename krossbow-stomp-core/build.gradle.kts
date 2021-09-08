@@ -31,9 +31,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.krossbowWebsocketCore)
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines.get()}")
-                implementation("com.squareup.okio:okio-multiplatform:${libs.versions.okio.get()}")
-                implementation("com.benasher44:uuid:0.3.0")
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.okio.multiplatform)
+                implementation(libs.uuid)
             }
         }
         val commonTest by getting {
@@ -41,7 +41,7 @@ kotlin {
                 implementation(projects.krossbowWebsocketTest)
                 implementation(kotlin("test"))
                 // For kotlinx-coroutines-test
-                implementation("org.jetbrains.kotlinx:atomicfu:${libs.versions.atomicFu.get()}")
+                implementation(libs.kotlinx.atomicfu)
             }
         }
         val jvmTest by getting {
