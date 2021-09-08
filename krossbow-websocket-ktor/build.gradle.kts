@@ -20,12 +20,14 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
+                api(projects.krossbowWebsocketTest)
                 implementation(kotlin("test"))
                 implementation(libs.kotlinx.atomicfu)
             }
         }
         val jvmTest by getting {
             dependencies {
+                api(libs.ktor.client.java)
                 api(libs.ktor.client.okhttp)
             }
         }
