@@ -9,6 +9,7 @@ import kotlinx.serialization.json.Json
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketFrame
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -55,11 +56,17 @@ internal class AutobahnClientTester(
     }
 
     private suspend fun WebSocketConnection.expectClosed() {
-        val closeFrame = withTimeoutOrNull(500) { incomingFrames.receive() }
-        assertNotNull(closeFrame, "Timed out while waiting for CLOSE frame")
+        val closeFrameResult = withTimeoutOrNull(500) { incomingFrames.receiveCatching() }
+        assertNotNull(closeFrameResult, "Timed out while waiting for CLOSE frame")
+        assertFalse(closeFrameResult.isClosed, "Expected CLOSE frame, but the channel itself was closed")
+        assertFalse(closeFrameResult.isFailure, "Expected CLOSE frame, but the channel was failed: ${closeFrameResult.exceptionOrNull()}")
+
+        val closeFrame = closeFrameResult.getOrThrow()
         assertIs<WebSocketFrame.Close>(closeFrame, "Should have received CLOSE frame, but got $closeFrame")
-        val result = incomingFrames.receiveCatching()
-        assertTrue(result.isClosed, "Connection should be closed now, got $result")
+
+        val result = withTimeoutOrNull(500) { incomingFrames.receiveCatching() }
+        assertNotNull(result, "Timed out while waiting for incoming frames channel to be closed")
+        assertTrue(result.isClosed, "Frames channel should be closed now, got $result")
     }
 }
 
