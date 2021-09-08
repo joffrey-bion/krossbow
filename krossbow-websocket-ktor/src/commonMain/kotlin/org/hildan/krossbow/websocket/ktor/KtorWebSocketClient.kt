@@ -6,11 +6,8 @@ import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.produceIn
+import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.websocket.*
-import kotlin.coroutines.EmptyCoroutineContext
 
 class KtorWebSocketClient(
     private val httpClient: HttpClient = HttpClient { install(WebSockets) }
@@ -34,7 +31,7 @@ private class KtorWebSocketConnectionAdapter(
     private val wsSession: DefaultClientWebSocketSession
 ) : WebSocketConnectionWithPingPong {
 
-    private val scope = CoroutineScope(EmptyCoroutineContext + Job() + CoroutineName("krossbow-ktor-ws-frames-mapper"))
+    private val scope = CoroutineScope(CoroutineName("krossbow-ktor-ws-frames-mapper"))
 
     override val url: String
         get() = wsSession.call.request.url.toString()
