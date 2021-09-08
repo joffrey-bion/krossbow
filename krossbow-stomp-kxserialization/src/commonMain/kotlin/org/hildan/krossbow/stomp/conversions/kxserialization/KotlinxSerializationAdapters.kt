@@ -42,7 +42,7 @@ fun StompSession.withTextConversions(format: StringFormat, mediaType: String): S
  * "application/json;charset=utf-8").
  */
 fun StompSession.withJsonConversions(
-    json: Json = Json {},
+    json: Json = Json,
     mediaType: String = "application/json;charset=utf-8",
 ): StompSessionWithKxSerialization = withTextConversions(json, mediaType)
 
