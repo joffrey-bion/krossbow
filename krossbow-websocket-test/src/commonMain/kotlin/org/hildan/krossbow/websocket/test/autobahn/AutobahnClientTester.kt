@@ -1,5 +1,6 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -9,6 +10,7 @@ import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketFrame
 import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 internal class AutobahnClientTester(
@@ -53,8 +55,9 @@ internal class AutobahnClientTester(
     }
 
     private suspend fun WebSocketConnection.expectClosed() {
-        val closeFrame = incomingFrames.receive()
-        assertIs<WebSocketFrame.Close>(closeFrame, "Should have received CLOSE frame by now, got $closeFrame")
+        val closeFrame = withTimeoutOrNull(500) { incomingFrames.receive() }
+        assertNotNull(closeFrame, "Timed out while waiting for CLOSE frame")
+        assertIs<WebSocketFrame.Close>(closeFrame, "Should have received CLOSE frame, but got $closeFrame")
         val result = incomingFrames.receiveCatching()
         assertTrue(result.isClosed, "Connection should be closed now, got $result")
     }
