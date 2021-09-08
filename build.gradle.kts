@@ -9,7 +9,7 @@ plugins {
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jetbrains.dokka") version "1.5.0" apply false
-    id("org.hildan.github.changelog") version "1.6.0"
+    id("org.hildan.github.changelog") version "1.8.0"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.1"
     `maven-publish`
     signing
