@@ -48,22 +48,31 @@ allprojects {
         tasks.withType<KotlinJvmTest>().configureEach {
             rootProject.dockerCompose.exposeAsEnvironment(this)
         }
+
+        val generateAutobahnConfigJson = tasks.create("generateAutobahnConfigJson") {
+            rootProject.dockerCompose.isRequiredBy(this)
+            val config = "${rootProject.buildDir}/js/packages/${rootProject.name}-${project.name}-test/autobahn-server.json"
+            outputs.file(config)
+            doFirst {
+                val autobahnContainer = rootProject.dockerCompose.servicesInfos["autobahn_server"]?.firstContainer
+                    ?: error("autobahn_server container not found")
+                file(config).writeText("""{"host":"${autobahnContainer.host}","port":${autobahnContainer.port}}""")
+            }
+        }
+
         extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()?.js {
             nodejs {
                 testTask {
-                    doFirst {
-                        generateAutobahnConfigJson()
-                    }
+                    dependsOn(generateAutobahnConfigJson)
+                }
+            }
+            browser {
+                testTask {
+                    dependsOn(generateAutobahnConfigJson)
                 }
             }
         }
     }
-}
-
-fun Project.generateAutobahnConfigJson() {
-    val autobahnContainer = rootProject.dockerCompose.servicesInfos.getValue("autobahn_server").firstContainer
-    val config = file("${rootProject.buildDir}/js/packages/${rootProject.name}-$name-test/autobahn-server.json")
-    config.writeText("""{"host":"${autobahnContainer.host}","port":${autobahnContainer.port}}""")
 }
 
 val Project.githubUser: String? get() = findProperty("githubUser") as String? ?: System.getenv("GITHUB_USER")
