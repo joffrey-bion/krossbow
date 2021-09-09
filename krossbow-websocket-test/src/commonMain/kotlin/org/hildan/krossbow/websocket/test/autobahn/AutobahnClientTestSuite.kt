@@ -112,9 +112,11 @@ abstract class AutobahnClientTestSuite(
     @Test
     fun autobahn_2_9_ping_pong() = runAutobahnTestCase("2.9")
 
+    @Ignore // FIXME not all pongs are necessary according to the spec, so FAILED status is acceptable here
     @Test
     fun autobahn_2_10_ping_pong() = runAutobahnTestCase("2.10")
 
+    @Ignore // FIXME not all pongs are necessary according to the spec, so FAILED status is acceptable here
     @Test
     fun autobahn_2_11_ping_pong() = runAutobahnTestCase("2.11")
 

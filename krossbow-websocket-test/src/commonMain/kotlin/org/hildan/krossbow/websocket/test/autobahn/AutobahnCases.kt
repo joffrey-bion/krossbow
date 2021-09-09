@@ -32,8 +32,8 @@ internal val AUTOBAHN_CASES = listOf(
     AutobahnCase("2.7", nEchoFrames = 0, nUnsolicitedPongFrames = 1),
     AutobahnCase("2.8", nEchoFrames = 0, nUnsolicitedPongFrames = 1),
     AutobahnCase("2.9", nEchoFrames = 0, nPingFrames = 1, nUnsolicitedPongFrames = 1),
-    AutobahnCase("2.10", nEchoFrames = 0, nPingFrames = 10),
-    AutobahnCase("2.11", nEchoFrames = 0, nPingFrames = 10),
+    AutobahnCase("2.10", nEchoFrames = 0, nPingFrames = 10), // FIXME not all pongs are necessary according to the spec, so FAILED status is acceptable here
+    AutobahnCase("2.11", nEchoFrames = 0, nPingFrames = 10), // FIXME not all pongs are necessary according to the spec, so FAILED status is acceptable here
     AutobahnCase("3.1", nEchoFrames = 0, expectFailure = true, end = CaseEnd.CLIENT_FORCE_CLOSE),
     AutobahnCase("3.2", nEchoFrames = 1, nPingFrames = 0 /* fail before ping */, expectFailure = true, end = CaseEnd.CLIENT_FORCE_CLOSE),
     AutobahnCase("3.3", nEchoFrames = 1, nPingFrames = 0 /* fail before ping */, expectFailure = true, end = CaseEnd.CLIENT_FORCE_CLOSE),
