@@ -223,7 +223,7 @@ Other artifacts provide more implementations supporting more platforms by depend
 | `krossbow-websocket-sockjs` | :eight_pointed_black_star: | :eight_pointed_black_star: |                    :eight_pointed_black_star: |                    | [sockjs-client](https://github.com/sockjs/sockjs-client), [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) |
 | `krossbow-websocket-spring` |                            |                            | :white_check_mark: :eight_pointed_black_star: |                    | [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) |
 | `krossbow-websocket-okhttp` |                            |                            | :white_check_mark:                            |                    | [OkHttp](https://square.github.io/okhttp/) |
-| `krossbow-websocket-ktor`   |     :white_check_mark:     |     :white_check_mark:     | :white_check_mark: \*                         |                    | [Ktor](https://ktor.io/clients/websockets.html), and the relevant [Ktor engine(s)](https://ktor.io/clients/http-client/engines.html) |
+| `krossbow-websocket-ktor`   |     :white_check_mark:     |     :white_check_mark:     | :white_check_mark: \*                         | :white_check_mark: | [Ktor](https://ktor.io/clients/websockets.html), and the relevant [Ktor engine(s)](https://ktor.io/clients/http-client/engines.html) |
 
 :white_check_mark: supported with native web socket transport
 
