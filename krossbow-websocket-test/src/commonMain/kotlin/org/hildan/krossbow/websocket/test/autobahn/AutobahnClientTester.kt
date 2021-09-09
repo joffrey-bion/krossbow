@@ -24,9 +24,10 @@ internal class AutobahnClientTester(
 
     suspend fun getCaseCount(): Int = callAndGetJson("getCaseCount")
 
-    suspend fun getCaseInfo(case: String): Int = callAndGetJson("getCaseInfo?casetuple=$case")
+    suspend fun getCaseInfo(case: String): AutobahnCaseInfo = callAndGetJson("getCaseInfo?casetuple=$case")
 
-    suspend fun getCaseStatus(case: String): AutobahnCaseStatus = callAndGetJson("getCaseStatus?casetuple=$case&agent=$agentUnderTest")
+    suspend fun getCaseStatus(case: String): TestCaseStatus =
+        callAndGetJson<AutobahnCaseStatus>("getCaseStatus?casetuple=$case&agent=$agentUnderTest").behavior
 
     suspend fun updateReports() {
         call("updateReports?agent=$agentUnderTest")
@@ -70,6 +71,10 @@ internal class AutobahnClientTester(
     }
 }
 
+@Serializable
+internal data class AutobahnCaseInfo(val id: String, val description: String)
+
+// cannot be private (otherwise "serializer not found")
 @Serializable
 internal data class AutobahnCaseStatus(val behavior: TestCaseStatus)
 

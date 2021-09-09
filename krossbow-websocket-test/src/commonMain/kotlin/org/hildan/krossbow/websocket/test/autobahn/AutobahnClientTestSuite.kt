@@ -204,8 +204,8 @@ abstract class AutobahnClientTestSuite(
     private fun runAutobahnTestCase(caseId: String) = runSuspendingTest {
         runAutobahnTestCase(AUTOBAHN_CASES.single { it.id == caseId })
         val status = autobahnClientTester.getCaseStatus(caseId)
-        val testResultAcceptable = status.behavior == TestCaseStatus.OK || status.behavior == TestCaseStatus.NON_STRICT
-        assertTrue(testResultAcceptable, "Test case $caseId finished with status ${status.behavior}, expected OK or NON-STRICT")
+        val testResultAcceptable = status == TestCaseStatus.OK || status == TestCaseStatus.NON_STRICT
+        assertTrue(testResultAcceptable, "Test case $caseId finished with status ${status}, expected OK or NON-STRICT")
     }
 
     private suspend fun runAutobahnTestCase(case: AutobahnCase) {
