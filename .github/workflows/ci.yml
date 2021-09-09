@@ -31,3 +31,10 @@ jobs:
         with:
           job-id: jdk${{ matrix.jdk-version }}
           arguments: build
+
+      - name: Upload Autobahn reports
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: autobahn-reports-${{ runner.os }}-jdk${{ matrix.jdk-version }}
+          path: build/autobahn/reports/clients
