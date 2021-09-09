@@ -26,7 +26,7 @@ external interface AutobahnConfig {
 }
 
 private fun readAutobahnConfigNodeJS(): AutobahnConfig =
-    js("require('fs').readFileSync('./autobahn-server.json', 'utf8')").unsafeCast<AutobahnConfig>()
+    js("JSON.parse(require('fs').readFileSync('./autobahn-server.json', 'utf8'))").unsafeCast<AutobahnConfig>()
 
 fun isBrowser() = js("typeof window !== 'undefined' && typeof window.document !== 'undefined'") as Boolean
 
