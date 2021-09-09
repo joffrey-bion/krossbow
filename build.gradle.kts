@@ -64,11 +64,19 @@ allprojects {
             nodejs {
                 testTask {
                     dependsOn(generateAutobahnConfigJson)
+                    // for krossbow-stomp-core tests and Autobahn tests
+                    useMocha {
+                        timeout = "10s"
+                    }
                 }
             }
             browser {
                 testTask {
                     dependsOn(generateAutobahnConfigJson)
+                    // for krossbow-stomp-core tests and Autobahn tests
+                    useMocha {
+                        timeout = "10s"
+                    }
                 }
             }
         }

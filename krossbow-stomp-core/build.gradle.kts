@@ -7,20 +7,8 @@ description = "A Kotlin multiplatform STOMP client with JVM, Browser, and NodeJS
 kotlin {
     jvm()
     js {
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
-            }
-        }
-        browser {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
-            }
-        }
+        nodejs()
+        browser()
     }
     ios()
 
