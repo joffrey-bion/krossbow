@@ -44,10 +44,26 @@ allprojects {
         tasks.withType<AbstractTestTask>().configureEach {
             rootProject.dockerCompose.isRequiredBy(this)
         }
+        // provide autobahn test server coordinates to the tests (non-trivial on macOS)
         tasks.withType<KotlinJvmTest>().configureEach {
             rootProject.dockerCompose.exposeAsEnvironment(this)
         }
+        extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()?.js {
+            nodejs {
+                testTask {
+                    doFirst {
+                        generateAutobahnConfigJson()
+                    }
+                }
+            }
+        }
     }
+}
+
+fun Project.generateAutobahnConfigJson() {
+    val autobahnContainer = rootProject.dockerCompose.servicesInfos.getValue("autobahn_server").firstContainer
+    val config = file("${rootProject.buildDir}/js/packages/${rootProject.name}-$name-test/autobahn-server.json")
+    config.writeText("""{"host":"${autobahnContainer.host}","port":${autobahnContainer.port}}""")
 }
 
 val Project.githubUser: String? get() = findProperty("githubUser") as String? ?: System.getenv("GITHUB_USER")
