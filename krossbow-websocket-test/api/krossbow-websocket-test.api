@@ -127,8 +127,6 @@ public abstract class org/hildan/krossbow/websocket/test/autobahn/AutobahnClient
 	public final fun autobahn_5_7_echo_payload ()V
 	public final fun autobahn_5_8_echo_payload ()V
 	public final fun autobahn_5_9_echo_payload ()V
-	public final fun generateReports ()V
 	public abstract fun provideClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
-	public final fun setupClient ()V
 }
 

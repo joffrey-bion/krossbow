@@ -22,8 +22,6 @@ abstract class AutobahnClientTestSuite(
     private val agentUnderTest: String,
     private val testServerUrl: String,
 ) {
-    private lateinit var autobahnClientTester: AutobahnClientTester
-
     constructor(
         agentUnderTest: String,
         testServerHost: String = getDefaultAutobahnTestServerHost(),
@@ -31,11 +29,6 @@ abstract class AutobahnClientTestSuite(
     ) : this(agentUnderTest, testServerUrl = "ws://$testServerHost:$testServerPort")
 
     abstract fun provideClient(): WebSocketClient
-
-    @BeforeTest
-    fun setupClient() {
-        autobahnClientTester = AutobahnClientTester(provideClient(), testServerUrl, agentUnderTest)
-    }
 
     @Test
     fun autobahn_1_1_1_echo_text_payload() = runAutobahnTestCase("1.1.1")
@@ -198,28 +191,26 @@ abstract class AutobahnClientTestSuite(
     @Test
     fun autobahn_5_9_echo_payload() = runAutobahnTestCase("5.9")
 
-    @AfterTest
-    fun generateReports() = runSuspendingTest {
-        autobahnClientTester.updateReports()
-    }
-
     private fun runAutobahnTestCase(caseId: String) = runSuspendingTest {
         runAutobahnTestCase(AUTOBAHN_CASES.single { it.id == caseId })
-        val status = autobahnClientTester.getCaseStatus(caseId)
-        val testResultAcceptable = status == TestCaseStatus.OK || status == TestCaseStatus.NON_STRICT
-        assertTrue(testResultAcceptable, "Test case $caseId finished with status ${status}, expected OK or NON-STRICT")
     }
 
     private suspend fun runAutobahnTestCase(case: AutobahnCase) {
+        val autobahnClientTester = AutobahnClientTester(provideClient(), testServerUrl, agentUnderTest)
         try {
             withTimeout(5000) {
                 val session = autobahnClientTester.connectForAutobahnTestCase(case.id)
                 session.echoUntilClosed()
             }
+            val status = autobahnClientTester.getCaseStatus(case.id)
+            val testResultAcceptable = status == TestCaseStatus.OK || status == TestCaseStatus.NON_STRICT
+            assertTrue(testResultAcceptable, "Test case ${case.id} finished with status ${status}, expected OK or NON-STRICT")
         } catch (e: TimeoutCancellationException) {
             fail("Test case ${case.id} timed out", e)
         } catch (e: Exception) {
             assertTrue(case.expectFailure, "Unexpected exception during test case ${case.id}: $e")
+        } finally {
+            autobahnClientTester.updateReports()
         }
     }
 }
