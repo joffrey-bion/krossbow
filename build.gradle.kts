@@ -49,6 +49,17 @@ allprojects {
             rootProject.dockerCompose.exposeAsEnvironment(this)
         }
 
+        tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest> {
+            doFirst {
+                val autobahnContainer = rootProject.dockerCompose.servicesInfos["autobahn_server"]?.firstContainer
+                    ?: error("autobahn_server container not found")
+                environment = environment + mapOf(
+                    "AUTOBAHN_SERVER_HOST" to autobahnContainer.host,
+                    "AUTOBAHN_SERVER_TCP_9001" to autobahnContainer.port
+                )
+            }
+        }
+
         val generateAutobahnConfigJson = tasks.create("generateAutobahnConfigJson") {
             rootProject.dockerCompose.isRequiredBy(this)
             val config = "${rootProject.buildDir}/js/packages/${rootProject.name}-${project.name}-test/autobahn-server.json"
@@ -60,25 +71,8 @@ allprojects {
             }
         }
 
-        extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()?.js {
-            nodejs {
-                testTask {
-                    dependsOn(generateAutobahnConfigJson)
-                    // for krossbow-stomp-core tests and Autobahn tests
-                    useMocha {
-                        timeout = "10s"
-                    }
-                }
-            }
-            browser {
-                testTask {
-                    dependsOn(generateAutobahnConfigJson)
-                    // for krossbow-stomp-core tests and Autobahn tests
-                    useMocha {
-                        timeout = "10s"
-                    }
-                }
-            }
+        tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest> {
+            dependsOn(generateAutobahnConfigJson)
         }
     }
 }

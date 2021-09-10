@@ -8,8 +8,20 @@ kotlin {
     jvm()
     js {
         useCommonJs()
-        nodejs()
-        browser()
+        nodejs {
+            testTask {
+                useMocha {
+                    timeout = "10s"
+                }
+            }
+        }
+        browser {
+            testTask {
+                useMocha {
+                    timeout = "10s"
+                }
+            }
+        }
     }
     ios()
 
