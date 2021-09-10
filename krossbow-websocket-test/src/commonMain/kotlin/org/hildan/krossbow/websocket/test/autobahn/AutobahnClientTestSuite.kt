@@ -221,19 +221,12 @@ private suspend fun WebSocketConnection.echoUntilClosed() {
     }
 }
 
-private suspend fun WebSocketConnection.echoNFrames(n: Int) {
-    repeat(n) {
-        val frame = incomingFrames.receive()
-        echoFrame(frame)
-    }
-}
-
 private suspend fun WebSocketConnection.echoFrame(frame: WebSocketFrame) {
     when (frame) {
         is WebSocketFrame.Text -> sendText(frame.text)
         is WebSocketFrame.Binary -> sendBinary(frame.bytes)
         is WebSocketFrame.Ping -> Unit // nothing special, we expect the underlying impl to PONG properly
-        is WebSocketFrame.Pong -> Unit // nothing to do
+        is WebSocketFrame.Pong -> Unit // nothing to do for unsollicited PONG
         is WebSocketFrame.Close -> error("should not receive CLOSE frame at that point")
     }
 }
@@ -248,6 +241,13 @@ private suspend fun WebSocketConnection.echoExactFrameCountAndExpectClosure(case
     when (case.end) {
         CaseEnd.CLIENT_FORCE_CLOSE -> expectClientForceClosed()
         CaseEnd.SERVER_CLOSE -> expectServerClosed()
+    }
+}
+
+private suspend fun WebSocketConnection.echoNFrames(n: Int) {
+    repeat(n) {
+        val frame = incomingFrames.receive()
+        echoFrame(frame)
     }
 }
 
