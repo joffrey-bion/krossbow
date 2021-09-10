@@ -35,17 +35,17 @@ allprojects {
     afterEvaluate {
         // suppressing Dokka generation for JS because of the ZipException on NPM dependencies
         // https://github.com/Kotlin/dokka/issues/537
-        tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+        tasks.withType<org.jetbrains.dokka.gradle.DokkaTask> {
             dokkaSourceSets.findByName("jsMain")?.suppress?.set(true)
             dokkaSourceSets.findByName("jsTest")?.suppress?.set(true)
         }
 
         // ensure autobahn test server is launched for websocket tests
-        tasks.withType<AbstractTestTask>().configureEach {
+        tasks.withType<AbstractTestTask> {
             rootProject.dockerCompose.isRequiredBy(this)
         }
         // provide autobahn test server coordinates to the tests (non-trivial on macOS)
-        tasks.withType<KotlinJvmTest>().configureEach {
+        tasks.withType<KotlinJvmTest> {
             rootProject.dockerCompose.exposeAsEnvironment(this)
         }
 
