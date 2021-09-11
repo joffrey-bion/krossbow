@@ -1,44 +1,38 @@
-name: CI Build
+name: iOS Experiments
 
 on:
   push:
-    branches-ignore:
+    branches:
       - ios-client*
-  pull_request:
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        # Windows hosts don't support linux containers yet (https://github.com/actions/virtual-environments/issues/1143)
-        os: [ ubuntu-latest, macos-latest ]
-        jdk-version: [ 11, 16 ]
+  ios-tests:
+    timeout-minutes: 30
+    runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK ${{ matrix.jdk-version }}
+      - name: Set up JDK 16
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.jdk-version }}
+          java-version: 16
 
       # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
       # (and it's necessary to run Autobahn tests)
       - name: Install docker and docker-compose (missing on MacOS)
-        if: matrix.os == 'macOS-latest'
         uses: ./.github/actions/setup-docker-macos
 
       - name: Build with Gradle
         uses: burrunan/gradle-cache-action@v1
         with:
-          job-id: jdk${{ matrix.jdk-version }}
-          arguments: build
+          job-id: jdk16
+          arguments: iosX64Test
 
       - name: Upload Autobahn reports
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: autobahn-reports-${{ runner.os }}-jdk${{ matrix.jdk-version }}
+          name: autobahn-reports-${{ runner.os }}-jdk16
           path: build/autobahn/reports/clients
