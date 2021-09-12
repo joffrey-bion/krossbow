@@ -30,7 +30,7 @@ class IosWebSocketClient(
         val socketEndpoint = NSURL.URLWithString(url)!!
 
         debug("connect - suspending")
-        return suspendCoroutine { continuation ->
+        return suspendCancellableCoroutine { continuation ->
             val incomingFrames: Channel<WebSocketFrame> = Channel(BUFFERED)
             val urlSession = NSURLSession.sessionWithConfiguration(
                 configuration = config,
@@ -147,6 +147,10 @@ class IosWebSocketClient(
             debug("connect - calling webSocket.resume()")
             webSocket.resume()
             debug("connect - done in suspendCoroutine")
+            continuation.invokeOnCancellation {
+                debug("connect - invokeOnCancellation - cancelling websocket")
+                webSocket.cancel()
+            }
         }
     }
 }
