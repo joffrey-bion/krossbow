@@ -53,8 +53,8 @@ kotlin {
         }
         val jsTest by getting {
             dependencies {
-                implementation(npm("isomorphic-ws", "4.0.1"))
-                implementation(npm("ws", "8.2.1"))
+                implementation(npm("isomorphic-ws", libs.versions.npm.isomorphic.ws.get()))
+                implementation(npm("ws", libs.versions.npm.ws.get()))
             }
         }
     }

@@ -10,19 +10,19 @@ dependencies {
     implementation(libs.kotlinx.coroutines.jdk8)
 
     // For Spring's WebSocket clients
-    api("org.springframework:spring-websocket:5.3.9")
+    api(libs.spring.websocket)
 
     // TODO move this to testImplementation and make the users add it?
     // JSR 356 - Java API for WebSocket (reference implementation)
     // Low-level implementation required by Spring's client (javax.websocket.*)
-    implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.17")
+    implementation(libs.tyrusStandaloneClient)
 
     testImplementation(kotlin("test"))
     testImplementation(projects.krossbowWebsocketTest)
-    testImplementation("org.slf4j:slf4j-simple:1.7.26")
+    testImplementation(libs.slf4j.simple)
 
     // Implementation of Jetty client (for jetty tests)
-    testImplementation("org.eclipse.jetty.websocket:websocket-client:9.4.43.v20210629")
+    testImplementation(libs.jettyWebsocketCient)
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
