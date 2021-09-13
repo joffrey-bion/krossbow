@@ -1,5 +1,16 @@
 # Change Log
 
+## [2.5.0](https://github.com/joffrey-bion/krossbow/tree/2.5.0) (2021-09-13)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/2.4.1...2.5.0)
+
+**Implemented enhancements:**
+
+- Upgrade Jackson to version 2.12.5 [\#147](https://github.com/joffrey-bion/krossbow/issues/147)
+- Upgrade uuid to version 0.3.1 [\#146](https://github.com/joffrey-bion/krossbow/issues/146)
+- Upgrade Ktor client to version 1.6.3 [\#145](https://github.com/joffrey-bion/krossbow/issues/145)
+- Upgrade Kotlinx Coroutines to version 1.5.2 [\#144](https://github.com/joffrey-bion/krossbow/issues/144)
+- Upgrade Kotlin to version 1.5.30 [\#136](https://github.com/joffrey-bion/krossbow/issues/136)
+
 ## [2.4.1](https://github.com/joffrey-bion/krossbow/tree/2.4.1) (2021-09-08)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.4.0...2.4.1)
 
@@ -460,7 +471,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/d1d82569bd7f9bf7ddf16fe723e092f7b28212c9...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/25a401bd7145332719c65e79506148f83458923f...0.1.0)
 
 **Implemented enhancements:**
 
