@@ -5,8 +5,6 @@ plugins {
 
 description = "Test utilities for Krossbow WebSocket adapter implementations."
 
-val serializationVersion = "1.2.0"
-
 kotlin {
     jvm()
     js {
