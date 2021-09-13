@@ -2,7 +2,7 @@ import org.hildan.github.changelog.builder.DEFAULT_EXCLUDED_LABELS
 import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
 
 plugins {
-    val kotlinVersion = "1.5.21"
+    val kotlinVersion = "1.5.30"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
