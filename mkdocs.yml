@@ -1,0 +1,92 @@
+site_name: Krossbow
+site_url: https://joffrey-bion.github.io/krossbow
+repo_name: krossbow
+repo_url: https://github.com/joffrey-bion/krossbow
+site_description: "A coroutine-based Kotlin multi-platform STOMP 1.2 client over web sockets."
+site_author: Joffrey Bion
+
+theme:
+  name: material
+  features:
+    - navigation.expand
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - scheme: default
+      media: "(prefers-color-scheme: light)"
+      primary: 'teal'
+      accent: 'teal'
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      media: "(prefers-color-scheme: dark)"
+      primary: 'light blue'
+      accent: 'light blue'
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - macros # for variables like git.tag (requires mkdocs-macros-plugin)
+  - search
+
+markdown_extensions:
+  - admonition # for info/warn/tip sections
+  - attr_list # for anchors in definition lists
+  - def_list # for definition lists (stomp config)
+  - footnotes
+#  - smarty
+#  - codehilite:
+#      guess_lang: false
+#  - footnotes
+#  - meta
+  # For anchor links in titles
+  - toc:
+      permalink: true
+#  - pymdownx.betterem:
+#      smart_enable: all
+#  - pymdownx.caret
+  - pymdownx.emoji
+  - pymdownx.highlight
+#  - pymdownx.inlinehilite
+#  - pymdownx.magiclink
+#  - pymdownx.smartsymbols
+  # Necessary for code highlighting
+  - pymdownx.superfences
+  # Tabs support
+  - pymdownx.tabbed
+#  - pymdownx.tilde
+#  - tables
+
+nav:
+  - 'Overview': index.md
+  - 'STOMP':
+    - 'Basic usage': stomp/basics.md
+    - 'Configuration': stomp/config.md
+    - 'Body conversions':
+      - 'Kotlinx Serialization': stomp/conversions/kx-serialization.md
+      - 'Jackson': stomp/conversions/jackson.md
+      - 'Custom conversions': stomp/conversions/custom.md
+    - 'Advanced features': stomp/advanced-features.md
+  - 'Web socket clients':
+    - 'Core (built-in)': websocket/core.md
+    - 'Ktor': websocket/ktor.md
+    - 'OkHttp': websocket/okhttp.md
+    - 'Spring': websocket/spring.md
+    - 'SockJS': websocket/sockjs.md
+  - 'Artifacts summary': artifacts.md
+  - 'Change Log 🡕': https://github.com/joffrey-bion/krossbow/blob/main/CHANGELOG.md
+  - 'License': license.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/joffreybion
+      name: "Joffrey on Twitter"
+  versions:
+    jackson: 2.12.5
+    ktor: 1.6.3
+    kotlinxSerialization: 1.2.2
+
+copyright: Copyright &copy; 2019 - 2021 Joffrey Bion

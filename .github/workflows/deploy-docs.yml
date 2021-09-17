@@ -1,0 +1,27 @@
+name: deploy-docs
+
+on:
+  push:
+    paths:
+      - 'mkdocs.yml'
+      - 'docs/**'
+    branches:
+      - main
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install MkDocs Material
+        run: pip install mkdocs-material mkdocs-macros-plugin
+
+      - name: Deploy doc to GitHub pages
+        run: mkdocs gh-deploy --force
