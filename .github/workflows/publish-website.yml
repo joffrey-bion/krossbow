@@ -1,4 +1,4 @@
-name: deploy-docs
+name: Publish website
 
 on:
   push:
@@ -9,11 +9,13 @@ on:
       - main
 
 jobs:
-  deploy-docs:
+  publish-website:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # to fetch all tags for proper version
 
       - name: Setup Python
         uses: actions/setup-python@v2
