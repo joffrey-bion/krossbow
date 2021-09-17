@@ -29,4 +29,4 @@ jobs:
         run: pip install mkdocs-material mkdocs-macros-plugin
 
       - name: Deploy doc to GitHub pages
-        run: mkdocs gh-deploy --force
+        run: mkdocs gh-deploy --strict --force
