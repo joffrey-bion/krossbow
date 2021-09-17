@@ -1,5 +1,7 @@
 package org.hildan.krossbow.websocket
 
+import okio.utf8Size
+
 /**
  * The maximum number of UTF-8 bytes allowed by the web socket protocol for the "reason" in close frames.
  * This limit is defined in [section 5.5 of the RFC-6455](https://tools.ietf.org/html/rfc6455#section-5.5).
@@ -22,12 +24,8 @@ fun String.truncateToCloseFrameReasonLength(): String = truncateUtf8BytesLengthT
  * If the truncation occurs in the middle of a multibyte-character, the whole character is removed.
  */
 fun String.truncateUtf8BytesLengthTo(maxLength: Int): String {
-    if (length <= maxLength / 4) {
-        return this // fast path, correct even if all chars are 4 bytes long
-    }
-    val utf8Bytes = encodeToByteArray()
-    if (utf8Bytes.size <= maxLength) {
+    if (utf8Size() <= maxLength) {
         return this
     }
-    return utf8Bytes.copyOf(maxLength).decodeToString().trimEnd { it == '�' }
+    return encodeToByteArray().copyOf(maxLength).decodeToString().trimEnd { it == '\uFFFD' }
 }
