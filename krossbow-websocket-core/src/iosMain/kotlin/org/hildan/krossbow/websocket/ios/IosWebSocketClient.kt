@@ -231,6 +231,10 @@ private fun ByteArray.toNSData(): NSData = memScoped {
 }
 
 private fun NSData.toByteArray(): ByteArray {
+    // length=0 breaks the code below for some reason (ArrayIndexOutOfBoundsException)
+    // and it doesn't hurt to shortcut memcpy anyway if the array is empty
+    if (length.toInt() == 0) return ByteArray(0)
+
     val data = this
     return ByteArray(data.length.toInt()).apply {
         usePinned { pinned ->
