@@ -17,8 +17,9 @@ import platform.posix.memcpy
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+import kotlin.random.Random
 
-fun debug(msg: String) {
+fun debugMsg(msg: String) {
     println("[ios debug] $msg")
 }
 
@@ -27,9 +28,15 @@ class IosWebSocketClient(
 ) : WebSocketClient {
 
     override suspend fun connect(url: String): WebSocketConnection {
+        println("\n\n[ios debug] Start connect to $url")
         val socketEndpoint = NSURL.URLWithString(url)!!
 
-        debug("connect - suspending")
+        // FIXME remove this, it's just for debugging
+        val rand = Random.nextInt(100)
+        fun debug(msg: String) {
+            debugMsg("[$rand] $msg")
+        }
+
         return suspendCancellableCoroutine { continuation ->
             val incomingFrames: Channel<WebSocketFrame> = Channel(BUFFERED)
             val urlSession = NSURLSession.sessionWithConfiguration(
@@ -40,7 +47,7 @@ class IosWebSocketClient(
                         webSocketTask: NSURLSessionWebSocketTask,
                         didOpenWithProtocol: String?
                     ) {
-                        debug("connect delegate - didOpenWithProtocol - resuming in URLSession")
+                        debug("    delegate - didOpenWithProtocol - resuming in URLSession")
                         continuation.resume(IosWebSocketConnection(url, incomingFrames, webSocketTask))
                     }
 
@@ -50,14 +57,12 @@ class IosWebSocketClient(
                         didCloseWithCode: NSURLSessionWebSocketCloseCode,
                         reason: NSData?
                     ) {
-                        debug("connect delegate - didCloseWithCode - trySend(Close) in URLSession")
-                        incomingFrames.trySend(WebSocketFrame.Close(didCloseWithCode.toInt(), reason?.decodeToString()))
-                        debug("connect delegate - didCloseWithCode - close() in URLSession")
+                        debug("    delegate - didCloseWithCode - trySend(closeFrame) in URLSession")
+                        val closeFrame = WebSocketFrame.Close(didCloseWithCode.toInt(), reason?.decodeToString())
+                        val closeResult = incomingFrames.trySend(closeFrame)
+                        closeResult.getOrThrow() // TODO better error handling?
+                        debug("    delegate - didCloseWithCode - close() in URLSession")
                         incomingFrames.close()
-                    }
-
-                    override fun URLSession(session: NSURLSession, taskIsWaitingForConnectivity: NSURLSessionTask) {
-                        debug("connect delegate - taskIsWaitingForConnectivity")
                     }
 
                     override fun URLSession(
@@ -65,7 +70,24 @@ class IosWebSocketClient(
                         task: NSURLSessionTask,
                         didCompleteWithError: NSError?
                     ) {
-                        debug("connect delegate - didCompleteWithError = ${didCompleteWithError?.localizedDescription}")
+                        debug("    delegate - didCompleteWithError: $didCompleteWithError")
+                        // TODO resumeWithException if still in connecting phase?
+
+                        if (didCompleteWithError != null) {
+                            // TODO is this special case normal? We shouldn't really invent CLOSE frames...
+                            //  Investigate why sometimes we don't get didCloseWithCode but get this instead
+                            if (didCompleteWithError.code.toInt() == 57) {
+                                debug("    delegate - didCompleteWithError - simulating CLOSE frame")
+                                incomingFrames.trySend(WebSocketFrame.Close(WebSocketCloseCodes.NO_STATUS_CODE, null))
+                                incomingFrames.close()
+                            } else {
+                                incomingFrames.close(didCompleteWithError.toWebSocketException())
+                            }
+                        }
+                    }
+
+                    override fun URLSession(session: NSURLSession, taskIsWaitingForConnectivity: NSURLSessionTask) {
+                        debug("    delegate - taskIsWaitingForConnectivity")
                     }
 
                     override fun URLSession(
@@ -73,7 +95,7 @@ class IosWebSocketClient(
                         task: NSURLSessionTask,
                         didFinishCollectingMetrics: NSURLSessionTaskMetrics
                     ) {
-                        debug("connect delegate - didFinishCollectingMetrics")
+                        debug("    delegate - didFinishCollectingMetrics")
                     }
 
                     override fun URLSession(
@@ -81,7 +103,7 @@ class IosWebSocketClient(
                         task: NSURLSessionTask,
                         needNewBodyStream: (NSInputStream?) -> Unit
                     ) {
-                        debug("connect delegate - needNewBodyStream")
+                        debug("    delegate - needNewBodyStream")
                     }
 
                     override fun URLSession(
@@ -90,7 +112,7 @@ class IosWebSocketClient(
                         didReceiveChallenge: NSURLAuthenticationChallenge,
                         completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Unit
                     ) {
-                        debug("connect delegate - didReceiveChallenge")
+                        debug("    delegate - didReceiveChallenge")
                     }
 
                     override fun URLSession(
@@ -99,7 +121,7 @@ class IosWebSocketClient(
                         willBeginDelayedRequest: NSURLRequest,
                         completionHandler: (NSURLSessionDelayedRequestDisposition, NSURLRequest?) -> Unit
                     ) {
-                        debug("connect delegate - willBeginDelayedRequest")
+                        debug("    delegate - willBeginDelayedRequest")
                     }
 
                     override fun URLSession(
@@ -109,7 +131,7 @@ class IosWebSocketClient(
                         totalBytesSent: int64_t,
                         totalBytesExpectedToSend: int64_t
                     ) {
-                        debug("connect delegate - didSendBodyData")
+                        debug("    delegate - didSendBodyData")
                     }
 
                     override fun URLSession(
@@ -119,11 +141,11 @@ class IosWebSocketClient(
                         newRequest: NSURLRequest,
                         completionHandler: (NSURLRequest?) -> Unit
                     ) {
-                        debug("connect delegate - willPerformHTTPRedirection")
+                        debug("    delegate - willPerformHTTPRedirection")
                     }
 
                     override fun URLSession(session: NSURLSession, didBecomeInvalidWithError: NSError?) {
-                        debug("connect delegate - didBecomeInvalidWithError = ${didBecomeInvalidWithError?.localizedDescription}")
+                        debug("    delegate - didBecomeInvalidWithError: $didBecomeInvalidWithError")
                     }
 
                     override fun URLSession(
@@ -131,26 +153,24 @@ class IosWebSocketClient(
                         didReceiveChallenge: NSURLAuthenticationChallenge,
                         completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Unit
                     ) {
-                        debug("connect delegate - didReceiveChallenge = $didReceiveChallenge")
+                        debug("    delegate - didReceiveChallenge: $didReceiveChallenge")
                     }
 
                     override fun URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
-                        debug("connect delegate - URLSessionDidFinishEventsForBackgroundURLSession")
+                        debug("    delegate - URLSessionDidFinishEventsForBackgroundURLSession")
                     }
                 },
                 delegateQueue = NSOperationQueue.currentQueue()
             )
-            debug("connect - urlSession created, calling webSocketTaskWithURL")
             val webSocket = urlSession.webSocketTaskWithURL(socketEndpoint)
-            debug("connect - got websocket, calling forwardIncomingMessagesAsyncTo")
-            webSocket.forwardIncomingMessagesAsyncTo(incomingFrames)
+            webSocket.forwardNextIncomingMessagesAsyncTo(incomingFrames)
             debug("connect - calling webSocket.resume()")
             webSocket.resume()
-            debug("connect - done in suspendCoroutine")
             continuation.invokeOnCancellation {
                 debug("connect - invokeOnCancellation - cancelling websocket")
                 webSocket.cancel()
             }
+            debug("connect - done in suspendCoroutine")
         }
     }
 }
@@ -165,19 +185,17 @@ class IosWebSocketConnection(
     override var canSend: Boolean = true
 
     override suspend fun sendText(frameText: String) {
-        debug("IosWebSocketConnection - sendText - frameText = $frameText")
         sendMessage(NSURLSessionWebSocketMessage(frameText))
     }
 
     override suspend fun sendBinary(frameData: ByteArray) {
-        debug("IosWebSocketConnection - sendBinary - frameData.size = ${frameData.size}")
         sendMessage(NSURLSessionWebSocketMessage(frameData.toNSData()))
     }
 
     private suspend fun sendMessage(message: NSURLSessionWebSocketMessage) {
         suspendCoroutine<Unit> { cont ->
             webSocket.sendMessage(message) { err ->
-                debug("IosWebSocketConnection - sendMessage - callback with err = ${err?.localizedDescription}")
+                debugMsg("IosWebSocketConnection - sendMessage - callback with err = ${err?.localizedDescription}")
                 when (err) {
                     null -> cont.resume(Unit)
                     else -> cont.resumeWithException(WebSocketException(err.localizedDescription))
@@ -187,25 +205,30 @@ class IosWebSocketConnection(
     }
 
     override suspend fun close(code: Int, reason: String?) {
-        debug("IosWebSocketConnection - close")
+        debugMsg("IosWebSocketConnection - close")
         canSend = false
         webSocket.cancelWithCloseCode(code.toLong(), reason?.encodeToNSData())
     }
 }
 
-private fun NSURLSessionWebSocketTask.forwardIncomingMessagesAsyncTo(incomingFrames: SendChannel<WebSocketFrame>) {
-    debug("forwardIncomingMessagesAsyncTo - calling receiveMessageWithCompletionHandler")
+private fun NSURLSessionWebSocketTask.forwardNextIncomingMessagesAsyncTo(incomingFrames: SendChannel<WebSocketFrame>) {
+    debugMsg("forwardNextIncomingMessagesAsyncTo - calling receiveMessageWithCompletionHandler")
     receiveMessageWithCompletionHandler { message, nsError ->
-        debug("forwardIncomingMessagesAsyncTo - callback!")
         when {
             nsError != null -> {
-                debug("forwardIncomingMessagesAsyncTo - closing with error (nsError = ${nsError.localizedDescription})")
-                incomingFrames.close(WebSocketException(nsError.localizedDescription))
+                // TODO it seems the callback is called with error when the websocket is closed normally
+                //  Domain=NSPOSIXErrorDomain Code=57 "Socket is not connected"
+                if (nsError.code.toInt() != 57) {
+                    debugMsg("    MESSAGE - nsError = $nsError")
+                    incomingFrames.close(nsError.toWebSocketException())
+                } else {
+                    debugMsg("    Stopping incoming message polling")
+                }
             }
             message != null -> {
-                debug("forwardIncomingMessagesAsyncTo - received message (message = ${message.toWebSocketFrame()})")
+                debugMsg("    MESSAGE - frame = ${message.toWebSocketFrame()}")
                 incomingFrames.trySend(message.toWebSocketFrame())
-                forwardIncomingMessagesAsyncTo(incomingFrames)
+                forwardNextIncomingMessagesAsyncTo(incomingFrames)
             }
         }
     }
@@ -242,3 +265,5 @@ private fun NSData.toByteArray(): ByteArray {
         }
     }
 }
+
+private fun NSError.toWebSocketException() = WebSocketException(localizedDescription)
