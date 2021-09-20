@@ -74,8 +74,15 @@ public class org/hildan/krossbow/websocket/WebSocketConnectionException : org/hi
 	public final fun getUrl ()Ljava/lang/String;
 }
 
-public abstract interface class org/hildan/krossbow/websocket/WebSocketConnectionWithPingPong : org/hildan/krossbow/websocket/WebSocketConnection {
+public abstract interface class org/hildan/krossbow/websocket/WebSocketConnectionWithPing : org/hildan/krossbow/websocket/WebSocketConnection {
 	public abstract fun sendPing ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/websocket/WebSocketConnectionWithPing$DefaultImpls {
+	public static fun getHost (Lorg/hildan/krossbow/websocket/WebSocketConnectionWithPing;)Ljava/lang/String;
+}
+
+public abstract interface class org/hildan/krossbow/websocket/WebSocketConnectionWithPingPong : org/hildan/krossbow/websocket/WebSocketConnectionWithPing {
 	public abstract fun sendPong ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 

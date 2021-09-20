@@ -56,13 +56,13 @@ interface WebSocketConnection {
         get() = url.substringAfter("://").substringBefore("/").substringBefore(":")
 
     /**
-     * Whether it is safe to send messages through this web socket.
-     * If this is false, sending frames should not be attempted and may throw an exception.
+     * If false, sending frames should not be attempted and will likely throw an exception.
+     * If true, sending frames will likely succeed.
+     * However, no guarantees can be made because there could be a race condition between WS closure and a "send" call.
      *
      * This is usually based on the underlying web socket implementation "closed for send" status.
-     * However, some web socket implementations like OkHttp don't expose their status but always allow calls to their
-     * `send` methods (which are turned into no-ops when the web socket is closed).
-     * For such implementations, `canSend` always returns `true`.
+     * However, some web socket implementations like OkHttp or iOS don't expose their status, and `canSend` always returns `true`.
+     * Note that OkHttp always allows calls to its `send` methods (which are turned into no-ops when the web socket is closed).
      */
     val canSend: Boolean
 
@@ -73,11 +73,19 @@ interface WebSocketConnection {
 
     /**
      * Sends a web socket text frame.
+     *
+     * This method suspends until the underlying web socket implementation has processed the message.
+     * Some implementations don't provide any ways to track when exactly the message is sent.
+     * For those implementations, this method returns immediately without suspending.
      */
     suspend fun sendText(frameText: String)
 
     /**
      * Sends a web socket binary frame.
+     *
+     * This method suspends until the underlying web socket implementation has processed the message.
+     * Some implementations don't provide any ways to track when exactly the message is sent.
+     * For those implementations, this method returns immediately without suspending.
      */
     suspend fun sendBinary(frameData: ByteArray)
 
@@ -99,19 +107,22 @@ interface WebSocketConnection {
     suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
 }
 
-interface WebSocketConnectionWithPingPong : WebSocketConnection {
+interface WebSocketConnectionWithPing : WebSocketConnection {
 
     /**
      * Sends a web socket ping frame.
      */
     suspend fun sendPing(frameData: ByteArray)
+}
+
+interface WebSocketConnectionWithPingPong : WebSocketConnectionWithPing {
 
     /**
-     * Sends a web socket pong frame.
+     * Sends an unsolicited web socket pong frame.
      *
      * Note that implementations usually take care of sending Pong frames corresponding to each received Ping frame, so
      * applications should not bother dealing with Pongs in general.
-     * Unsollicited Pong frames may be sent, however, to serve as unidirectional heart beats.
+     * Unsolicited Pong frames may be sent, however, for instance to serve as unidirectional heart beats.
      */
     suspend fun sendPong(frameData: ByteArray)
 }
