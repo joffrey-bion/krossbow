@@ -68,11 +68,7 @@ private class IosWebSocketListener(
         cont.resume()
     }
 
-    override fun URLSession(
-        session: NSURLSession,
-        webSocketTask: NSURLSessionWebSocketTask,
-        didOpenWithProtocol: String?
-    ) {
+    override fun URLSession(session: NSURLSession, webSocketTask: NSURLSessionWebSocketTask, didOpenWithProtocol: String?) {
         completeConnection {
             resume(IosWebSocketConnection(url, incomingFrames, webSocketTask))
         }
@@ -84,10 +80,7 @@ private class IosWebSocketListener(
         didCloseWithCode: NSURLSessionWebSocketCloseCode,
         reason: NSData?
     ) {
-        val closeFrame = WebSocketFrame.Close(didCloseWithCode.toInt(), reason?.decodeToString())
-        val closeResult = incomingFrames.trySend(closeFrame)
-        closeResult.getOrThrow() // TODO better error handling?
-        incomingFrames.close()
+        passCloseFrameThroughChannel(didCloseWithCode.toInt(), reason?.decodeToString())
     }
 
     override fun URLSession(
@@ -111,17 +104,17 @@ private class IosWebSocketListener(
 
         // For some reason, sometimes we get this error 57 "Socket is closed" instead of didCloseWithCode callback
         if (didCompleteWithError.code.toInt() == ERROR_CODE_SOCKET_NOT_CONNECTED) {
-            simulateCloseFrame()
+            passCloseFrameThroughChannel(WebSocketCloseCodes.NO_STATUS_CODE, reason = null)
             return
         }
 
         incomingFrames.close(didCompleteWithError.toIosWebSocketException())
     }
 
-    private fun simulateCloseFrame() {
-        val closeResult = incomingFrames.trySend(WebSocketFrame.Close(WebSocketCloseCodes.NO_STATUS_CODE, null))
+    private fun passCloseFrameThroughChannel(code: Int, reason: String?) {
+        val closeResult = incomingFrames.trySend(WebSocketFrame.Close(code, reason))
         if (closeResult.isFailure) {
-            val closeException = WebSocketException("Could not send CLOSE frame", cause = closeResult.exceptionOrNull())
+            val closeException = WebSocketException("Could not pass CLOSE frame through channel", cause = closeResult.exceptionOrNull())
             incomingFrames.close(closeException)
             // still throw because no one might be listening to this channel (especially since the buffer is likely full)
             throw closeException
