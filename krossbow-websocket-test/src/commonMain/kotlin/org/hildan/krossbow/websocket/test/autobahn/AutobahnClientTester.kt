@@ -9,10 +9,7 @@ import kotlinx.serialization.json.Json
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketFrame
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 internal class AutobahnClientTester(
     private val wsClient: WebSocketClient,
@@ -29,42 +26,40 @@ internal class AutobahnClientTester(
     suspend fun getCaseStatus(case: String): TestCaseStatus =
         callAndGetJson<AutobahnCaseStatus>("getCaseStatus?casetuple=$case&agent=$agentUnderTest").behavior
 
-    suspend fun updateReports() {
-        call("updateReports?agent=$agentUnderTest")
-    }
+    suspend fun updateReports(): Unit = call("updateReports?agent=$agentUnderTest")
 
-    suspend fun stopServer() {
-        call("stopServer")
-    }
+    suspend fun stopServer(): Unit = call("stopServer")
 
     @OptIn(ExperimentalSerializationApi::class)
     private suspend inline fun <reified T> callAndGetJson(endpoint: String): T {
-        val frame = callAndGet(endpoint)
-        assertIs<WebSocketFrame.Text>(frame)
-        return Json.decodeFromString(frame.text)
-    }
-
-    private suspend fun callAndGet(endpoint: String): WebSocketFrame {
         val connection = wsClient.connect("$testServerUrl/$endpoint")
-        val frame = connection.incomingFrames.receive()
-        connection.expectClosed()
-        return frame
+        val dataFrame = connection.expectFrame<WebSocketFrame.Text>()
+        return Json.decodeFromString<T>(dataFrame.text).also {
+            connection.expectFrame<WebSocketFrame.Close>()
+            connection.expectNoMoreFrames()
+        }
     }
 
     private suspend fun call(endpoint: String) {
         val connection = wsClient.connect("$testServerUrl/$endpoint")
-        connection.expectClosed()
+        connection.expectFrame<WebSocketFrame.Close>()
+        connection.expectNoMoreFrames()
     }
 
-    private suspend fun WebSocketConnection.expectClosed() {
-        val closeFrameResult = withTimeoutOrNull(2000) { incomingFrames.receiveCatching() }
-        assertNotNull(closeFrameResult, "Timed out while waiting for CLOSE frame")
-        assertFalse(closeFrameResult.isClosed, "Expected CLOSE frame, but the channel itself was closed")
-        assertFalse(closeFrameResult.isFailure, "Expected CLOSE frame, but the channel was failed: ${closeFrameResult.exceptionOrNull()}")
+    private suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expectFrame(): T {
+        val frameType = T::class.simpleName
+        val result = withTimeoutOrNull(2000) { incomingFrames.receiveCatching() }
+        assertNotNull(result, "Timed out while waiting for $frameType frame")
+        assertFalse(result.isClosed, "Expected $frameType frame, but the channel was closed")
+        assertFalse(result.isFailure,
+            "Expected $frameType frame, but the channel was failed: ${result.exceptionOrNull()}")
 
-        val closeFrame = closeFrameResult.getOrThrow()
-        assertIs<WebSocketFrame.Close>(closeFrame, "Should have received CLOSE frame, but got $closeFrame")
+        val frame = result.getOrThrow()
+        assertIs<T>(frame, "Should have received $frameType frame, but got $frame")
+        return frame
+    }
 
+    private suspend fun WebSocketConnection.expectNoMoreFrames() {
         val result = withTimeoutOrNull(1000) { incomingFrames.receiveCatching() }
         assertNotNull(result, "Timed out while waiting for incoming frames channel to be closed")
         assertTrue(result.isClosed, "Frames channel should be closed now, got $result")
