@@ -1,0 +1,1157 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>AutobahnClientTestSuite</title>
+</head><body><link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script><script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script><link href="../../../styles/style.css" rel="Stylesheet"><link href="../../../styles/logo-styles.css" rel="Stylesheet"><link href="../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../styles/main.css" rel="Stylesheet"><script type="text/javascript" src="../../../scripts/clipboard.js" async></script><script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script><script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script><script type="text/javascript" src="../../../scripts/main.js" async></script>
+  
+    <div id="container">
+      <div id="leftColumn"><a href="../../../index.html">
+            <div id="logo"></div>
+          </a>
+        <div id="paneSearch"></div>
+        <div id="sideMenu"></div>
+      </div>
+      <div id="main">
+        <script type="text/javascript" src="../../../scripts/main.js"></script><div id="leftToggler"><span class="icon-toggler"></span></div>
+
+        <div class="main-content" id="content" pageids="krossbow-websocket-test::org.hildan.krossbow.websocket.test.autobahn/AutobahnClientTestSuite///PointingToDeclaration//-1429840958">
+          <div class="navigation-wrapper" id="navigation-wrapper">
+            <div class="breadcrumbs"><a href="../../index.html">krossbow-websocket-test</a>/<a href="../index.html">org.hildan.krossbow.websocket.test.autobahn</a>/<a href="index.html">AutobahnClientTestSuite</a></div>
+            <div class="pull-right d-flex">
+              <div class="filter-section" id="filter-section"><button class="platform-tag platform-selector common-like" data-active="" data-filter=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">common</button></div>
+              <div id="searchBar"></div>
+            </div>
+          </div>
+          <div class="cover ">
+            <h1 class="cover"><span>Autobahn</span><wbr><span>Client</span><wbr><span>Test</span><wbr><span><span>Suite</span></span></h1>
+            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">abstract class <a href="index.html">AutobahnClientTestSuite</a>(agentUnderTest: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, testServerUrl: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Runs tests from the <a href="https://github.com/crossbario/autobahn-testsuite">Autobahn test suite</a>.</p><p class="paragraph">This test suite requires a running Autobahn fuzzing server. It can be started with the following docker command:</p><div class="sample-container"><code class="" theme="idea"><pre>docker run -it --rm -v "./autobahn/config:/config" -v "./build/autobahn/reports:/reports" -p 12345:12345 crossbario/autobahn-testsuite</pre></code></div><p class="paragraph">Alternatively, Gradle can be configured to start the relevant container when running tests. See Krossbow's repository for an example setup using <code>com.avast.gradle.docker-compose</code> Gradle plugin.</p></div></div>
+          </div>
+          <div class="tabbedcontent">
+            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Functions">Functions</button></div>
+            <div class="tabs-section-body">
+              <h2 class="tabbedcontent">Constructors</h2>
+              <div class="table" data-togglable="Constructors"><a data-name="517356166%2FConstructors%2F-1429840958" anchor-label="AutobahnClientTestSuite" id="517356166%2FConstructors%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue TabbedContent">
+                    <div class=""><span class="inline-flex"><a href="-autobahn-client-test-suite.html">AutobahnClientTestSuite</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="517356166%2FConstructors%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="-autobahn-client-test-suite.html">AutobahnClientTestSuite</a>(agentUnderTest: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, testServerHost: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> = getDefaultAutobahnTestServerHost(), testServerPort: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = getDefaultAutobahnTestServerPort())<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="386204279%2FConstructors%2F-1429840958" anchor-label="AutobahnClientTestSuite" id="386204279%2FConstructors%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue TabbedContent">
+                    <div class=""><span class="inline-flex"><a href="-autobahn-client-test-suite.html">AutobahnClientTestSuite</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="386204279%2FConstructors%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="-autobahn-client-test-suite.html">AutobahnClientTestSuite</a>(agentUnderTest: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, testServerUrl: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="">Functions</h2>
+              <div class="table" data-togglable="Functions"><a data-name="-1376830048%2FFunctions%2F-1429840958" anchor-label="autobahn_1_1_1_echo_text_payload" id="-1376830048%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_1_1_echo_text_payload.html"><span><span>autobahn_1_1_1_echo_text_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1376830048%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_1_1_echo_text_payload.html">autobahn_1_1_1_echo_text_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1893443327%2FFunctions%2F-1429840958" anchor-label="autobahn_1_1_2_echo_text_payload" id="1893443327%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_1_2_echo_text_payload.html"><span><span>autobahn_1_1_2_echo_text_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1893443327%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_1_2_echo_text_payload.html">autobahn_1_1_2_echo_text_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="868749406%2FFunctions%2F-1429840958" anchor-label="autobahn_1_1_3_echo_text_payload" id="868749406%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_1_3_echo_text_payload.html"><span><span>autobahn_1_1_3_echo_text_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="868749406%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_1_3_echo_text_payload.html">autobahn_1_1_3_echo_text_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-155944515%2FFunctions%2F-1429840958" anchor-label="autobahn_1_1_4_echo_text_payload" id="-155944515%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_1_4_echo_text_payload.html"><span><span>autobahn_1_1_4_echo_text_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-155944515%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_1_4_echo_text_payload.html">autobahn_1_1_4_echo_text_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1180638436%2FFunctions%2F-1429840958" anchor-label="autobahn_1_1_5_echo_text_payload" id="-1180638436%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_1_5_echo_text_payload.html"><span><span>autobahn_1_1_5_echo_text_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1180638436%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_1_5_echo_text_payload.html">autobahn_1_1_5_echo_text_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2089634939%2FFunctions%2F-1429840958" anchor-label="autobahn_1_1_6_echo_text_payload" id="2089634939%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_1_6_echo_text_payload.html"><span><span>autobahn_1_1_6_echo_text_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2089634939%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_1_6_echo_text_payload.html">autobahn_1_1_6_echo_text_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1064941018%2FFunctions%2F-1429840958" anchor-label="autobahn_1_1_7_echo_text_payload" id="1064941018%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_1_7_echo_text_payload.html"><span><span>autobahn_1_1_7_echo_text_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1064941018%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_1_7_echo_text_payload.html">autobahn_1_1_7_echo_text_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="40247097%2FFunctions%2F-1429840958" anchor-label="autobahn_1_1_8_echo_text_payload" id="40247097%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_1_8_echo_text_payload.html"><span><span>autobahn_1_1_8_echo_text_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="40247097%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_1_8_echo_text_payload.html">autobahn_1_1_8_echo_text_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-238352533%2FFunctions%2F-1429840958" anchor-label="autobahn_1_2_1_echo_binary_payload" id="-238352533%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_2_1_echo_binary_payload.html"><span><span>autobahn_1_2_1_echo_binary_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-238352533%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_2_1_echo_binary_payload.html">autobahn_1_2_1_echo_binary_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1421699830%2FFunctions%2F-1429840958" anchor-label="autobahn_1_2_2_echo_binary_payload" id="-1421699830%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_2_2_echo_binary_payload.html"><span><span>autobahn_1_2_2_echo_binary_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1421699830%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_2_2_echo_binary_payload.html">autobahn_1_2_2_echo_binary_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1689920169%2FFunctions%2F-1429840958" anchor-label="autobahn_1_2_3_echo_binary_payload" id="1689920169%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_2_3_echo_binary_payload.html"><span><span>autobahn_1_2_3_echo_binary_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1689920169%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_2_3_echo_binary_payload.html">autobahn_1_2_3_echo_binary_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="506572872%2FFunctions%2F-1429840958" anchor-label="autobahn_1_2_4_echo_binary_payload" id="506572872%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_2_4_echo_binary_payload.html"><span><span>autobahn_1_2_4_echo_binary_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="506572872%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_2_4_echo_binary_payload.html">autobahn_1_2_4_echo_binary_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-676774425%2FFunctions%2F-1429840958" anchor-label="autobahn_1_2_5_echo_binary_payload" id="-676774425%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_2_5_echo_binary_payload.html"><span><span>autobahn_1_2_5_echo_binary_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-676774425%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_2_5_echo_binary_payload.html">autobahn_1_2_5_echo_binary_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1860121722%2FFunctions%2F-1429840958" anchor-label="autobahn_1_2_6_echo_binary_payload" id="-1860121722%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_2_6_echo_binary_payload.html"><span><span>autobahn_1_2_6_echo_binary_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1860121722%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_2_6_echo_binary_payload.html">autobahn_1_2_6_echo_binary_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1251498277%2FFunctions%2F-1429840958" anchor-label="autobahn_1_2_7_echo_binary_payload" id="1251498277%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_2_7_echo_binary_payload.html"><span><span>autobahn_1_2_7_echo_binary_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1251498277%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_2_7_echo_binary_payload.html">autobahn_1_2_7_echo_binary_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="68150980%2FFunctions%2F-1429840958" anchor-label="autobahn_1_2_8_echo_binary_payload" id="68150980%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_1_2_8_echo_binary_payload.html"><span><span>autobahn_1_2_8_echo_binary_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="68150980%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_1_2_8_echo_binary_payload.html">autobahn_1_2_8_echo_binary_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="779370012%2FFunctions%2F-1429840958" anchor-label="autobahn_2_10_ping_pong" id="779370012%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_10_ping_pong.html"><span><span>autobahn_2_10_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="779370012%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_10_ping_pong.html">autobahn_2_10_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1565297029%2FFunctions%2F-1429840958" anchor-label="autobahn_2_11_ping_pong" id="-1565297029%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_11_ping_pong.html"><span><span>autobahn_2_11_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1565297029%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_11_ping_pong.html">autobahn_2_11_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="119149506%2FFunctions%2F-1429840958" anchor-label="autobahn_2_1_ping_pong" id="119149506%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_1_ping_pong.html"><span><span>autobahn_2_1_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="119149506%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_1_ping_pong.html">autobahn_2_1_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2069449761%2FFunctions%2F-1429840958" anchor-label="autobahn_2_2_ping_pong" id="2069449761%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_2_ping_pong.html"><span><span>autobahn_2_2_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2069449761%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_2_ping_pong.html">autobahn_2_2_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-275217280%2FFunctions%2F-1429840958" anchor-label="autobahn_2_3_ping_pong" id="-275217280%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_3_ping_pong.html"><span><span>autobahn_2_3_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-275217280%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_3_ping_pong.html">autobahn_2_3_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1675082975%2FFunctions%2F-1429840958" anchor-label="autobahn_2_4_ping_pong" id="1675082975%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_4_ping_pong.html"><span><span>autobahn_2_4_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1675082975%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_4_ping_pong.html">autobahn_2_4_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-669584066%2FFunctions%2F-1429840958" anchor-label="autobahn_2_5_ping_pong" id="-669584066%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_5_ping_pong.html"><span><span>autobahn_2_5_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-669584066%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_5_ping_pong.html">autobahn_2_5_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1280716189%2FFunctions%2F-1429840958" anchor-label="autobahn_2_6_ping_pong" id="1280716189%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_6_ping_pong.html"><span><span>autobahn_2_6_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1280716189%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_6_ping_pong.html">autobahn_2_6_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1063950852%2FFunctions%2F-1429840958" anchor-label="autobahn_2_7_ping_pong" id="-1063950852%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_7_ping_pong.html"><span><span>autobahn_2_7_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1063950852%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_7_ping_pong.html">autobahn_2_7_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="886349403%2FFunctions%2F-1429840958" anchor-label="autobahn_2_8_ping_pong" id="886349403%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_8_ping_pong.html"><span><span>autobahn_2_8_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="886349403%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_8_ping_pong.html">autobahn_2_8_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1458317638%2FFunctions%2F-1429840958" anchor-label="autobahn_2_9_ping_pong" id="-1458317638%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_2_9_ping_pong.html"><span><span>autobahn_2_9_ping_pong</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1458317638%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_2_9_ping_pong.html">autobahn_2_9_ping_pong</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1800796617%2FFunctions%2F-1429840958" anchor-label="autobahn_3_1_reserved_bits" id="1800796617%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_3_1_reserved_bits.html"><span><span>autobahn_3_1_reserved_bits</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1800796617%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_3_1_reserved_bits.html">autobahn_3_1_reserved_bits</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1032590680%2FFunctions%2F-1429840958" anchor-label="autobahn_3_2_reserved_bits" id="-1032590680%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_3_2_reserved_bits.html"><span><span>autobahn_3_2_reserved_bits</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1032590680%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_3_2_reserved_bits.html">autobahn_3_2_reserved_bits</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="428989319%2FFunctions%2F-1429840958" anchor-label="autobahn_3_3_reserved_bits" id="428989319%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_3_3_reserved_bits.html"><span><span>autobahn_3_3_reserved_bits</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="428989319%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_3_3_reserved_bits.html">autobahn_3_3_reserved_bits</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1890569318%2FFunctions%2F-1429840958" anchor-label="autobahn_3_4_reserved_bits" id="1890569318%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_3_4_reserved_bits.html"><span><span>autobahn_3_4_reserved_bits</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1890569318%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_3_4_reserved_bits.html">autobahn_3_4_reserved_bits</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-942817979%2FFunctions%2F-1429840958" anchor-label="autobahn_3_5_reserved_bits" id="-942817979%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_3_5_reserved_bits.html"><span><span>autobahn_3_5_reserved_bits</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-942817979%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_3_5_reserved_bits.html">autobahn_3_5_reserved_bits</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="518762020%2FFunctions%2F-1429840958" anchor-label="autobahn_3_6_reserved_bits" id="518762020%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_3_6_reserved_bits.html"><span><span>autobahn_3_6_reserved_bits</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="518762020%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_3_6_reserved_bits.html">autobahn_3_6_reserved_bits</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1980342019%2FFunctions%2F-1429840958" anchor-label="autobahn_3_7_reserved_bits" id="1980342019%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_3_7_reserved_bits.html"><span><span>autobahn_3_7_reserved_bits</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1980342019%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_3_7_reserved_bits.html">autobahn_3_7_reserved_bits</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1415724274%2FFunctions%2F-1429840958" anchor-label="autobahn_4_1_1_opcodes" id="-1415724274%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_1_1_opcodes.html"><span><span>autobahn_4_1_1_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1415724274%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_1_1_opcodes.html">autobahn_4_1_1_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-390232275%2FFunctions%2F-1429840958" anchor-label="autobahn_4_1_2_opcodes" id="-390232275%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_1_2_opcodes.html"><span><span>autobahn_4_1_2_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-390232275%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_1_2_opcodes.html">autobahn_4_1_2_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="635259724%2FFunctions%2F-1429840958" anchor-label="autobahn_4_1_3_opcodes" id="635259724%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_1_3_opcodes.html"><span><span>autobahn_4_1_3_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="635259724%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_1_3_opcodes.html">autobahn_4_1_3_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1660751723%2FFunctions%2F-1429840958" anchor-label="autobahn_4_1_4_opcodes" id="1660751723%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_1_4_opcodes.html"><span><span>autobahn_4_1_4_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1660751723%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_1_4_opcodes.html">autobahn_4_1_4_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1608723574%2FFunctions%2F-1429840958" anchor-label="autobahn_4_1_5_opcodes" id="-1608723574%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_1_5_opcodes.html"><span><span>autobahn_4_1_5_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1608723574%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_1_5_opcodes.html">autobahn_4_1_5_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="534575981%2FFunctions%2F-1429840958" anchor-label="autobahn_4_2_1_opcodes" id="534575981%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_2_1_opcodes.html"><span><span>autobahn_4_2_1_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="534575981%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_2_1_opcodes.html">autobahn_4_2_1_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1560067980%2FFunctions%2F-1429840958" anchor-label="autobahn_4_2_2_opcodes" id="1560067980%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_2_2_opcodes.html"><span><span>autobahn_4_2_2_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1560067980%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_2_2_opcodes.html">autobahn_4_2_2_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1709407317%2FFunctions%2F-1429840958" anchor-label="autobahn_4_2_3_opcodes" id="-1709407317%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_2_3_opcodes.html"><span><span>autobahn_4_2_3_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1709407317%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_2_3_opcodes.html">autobahn_4_2_3_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-683915318%2FFunctions%2F-1429840958" anchor-label="autobahn_4_2_4_opcodes" id="-683915318%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_2_4_opcodes.html"><span><span>autobahn_4_2_4_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-683915318%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_2_4_opcodes.html">autobahn_4_2_4_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="341576681%2FFunctions%2F-1429840958" anchor-label="autobahn_4_2_5_opcodes" id="341576681%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_4_2_5_opcodes.html"><span><span>autobahn_4_2_5_opcodes</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="341576681%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_4_2_5_opcodes.html">autobahn_4_2_5_opcodes</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-254272894%2FFunctions%2F-1429840958" anchor-label="autobahn_5_1_echo_payload" id="-254272894%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_5_1_echo_payload.html"><span><span>autobahn_5_1_echo_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-254272894%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_5_1_echo_payload.html">autobahn_5_1_echo_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1176956477%2FFunctions%2F-1429840958" anchor-label="autobahn_5_2_echo_payload" id="-1176956477%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_5_2_echo_payload.html"><span><span>autobahn_5_2_echo_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1176956477%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_5_2_echo_payload.html">autobahn_5_2_echo_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-2099640060%2FFunctions%2F-1429840958" anchor-label="autobahn_5_3_echo_payload" id="-2099640060%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_5_3_echo_payload.html"><span><span>autobahn_5_3_echo_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2099640060%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_5_3_echo_payload.html">autobahn_5_3_echo_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1272643653%2FFunctions%2F-1429840958" anchor-label="autobahn_5_4_echo_payload" id="1272643653%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_5_4_echo_payload.html"><span><span>autobahn_5_4_echo_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1272643653%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_5_4_echo_payload.html">autobahn_5_4_echo_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="349960070%2FFunctions%2F-1429840958" anchor-label="autobahn_5_5_echo_payload" id="349960070%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_5_5_echo_payload.html"><span><span>autobahn_5_5_echo_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="349960070%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_5_5_echo_payload.html">autobahn_5_5_echo_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-572723513%2FFunctions%2F-1429840958" anchor-label="autobahn_5_6_echo_payload" id="-572723513%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_5_6_echo_payload.html"><span><span>autobahn_5_6_echo_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-572723513%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_5_6_echo_payload.html">autobahn_5_6_echo_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1495407096%2FFunctions%2F-1429840958" anchor-label="autobahn_5_7_echo_payload" id="-1495407096%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_5_7_echo_payload.html"><span><span>autobahn_5_7_echo_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1495407096%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_5_7_echo_payload.html">autobahn_5_7_echo_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1876876617%2FFunctions%2F-1429840958" anchor-label="autobahn_5_8_echo_payload" id="1876876617%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_5_8_echo_payload.html"><span><span>autobahn_5_8_echo_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1876876617%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_5_8_echo_payload.html">autobahn_5_8_echo_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="954193034%2FFunctions%2F-1429840958" anchor-label="autobahn_5_9_echo_payload" id="954193034%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="autobahn_5_9_echo_payload.html"><span><span>autobahn_5_9_echo_payload</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="954193034%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">fun <a href="autobahn_5_9_echo_payload.html">autobahn_5_9_echo_payload</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2091974029%2FFunctions%2F-1429840958" anchor-label="provideClient" id="2091974029%2FFunctions%2F-1429840958" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"></a>
+                <div class="table-row" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="provide-client.html"><span>provide</span><wbr><span><span>Client</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2091974029%2FFunctions%2F-1429840958"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="platform-tags ">
+                        <div class="platform-tag common-like">common</div>
+                      </div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":krossbow-websocket-test:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-test:dokkaHtmlPartial/commonMain"><div class="symbol monospace">abstract fun <a href="provide-client.html">provideClient</a>(): <a href="../../../krossbow-websocket-core/org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>© 2021 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+      </div>
+    </div>
+  
+</body></html>
+
+
