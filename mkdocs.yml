@@ -76,6 +76,7 @@ nav:
     - 'Spring': websocket/spring.md
     - 'SockJS': websocket/sockjs.md
   - 'Artifacts summary': artifacts.md
+  - 'API Docs 🡕': kdoc/index.html
   - 'Change Log 🡕': https://github.com/joffrey-bion/krossbow/blob/main/CHANGELOG.md
   - 'License': license.md
 
