@@ -32,10 +32,10 @@ Krossbow supports the following targets:
 * :white_check_mark: JVM
 * :white_check_mark: JS (browser & NodeJS)
 * :warning: Android (using JVM artifacts)
-* :x: Native
+* :construction: iOS ([in progress](https://github.com/joffrey-bion/krossbow/issues/126))
+* :x: Native Desktop
 
-The Native target is currently unsupported, due to a lack of native web socket implementations.
-Specific support for iOS is tracked [in this issue](https://github.com/joffrey-bion/krossbow/issues/126).
+The desktop Native targets are currently unsupported, due to a lack of native web socket implementations.
 Contributions are of course welcome!
 
 !!! info "Android not tested on CI"
