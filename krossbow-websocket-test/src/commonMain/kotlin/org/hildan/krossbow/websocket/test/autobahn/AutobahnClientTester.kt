@@ -57,7 +57,7 @@ internal class AutobahnClientTester(
     }
 
     private suspend fun WebSocketConnection.expectClosed() {
-        val closeFrameResult = withTimeoutOrNull(500) { incomingFrames.receiveCatching() }
+        val closeFrameResult = withTimeoutOrNull(2000) { incomingFrames.receiveCatching() }
         assertNotNull(closeFrameResult, "Timed out while waiting for CLOSE frame")
         assertFalse(closeFrameResult.isClosed, "Expected CLOSE frame, but the channel itself was closed")
         assertFalse(closeFrameResult.isFailure, "Expected CLOSE frame, but the channel was failed: ${closeFrameResult.exceptionOrNull()}")
@@ -65,7 +65,7 @@ internal class AutobahnClientTester(
         val closeFrame = closeFrameResult.getOrThrow()
         assertIs<WebSocketFrame.Close>(closeFrame, "Should have received CLOSE frame, but got $closeFrame")
 
-        val result = withTimeoutOrNull(500) { incomingFrames.receiveCatching() }
+        val result = withTimeoutOrNull(1000) { incomingFrames.receiveCatching() }
         assertNotNull(result, "Timed out while waiting for incoming frames channel to be closed")
         assertTrue(result.isClosed, "Frames channel should be closed now, got $result")
     }

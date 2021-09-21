@@ -198,7 +198,7 @@ abstract class AutobahnClientTestSuite(
     private suspend fun runAutobahnTestCase(case: AutobahnCase) {
         val autobahnClientTester = AutobahnClientTester(provideClient(), testServerUrl, agentUnderTest)
         try {
-            withTimeout(5000) {
+            withTimeout(10000) {
                 val session = autobahnClientTester.connectForAutobahnTestCase(case.id)
                 session.echoUntilClosed()
             }

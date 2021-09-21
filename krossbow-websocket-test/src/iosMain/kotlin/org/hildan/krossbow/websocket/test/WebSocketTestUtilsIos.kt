@@ -28,7 +28,8 @@ internal actual suspend fun runAlongEchoWSServer(block: suspend (port: Int) -> U
  * Inspired by https://github.com/ktorio/ktor/issues/678#issuecomment-433756753
  */
 @OptIn(ExperimentalTime::class, DelicateCoroutinesApi::class)
-private fun runOnMainThreadAlongMainLoop(timeout: Duration = Duration.seconds(5), block: suspend CoroutineScope.() -> Unit) {
+private fun runOnMainThreadAlongMainLoop(timeout: Duration = Duration.seconds(10), block: suspend CoroutineScope.() ->
+Unit) {
     val maxTimeNanos = getTimeNanos() + timeout.inWholeNanoseconds
 
     // The block is run in a concurrent coroutine, so we can run the main loop at the same time.
