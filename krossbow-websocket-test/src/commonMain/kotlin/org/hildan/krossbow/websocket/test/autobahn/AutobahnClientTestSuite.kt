@@ -208,7 +208,9 @@ abstract class AutobahnClientTestSuite(
         } catch (e: TimeoutCancellationException) {
             fail("Test case ${case.id} timed out", e)
         } catch (e: Exception) {
-            assertTrue(case.expectFailure, "Unexpected exception during test case ${case.id}: $e")
+            if (!case.expectFailure) {
+                throw IllegalStateException("Unexpected exception during test case ${case.id}", e)
+            }
         } finally {
             autobahnClientTester.updateReports()
         }
