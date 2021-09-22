@@ -1,6 +1,5 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
-import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -8,8 +7,10 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
-import org.hildan.krossbow.websocket.WebSocketFrame
-import kotlin.test.*
+import org.hildan.krossbow.websocket.test.connectWithTimeout
+import org.hildan.krossbow.websocket.test.expectCloseFrame
+import org.hildan.krossbow.websocket.test.expectNoMoreFrames
+import org.hildan.krossbow.websocket.test.expectTextFrame
 
 internal class AutobahnClientTester(
     private val wsClient: WebSocketClient,
@@ -17,7 +18,7 @@ internal class AutobahnClientTester(
     private val agentUnderTest: String,
 ) {
     suspend fun connectForAutobahnTestCase(case: String): WebSocketConnection =
-        wsClient.connect("$testServerUrl/runCase?casetuple=$case&agent=$agentUnderTest")
+        wsClient.connectWithTimeout("$testServerUrl/runCase?casetuple=$case&agent=$agentUnderTest")
 
     suspend fun getCaseCount(): Int = callAndGetJson("getCaseCount")
 
@@ -32,37 +33,18 @@ internal class AutobahnClientTester(
 
     @OptIn(ExperimentalSerializationApi::class)
     private suspend inline fun <reified T> callAndGetJson(endpoint: String): T {
-        val connection = wsClient.connect("$testServerUrl/$endpoint")
-        val dataFrame = connection.expectFrame<WebSocketFrame.Text>()
+        val connection = wsClient.connectWithTimeout("$testServerUrl/$endpoint")
+        val dataFrame = connection.expectTextFrame("JSON data for endpoint $endpoint")
         return Json.decodeFromString<T>(dataFrame.text).also {
-            connection.expectFrame<WebSocketFrame.Close>()
-            connection.expectNoMoreFrames()
+            connection.expectCloseFrame("after JSON data for endpoint $endpoint")
+            connection.expectNoMoreFrames("after close frame for endpoint $endpoint")
         }
     }
 
     private suspend fun call(endpoint: String) {
-        val connection = wsClient.connect("$testServerUrl/$endpoint")
-        connection.expectFrame<WebSocketFrame.Close>()
-        connection.expectNoMoreFrames()
-    }
-
-    private suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expectFrame(): T {
-        val frameType = T::class.simpleName
-        val result = withTimeoutOrNull(2000) { incomingFrames.receiveCatching() }
-        assertNotNull(result, "Timed out while waiting for $frameType frame")
-        assertFalse(result.isClosed, "Expected $frameType frame, but the channel was closed")
-        assertFalse(result.isFailure,
-            "Expected $frameType frame, but the channel was failed: ${result.exceptionOrNull()}")
-
-        val frame = result.getOrThrow()
-        assertIs<T>(frame, "Should have received $frameType frame, but got $frame")
-        return frame
-    }
-
-    private suspend fun WebSocketConnection.expectNoMoreFrames() {
-        val result = withTimeoutOrNull(1000) { incomingFrames.receiveCatching() }
-        assertNotNull(result, "Timed out while waiting for incoming frames channel to be closed")
-        assertTrue(result.isClosed, "Frames channel should be closed now, got $result")
+        val connection = wsClient.connectWithTimeout("$testServerUrl/$endpoint")
+        connection.expectCloseFrame("no data for endpoint $endpoint")
+        connection.expectNoMoreFrames("after close frame for endpoint $endpoint")
     }
 }
 

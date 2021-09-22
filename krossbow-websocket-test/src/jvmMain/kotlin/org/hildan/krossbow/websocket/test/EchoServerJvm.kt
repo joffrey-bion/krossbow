@@ -3,20 +3,10 @@ package org.hildan.krossbow.websocket.test
 import com.pusher.java_websocket.WebSocket
 import com.pusher.java_websocket.handshake.ClientHandshake
 import com.pusher.java_websocket.server.WebSocketServer
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
-
-actual fun getDefaultAutobahnTestServerHost(): String =
-    System.getenv("AUTOBAHN_SERVER_HOST") ?: error("Environment variable AUTOBAHN_SERVER_HOST not provided")
-
-actual fun getDefaultAutobahnTestServerPort(): Int =
-    System.getenv("AUTOBAHN_SERVER_TCP_9001")?.toInt() ?: error("Environment variable AUTOBAHN_SERVER_TCP_9001 not provided")
-
-actual fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit) = runBlocking { block() }
 
 internal actual suspend fun runAlongEchoWSServer(block: suspend (port: Int) -> Unit) {
     val server = EchoWebSocketServer()

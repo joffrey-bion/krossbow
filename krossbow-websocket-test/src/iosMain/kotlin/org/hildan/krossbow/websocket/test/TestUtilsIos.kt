@@ -1,25 +1,13 @@
 package org.hildan.krossbow.websocket.test
 
-import kotlinx.cinterop.toKString
 import kotlinx.coroutines.*
 import platform.Foundation.*
-import platform.posix.getenv
 import kotlin.system.getTimeNanos
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
-actual fun getDefaultAutobahnTestServerHost(): String = getenv("AUTOBAHN_SERVER_HOST")?.toKString()
-    ?: error("Environment variable AUTOBAHN_SERVER_HOST not provided")
-
-actual fun getDefaultAutobahnTestServerPort(): Int = getenv("AUTOBAHN_SERVER_TCP_9001")?.toKString()?.toInt()
-    ?: error("Environment variable AUTOBAHN_SERVER_TCP_9001 not provided")
-
 @OptIn(ExperimentalTime::class, DelicateCoroutinesApi::class)
 actual fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit) = runOnMainThreadAlongMainLoop { block() }
-
-internal actual suspend fun runAlongEchoWSServer(block: suspend (port: Int) -> Unit) {
-    TODO("Implement test WS echo server on native platform")
-}
 
 /**
  * Runs the given test [block] on the main thread, while still executing the main loop concurrently to make sure every

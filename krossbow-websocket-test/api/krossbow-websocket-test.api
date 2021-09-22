@@ -1,3 +1,8 @@
+public final class org/hildan/krossbow/websocket/test/AutobahnConfigJvmKt {
+	public static final fun getDefaultAutobahnTestServerHost ()Ljava/lang/String;
+	public static final fun getDefaultAutobahnTestServerPort ()I
+}
+
 public final class org/hildan/krossbow/websocket/test/CloseEvent {
 	public fun <init> (ILjava/lang/String;)V
 	public final fun component1 ()I
@@ -32,6 +37,10 @@ public final class org/hildan/krossbow/websocket/test/EchoWebSocketServer : com/
 	public static synthetic fun startAndAwaitPort$default (Lorg/hildan/krossbow/websocket/test/EchoWebSocketServer;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
+public final class org/hildan/krossbow/websocket/test/TestUtilsJvmKt {
+	public static final fun runSuspendingTest (Lkotlin/jvm/functions/Function2;)V
+}
+
 public final class org/hildan/krossbow/websocket/test/WebSocketClientMocksKt {
 	public static final fun webSocketClientMock (Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/websocket/WebSocketClient;
 	public static synthetic fun webSocketClientMock$default (Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/hildan/krossbow/websocket/WebSocketClient;
@@ -64,10 +73,16 @@ public final class org/hildan/krossbow/websocket/test/WebSocketConnectionMock : 
 	public final fun waitForSentWsFrameAndSimulateCompletion (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
-public final class org/hildan/krossbow/websocket/test/WebSocketTestUtilsJvmKt {
-	public static final fun getDefaultAutobahnTestServerHost ()Ljava/lang/String;
-	public static final fun getDefaultAutobahnTestServerPort ()I
-	public static final fun runSuspendingTest (Lkotlin/jvm/functions/Function2;)V
+public final class org/hildan/krossbow/websocket/test/WebSocketTestUtilsKt {
+	public static final field DEFAULT_TIMEOUT_MILLIS J
+	public static final fun connectWithTimeout (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun connectWithTimeout$default (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun expectCloseFrame (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun expectCloseFrame$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun expectNoMoreFrames (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun expectNoMoreFrames$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun expectTextFrame (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun expectTextFrame$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract class org/hildan/krossbow/websocket/test/autobahn/AutobahnClientTestSuite {
