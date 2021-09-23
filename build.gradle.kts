@@ -23,6 +23,9 @@ dockerCompose {
     buildBeforeUp.set(false)
 }
 
+fun getAutobahnTestServerContainerInfo() = rootProject.dockerCompose.servicesInfos["autobahn_server"]?.firstContainer
+    ?: error("autobahn_server container not found")
+
 allprojects {
     group = "org.hildan.krossbow"
 
@@ -48,35 +51,32 @@ allprojects {
         tasks.withType<AbstractTestTask> {
             rootProject.dockerCompose.isRequiredBy(this)
         }
-        // provide autobahn test server coordinates to the tests (non-trivial on macOS)
+        // provide autobahn test server coordinates to the tests (can vary if DOCKER_HOST is set - like on CI macOS)
         tasks.withType<KotlinJvmTest> {
             rootProject.dockerCompose.exposeAsEnvironment(this)
         }
 
-        tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest> {
+        tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest> {
             doFirst {
-                val autobahnContainer = rootProject.dockerCompose.servicesInfos["autobahn_server"]?.firstContainer
-                    ?: error("autobahn_server container not found")
-                environment = environment + mapOf(
-                    "AUTOBAHN_SERVER_HOST" to autobahnContainer.host,
-                    "AUTOBAHN_SERVER_TCP_9001" to autobahnContainer.port
-                )
+                val autobahnContainer = getAutobahnTestServerContainerInfo()
+                // SIMCTL_CHILD_ prefix to pass those variables from test process to the iOS emulator
+                environment("SIMCTL_CHILD_AUTOBAHN_SERVER_HOST", autobahnContainer.host)
+                environment("SIMCTL_CHILD_AUTOBAHN_SERVER_TCP_9001", autobahnContainer.port)
             }
         }
 
-        val generateAutobahnConfigJson = tasks.create("generateAutobahnConfigJson") {
+        val generateAutobahnConfigJsonForJs = tasks.create("generateAutobahnConfigJsonForJs") {
             rootProject.dockerCompose.isRequiredBy(this)
             val config = "${rootProject.buildDir}/js/packages/${rootProject.name}-${project.name}-test/autobahn-server.json"
             outputs.file(config)
             doFirst {
-                val autobahnContainer = rootProject.dockerCompose.servicesInfos["autobahn_server"]?.firstContainer
-                    ?: error("autobahn_server container not found")
+                val autobahnContainer = getAutobahnTestServerContainerInfo()
                 file(config).writeText("""{"host":"${autobahnContainer.host}","port":${autobahnContainer.port}}""")
             }
         }
 
         tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest> {
-            dependsOn(generateAutobahnConfigJson)
+            dependsOn(generateAutobahnConfigJsonForJs)
         }
     }
 }
