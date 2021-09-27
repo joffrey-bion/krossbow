@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   autobahn_server:
-    image: crossbario/autobahn-testsuite
+    image: "crossbario/autobahn-testsuite:0.8.0"
     ports:
       - "9001:9001"
     volumes:
