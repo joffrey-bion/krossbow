@@ -6,26 +6,26 @@ import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketFrame
 import kotlin.test.*
 
-const val DEFAULT_TIMEOUT_MILLIS = 2000L
+const val DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS = 2000L
 
 suspend fun WebSocketClient.connectWithTimeout(
     url: String,
-    timeoutMillis: Long = DEFAULT_TIMEOUT_MILLIS,
+    timeoutMillis: Long = 8000,
 ) = withTimeoutOrNull(timeoutMillis) { connect(url) } ?: fail("Timed out while connecting to $url")
 
 suspend fun WebSocketConnection.expectTextFrame(
     frameDescription: String,
-    timeoutMillis: Long = DEFAULT_TIMEOUT_MILLIS,
+    timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
 ) = expectFrame<WebSocketFrame.Text>(frameDescription, timeoutMillis)
 
 suspend fun WebSocketConnection.expectCloseFrame(
     frameDescription: String = "no more data expected",
-    timeoutMillis: Long = DEFAULT_TIMEOUT_MILLIS,
+    timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
 ) = expectFrame<WebSocketFrame.Close>(frameDescription, timeoutMillis)
 
 suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expectFrame(
     frameDescription: String,
-    timeoutMillis: Long = DEFAULT_TIMEOUT_MILLIS,
+    timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
 ): T {
     val frameType = T::class.simpleName
     val result = withTimeoutOrNull(timeoutMillis) { incomingFrames.receiveCatching() }
@@ -40,7 +40,7 @@ suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expectFrame(
 
 suspend fun WebSocketConnection.expectNoMoreFrames(
     eventDescription: String = "end of transmission",
-    timeoutMillis: Long = DEFAULT_TIMEOUT_MILLIS,
+    timeoutMillis: Long = 1000,
 ) {
     val result = withTimeoutOrNull(timeoutMillis) { incomingFrames.receiveCatching() }
     assertNotNull(result, "Timed out while waiting for incoming frames channel to be closed ($eventDescription)")
