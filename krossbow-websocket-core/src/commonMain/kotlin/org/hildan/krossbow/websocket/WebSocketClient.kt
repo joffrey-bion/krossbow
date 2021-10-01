@@ -92,7 +92,9 @@ interface WebSocketConnection {
      *
      * The [reason] must not be longer than 123 *bytes* (not characters!) when encoded in UTF-8, due to the limit on
      * control frames defined by the web socket protocol specification
-     * [RFC-6455](https://tools.ietf.org/html/rfc6455#section-5.5). You can use
+     * [RFC-6455](https://tools.ietf.org/html/rfc6455#section-5.5).
+     * You can use [String.truncateToCloseFrameReasonLength] if you don't control the length of the reason and yet still
+     * want to avoid exceptions.
      */
     suspend fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, reason: String? = null)
 }
