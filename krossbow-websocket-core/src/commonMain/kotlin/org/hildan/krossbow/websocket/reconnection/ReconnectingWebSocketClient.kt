@@ -83,7 +83,7 @@ private class WebSocketConnectionProxy(
         get() = _frames
 
     init {
-        scope.launch(start = CoroutineStart.UNDISPATCHED) {
+        scope.launch {
             while (isActive) {
                 try {
                     for (f in currentConnection.incomingFrames) {
