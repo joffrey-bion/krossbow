@@ -1,8 +1,3 @@
-public final class org/hildan/krossbow/websocket/test/AutobahnConfigJvmKt {
-	public static final fun getDefaultAutobahnTestServerHost ()Ljava/lang/String;
-	public static final fun getDefaultAutobahnTestServerPort ()I
-}
-
 public final class org/hildan/krossbow/websocket/test/CloseEvent {
 	public fun <init> (ILjava/lang/String;)V
 	public final fun component1 ()I
@@ -83,65 +78,5 @@ public final class org/hildan/krossbow/websocket/test/WebSocketTestUtilsKt {
 	public static synthetic fun expectNoMoreFrames$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun expectTextFrame (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun expectTextFrame$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-}
-
-public abstract class org/hildan/krossbow/websocket/test/autobahn/AutobahnClientTestSuite {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;I)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun autobahn_1_1_1_echo_text_payload ()V
-	public final fun autobahn_1_1_2_echo_text_payload ()V
-	public final fun autobahn_1_1_3_echo_text_payload ()V
-	public final fun autobahn_1_1_4_echo_text_payload ()V
-	public final fun autobahn_1_1_5_echo_text_payload ()V
-	public final fun autobahn_1_1_6_echo_text_payload ()V
-	public final fun autobahn_1_1_7_echo_text_payload ()V
-	public final fun autobahn_1_1_8_echo_text_payload ()V
-	public final fun autobahn_1_2_1_echo_binary_payload ()V
-	public final fun autobahn_1_2_2_echo_binary_payload ()V
-	public final fun autobahn_1_2_3_echo_binary_payload ()V
-	public final fun autobahn_1_2_4_echo_binary_payload ()V
-	public final fun autobahn_1_2_5_echo_binary_payload ()V
-	public final fun autobahn_1_2_6_echo_binary_payload ()V
-	public final fun autobahn_1_2_7_echo_binary_payload ()V
-	public final fun autobahn_1_2_8_echo_binary_payload ()V
-	public final fun autobahn_2_10_ping_pong ()V
-	public final fun autobahn_2_11_ping_pong ()V
-	public final fun autobahn_2_1_ping_pong ()V
-	public final fun autobahn_2_2_ping_pong ()V
-	public final fun autobahn_2_3_ping_pong ()V
-	public final fun autobahn_2_4_ping_pong ()V
-	public final fun autobahn_2_5_ping_pong ()V
-	public final fun autobahn_2_6_ping_pong ()V
-	public final fun autobahn_2_7_ping_pong ()V
-	public final fun autobahn_2_8_ping_pong ()V
-	public final fun autobahn_2_9_ping_pong ()V
-	public final fun autobahn_3_1_reserved_bits ()V
-	public final fun autobahn_3_2_reserved_bits ()V
-	public final fun autobahn_3_3_reserved_bits ()V
-	public final fun autobahn_3_4_reserved_bits ()V
-	public final fun autobahn_3_5_reserved_bits ()V
-	public final fun autobahn_3_6_reserved_bits ()V
-	public final fun autobahn_3_7_reserved_bits ()V
-	public final fun autobahn_4_1_1_opcodes ()V
-	public final fun autobahn_4_1_2_opcodes ()V
-	public final fun autobahn_4_1_3_opcodes ()V
-	public final fun autobahn_4_1_4_opcodes ()V
-	public final fun autobahn_4_1_5_opcodes ()V
-	public final fun autobahn_4_2_1_opcodes ()V
-	public final fun autobahn_4_2_2_opcodes ()V
-	public final fun autobahn_4_2_3_opcodes ()V
-	public final fun autobahn_4_2_4_opcodes ()V
-	public final fun autobahn_4_2_5_opcodes ()V
-	public final fun autobahn_5_1_echo_payload ()V
-	public final fun autobahn_5_2_echo_payload ()V
-	public final fun autobahn_5_3_echo_payload ()V
-	public final fun autobahn_5_4_echo_payload ()V
-	public final fun autobahn_5_5_echo_payload ()V
-	public final fun autobahn_5_6_echo_payload ()V
-	public final fun autobahn_5_7_echo_payload ()V
-	public final fun autobahn_5_8_echo_payload ()V
-	public final fun autobahn_5_9_echo_payload ()V
-	public abstract fun provideClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
 }
 

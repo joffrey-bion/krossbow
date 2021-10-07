@@ -44,4 +44,4 @@ jobs:
         if: failure()
         with:
           name: autobahn-reports-${{ runner.os }}-jdk${{ matrix.jdk-version }}
-          path: build/autobahn/reports/clients
+          path: autobahn-tests/build/autobahn/reports/clients

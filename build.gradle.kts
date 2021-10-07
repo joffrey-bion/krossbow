@@ -1,5 +1,4 @@
 import org.hildan.github.changelog.builder.DEFAULT_EXCLUDED_LABELS
-import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
 
 plugins {
     val kotlinVersion = "1.5.31"
@@ -14,17 +13,7 @@ plugins {
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
-    id("com.avast.gradle.docker-compose") version "0.14.9"
 }
-
-// autobahn test server for websocket tests
-dockerCompose {
-    useComposeFiles.set(listOf(file("$rootDir/autobahn/docker-compose.yml").toString()))
-    buildBeforeUp.set(false)
-}
-
-fun getAutobahnTestServerContainerInfo() = rootProject.dockerCompose.servicesInfos["autobahn_server"]?.firstContainer
-    ?: error("autobahn_server container not found")
 
 allprojects {
     group = "org.hildan.krossbow"
@@ -45,38 +34,6 @@ allprojects {
 
         tasks.withType<org.jetbrains.dokka.gradle.DokkaMultiModuleTask> {
             outputDirectory.set(file("$rootDir/docs/kdoc"))
-        }
-
-        // ensure autobahn test server is launched for websocket tests
-        tasks.withType<AbstractTestTask> {
-            rootProject.dockerCompose.isRequiredBy(this)
-        }
-        // provide autobahn test server coordinates to the tests (can vary if DOCKER_HOST is set - like on CI macOS)
-        tasks.withType<KotlinJvmTest> {
-            rootProject.dockerCompose.exposeAsEnvironment(this)
-        }
-
-        tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest> {
-            doFirst {
-                val autobahnContainer = getAutobahnTestServerContainerInfo()
-                // SIMCTL_CHILD_ prefix to pass those variables from test process to the iOS emulator
-                environment("SIMCTL_CHILD_AUTOBAHN_SERVER_HOST", autobahnContainer.host)
-                environment("SIMCTL_CHILD_AUTOBAHN_SERVER_TCP_9001", autobahnContainer.port)
-            }
-        }
-
-        val generateAutobahnConfigJsonForJs = tasks.create("generateAutobahnConfigJsonForJs") {
-            rootProject.dockerCompose.isRequiredBy(this)
-            val config = "${rootProject.buildDir}/js/packages/${rootProject.name}-${project.name}-test/autobahn-server.json"
-            outputs.file(config)
-            doFirst {
-                val autobahnContainer = getAutobahnTestServerContainerInfo()
-                file(config).writeText("""{"host":"${autobahnContainer.host}","port":${autobahnContainer.port}}""")
-            }
-        }
-
-        tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest> {
-            dependsOn(generateAutobahnConfigJsonForJs)
         }
     }
 }
@@ -103,8 +60,6 @@ nexusPublishing {
 }
 
 subprojects {
-    apply(plugin = "maven-publish")
-    apply(plugin = "signing")
 
     tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>> {
         kotlinOptions.freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
@@ -118,25 +73,30 @@ subprojects {
         }
     }
 
-    val dokkaJar by tasks.creating(Jar::class) {
-        archiveClassifier.set("javadoc")
-        from(tasks.findByName("dokkaHtml"))
-    }
+    if (project.name != "autobahn-tests") {
+        apply(plugin = "maven-publish")
+        apply(plugin = "signing")
 
-    afterEvaluate {
-        publishing.publications.filterIsInstance<MavenPublication>().forEach { pub ->
-            pub.artifact(dokkaJar)
-            pub.configurePomForMavenCentral(project)
+        val dokkaJar by tasks.creating(Jar::class) {
+            archiveClassifier.set("javadoc")
+            from(tasks.findByName("dokkaHtml"))
         }
 
-        signing {
-            val signingKey: String? by project
-            val signingPassword: String? by project
-            useInMemoryPgpKeys(signingKey, signingPassword)
-            sign(publishing.publications)
-        }
+        afterEvaluate {
+            publishing.publications.filterIsInstance<MavenPublication>().forEach { pub ->
+                pub.artifact(dokkaJar)
+                pub.configurePomForMavenCentral(project)
+            }
 
-        tasks["assemble"].dependsOn(tasks["dokkaHtml"])
+            signing {
+                val signingKey: String? by project
+                val signingPassword: String? by project
+                useInMemoryPgpKeys(signingKey, signingPassword)
+                sign(publishing.publications)
+            }
+
+            tasks["assemble"].dependsOn(tasks["dokkaHtml"])
+        }
     }
 }
 

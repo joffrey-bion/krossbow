@@ -8,9 +8,6 @@ dependencies {
     api(projects.krossbowWebsocketCore)
     api(libs.okhttp)
     implementation(libs.kotlinx.coroutines.jdk8)
-
-    testImplementation(projects.krossbowWebsocketTest)
-    testImplementation(kotlin("test"))
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

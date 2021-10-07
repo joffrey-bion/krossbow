@@ -18,23 +18,5 @@ kotlin {
                 api(libs.ktor.client.websockets)
             }
         }
-        val commonTest by getting {
-            dependencies {
-                api(projects.krossbowWebsocketTest)
-                implementation(kotlin("test"))
-                implementation(libs.kotlinx.atomicfu)
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
-                api(libs.ktor.client.java)
-                api(libs.ktor.client.okhttp)
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-                api(libs.ktor.client.js)
-            }
-        }
     }
 }
