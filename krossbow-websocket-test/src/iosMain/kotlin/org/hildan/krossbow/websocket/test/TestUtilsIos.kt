@@ -3,8 +3,11 @@ package org.hildan.krossbow.websocket.test
 import kotlinx.coroutines.*
 import platform.Foundation.*
 import kotlin.system.getTimeNanos
+import kotlin.test.Ignore
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
+
+actual typealias IgnoreOnNative = Ignore
 
 @OptIn(ExperimentalTime::class, DelicateCoroutinesApi::class)
 actual fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit) = runOnMainThreadAlongMainLoop { block() }

@@ -7,7 +7,6 @@ import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.ExperimentalTime
 
 /**
@@ -18,6 +17,9 @@ import kotlin.time.ExperimentalTime
  * under the hood.
  *
  * When chaining multiple [withAutoReconnect] calls, the last reconnect configuration takes precedence.
+ *
+ * Note: limitations on Kotlin/Native multithreaded coroutines prevent the reconnection wrapper from working properly.
+ * Please use the new memory model if you want the reconnection feature on Kotlin/Native.
  */
 fun WebSocketClient.withAutoReconnect(config: ReconnectConfig): WebSocketClient = when (this) {
     is ReconnectingWebSocketClient -> ReconnectingWebSocketClient(baseClient, config)
@@ -32,6 +34,9 @@ fun WebSocketClient.withAutoReconnect(config: ReconnectConfig): WebSocketClient 
  * under the hood.
  *
  * When chaining multiple [withAutoReconnect] calls, the last reconnect configuration takes precedence.
+ *
+ * Note: limitations on Kotlin/Native multithreaded coroutines prevent the reconnection wrapper from working properly.
+ * Please use the new memory model if you want the reconnection feature on Kotlin/Native.
  */
 fun WebSocketClient.withAutoReconnect(configure: ReconnectConfigBuilder.() -> Unit): WebSocketClient =
     withAutoReconnect(reconnectConfig(configure))
@@ -44,6 +49,9 @@ fun WebSocketClient.withAutoReconnect(configure: ReconnectConfigBuilder.() -> Un
  * under the hood.
  *
  * When chaining multiple [withAutoReconnect] calls, the last reconnect configuration takes precedence.
+ *
+ * Note: limitations on Kotlin/Native multithreaded coroutines prevent the reconnection wrapper from working properly.
+ * Please use the new memory model if you want the reconnection feature on Kotlin/Native.
  */
 fun WebSocketClient.withAutoReconnect(
     maxAttempts: Int = DEFAULT_MAX_ATTEMPTS,
