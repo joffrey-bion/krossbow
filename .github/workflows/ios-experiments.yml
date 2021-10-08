@@ -9,15 +9,18 @@ jobs:
   ios-tests:
     timeout-minutes: 30
     runs-on: macos-latest
+    strategy:
+      matrix:
+        jdk-version: [ 17 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 16
+      - name: Set up JDK ${{ matrix.jdk-version }}
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: 16
+          java-version: ${{ matrix.jdk-version }}
 
       # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
       # (and it's necessary to run Autobahn tests)
@@ -27,12 +30,12 @@ jobs:
       - name: Build with Gradle
         uses: burrunan/gradle-cache-action@v1
         with:
-          job-id: jdk16
+          job-id: jdk${{ matrix.jdk-version }}
           arguments: iosX64Test
 
       - name: Upload Autobahn reports
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: autobahn-reports-${{ runner.os }}-jdk16
+          name: autobahn-reports-${{ runner.os }}-jdk${{ matrix.jdk-version }}
           path: build/autobahn/reports/clients

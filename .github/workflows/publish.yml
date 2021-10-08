@@ -7,16 +7,19 @@ on:
 
 jobs:
   publish:
-    runs-on: macos-latest # For iOS publications
+    runs-on: macos-latest # For iOS tests
+    strategy:
+      matrix:
+        jdk-version: [ 17 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ matrix.jdk-version }}
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: ${{ matrix.jdk-version }}
 
       # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
       # (and it's necessary to run Autobahn tests)
@@ -37,6 +40,6 @@ jobs:
           ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.OSSRH_USER_TOKEN }}
           ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.OSSRH_KEY }}
         with:
-          job-id: jdk11
+          job-id: jdk${{ matrix.jdk-version }}
           arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository
           properties: version=${{ github.event.release.tag_name }}

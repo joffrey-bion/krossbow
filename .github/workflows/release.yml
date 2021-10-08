@@ -9,16 +9,19 @@ on:
 
 jobs:
   release:
-    runs-on: macos-latest # For iOS tests
+    runs-on: macos-latest # For iOS publications
+    strategy:
+      matrix:
+        jdk-version: [ 17 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ matrix.jdk-version }}
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: ${{ matrix.jdk-version }}
 
       # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
       # (and it's necessary to run Autobahn tests)
@@ -28,7 +31,7 @@ jobs:
       - name: Test build before release
         uses: burrunan/gradle-cache-action@v1
         with:
-          job-id: jdk11
+          job-id: jdk${{ matrix.jdk-version }}
           arguments: build
 
       - name: Generate Change Log
@@ -36,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          job-id: jdk11
+          job-id: jdk${{ matrix.jdk-version }}
           # We already deal with caches in a previous gradle-cache-action
           execution-only-caches: true
           arguments: generateChangelog

@@ -14,22 +14,25 @@ on:
 jobs:
   publish-website:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jdk-version: [ 17 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0 # to fetch all tags for proper version
 
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ matrix.jdk-version }}
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: ${{ matrix.jdk-version }}
 
       - name: Generate KDocs
         uses: burrunan/gradle-cache-action@v1
         with:
-          job-id: jdk11
+          job-id: jdk${{ matrix.jdk-version }}
           arguments: dokkaHtmlMultiModule
 
       - name: Setup Python
