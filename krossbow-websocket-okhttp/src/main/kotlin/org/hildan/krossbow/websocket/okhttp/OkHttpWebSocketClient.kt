@@ -43,7 +43,7 @@ private class KrossbowToOkHttpListenerAdapter(
     private var connectionContinuation: Continuation<KrossbowWebSocketSession>? = connectionContinuation
 
     @Volatile
-    private var isConnecting = false
+    private var isConnecting = true
 
     private inline fun completeConnection(resume: Continuation<KrossbowWebSocketSession>.() -> Unit) {
         val cont = connectionContinuation ?: error("OkHttp connection continuation already consumed")
