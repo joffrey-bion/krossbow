@@ -1,5 +1,16 @@
 # Change Log
 
+## [2.5.1](https://github.com/joffrey-bion/krossbow/tree/2.5.1) (2021-10-08)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/2.5.0...2.5.1)
+
+**Fixed bugs:**
+
+- Ktor adapter tries to consume incomingFrames channel twice [\#155](https://github.com/joffrey-bion/krossbow/issues/155)
+
+**Implemented enhancements:**
+
+- Upgrade Kotlin to version 1.5.31 [\#151](https://github.com/joffrey-bion/krossbow/issues/151)
+
 ## [2.5.0](https://github.com/joffrey-bion/krossbow/tree/2.5.0) (2021-09-13)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.4.1...2.5.0)
 
@@ -471,7 +482,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/25a401bd7145332719c65e79506148f83458923f...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/d8547505327f44563aeed26484c9cc26ea031067...0.1.0)
 
 **Implemented enhancements:**
 
