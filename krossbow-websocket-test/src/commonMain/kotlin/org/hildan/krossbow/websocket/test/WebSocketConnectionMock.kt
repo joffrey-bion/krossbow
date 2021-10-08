@@ -40,7 +40,7 @@ class WebSocketConnectionMock : WebSocketConnection {
     /**
      * Waits for a web socket frame to be sent, unblocking any send call.
      *
-     * @returns the parsed stomp frame that was sent to allow further assertions
+     * @returns the web socket frame that was sent to allow further assertions
      */
     suspend fun waitForSentWsFrameAndSimulateCompletion(): WebSocketFrame = sentFrames.receive()
 
