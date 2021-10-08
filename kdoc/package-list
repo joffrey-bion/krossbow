@@ -27,4 +27,3 @@ module:krossbow-websocket-spring
 org.hildan.krossbow.websocket.spring
 module:krossbow-websocket-test
 org.hildan.krossbow.websocket.test
-org.hildan.krossbow.websocket.test.autobahn
