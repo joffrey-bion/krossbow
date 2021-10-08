@@ -76,7 +76,11 @@ tasks.withType<AbstractTestTask> {
 
 // provide autobahn test server coordinates to the tests (can vary if DOCKER_HOST is set - like on CI macOS)
 tasks.withType<org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest> {
-    dockerCompose.exposeAsEnvironment(this)
+    doFirst {
+        val autobahnContainer = getAutobahnTestServerContainerInfo()
+        environment("AUTOBAHN_SERVER_HOST", autobahnContainer.host)
+        environment("AUTOBAHN_SERVER_TCP_9001", autobahnContainer.port)
+    }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest> {
