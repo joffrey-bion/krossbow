@@ -33,7 +33,8 @@ public final class org/hildan/krossbow/websocket/test/EchoWebSocketServer : com/
 }
 
 public final class org/hildan/krossbow/websocket/test/TestUtilsJvmKt {
-	public static final fun runSuspendingTest (Lkotlin/jvm/functions/Function2;)V
+	public static final fun runSuspendingTest-VtjQ1oo (JLkotlin/jvm/functions/Function2;)V
+	public static synthetic fun runSuspendingTest-VtjQ1oo$default (JLkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
 }
 
 public final class org/hildan/krossbow/websocket/test/WebSocketClientMocksKt {

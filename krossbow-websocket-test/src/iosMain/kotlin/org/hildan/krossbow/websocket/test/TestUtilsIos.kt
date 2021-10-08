@@ -4,13 +4,15 @@ import kotlinx.coroutines.*
 import platform.Foundation.*
 import kotlin.system.getTimeNanos
 import kotlin.test.Ignore
+import kotlin.test.fail
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
 actual typealias IgnoreOnNative = Ignore
 
-@OptIn(ExperimentalTime::class, DelicateCoroutinesApi::class)
-actual fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit) = runOnMainThreadAlongMainLoop { block() }
+@OptIn(ExperimentalTime::class)
+actual fun runSuspendingTest(timeout: Duration, block: suspend CoroutineScope.() -> Unit) =
+    runOnMainThreadAlongMainLoop(timeout) { block() }
 
 /**
  * Runs the given test [block] on the main thread, while still executing the main loop concurrently to make sure every
@@ -18,12 +20,8 @@ actual fun runSuspendingTest(block: suspend CoroutineScope.() -> Unit) = runOnMa
  *
  * Inspired by https://github.com/ktorio/ktor/issues/678#issuecomment-433756753
  */
-@OptIn(DelicateCoroutinesApi::class)
-@ExperimentalTime
-private fun runOnMainThreadAlongMainLoop(
-    timeout: Duration = Duration.seconds(10),
-    block: suspend CoroutineScope.() -> Unit,
-) {
+@OptIn(DelicateCoroutinesApi::class, ExperimentalTime::class)
+private fun runOnMainThreadAlongMainLoop(timeout: Duration, block: suspend CoroutineScope.() -> Unit) {
     val maxTimeNanos = getTimeNanos() + timeout.inWholeNanoseconds
 
     // The block is run in a concurrent coroutine, so we can run the main loop at the same time.
@@ -42,7 +40,7 @@ private fun runOnMainThreadAlongMainLoop(
     while (!testRunner.isCompleted || NSOperationQueue.mainQueue.operationCount.toInt() > 0) {
         if (getTimeNanos() >= maxTimeNanos) {
             testRunner.cancel("Timed out after $timeout")
-            error("Job timed out after $timeout")
+            fail("Test timed out after $timeout")
         }
         if (testRunner.isCompleted) {
             val remainingOps = NSOperationQueue.mainQueue.operationCount.toInt()
