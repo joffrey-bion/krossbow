@@ -46,6 +46,7 @@ public abstract class org/hildan/krossbow/websocket/test/WebSocketClientTestSuit
 	public fun <init> ()V
 	public abstract fun provideClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
 	public final fun setupClient ()V
+	public final fun testConnectFailure ()V
 	public final fun testWithEchoServer ()V
 }
 

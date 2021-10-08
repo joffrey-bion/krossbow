@@ -2,14 +2,11 @@ package org.hildan.krossbow.websocket.test
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketCloseCodes
-import org.hildan.krossbow.websocket.WebSocketFrame
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import org.hildan.krossbow.websocket.*
+import kotlin.test.*
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 abstract class WebSocketClientTestSuite {
 
     abstract fun provideClient(): WebSocketClient
@@ -21,6 +18,17 @@ abstract class WebSocketClientTestSuite {
         wsClient = provideClient()
     }
 
+    @Test
+    fun testConnectFailure() = runSuspendingTest {
+        // Using the non-reified version because of the suspend inline function bug on JS platform
+        // https://youtrack.jetbrains.com/issue/KT-37645
+        assertFailsWith(WebSocketConnectionException::class) {
+            wsClient.connect("ws://garbage")
+        }
+    }
+
+    @IgnoreOnNative
+    @IgnoreOnJS
     @Test
     fun testWithEchoServer() = runSuspendingTest {
         runAlongEchoWSServer { port ->

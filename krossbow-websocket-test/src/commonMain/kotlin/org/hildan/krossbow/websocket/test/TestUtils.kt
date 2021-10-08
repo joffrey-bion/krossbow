@@ -8,6 +8,10 @@ import kotlin.time.ExperimentalTime
 @OptionalExpectation
 expect annotation class IgnoreOnNative()
 
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+expect annotation class IgnoreOnJS()
+
 @OptIn(ExperimentalTime::class)
 expect fun runSuspendingTest(
     timeout: Duration = Duration.seconds(20),
