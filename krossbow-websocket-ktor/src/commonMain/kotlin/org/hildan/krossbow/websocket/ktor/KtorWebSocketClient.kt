@@ -41,8 +41,8 @@ private class KtorWebSocketConnectionAdapter(
         get() = !wsSession.outgoing.isClosedForSend
 
     @OptIn(FlowPreview::class)
-    override val incomingFrames: ReceiveChannel<WebSocketFrame>
-        get() = wsSession.incoming.consumeAsFlow().map { it.toKrossbowFrame() }.produceIn(scope)
+    override val incomingFrames: ReceiveChannel<WebSocketFrame> =
+        wsSession.incoming.consumeAsFlow().map { it.toKrossbowFrame() }.produceIn(scope)
 
     override suspend fun sendText(frameText: String) {
         wsSession.outgoing.send(Frame.Text(frameText))
