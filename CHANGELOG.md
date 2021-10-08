@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.5.2](https://github.com/joffrey-bion/krossbow/tree/2.5.2) (2021-10-08)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/2.5.1...2.5.2)
+
+**Fixed bugs:**
+
+- \`connect\(\)\` doesn't fail on connection failure with OkHttp client [\#138](https://github.com/joffrey-bion/krossbow/issues/138)
+
 ## [2.5.1](https://github.com/joffrey-bion/krossbow/tree/2.5.1) (2021-10-08)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.5.0...2.5.1)
 
@@ -28,7 +35,6 @@
 **Fixed bugs:**
 
 - OkHttp's close frame is not always correctly reported [\#140](https://github.com/joffrey-bion/krossbow/issues/140)
-- \`connect\(\)\` doesn't fail on connection failure with OkHttp client [\#138](https://github.com/joffrey-bion/krossbow/issues/138)
 
 **Implemented enhancements:**
 
@@ -482,7 +488,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/d8547505327f44563aeed26484c9cc26ea031067...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/e2f401a7b2e5431b00a614973b0e0701bd4aae6d...0.1.0)
 
 **Implemented enhancements:**
 
