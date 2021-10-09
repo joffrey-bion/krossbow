@@ -8,16 +8,29 @@ import kotlinx.coroutines.withTimeout
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 
-internal actual suspend fun runAlongEchoWSServer(block: suspend (port: Int) -> Unit) {
-    val server = EchoWebSocketServer()
+internal actual suspend fun runAlongEchoWSServer(
+    onOpenActions: ActionsBuilder.() -> Unit,
+    block: suspend (port: Int) -> Unit,
+) {
+    val server = EchoWebSocketServer(ActionsBuilder().apply(onOpenActions).build())
     val port = server.startAndAwaitPort()
     block(port)
     server.stop()
 }
 
-class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(port)) {
+internal class EchoWebSocketServer(
+    private val onOpenActions: List<ServerAction>,
+    port: Int = 0,
+) : WebSocketServer(InetSocketAddress(port)) {
 
     override fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
+        for (a in onOpenActions) {
+            when (a) {
+                is ServerAction.SendTextFrame -> conn?.send(a.message)
+                is ServerAction.SendBinaryFrame -> conn?.send(a.data)
+                is ServerAction.Close -> conn?.close(a.code, a.reason)
+            }
+        }
     }
 
     override fun onMessage(conn: WebSocket?, message: String?) {

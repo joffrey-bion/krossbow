@@ -19,19 +19,6 @@ public final class org/hildan/krossbow/websocket/test/ControlledWebSocketClientM
 	public final fun waitForConnectCall (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
-public final class org/hildan/krossbow/websocket/test/EchoWebSocketServer : com/pusher/java_websocket/server/WebSocketServer {
-	public fun <init> ()V
-	public fun <init> (I)V
-	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun onClose (Lcom/pusher/java_websocket/WebSocket;ILjava/lang/String;Z)V
-	public fun onError (Lcom/pusher/java_websocket/WebSocket;Ljava/lang/Exception;)V
-	public fun onMessage (Lcom/pusher/java_websocket/WebSocket;Ljava/lang/String;)V
-	public fun onMessage (Lcom/pusher/java_websocket/WebSocket;Ljava/nio/ByteBuffer;)V
-	public fun onOpen (Lcom/pusher/java_websocket/WebSocket;Lcom/pusher/java_websocket/handshake/ClientHandshake;)V
-	public final fun startAndAwaitPort (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun startAndAwaitPort$default (Lorg/hildan/krossbow/websocket/test/EchoWebSocketServer;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-}
-
 public final class org/hildan/krossbow/websocket/test/TestUtilsJvmKt {
 	public static final fun runSuspendingTest-VtjQ1oo (JLkotlin/jvm/functions/Function2;)V
 	public static synthetic fun runSuspendingTest-VtjQ1oo$default (JLkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
@@ -46,8 +33,10 @@ public abstract class org/hildan/krossbow/websocket/test/WebSocketClientTestSuit
 	public fun <init> ()V
 	public abstract fun provideClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
 	public final fun setupClient ()V
+	public final fun testClose ()V
 	public final fun testConnectFailure ()V
-	public final fun testWithEchoServer ()V
+	public final fun testEchoBinary ()V
+	public final fun testEchoText ()V
 }
 
 public final class org/hildan/krossbow/websocket/test/WebSocketConnectionMock : org/hildan/krossbow/websocket/WebSocketConnection {

@@ -1,12 +1,8 @@
 package org.hildan.krossbow.websocket.test
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import org.hildan.krossbow.websocket.*
 import kotlin.test.*
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 abstract class WebSocketClientTestSuite {
 
     abstract fun provideClient(): WebSocketClient
@@ -30,34 +26,58 @@ abstract class WebSocketClientTestSuite {
     @IgnoreOnNative
     @IgnoreOnJS
     @Test
-    fun testWithEchoServer() = runSuspendingTest {
-        runAlongEchoWSServer { port ->
-            testEchoWs(wsClient, "ws://localhost:$port")
-        }
+    fun testEchoText() = runSuspendingTestWithEchoServer { url ->
+        val session = wsClient.connect(url)
+
+        session.sendText("hello")
+        val helloResponse = session.incomingFrames.receive()
+        assertTrue(helloResponse is WebSocketFrame.Text)
+        assertEquals("hello", helloResponse.text)
+
+        session.close()
+
+        session.expectCloseFrame("after echo text")
+        session.expectNoMoreFrames("after echo text CLOSE frame")
+    }
+
+    @IgnoreOnNative
+    @IgnoreOnJS
+    @Test
+    fun testEchoBinary() = runSuspendingTestWithEchoServer { url ->
+        val session = wsClient.connect(url)
+
+        val fortyTwos = ByteArray(3) { 42 }
+        session.sendBinary(fortyTwos)
+        val fortyTwosResponse = session.incomingFrames.receive()
+        assertTrue(fortyTwosResponse is WebSocketFrame.Binary)
+        assertEquals(fortyTwos.toList(), fortyTwosResponse.bytes.toList())
+
+        session.close()
+
+        session.expectCloseFrame("after echo binary")
+        session.expectNoMoreFrames("after echo binary CLOSE frame")
+    }
+
+    @IgnoreOnNative
+    @IgnoreOnJS
+    @Test
+    fun testClose() = runSuspendingTestWithEchoServer(onOpenActions = {
+        close()
+    }) { url ->
+        val session = wsClient.connect(url)
+
+        session.expectCloseFrame("after connect")
+        session.expectNoMoreFrames("after CLOSE frame following connect")
     }
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
-private suspend fun testEchoWs(websocketClient: WebSocketClient, url: String) {
-    val session = websocketClient.connect(url)
-
-    session.sendText("hello")
-    val helloResponse = session.incomingFrames.receive()
-    assertTrue(helloResponse is WebSocketFrame.Text)
-    assertEquals("hello", helloResponse.text)
-
-    val fortyTwos = ByteArray(3) { 42 }
-    session.sendBinary(fortyTwos)
-    val fortyTwosResponse = session.incomingFrames.receive()
-    assertTrue(fortyTwosResponse is WebSocketFrame.Binary)
-    assertEquals(fortyTwos.toList(), fortyTwosResponse.bytes.toList())
-
-    session.close()
-
-    val closeFrame = session.incomingFrames.receive()
-    assertTrue(closeFrame is WebSocketFrame.Close, "Last frame should be a close frame")
-    assertEquals(WebSocketCloseCodes.NORMAL_CLOSURE, closeFrame.code)
-
-    delay(20) // somehow isClosedForReceive needs some time to become true
-    assertTrue(session.incomingFrames.isClosedForReceive, "The incoming frames channel should be closed")
+private fun runSuspendingTestWithEchoServer(
+    onOpenActions: ActionsBuilder.() -> Unit = {},
+    block: suspend (url: String) -> Unit,
+) {
+    runSuspendingTest {
+        runAlongEchoWSServer(onOpenActions) { port ->
+            block("ws://localhost:$port")
+        }
+    }
 }
