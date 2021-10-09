@@ -42,7 +42,20 @@ private class KtorWebSocketConnectionAdapter(
 
     @OptIn(FlowPreview::class)
     override val incomingFrames: ReceiveChannel<WebSocketFrame> =
-        wsSession.incoming.consumeAsFlow().map { it.toKrossbowFrame() }.produceIn(scope)
+        wsSession.incoming.consumeAsFlow()
+            .map { it.toKrossbowFrame() }
+            .onCompletion { error ->
+                if (error == null) {
+                    // Ktor just closes the channel without sending the close frame
+                    emit(inferCloseFrame())
+                }
+            }
+            .produceIn(scope)
+
+    private suspend fun inferCloseFrame() = when(val reason = wsSession.closeReason.await()) {
+        null -> WebSocketFrame.Close(WebSocketCloseCodes.NO_STATUS_CODE, reason = "Artificial close frame because Ktor doesn't send it")
+        else -> WebSocketFrame.Close(reason.code.toInt(), reason.message)
+    }
 
     override suspend fun sendText(frameText: String) {
         wsSession.outgoing.send(Frame.Text(frameText))
@@ -62,7 +75,12 @@ private class KtorWebSocketConnectionAdapter(
 
     override suspend fun close(code: Int, reason: String?) {
         wsSession.close(CloseReason(code.toShort(), reason ?: ""))
-        scope.cancel()
+        scope.launch {
+            // give time for the server's last frames to arrive and be forwarded by the produceIn coroutine
+            delay(5000)
+            // we cancel the produceIn coroutine in case we still haven't heard from the server
+            scope.cancel()
+        }
     }
 }
 
