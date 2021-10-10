@@ -182,8 +182,19 @@ private fun NSURLSessionWebSocketTask.forwardNextIncomingMessagesAsyncTo(incomin
                 // No recursive call here, so we stop listening to messages in a closed or failed web socket
             }
             message != null -> {
-                incomingFrames.trySend(message.toWebSocketFrame())
-
+                val result = incomingFrames.trySend(message.toWebSocketFrame())
+                if (result.isFailure) {
+                    val closeException = WebSocketException("Could not pass message frame through channel", cause = result.exceptionOrNull())
+                    incomingFrames.close(closeException)
+                    // still throw because no one might be listening to this channel (especially since the buffer is likely full)
+                    throw closeException
+                }
+                if (result.isClosed) {
+                    // TODO should we throw here instead? In which cases exactly this can happen?
+                    // if the channel is already closed, maybe it is just a race with the closing handshake
+                    // and we can simply ignore the extra message
+                    return@receiveMessageWithCompletionHandler
+                }
                 // it's ok to use recursion since the call is asynchronous anyway, we won't blow the stack
                 forwardNextIncomingMessagesAsyncTo(incomingFrames)
             }
