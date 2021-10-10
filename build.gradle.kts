@@ -7,7 +7,7 @@ plugins {
     kotlin("multiplatform") apply false
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
-    id("org.jetbrains.dokka") version "1.5.30" apply false
+    id("org.jetbrains.dokka") version "1.5.31" apply false
     id("org.hildan.github.changelog") version "1.8.0"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.1"
     `maven-publish`
