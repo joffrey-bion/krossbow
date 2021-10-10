@@ -177,17 +177,20 @@ private fun NSURLSessionWebSocketTask.forwardNextIncomingMessagesAsyncTo(incomin
     receiveMessageWithCompletionHandler { message, nsError ->
         when {
             nsError != null -> {
-                // This callback is called with this error when the websocket is closed normally:
-                //  Domain=NSPOSIXErrorDomain Code=57 "Socket is not connected"
-                // Therefore, in this case we just don't fail (channel will be closed in NSURLSession callbacks)
-                if (nsError.code.toInt() != ERROR_CODE_SOCKET_NOT_CONNECTED) {
-                    incomingFrames.close(nsError.toIosWebSocketException())
-                } else {
-                    // TODO check if necessary - maybe just not connected yet?
+                // We sometimes get this error: Domain=NSPOSIXErrorDomain Code=57 "Socket is not connected"
+                // It happens when the websocket is closed normally, in which case we just don't fail here, and the
+                // channel will be closed in the actual NSURLSession close callback.
+                if (nsError.code.toInt() == ERROR_CODE_SOCKET_NOT_CONNECTED) {
+                    // If the channel is not closed, it might be worth continuing to forward messages (maybe we got this
+                    // error for another reason, like the websocket was not connected *yet*) - it shouldn't hurt anyway.
+                    // TODO check if we actually do get this error in this case, and thus continuing to forward new
+                    //  messages is indeed useful
                     if (!incomingFrames.isClosedForSend) {
                         forwardNextIncomingMessagesAsyncTo(incomingFrames)
                     }
+                    return@receiveMessageWithCompletionHandler
                 }
+                incomingFrames.close(nsError.toIosWebSocketException())
                 // No recursive call here, so we stop listening to messages in a closed or failed web socket
             }
             message != null -> {
