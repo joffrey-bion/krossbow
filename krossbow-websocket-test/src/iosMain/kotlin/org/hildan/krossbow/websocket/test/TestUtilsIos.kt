@@ -11,8 +11,8 @@ import kotlin.time.ExperimentalTime
 actual typealias IgnoreOnNative = Ignore
 
 @OptIn(ExperimentalTime::class)
-actual fun runSuspendingTest(timeout: Duration, block: suspend CoroutineScope.() -> Unit) =
-    runOnMainThreadAlongMainLoop(timeout) { block() }
+actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.() -> Unit) =
+    runOnMainThreadAlongMainLoop(Duration.milliseconds(timeoutMillis)) { block() }
 
 /**
  * Runs the given test [block] on the main thread, while still executing the main loop concurrently to make sure every

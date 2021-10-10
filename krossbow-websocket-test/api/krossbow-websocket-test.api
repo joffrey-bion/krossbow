@@ -20,8 +20,8 @@ public final class org/hildan/krossbow/websocket/test/ControlledWebSocketClientM
 }
 
 public final class org/hildan/krossbow/websocket/test/TestUtilsJvmKt {
-	public static final fun runSuspendingTest-VtjQ1oo (JLkotlin/jvm/functions/Function2;)V
-	public static synthetic fun runSuspendingTest-VtjQ1oo$default (JLkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static final fun runSuspendingTest (JLkotlin/jvm/functions/Function2;)V
+	public static synthetic fun runSuspendingTest$default (JLkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
 }
 
 public final class org/hildan/krossbow/websocket/test/WebSocketClientMocksKt {

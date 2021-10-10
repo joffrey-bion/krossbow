@@ -4,12 +4,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.test.fail
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-actual fun runSuspendingTest(timeout: Duration, block: suspend CoroutineScope.() -> Unit) = runBlocking {
-    withTimeoutOrNull(timeout) {
+actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.() -> Unit) = runBlocking {
+    withTimeoutOrNull(timeoutMillis) {
         block()
-    } ?: fail("Test timed out after $timeout")
+    } ?: fail("Test timed out after ${timeoutMillis}ms")
 }

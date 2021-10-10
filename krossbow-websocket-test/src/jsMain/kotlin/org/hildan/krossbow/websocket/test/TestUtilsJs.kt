@@ -3,21 +3,19 @@ package org.hildan.krossbow.websocket.test
 import kotlinx.coroutines.*
 import kotlin.test.Ignore
 import kotlin.test.fail
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 actual typealias IgnoreOnJS = Ignore
 
-@OptIn(DelicateCoroutinesApi::class, ExperimentalTime::class)
-actual fun runSuspendingTest(timeout: Duration, block: suspend CoroutineScope.() -> Unit): dynamic =
+@OptIn(DelicateCoroutinesApi::class)
+actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.() -> Unit): dynamic =
     GlobalScope.promise {
         try {
             // JS tests immediately timeout if we use withTimeoutOrNull here...
-            withTimeout(timeout) {
+            withTimeout(timeoutMillis) {
                 block()
             }
         } catch (e: TimeoutCancellationException) {
-            fail("Test timed out after $timeout")
+            fail("Test timed out after ${timeoutMillis}ms")
         }
     }
 
