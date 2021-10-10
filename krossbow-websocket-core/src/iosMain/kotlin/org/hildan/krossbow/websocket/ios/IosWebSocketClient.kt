@@ -167,6 +167,12 @@ private class IosWebSocketConnection(
     }
 }
 
+/**
+ * Listens to the incoming messages on this web socket and forwards them to the given [incomingFrames] channel.
+ *
+ * This method is implemented with recursion due to the peculiar design of NSURLSessionWebSocketTask.
+ * There is currently no way to register a callback for all new messages - only to listen to one single "next" message.
+ */
 private fun NSURLSessionWebSocketTask.forwardNextIncomingMessagesAsyncTo(incomingFrames: SendChannel<WebSocketFrame>) {
     receiveMessageWithCompletionHandler { message, nsError ->
         when {
