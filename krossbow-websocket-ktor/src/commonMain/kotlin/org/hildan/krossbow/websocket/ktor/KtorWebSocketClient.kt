@@ -47,14 +47,13 @@ private class KtorWebSocketConnectionAdapter(
             .onCompletion { error ->
                 if (error == null) {
                     // Ktor just closes the channel without sending the close frame
-                    emit(inferCloseFrame())
+                    buildCloseFrame()?.let { emit(it) }
                 }
             }
             .produceIn(scope)
 
-    private suspend fun inferCloseFrame() = when(val reason = wsSession.closeReason.await()) {
-        null -> WebSocketFrame.Close(WebSocketCloseCodes.NO_STATUS_CODE, reason = "Artificial close frame because Ktor doesn't send it")
-        else -> WebSocketFrame.Close(reason.code.toInt(), reason.message)
+    private suspend fun buildCloseFrame(): WebSocketFrame.Close? = wsSession.closeReason.await()?.let { reason ->
+        WebSocketFrame.Close(reason.code.toInt(), reason.message)
     }
 
     override suspend fun sendText(frameText: String) {
