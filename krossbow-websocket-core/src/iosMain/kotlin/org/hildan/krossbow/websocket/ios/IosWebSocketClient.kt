@@ -104,7 +104,10 @@ private class IosWebSocketListener(
 
         // For some reason, sometimes we get this error 57 "Socket is closed" instead of didCloseWithCode callback
         if (didCompleteWithError.code.toInt() == ERROR_CODE_SOCKET_NOT_CONNECTED) {
-            passCloseFrameThroughChannel(WebSocketCloseCodes.NO_STATUS_CODE, reason = null)
+            passCloseFrameThroughChannel(
+                code = WebSocketCloseCodes.NO_STATUS_CODE,
+                reason = "fake CLOSE frame - got error 57 'Socket is closed' on NSURLSession",
+            )
             return
         }
 
