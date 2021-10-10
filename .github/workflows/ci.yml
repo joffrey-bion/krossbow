@@ -6,7 +6,7 @@ on:
       - 'mkdocs.yml'
       - 'docs/**'
     branches-ignore:
-      - ios-client*
+      - autobahn-tests/ios
   pull_request:
 
 jobs:

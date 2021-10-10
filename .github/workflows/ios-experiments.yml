@@ -3,7 +3,7 @@ name: iOS Experiments
 on:
   push:
     branches:
-      - ios-client*
+      - autobahn-tests/ios
 
 jobs:
   ios-tests:
