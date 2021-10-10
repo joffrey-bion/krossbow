@@ -11,6 +11,7 @@ This core module already adapts some built-in implementations on each platform t
 - JS: the browser's native [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
 - JVM: the built-in JDK11+ asynchronous
   [java.net.http.WebSocket](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/WebSocket.html)
+- iOS: the native Foundation websocket using [NSURLSessionWebSocketTask](https://developer.apple.com/documentation/foundation/nsurlsessionwebsockettask)
 
 Note that these built-in implementations don't bring in any transitive dependencies.
 The ones that do need dependencies are part of different modules, so that they can be included separately only if
