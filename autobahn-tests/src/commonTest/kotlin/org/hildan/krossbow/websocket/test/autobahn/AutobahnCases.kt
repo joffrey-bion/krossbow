@@ -74,6 +74,7 @@ internal val AUTOBAHN_CASES = listOf(
 )
 
 internal data class AutobahnCase(
+    /** The readable test case number (a.k.a "case tuple") */
     val id: String,
     /** Number of frames actually echoed during the test (not control frames). */
     val nEchoFrames: Int,
@@ -85,6 +86,10 @@ internal data class AutobahnCase(
     val end: CaseEnd = CaseEnd.SERVER_CLOSE,
 ) {
     val nExpectedFramesBeforeEnd = nEchoFrames + nPingFrames + nUnsolicitedPongFrames
+
+    companion object {
+        fun fromTuple(caseId: String) = AUTOBAHN_CASES.single { it.id == caseId }
+    }
 }
 
 internal enum class CaseEnd {

@@ -190,17 +190,28 @@ abstract class AutobahnClientTestSuite(
     fun autobahn_5_9_echo_payload() = runAutobahnTestCase("5.9")
 
     private fun runAutobahnTestCase(caseId: String) = runSuspendingTest {
-        runAutobahnTestCase(AUTOBAHN_CASES.single { it.id == caseId })
-    }
-
-    private suspend fun runAutobahnTestCase(case: AutobahnCase) {
         val autobahnClientTester = AutobahnClientTester(provideClient(), testServerUrl, agentUnderTest)
         try {
+            autobahnClientTester.runTestCase(AutobahnCase.fromTuple(caseId))
+        } catch (t: Throwable) { // we need to also catch AssertionError
+            println("Test case $caseId failed for agent $agentUnderTest, writing autobahn reports...")
+            // It would be best to do that only after all tests of the class, but it's not possible at the moment.
+            // In the meantime, we only write reports in case of error because updateReports itself fails sometimes.
+            // We want to keep the original exception so we rethrow it, but we also add exceptions from updateReports
+            // as suppressed exceptions in case it fails as well.
+            val reportResult = runCatching { autobahnClientTester.updateReports() }
+            reportResult.exceptionOrNull()?.let { t.addSuppressed(it) }
+            throw t
+        }
+    }
+
+    private suspend fun AutobahnClientTester.runTestCase(case: AutobahnCase) {
+        try {
             withTimeout(10000) {
-                val session = autobahnClientTester.connectForAutobahnTestCase(case.id)
+                val session = connectForAutobahnTestCase(case.id)
                 session.echoUntilClosed()
             }
-            val status = autobahnClientTester.getCaseStatus(case.id)
+            val status = getCaseStatus(case.id)
             val testResultAcceptable = status == TestCaseStatus.OK || status == TestCaseStatus.NON_STRICT
             assertTrue(testResultAcceptable, "Test case ${case.id} finished with status ${status}, expected OK or NON-STRICT")
         } catch (e: TimeoutCancellationException) {
@@ -209,8 +220,6 @@ abstract class AutobahnClientTestSuite(
             if (!case.expectFailure) {
                 throw IllegalStateException("Unexpected exception during test case ${case.id}", e)
             }
-        } finally {
-            autobahnClientTester.updateReports()
         }
     }
 }
