@@ -173,6 +173,11 @@ private fun NSURLSessionWebSocketTask.forwardNextIncomingMessagesAsyncTo(incomin
                 // Therefore, in this case we just don't fail (channel will be closed in NSURLSession callbacks)
                 if (nsError.code.toInt() != ERROR_CODE_SOCKET_NOT_CONNECTED) {
                     incomingFrames.close(nsError.toIosWebSocketException())
+                } else {
+                    // TODO check if necessary - maybe just not connected yet?
+                    if (!incomingFrames.isClosedForSend) {
+                        forwardNextIncomingMessagesAsyncTo(incomingFrames)
+                    }
                 }
                 // No recursive call here, so we stop listening to messages in a closed or failed web socket
             }
