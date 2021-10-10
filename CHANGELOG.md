@@ -1,5 +1,16 @@
 # Change Log
 
+## [2.6.0](https://github.com/joffrey-bion/krossbow/tree/2.6.0) (2021-10-10)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/2.5.2...2.6.0)
+
+**Fixed bugs:**
+
+- Ktor web socket client doesn't report Close frames? [\#141](https://github.com/joffrey-bion/krossbow/issues/141)
+
+**Implemented enhancements:**
+
+- iOS support  [\#126](https://github.com/joffrey-bion/krossbow/issues/126)
+
 ## [2.5.2](https://github.com/joffrey-bion/krossbow/tree/2.5.2) (2021-10-08)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.5.1...2.5.2)
 
@@ -488,7 +499,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/e2f401a7b2e5431b00a614973b0e0701bd4aae6d...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/b8ae12d1effa5fb13840e0b023ff834774a4402a...0.1.0)
 
 **Implemented enhancements:**
 
