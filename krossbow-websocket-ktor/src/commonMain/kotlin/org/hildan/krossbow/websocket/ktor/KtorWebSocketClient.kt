@@ -8,6 +8,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.websocket.*
+import org.hildan.krossbow.websocket.WebSocketException
 
 class KtorWebSocketClient(
     private val httpClient: HttpClient = HttpClient { install(WebSockets) }
@@ -49,6 +50,9 @@ private class KtorWebSocketConnectionAdapter(
                     // Ktor just closes the channel without sending the close frame
                     buildCloseFrame()?.let { emit(it) }
                 }
+            }
+            .catch { th ->
+                throw WebSocketException("error in Ktor's websocket: ${th.message}", cause = th)
             }
             .produceIn(scope)
 
