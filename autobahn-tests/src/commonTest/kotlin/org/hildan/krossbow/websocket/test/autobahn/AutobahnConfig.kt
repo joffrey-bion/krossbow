@@ -1,5 +1,11 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
-expect fun getDefaultAutobahnTestServerHost(): String
+expect fun getDefaultAutobahnConfig(): AutobahnConfig
 
-expect fun getDefaultAutobahnTestServerPort(): Int
+data class AutobahnConfig(
+    val host: String,
+    val wsPort: Int,
+    val webPort: Int,
+) {
+    val websocketTestServerUrl: String = "ws://$host:$wsPort"
+}

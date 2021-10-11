@@ -3,8 +3,11 @@ package org.hildan.krossbow.websocket.test.autobahn
 import kotlinx.cinterop.toKString
 import platform.posix.getenv
 
-actual fun getDefaultAutobahnTestServerHost(): String = getenv("AUTOBAHN_SERVER_HOST")?.toKString()
-    ?: error("Environment variable AUTOBAHN_SERVER_HOST not provided")
+actual fun getDefaultAutobahnConfig() = AutobahnConfig(
+    host = getMandatoryEnvVar("AUTOBAHN_SERVER_HOST"),
+    wsPort = getMandatoryEnvVar("AUTOBAHN_SERVER_TCP_9001").toInt(),
+    webPort = getMandatoryEnvVar("AUTOBAHN_SERVER_TCP_8080").toInt(),
+)
 
-actual fun getDefaultAutobahnTestServerPort(): Int = getenv("AUTOBAHN_SERVER_TCP_9001")?.toKString()?.toInt()
-    ?: error("Environment variable AUTOBAHN_SERVER_TCP_9001 not provided")
+private fun getMandatoryEnvVar(varName: String): String = getenv(varName)?.toKString()
+    ?: error("Environment variable $varName not provided")

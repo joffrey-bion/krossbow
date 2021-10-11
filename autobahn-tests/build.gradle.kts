@@ -79,7 +79,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest> {
     doFirst {
         val autobahnContainer = getAutobahnTestServerContainerInfo()
         environment("AUTOBAHN_SERVER_HOST", autobahnContainer.host)
-        environment("AUTOBAHN_SERVER_TCP_9001", autobahnContainer.port)
+        environment("AUTOBAHN_SERVER_TCP_8080", autobahnContainer.ports.getValue(8080))
+        environment("AUTOBAHN_SERVER_TCP_9001", autobahnContainer.ports.getValue(9001))
     }
 }
 
@@ -88,7 +89,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimu
         val autobahnContainer = getAutobahnTestServerContainerInfo()
         // SIMCTL_CHILD_ prefix to pass those variables from test process to the iOS emulator
         environment("SIMCTL_CHILD_AUTOBAHN_SERVER_HOST", autobahnContainer.host)
-        environment("SIMCTL_CHILD_AUTOBAHN_SERVER_TCP_9001", autobahnContainer.port)
+        environment("SIMCTL_CHILD_AUTOBAHN_SERVER_TCP_8080", autobahnContainer.ports.getValue(8080))
+        environment("SIMCTL_CHILD_AUTOBAHN_SERVER_TCP_9001", autobahnContainer.ports.getValue(9001))
     }
 }
 
@@ -98,7 +100,11 @@ val generateAutobahnConfigJsonForJs by tasks.creating {
     outputs.file(config)
     doFirst {
         val autobahnContainer = getAutobahnTestServerContainerInfo()
-        file(config).writeText("""{"host":"${autobahnContainer.host}","port":${autobahnContainer.port}}""")
+        file(config).writeText("""{
+            "host":"${autobahnContainer.host}",
+            "webPort":${autobahnContainer.ports.getValue(8080)},
+            "wsPort":${autobahnContainer.ports.getValue(9001)}
+        }""".trimMargin())
     }
 }
 

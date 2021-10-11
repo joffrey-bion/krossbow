@@ -2,22 +2,26 @@ package org.hildan.krossbow.websocket.test.autobahn
 
 import org.hildan.krossbow.websocket.test.isBrowser
 
-actual fun getDefaultAutobahnTestServerHost(): String = when (isBrowser()) {
-    true -> readAutobahnConfigBrowser().host
-    false -> readAutobahnConfigNodeJS().host
-}
+actual fun getDefaultAutobahnConfig() = readJsonAutobahnConfig().toCommonConfig()
 
-actual fun getDefaultAutobahnTestServerPort(): Int = when (isBrowser()) {
-    true -> readAutobahnConfigBrowser().port
-    false -> readAutobahnConfigNodeJS().port
-}
+private fun AutobahnConfigJson.toCommonConfig() = AutobahnConfig(
+    host = host,
+    wsPort = wsPort,
+    webPort = webPort,
+)
 
-external interface AutobahnConfig {
+private external interface AutobahnConfigJson {
     val host: String
-    val port: Int
+    val wsPort: Int
+    val webPort: Int
 }
 
-private fun readAutobahnConfigBrowser(): AutobahnConfig = js("autobahn").unsafeCast<AutobahnConfig>()
+private fun readJsonAutobahnConfig(): AutobahnConfigJson = when (isBrowser()) {
+    true -> readJsonAutobahnConfigBrowser()
+    false -> readJsonAutobahnConfigNodeJS()
+}
 
-private fun readAutobahnConfigNodeJS(): AutobahnConfig =
-    js("JSON.parse(require('fs').readFileSync('./autobahn-server.json', 'utf8'))").unsafeCast<AutobahnConfig>()
+private fun readJsonAutobahnConfigBrowser(): AutobahnConfigJson = js("autobahn").unsafeCast<AutobahnConfigJson>()
+
+private fun readJsonAutobahnConfigNodeJS(): AutobahnConfigJson =
+    js("JSON.parse(require('fs').readFileSync('./autobahn-server.json', 'utf8'))").unsafeCast<AutobahnConfigJson>()

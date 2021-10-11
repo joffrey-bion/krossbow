@@ -14,9 +14,11 @@ import org.hildan.krossbow.websocket.test.expectTextFrame
 
 internal class AutobahnClientTester(
     private val wsClient: WebSocketClient,
-    private val testServerUrl: String,
+    private val config: AutobahnConfig,
     private val agentUnderTest: String,
 ) {
+    private val testServerUrl = config.websocketTestServerUrl
+
     suspend fun connectForAutobahnTestCase(case: String): WebSocketConnection =
         wsClient.connectWithTimeout("$testServerUrl/runCase?casetuple=$case&agent=$agentUnderTest")
 

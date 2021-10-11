@@ -4,6 +4,7 @@ services:
     image: "crossbario/autobahn-testsuite:0.8.0"
     ports:
       - "9001:9001"
+      - "8080:8080"
     volumes:
       - ./config:/config
       - ../build/autobahn/reports:/reports

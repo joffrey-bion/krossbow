@@ -18,14 +18,8 @@ import kotlin.test.*
  */
 abstract class AutobahnClientTestSuite(
     private val agentUnderTest: String,
-    private val testServerUrl: String,
+    private val config: AutobahnConfig = getDefaultAutobahnConfig(),
 ) {
-    constructor(
-        agentUnderTest: String,
-        testServerHost: String = getDefaultAutobahnTestServerHost(),
-        testServerPort: Int = getDefaultAutobahnTestServerPort(),
-    ) : this(agentUnderTest, testServerUrl = "ws://$testServerHost:$testServerPort")
-
     abstract fun provideClient(): WebSocketClient
 
     @Test
@@ -190,7 +184,7 @@ abstract class AutobahnClientTestSuite(
     fun autobahn_5_9_echo_payload() = runAutobahnTestCase("5.9")
 
     private fun runAutobahnTestCase(caseId: String) = runSuspendingTest {
-        val autobahnClientTester = AutobahnClientTester(provideClient(), testServerUrl, agentUnderTest)
+        val autobahnClientTester = AutobahnClientTester(provideClient(), config, agentUnderTest)
         try {
             autobahnClientTester.runTestCase(AutobahnCase.fromTuple(caseId))
         } catch (t: Throwable) { // we need to also catch AssertionError
