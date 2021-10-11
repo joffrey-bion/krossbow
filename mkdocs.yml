@@ -88,6 +88,6 @@ extra:
   versions:
     jackson: 2.12.5
     ktor: 1.6.3
-    kotlinxSerialization: 1.2.2
+    kotlinxSerialization: 1.3.0
 
 copyright: Copyright &copy; 2019 - 2021 Joffrey Bion
