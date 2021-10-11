@@ -729,7 +729,7 @@ It also provides out-of-the-box a built-in web socket implementation (without th
 <li><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> JVM</li>
 <li><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> JS (browser &amp; NodeJS)</li>
 <li><img alt="⚠️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/26a0.png" title=":warning:" /> Android (using JVM artifacts)</li>
-<li><img alt="🚧" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/1f6a7.png" title=":construction:" /> iOS (<a href="https://github.com/joffrey-bion/krossbow/issues/126">in progress</a>)</li>
+<li><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> iOS (New!)</li>
 <li><img alt="❌" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/274c.png" title=":x:" /> Native Desktop</li>
 </ul>
 <p>The desktop Native targets are currently unsupported, due to a lack of native web socket implementations.
@@ -754,15 +754,17 @@ Here is a summary of the supported platform by module:</p>
 <th align="center">NodeJS</th>
 <th align="center">JVM8+ (blocking)</th>
 <th align="center">JVM11+ (async)</th>
+<th align="center">iOS</th>
 <th>Transitive dependencies</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="./websocket/core">Core (built-in)</a></td>
+<td><a href="./websocket/core">Core<br>(built-in)</a></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"></td>
 <td align="center"></td>
+<td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td>None</td>
 </tr>
@@ -772,6 +774,7 @@ Here is a summary of the supported platform by module:</p>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> *</td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
+<td align="center"></td>
 <td><a href="https://ktor.io/clients/websockets.html">Ktor</a>, and the relevant <a href="https://ktor.io/clients/http-client/engines.html">Ktor engine(s)</a></td>
 </tr>
 <tr>
@@ -779,6 +782,7 @@ Here is a summary of the supported platform by module:</p>
 <td align="center"></td>
 <td align="center"></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
+<td align="center"></td>
 <td align="center"></td>
 <td><a href="https://square.github.io/okhttp/">OkHttp</a></td>
 </tr>
@@ -788,6 +792,7 @@ Here is a summary of the supported platform by module:</p>
 <td align="center"><img alt="🔶" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/1f536.png" title=":large_orange_diamond:" /></td>
 <td align="center"><img alt="🔶" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/1f536.png" title=":large_orange_diamond:" /></td>
 <td align="center"></td>
+<td align="center"></td>
 <td><a href="https://github.com/sockjs/sockjs-client">sockjs-client</a> (on JS), <a href="https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html">Spring websocket</a> (on JVM)</td>
 </tr>
 <tr>
@@ -795,6 +800,7 @@ Here is a summary of the supported platform by module:</p>
 <td align="center"></td>
 <td align="center"></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> <img alt="🔶" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/1f536.png" title=":large_orange_diamond:" /></td>
+<td align="center"></td>
 <td align="center"></td>
 <td><a href="https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html">Spring websocket</a></td>
 </tr>
