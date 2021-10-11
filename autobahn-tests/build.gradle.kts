@@ -39,6 +39,15 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.core)
                 implementation(libs.kotlinx.serialization.json)
+
+                // for autobahn test server HTTP endpoints
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.serialization)
+            }
+        }
+        val iosTest by getting {
+            dependencies {
+                implementation(libs.ktor.client.ios)
             }
         }
         val jvmTest by getting {
