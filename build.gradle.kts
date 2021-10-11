@@ -103,7 +103,7 @@ subprojects {
 fun MavenPublication.configurePomForMavenCentral(project: Project) = pom {
     name.set(project.name)
     description.set(project.description)
-    url.set(githubRepoUrl)
+    url.set("https://joffrey-bion.github.io/krossbow")
     licenses {
         license {
             name.set("The MIT License")
