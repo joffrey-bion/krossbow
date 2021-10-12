@@ -85,6 +85,10 @@ tasks.withType<AbstractTestTask> {
 
 // provide autobahn test server coordinates to the tests (can vary if DOCKER_HOST is set - like on CI macOS)
 tasks.withType<org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest> {
+    // autobahn doesn't support parallel tests
+    // https://github.com/crossbario/autobahn-testsuite/issues/119
+    maxParallelForks = 1
+
     doFirst {
         val autobahnContainer = getAutobahnTestServerContainerInfo()
         environment("AUTOBAHN_SERVER_HOST", autobahnContainer.host)
