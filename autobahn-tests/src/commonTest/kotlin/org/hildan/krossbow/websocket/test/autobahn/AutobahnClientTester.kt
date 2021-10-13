@@ -70,5 +70,8 @@ internal enum class TestCaseStatus {
     FAILED_BY_CLIENT,
     INFORMATIONAL,
     UNIMPLEMENTED,
-    NO_CLOSE,
+    NO_CLOSE;
+
+    val isAcceptable
+        get() = this == OK || this == NON_STRICT
 }

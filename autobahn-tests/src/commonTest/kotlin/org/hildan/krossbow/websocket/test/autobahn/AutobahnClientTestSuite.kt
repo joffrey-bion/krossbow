@@ -20,6 +20,8 @@ abstract class AutobahnClientTestSuite(
     private val agentUnderTest: String,
     private val config: AutobahnConfig = getDefaultAutobahnConfig(),
 ) {
+    private val reportsClient = AutobahnReportsClient(config)
+
     abstract fun provideClient(): WebSocketClient
 
     @Test
@@ -185,35 +187,52 @@ abstract class AutobahnClientTestSuite(
 
     private fun runAutobahnTestCase(caseId: String) = runSuspendingTest {
         val autobahnClientTester = AutobahnClientTester(provideClient(), config, agentUnderTest)
-        try {
-            autobahnClientTester.runTestCase(AutobahnCase.fromTuple(caseId))
-        } catch (t: Throwable) { // we need to also catch AssertionError
-            println("Test case $caseId failed for agent $agentUnderTest, writing autobahn reports...")
-            // It would be best to do that only after all tests of the class, but it's not possible at the moment.
-            // In the meantime, we only write reports in case of error because updateReports itself fails sometimes.
-            // We want to keep the original exception so we rethrow it, but we also add exceptions from updateReports
-            // as suppressed exceptions in case it fails as well.
-            val reportResult = runCatching { autobahnClientTester.updateReports() }
-            reportResult.exceptionOrNull()?.let { t.addSuppressed(it) }
-            throw t
+        val case = AutobahnCase.fromTuple(caseId)
+
+        // It would be best to update reports only after all tests of the class, but it's not possible at the moment.
+        // In the meantime, we only write reports in case of error because updateReports itself fails sometimes.
+        autobahnClientTester.withReportsOnError {
+            autobahnClientTester.runTestCase(case)
+        }
+        autobahnClientTester.assertTestCaseResult(case)
+    }
+
+    private suspend fun AutobahnClientTester.assertTestCaseResult(case: AutobahnCase) {
+        val status = getCaseStatus(case.id)
+        if (!status.isAcceptable) {
+            updateReports() // required to fetch the report details
+            failTestCaseWithReportDetails(case)
         }
     }
 
-    private suspend fun AutobahnClientTester.runTestCase(case: AutobahnCase) {
-        try {
-            withTimeout(10000) {
-                val session = connectForAutobahnTestCase(case.id)
-                session.echoUntilClosed()
-            }
-            val status = getCaseStatus(case.id)
-            val testResultAcceptable = status == TestCaseStatus.OK || status == TestCaseStatus.NON_STRICT
-            assertTrue(testResultAcceptable, "Test case ${case.id} finished with status ${status}, expected OK or NON-STRICT")
-        } catch (e: TimeoutCancellationException) {
-            fail("Test case ${case.id} timed out", e)
-        } catch (e: Exception) {
-            if (!case.expectFailure) {
-                throw IllegalStateException("Unexpected exception during test case ${case.id}", e)
-            }
+    private suspend fun failTestCaseWithReportDetails(case: AutobahnCase) {
+        val testResult = reportsClient.getTestResult(agentUnderTest, case.id)
+        val status = testResult.behavior
+        assertFalse(status.isAcceptable, "Case status was not acceptable but the report says $status")
+
+        val details = testResult.fetchReport()?.describeExpectedAndActual()
+        fail("Test case ${case.id} finished with status $status, expected OK or NON-STRICT:\n$details")
+    }
+
+    private suspend fun AutobahnTestCaseResult.fetchReport(): AutobahnTestCaseReport? = try {
+        reportsClient.getTestCaseReport(reportFile)
+    } catch (e: Exception) {
+        println("Error while fetching test report: ${e.message}")
+        null
+    }
+}
+
+private suspend fun AutobahnClientTester.runTestCase(case: AutobahnCase) {
+    try {
+        withTimeout(10000) {
+            val session = connectForAutobahnTestCase(case.id)
+            session.echoUntilClosed()
+        }
+    } catch (e: TimeoutCancellationException) { // caught separately because it's never an expected failure
+        fail("Test case ${case.id} timed out", e)
+    } catch (e: Exception) {
+        if (!case.expectFailure) {
+            throw IllegalStateException("Unexpected exception during test case ${case.id}: ${e.message}", e)
         }
     }
 }
@@ -233,6 +252,28 @@ private suspend fun WebSocketConnection.echoFrame(frame: WebSocketFrame) {
         is WebSocketFrame.Close -> error("should not receive CLOSE frame at that point")
     }
 }
+
+private suspend fun AutobahnClientTester.withReportsOnError(function: suspend () -> Unit) {
+    try {
+        function.invoke()
+    } catch (t: Throwable) { // we need to also catch AssertionError
+        // We want to keep the original exception so we rethrow it,
+        // but we still want to know about exceptions from updateReports itself
+        val reportResult = runCatching { updateReports() }
+        reportResult.exceptionOrNull()?.let { t.addSuppressed(it) }
+        throw t
+    }
+}
+
+private fun AutobahnTestCaseReport.describeExpectedAndActual(): String {
+    val expectedFrames = expected.entries.joinToString("\n") { (status, frames) ->
+        frames.formatAsList(header = "Expected (for $status)")
+    }
+    val actualFrames = received.formatAsList(header = "Actual")
+    return "$expectedFrames\n$actualFrames"
+}
+
+private fun FramesHistory.formatAsList(header: String): String = "$header:\n    ${this.joinToString("\n    ")}"
 
 /*
 The following methods could be used for a more precise behaviour check.
