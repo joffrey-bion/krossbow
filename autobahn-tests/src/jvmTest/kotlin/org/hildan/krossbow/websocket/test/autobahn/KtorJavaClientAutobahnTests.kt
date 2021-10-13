@@ -6,8 +6,16 @@ import io.ktor.client.features.websocket.*
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
 import kotlin.test.Ignore
 
-@Ignore // FIXME ignored because double ping-pong management fails Autobahn tests 2.x
-class KtorJavaClientAutobahnTests : AutobahnClientTestSuite("krossbow-ktor-java-client") {
+@Ignore // FIXME weird timeouts on lots of cases
+class KtorJavaClientAutobahnTests : AutobahnClientTestSuite(
+    agentUnderTest = "krossbow-ktor-java-client",
+    exclusions = listOf(
+        CaseExclusion(
+            caseIdPrefix = "2.",
+            reason = "Ktor sends double pongs with Java engine, which breaks autobahn ping-pong tests",
+        )
+    ),
+) {
 
     override fun provideClient() = KtorWebSocketClient(HttpClient(Java) { install(WebSockets) })
 }

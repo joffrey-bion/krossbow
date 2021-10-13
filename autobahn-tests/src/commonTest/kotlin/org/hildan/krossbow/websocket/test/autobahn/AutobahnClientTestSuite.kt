@@ -6,6 +6,11 @@ import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.test.runSuspendingTest
 import kotlin.test.*
 
+data class CaseExclusion(
+    val caseIdPrefix: String,
+    val reason: String,
+)
+
 /**
  * Runs tests from the [Autobahn test suite](https://github.com/crossbario/autobahn-testsuite).
  *
@@ -18,6 +23,7 @@ import kotlin.test.*
  */
 abstract class AutobahnClientTestSuite(
     private val agentUnderTest: String,
+    private val exclusions: List<CaseExclusion> = emptyList(),
     private val config: AutobahnConfig = getDefaultAutobahnConfig(),
 ) {
     private val reportsClient = AutobahnReportsClient(config)
@@ -186,6 +192,11 @@ abstract class AutobahnClientTestSuite(
     fun autobahn_5_9_echo_payload() = runAutobahnTestCase("5.9")
 
     private fun runAutobahnTestCase(caseId: String) = runSuspendingTest {
+        val matchedExclusion = exclusions.find { caseId.startsWith(it.caseIdPrefix) }
+        if (matchedExclusion != null) {
+            println("Test case $caseId disabled for agent $agentUnderTest: ${matchedExclusion.reason}")
+            return@runSuspendingTest
+        }
         val autobahnClientTester = AutobahnClientTester(provideClient(), config, agentUnderTest)
         val case = AutobahnCase.fromTuple(caseId)
 
