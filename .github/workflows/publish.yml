@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    runs-on: macos-latest # For iOS tests
+    runs-on: macos-10.15 # For iOS tests
     strategy:
       matrix:
         jdk-version: [ 17 ]
