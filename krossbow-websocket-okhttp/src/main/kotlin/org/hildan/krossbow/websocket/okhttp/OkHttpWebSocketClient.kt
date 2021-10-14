@@ -1,7 +1,7 @@
 package org.hildan.krossbow.websocket.okhttp
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.Flow
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -11,7 +11,7 @@ import okio.ByteString
 import okio.ByteString.Companion.toByteString
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
+import org.hildan.krossbow.websocket.WebSocketListenerFlowAdapter
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -24,7 +24,7 @@ class OkHttpWebSocketClient(
 
     override suspend fun connect(url: String): KrossbowWebSocketSession {
         val request = Request.Builder().url(url).build()
-        val channelListener = WebSocketListenerChannelAdapter()
+        val channelListener = WebSocketListenerFlowAdapter()
 
         return suspendCancellableCoroutine { continuation ->
             val okHttpListener = KrossbowToOkHttpListenerAdapter(continuation, channelListener)
@@ -38,7 +38,7 @@ class OkHttpWebSocketClient(
 
 private class KrossbowToOkHttpListenerAdapter(
     connectionContinuation: Continuation<KrossbowWebSocketSession>,
-    private val channelListener: WebSocketListenerChannelAdapter,
+    private val channelListener: WebSocketListenerFlowAdapter,
 ) : WebSocketListener() {
     private var connectionContinuation: Continuation<KrossbowWebSocketSession>? = connectionContinuation
 
@@ -83,7 +83,7 @@ private class KrossbowToOkHttpListenerAdapter(
 
 private class OkHttpSocketToKrossbowConnectionAdapter(
     private val okSocket: WebSocket,
-    framesChannel: ReceiveChannel<WebSocketFrame>
+    override val incomingFrames: Flow<WebSocketFrame>,
 ) : KrossbowWebSocketSession {
 
     override val url: String
@@ -91,8 +91,6 @@ private class OkHttpSocketToKrossbowConnectionAdapter(
 
     override val canSend: Boolean
         get() = true // all send methods are just no-ops when the session is closed, so always OK
-
-    override val incomingFrames: ReceiveChannel<WebSocketFrame> = framesChannel
 
     override suspend fun sendText(frameText: String) {
         okSocket.send(frameText)

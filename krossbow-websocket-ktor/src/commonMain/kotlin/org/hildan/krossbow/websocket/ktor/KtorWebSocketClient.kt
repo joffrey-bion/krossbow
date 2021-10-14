@@ -5,7 +5,6 @@ import io.ktor.client.features.websocket.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.WebSocketException
@@ -32,8 +31,6 @@ private class KtorWebSocketConnectionAdapter(
     private val wsSession: DefaultClientWebSocketSession
 ) : WebSocketConnectionWithPingPong {
 
-    private val scope = CoroutineScope(CoroutineName("krossbow-ktor-ws-frames-mapper"))
-
     override val url: String
         get() = wsSession.call.request.url.toString()
 
@@ -42,8 +39,8 @@ private class KtorWebSocketConnectionAdapter(
         get() = !wsSession.outgoing.isClosedForSend
 
     @OptIn(FlowPreview::class)
-    override val incomingFrames: ReceiveChannel<WebSocketFrame> =
-        wsSession.incoming.consumeAsFlow()
+    override val incomingFrames: Flow<WebSocketFrame> =
+        wsSession.incoming.receiveAsFlow()
             .map { it.toKrossbowFrame() }
             .onCompletion { error ->
                 if (error == null) {
@@ -54,7 +51,6 @@ private class KtorWebSocketConnectionAdapter(
             .catch { th ->
                 throw WebSocketException("error in Ktor's websocket: ${th.message}", cause = th)
             }
-            .produceIn(scope)
 
     private suspend fun buildCloseFrame(): WebSocketFrame.Close? = wsSession.closeReason.await()?.let { reason ->
         WebSocketFrame.Close(reason.code.toInt(), reason.message)
@@ -78,12 +74,6 @@ private class KtorWebSocketConnectionAdapter(
 
     override suspend fun close(code: Int, reason: String?) {
         wsSession.close(CloseReason(code.toShort(), reason ?: ""))
-        scope.launch {
-            // give time for the server's last frames to arrive and be forwarded by the produceIn coroutine
-            delay(5000)
-            // we cancel the produceIn coroutine in case we still haven't heard from the server
-            scope.cancel()
-        }
     }
 }
 

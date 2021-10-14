@@ -4,25 +4,25 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ChannelResult
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
- * Adapter between listener calls and a web socket "incoming" frames channel.
- * This is to make it easier to bridge listener-based APIs with the channel-based API of Krossbow.
+ * Adapter between listener calls and a web socket "incoming" frames flow.
+ * This is to make it easier to bridge listener-based APIs with the flow-based API of Krossbow.
  * Methods of this listener never fail, but can send failure through the frames channel to the consumers.
  */
-class WebSocketListenerChannelAdapter(
+class WebSocketListenerFlowAdapter(
     bufferSize: Int = Channel.BUFFERED,
     onBufferOverflow: BufferOverflow = BufferOverflow.SUSPEND,
 ) {
-    /**
-     * The channel of incoming web socket frames.
-     * This channel is closed when the web socket connection is closed
-     */
-    val incomingFrames: ReceiveChannel<WebSocketFrame>
-        get() = frames
-
     private val frames: Channel<WebSocketFrame> = Channel(bufferSize, onBufferOverflow)
+
+    /**
+     * The flow of incoming web socket frames.
+     * This flow completes when the web socket connection is closed.
+     */
+    val incomingFrames: Flow<WebSocketFrame> = frames.receiveAsFlow()
 
     private val partialTextMessageHandler = PartialTextMessageHandler {
         frames.send(WebSocketFrame.Text(it.toString()))
@@ -73,21 +73,21 @@ class WebSocketListenerChannelAdapter(
 }
 
 /**
- * An adapter similar to [WebSocketListenerChannelAdapter], but with an unlimited buffer and non-suspending callback
+ * An adapter similar to [WebSocketListenerFlowAdapter], but with an unlimited buffer and non-suspending callback
  * functions. This is useful for bridging implementations that do not support backpressure (like the browser
  * WebSocket API).
  *
  * This implementation does not support partial messages.
  */
-class UnboundedWsListenerChannelAdapter {
+class UnboundedWsListenerFlowAdapter {
+
+    private val frames: Channel<WebSocketFrame> = Channel(capacity = Channel.UNLIMITED)
+
     /**
      * The channel of incoming web socket frames.
      * This channel is closed when the web socket connection is closed
      */
-    val incomingFrames: ReceiveChannel<WebSocketFrame>
-        get() = frames
-
-    private val frames: Channel<WebSocketFrame> = Channel(capacity = Channel.UNLIMITED)
+    val incomingFrames: Flow<WebSocketFrame> = frames.receiveAsFlow()
 
     fun onBinaryMessage(bytes: ByteArray) = frames.trySend(WebSocketFrame.Binary(bytes))
 

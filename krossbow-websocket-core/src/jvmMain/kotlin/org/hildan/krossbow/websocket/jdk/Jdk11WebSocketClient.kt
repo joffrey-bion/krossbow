@@ -1,7 +1,7 @@
 package org.hildan.krossbow.websocket.jdk
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
 import kotlinx.coroutines.sync.Mutex
@@ -23,7 +23,7 @@ class Jdk11WebSocketClient(
 
     override suspend fun connect(url: String): WebSocketConnectionWithPingPong {
         try {
-            val listener = WebSocketListenerChannelAdapter()
+            val listener = WebSocketListenerFlowAdapter()
             val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
             val webSocket = httpClient.newWebSocketBuilder()
                     .apply { configureWebSocket() }
@@ -39,7 +39,7 @@ class Jdk11WebSocketClient(
 }
 
 private class Jdk11WebSocketListener(
-    private val listener: WebSocketListenerChannelAdapter
+    private val listener: WebSocketListenerFlowAdapter
 ) : WebSocket.Listener {
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -91,7 +91,7 @@ private fun ByteBuffer.toByteArray(): ByteArray {
 private class Jdk11WebSocketConnection(
     private val webSocket: WebSocket,
     override val url: String,
-    override val incomingFrames: ReceiveChannel<WebSocketFrame>
+    override val incomingFrames: Flow<WebSocketFrame>,
 ) : WebSocketConnectionWithPingPong {
 
     private val mutex = Mutex()

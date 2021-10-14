@@ -18,7 +18,7 @@ internal class StompSocket(
     /**
      * The [Flow] of decoded STOMP events. Only a single collector is expected.
      */
-    val incomingEvents: Flow<StompEvent> = webSocketConnection.incomingFrames.receiveAsFlow()
+    val incomingEvents: Flow<StompEvent> = webSocketConnection.incomingFrames
             .catch { registerWsExceptionAndRethrow(it) }
             .map { decodeStomp(it) }
             .catch {

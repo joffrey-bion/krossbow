@@ -3,9 +3,9 @@ public final class org/hildan/krossbow/websocket/DefaultJvmClientKt {
 	public static final fun defaultWebSocketClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
 }
 
-public final class org/hildan/krossbow/websocket/UnboundedWsListenerChannelAdapter {
+public final class org/hildan/krossbow/websocket/UnboundedWsListenerFlowAdapter {
 	public fun <init> ()V
-	public final fun getIncomingFrames ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public final fun getIncomingFrames ()Lkotlinx/coroutines/flow/Flow;
 	public final fun onBinaryMessage-JP2dKIU ([B)Ljava/lang/Object;
 	public final fun onClose-Mj0NB7M (ILjava/lang/String;)Ljava/lang/Object;
 	public final fun onError (Ljava/lang/String;)V
@@ -51,7 +51,7 @@ public abstract interface class org/hildan/krossbow/websocket/WebSocketConnectio
 	public abstract fun close (ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getCanSend ()Z
 	public abstract fun getHost ()Ljava/lang/String;
-	public abstract fun getIncomingFrames ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public abstract fun getIncomingFrames ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun getUrl ()Ljava/lang/String;
 	public abstract fun sendBinary ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun sendText (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -137,20 +137,20 @@ public final class org/hildan/krossbow/websocket/WebSocketFrame$Text : org/hilda
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class org/hildan/krossbow/websocket/WebSocketListenerChannelAdapter {
+public final class org/hildan/krossbow/websocket/WebSocketListenerFlowAdapter {
 	public fun <init> ()V
 	public fun <init> (ILkotlinx/coroutines/channels/BufferOverflow;)V
 	public synthetic fun <init> (ILkotlinx/coroutines/channels/BufferOverflow;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getIncomingFrames ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public final fun getIncomingFrames ()Lkotlinx/coroutines/flow/Flow;
 	public final fun onBinaryMessage ([BZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun onBinaryMessage$default (Lorg/hildan/krossbow/websocket/WebSocketListenerChannelAdapter;[BZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun onBinaryMessage$default (Lorg/hildan/krossbow/websocket/WebSocketListenerFlowAdapter;[BZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun onClose (ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun onError (Ljava/lang/String;)V
 	public final fun onError (Ljava/lang/Throwable;)V
 	public final fun onPing ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun onPong ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun onTextMessage (Ljava/lang/CharSequence;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun onTextMessage$default (Lorg/hildan/krossbow/websocket/WebSocketListenerChannelAdapter;Ljava/lang/CharSequence;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun onTextMessage$default (Lorg/hildan/krossbow/websocket/WebSocketListenerFlowAdapter;Ljava/lang/CharSequence;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClient : org/hildan/krossbow/websocket/WebSocketClient {

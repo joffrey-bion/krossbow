@@ -1,27 +1,25 @@
 package org.hildan.krossbow.websocket
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.websocket.test.runSuspendingTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
+import kotlin.test.*
 
-class WebSocketListenerChannelAdapterTest {
+class WebSocketListenerFlowAdapterTest {
 
     @Test
     fun onTextMessage_triggersTextFrame() = runSuspendingTest {
-        val adapter = WebSocketListenerChannelAdapter()
+        val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onTextMessage("test") }
-        val frame = adapter.incomingFrames.receive()
-        assertEquals(WebSocketFrame.Text("test"), frame)
+        val frameText = adapter.receiveText()
+        assertEquals("test", frameText)
     }
 
     @Test
     fun onTextMessage_partialMessages() = runSuspendingTest {
-        val adapter = WebSocketListenerChannelAdapter()
+        val adapter = WebSocketListenerFlowAdapter()
         launch {
             adapter.onTextMessage("complete", isLast = true)
 
@@ -40,25 +38,24 @@ class WebSocketListenerChannelAdapterTest {
         assertEquals("123", adapter.receiveText(), "the complete msg should be sent when last part is received")
     }
 
-    private suspend fun WebSocketListenerChannelAdapter.receiveText(): String {
-        val frame = incomingFrames.receive()
+    private suspend fun WebSocketListenerFlowAdapter.receiveText(): String {
+        val frame = incomingFrames.first()
         assertTrue(frame is WebSocketFrame.Text)
         return frame.text
     }
 
     @Test
     fun onBinaryMessage_triggersBinaryFrame() = runSuspendingTest {
-        val adapter = WebSocketListenerChannelAdapter()
+        val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onBinaryMessage(ByteArray(2) { 42 }) }
-        val frame = adapter.incomingFrames.receive()
-        assertTrue(frame is WebSocketFrame.Binary)
-        assertEquals(List<Byte>(2) { 42 }, frame.bytes.toList())
+        val frameBytes = adapter.receiveBytes()
+        assertEquals(List<Byte>(2) { 42 }, frameBytes.toList())
     }
 
     @Test
     fun onBinaryMessage_partialMessages() = runSuspendingTest {
-        val adapter = WebSocketListenerChannelAdapter()
+        val adapter = WebSocketListenerFlowAdapter()
 
         val zeroOneTwo = listOf<Byte>(0, 1, 2)
         val oneTwo = listOf<Byte>(1, 2)
@@ -82,47 +79,45 @@ class WebSocketListenerChannelAdapterTest {
         assertEquals(one + two + three, adapter.receiveBytes().toList())
     }
 
-    private suspend fun WebSocketListenerChannelAdapter.receiveBytes(): ByteArray {
-        val frame = incomingFrames.receive()
+    private suspend fun WebSocketListenerFlowAdapter.receiveBytes(): ByteArray {
+        val frame = incomingFrames.first()
         assertTrue(frame is WebSocketFrame.Binary)
         return frame.bytes
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun onClose_triggersCloseFrameAndClosesTheChannel() = runSuspendingTest {
-        val adapter = WebSocketListenerChannelAdapter()
+    fun onClose_triggersCloseFrameAndCompletesTheFlow() = runSuspendingTest {
+        val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onClose(1024, "REASON") }
-        val frame = adapter.incomingFrames.receive()
+        val frame = adapter.incomingFrames.first()
         assertEquals(WebSocketFrame.Close(1024, "REASON"), frame)
 
-        assertTrue(adapter.incomingFrames.isClosedForReceive)
+        assertTrue(adapter.incomingFrames.count() == 0)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun onErrorText_propagatesExceptionToChannel() = runSuspendingTest {
-        val adapter = WebSocketListenerChannelAdapter()
+    fun onErrorText_propagatesExceptionToTheFlow() = runSuspendingTest {
+        val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onError("some error") }
 
-        val ex = assertFailsWith(WebSocketException::class) { adapter.incomingFrames.receive() }
+        val ex = assertFailsWith(WebSocketException::class) { adapter.incomingFrames.first() }
         assertEquals("some error", ex.message)
-        assertTrue(adapter.incomingFrames.isClosedForReceive)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun onErrorThrowable_propagatesExceptionToChannel() = runSuspendingTest {
-        val adapter = WebSocketListenerChannelAdapter()
+    fun onErrorThrowable_propagatesWrappedExceptionToFlow() = runSuspendingTest {
+        val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onError(RuntimeException("some error")) }
 
-        val ex = assertFailsWith(WebSocketException::class) { adapter.incomingFrames.receive() }
+        val ex = assertFailsWith(WebSocketException::class) { adapter.incomingFrames.first() }
         assertEquals("some error", ex.message)
         // for some reason, cause is nested twice on JVM (but not on JS targets)
         assertEquals(RuntimeException::class, (ex.cause?.cause ?: ex.cause)!!::class)
-        assertTrue(adapter.incomingFrames.isClosedForReceive)
     }
 }

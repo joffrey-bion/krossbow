@@ -3,7 +3,7 @@ package org.hildan.krossbow.websocket.test
 import kotlinx.coroutines.channels.Channel
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
+import org.hildan.krossbow.websocket.WebSocketListenerFlowAdapter
 import kotlin.test.fail
 
 class WebSocketConnectionMock : WebSocketConnection {
@@ -11,7 +11,7 @@ class WebSocketConnectionMock : WebSocketConnection {
     override val url: String
         get() = "dummy-url"
 
-    private val listener = WebSocketListenerChannelAdapter()
+    private val listener = WebSocketListenerFlowAdapter()
 
     override val canSend: Boolean
         get() = !closed

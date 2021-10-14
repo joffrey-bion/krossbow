@@ -47,7 +47,7 @@ public final class org/hildan/krossbow/websocket/test/WebSocketConnectionMock : 
 	public fun getCanSend ()Z
 	public final fun getClosed ()Z
 	public fun getHost ()Ljava/lang/String;
-	public fun getIncomingFrames ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public fun getIncomingFrames ()Lkotlinx/coroutines/flow/Flow;
 	public fun getUrl ()Ljava/lang/String;
 	public fun sendBinary ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun sendText (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

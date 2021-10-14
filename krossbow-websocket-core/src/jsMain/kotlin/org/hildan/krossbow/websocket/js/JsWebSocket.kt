@@ -1,8 +1,8 @@
 package org.hildan.krossbow.websocket.js
 
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.suspendCancellableCoroutine
-import org.hildan.krossbow.websocket.UnboundedWsListenerChannelAdapter
+import org.hildan.krossbow.websocket.UnboundedWsListenerFlowAdapter
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketConnectionClosedException
@@ -43,7 +43,7 @@ open class JsWebSocketClientAdapter(
                 var pendingConnect = true
                 // We use unlimited buffer size because we have no means for backpressure anyway
                 // (see motivation for https://www.chromestatus.com/feature/5189728691290112)
-                val listener = UnboundedWsListenerChannelAdapter()
+                val listener = UnboundedWsListenerFlowAdapter()
                 val wsSession = JsWebSocketConnection(ws, listener.incomingFrames)
                 ws.onopen = {
                     pendingConnect = false
@@ -92,7 +92,7 @@ open class JsWebSocketClientAdapter(
  */
 private class JsWebSocketConnection(
     private val ws: WebSocket,
-    override val incomingFrames: ReceiveChannel<WebSocketFrame>
+    override val incomingFrames: Flow<WebSocketFrame>,
 ) : WebSocketConnection {
 
     override val url: String

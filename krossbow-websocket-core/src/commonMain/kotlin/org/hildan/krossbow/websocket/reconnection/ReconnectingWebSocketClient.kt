@@ -2,7 +2,7 @@ package org.hildan.krossbow.websocket.reconnection
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketConnectionException
@@ -87,15 +87,14 @@ private class WebSocketConnectionProxy(
         get() = currentConnection.canSend
 
     private val _frames: Channel<WebSocketFrame> = Channel()
-    override val incomingFrames: ReceiveChannel<WebSocketFrame>
-        get() = _frames
+    override val incomingFrames: Flow<WebSocketFrame> = _frames.receiveAsFlow()
 
     init {
         scope.launch {
             while (isActive) {
                 try {
-                    for (f in currentConnection.incomingFrames) {
-                        _frames.send(f)
+                    currentConnection.incomingFrames.collect {
+                        _frames.send(it)
                     }
                 } catch (e: CancellationException) {
                     throw e // let cancellation through

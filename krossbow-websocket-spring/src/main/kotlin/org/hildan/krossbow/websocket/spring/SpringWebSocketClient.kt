@@ -1,14 +1,14 @@
 package org.hildan.krossbow.websocket.spring
 
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketListenerChannelAdapter
+import org.hildan.krossbow.websocket.WebSocketListenerFlowAdapter
 import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
 import org.springframework.web.socket.BinaryMessage
 import org.springframework.web.socket.CloseStatus
@@ -56,7 +56,7 @@ open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClien
 
 private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
 
-    val channelListener: WebSocketListenerChannelAdapter = WebSocketListenerChannelAdapter()
+    val channelListener: WebSocketListenerFlowAdapter = WebSocketListenerFlowAdapter()
 
     override fun afterConnectionEstablished(session: SpringWebSocketSession) {}
 
@@ -92,7 +92,7 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
 @Suppress("BlockingMethodInNonBlockingContext")
 private class SpringSessionToKrossbowConnectionAdapter(
     private val session: SpringWebSocketSession,
-    override val incomingFrames: ReceiveChannel<WebSocketFrame>
+    override val incomingFrames: Flow<WebSocketFrame>,
 ) : WebSocketConnectionWithPingPong {
 
     private val mutex = Mutex()

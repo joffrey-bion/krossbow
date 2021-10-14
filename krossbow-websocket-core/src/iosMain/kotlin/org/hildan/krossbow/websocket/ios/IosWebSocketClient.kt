@@ -7,6 +7,8 @@ import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.hildan.krossbow.websocket.*
 import platform.Foundation.*
@@ -70,7 +72,7 @@ private class IosWebSocketListener(
 
     override fun URLSession(session: NSURLSession, webSocketTask: NSURLSessionWebSocketTask, didOpenWithProtocol: String?) {
         completeConnection {
-            resume(IosWebSocketConnection(url, incomingFrames, webSocketTask))
+            resume(IosWebSocketConnection(url, incomingFrames.receiveAsFlow(), webSocketTask))
         }
     }
 
@@ -128,7 +130,7 @@ private class IosWebSocketListener(
 
 private class IosWebSocketConnection(
     override val url: String,
-    override val incomingFrames: Channel<WebSocketFrame>,
+    override val incomingFrames: Flow<WebSocketFrame>,
     private val webSocket: NSURLSessionWebSocketTask,
 ) : WebSocketConnectionWithPing {
 

@@ -244,7 +244,7 @@ private suspend fun AutobahnClientTester.runTestCase(case: AutobahnCase) {
     try {
         val session = connectForAutobahnTestCase(case.id)
         withTimeout(10000) {
-            session.incomingFrames.receiveAsFlow()
+            session.incomingFrames
                 .onEach { receivedFrames.add(it) }
                 .takeWhile { it !is WebSocketFrame.Close }
                 .collect {
@@ -314,8 +314,7 @@ private suspend fun WebSocketConnection.echoExactFrameCountAndExpectClosure(case
 }
 
 private suspend fun WebSocketConnection.echoNFrames(n: Int) {
-    repeat(n) {
-        val frame = incomingFrames.receive()
+    incomingFrames.take(n).collect { frame ->
         echoFrame(frame)
     }
 }
@@ -325,18 +324,18 @@ private suspend fun WebSocketConnection.expectClientForceClosed() {
     // a frame could be received as part of the test, etc.
     // We can't really rely on channel closure generally, hence this "weak" check that works on all client-close tests
     val result = withTimeoutOrNull(2000) {
-        incomingFrames.receiveAsFlow().toList()
+        incomingFrames.toList()
     }
-    assertFalse(result == null, "Incoming frames channel should not hang (the client should have closed the connection)")
+    assertFalse(result == null, "Incoming frames flow should not hang (the client should have closed the connection)")
 }
 
 private suspend fun WebSocketConnection.expectServerClosed() {
-    val frames = incomingFrames.receiveAsFlow().toList()
+    val frames = incomingFrames.toList()
     // ping-pongs are irrelevant because they are not echoed (they are more low-level frames)
     val relevantFrames = frames.filter { !(it is WebSocketFrame.Pong || it is WebSocketFrame.Ping) }
     assertEquals(1, relevantFrames.size, "The server should only have sent a single frame by now (CLOSE), got ${relevantFrames.map { it.truncated(20) }}")
     assertIs<WebSocketFrame.Close>(relevantFrames.single(), "The frame received from the server should be a CLOSE frame")
-    assertTrue(incomingFrames.receiveCatching().isClosed, "The incoming frames channel should be closed by now")
+    assertTrue(incomingFrames.count() == 0, "The incoming frames flow should be completed by now")
 }
 
 private fun WebSocketFrame.truncated(length: Int) = if (this is WebSocketFrame.Text) {

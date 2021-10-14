@@ -1,5 +1,8 @@
 package org.hildan.krossbow.websocket.test
 
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
@@ -34,12 +37,12 @@ suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expectFrame(
     timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
 ): T {
     val frameType = T::class.simpleName
-    val result = withTimeoutOrNull(timeoutMillis) { incomingFrames.receiveCatching() }
-    assertNotNull(result, "Timed out while waiting for $frameType frame ($frameDescription)")
-    assertFalse(result.isClosed, "Expected $frameType frame ($frameDescription), but the channel was closed")
-    assertFalse(result.isFailure, "Expected $frameType frame ($frameDescription), but the channel was failed: ${result.exceptionOrNull()}")
-
-    val frame = result.getOrThrow()
+    val frame = withTimeoutOrNull(timeoutMillis) {
+        incomingFrames
+            .catch { ex -> fail("Expected $frameType frame ($frameDescription), but the flow failed with $ex") }
+            .firstOrNull() ?: fail("Expected $frameType frame ($frameDescription), but the flow was complete")
+    }
+    assertNotNull(frame, "Timed out while waiting for $frameType frame ($frameDescription)")
     assertIs<T>(frame, "Should have received $frameType frame ($frameDescription), but got $frame")
     return frame
 }
@@ -48,7 +51,8 @@ suspend fun WebSocketConnection.expectNoMoreFrames(
     eventDescription: String = "end of transmission",
     timeoutMillis: Long = 1000,
 ) {
-    val result = withTimeoutOrNull(timeoutMillis) { incomingFrames.receiveCatching() }
-    assertNotNull(result, "Timed out while waiting for incoming frames channel to be closed ($eventDescription)")
-    assertTrue(result.isClosed, "Frames channel should be closed now ($eventDescription), got $result")
+    val lastFrames = withTimeoutOrNull(timeoutMillis) { incomingFrames.toList() }
+    assertNotNull(lastFrames, "Timed out while waiting for incoming frames flow to end ($eventDescription)")
+    assertTrue(lastFrames.isEmpty(), "Frames flow should have completed ($eventDescription), but got ${lastFrames.size} more frame(s): $lastFrames")
 }
+
