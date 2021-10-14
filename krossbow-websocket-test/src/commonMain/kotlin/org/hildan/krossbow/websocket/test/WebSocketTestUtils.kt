@@ -18,6 +18,11 @@ suspend fun WebSocketConnection.expectTextFrame(
     timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
 ) = expectFrame<WebSocketFrame.Text>(frameDescription, timeoutMillis)
 
+suspend fun WebSocketConnection.expectBinaryFrame(
+    frameDescription: String,
+    timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
+) = expectFrame<WebSocketFrame.Binary>(frameDescription, timeoutMillis)
+
 suspend fun WebSocketConnection.expectCloseFrame(
     frameDescription: String = "no more data expected",
     timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
