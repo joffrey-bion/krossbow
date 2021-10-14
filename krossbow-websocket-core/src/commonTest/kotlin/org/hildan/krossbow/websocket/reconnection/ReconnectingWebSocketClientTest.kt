@@ -4,7 +4,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.test.*
 import kotlin.test.*
 import kotlin.time.Duration
@@ -55,9 +54,7 @@ internal class ReconnectingWebSocketClientTest {
         val connection = reconnectingClient.connect("dummy")
 
         launch { baseConnection.simulateTextFrameReceived("test") }
-        val received = withTimeoutOrNull(500) { connection.incomingFrames.receive() }
-        assertNotNull(received, "The received frame should be forwarded")
-        assertTrue(received is WebSocketFrame.Text, "The received frame should be a text frame")
+        val received = connection.expectTextFrame("test frame")
         assertEquals(received.text, "test", "The message of the forwarded frame should match the received frame")
     }
 
@@ -76,17 +73,16 @@ internal class ReconnectingWebSocketClientTest {
         assertEquals(1, connections.size, "base client should have provided 1 connection")
 
         launch { connections[0].simulateTextFrameReceived("test1") }
-        val received1 = withTimeoutOrNull(500) { connection.incomingFrames.receive() }
-        assertNotNull(received1, "The received frame on the first connection should be forwarded")
+        val received1 = connection.expectTextFrame("frame1")
+        assertEquals(received1.text, "test1", "The message of the forwarded frame should match the received frame")
 
         connections[0].simulateError("simulated error")
         delay(100) // give time to trigger reconnect coroutine
         assertEquals(2, connections.size, "Should reconnect after error")
 
         launch { connections[1].simulateTextFrameReceived("test2") }
-        val received2 = withTimeoutOrNull(500) { connection.incomingFrames.receive() }
+        val received2 = connection.expectTextFrame("frame2")
         assertNotNull(received2, "The received frame on the second connection should be forwarded")
-        assertTrue(received2 is WebSocketFrame.Text, "The received frame should be a text frame")
         assertEquals(received2.text, "test2", "The message of the forwarded frame should match the received frame")
     }
 
@@ -110,8 +106,8 @@ internal class ReconnectingWebSocketClientTest {
         assertEquals(1, connections.size, "base client should have provided 1 connection")
 
         launch { connections[0].simulateTextFrameReceived("test1") }
-        val received1 = withTimeoutOrNull(500) { connection.incomingFrames.receive() }
-        assertNotNull(received1, "The received frame on the first connection should be forwarded")
+        val received1 = connection.expectTextFrame("test frame")
+        assertEquals(received1.text, "test1", "The message of the forwarded frame should match the received frame")
 
         assertFalse(reconnected, "afterReconnect callback should not be called after first connection")
 

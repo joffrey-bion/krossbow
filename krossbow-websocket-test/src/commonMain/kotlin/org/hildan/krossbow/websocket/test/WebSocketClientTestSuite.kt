@@ -30,8 +30,7 @@ abstract class WebSocketClientTestSuite {
         val session = wsClient.connect(url)
 
         session.sendText("hello")
-        val helloResponse = session.incomingFrames.receive()
-        assertTrue(helloResponse is WebSocketFrame.Text)
+        val helloResponse = session.expectTextFrame("hello frame")
         assertEquals("hello", helloResponse.text)
 
         session.close()
@@ -48,8 +47,7 @@ abstract class WebSocketClientTestSuite {
 
         val fortyTwos = ByteArray(3) { 42 }
         session.sendBinary(fortyTwos)
-        val fortyTwosResponse = session.incomingFrames.receive()
-        assertTrue(fortyTwosResponse is WebSocketFrame.Binary)
+        val fortyTwosResponse = session.expectBinaryFrame("3 binary 42s")
         assertEquals(fortyTwos.toList(), fortyTwosResponse.bytes.toList())
 
         session.close()
