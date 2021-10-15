@@ -4,6 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.features.websocket.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.websocket.*
@@ -38,13 +39,16 @@ private class KtorWebSocketConnectionAdapter(
     override val canSend: Boolean
         get() = !wsSession.outgoing.isClosedForSend
 
-    @OptIn(FlowPreview::class)
+    private val emittedCloseFrame = atomic(false)
+
     override val incomingFrames: Flow<WebSocketFrame> =
         wsSession.incoming.receiveAsFlow()
             .map { it.toKrossbowFrame() }
             .onCompletion { error ->
-                if (error == null) {
-                    // Ktor just closes the channel without sending the close frame
+                // Ktor just closes the channel without sending the close frame, so we build it ourselves here.
+                // Clients could collect the flow multiple times, which calls onCompletion each time, but we only want
+                // to emit the Close frame once, as if it were in the channel like the other frames.
+                if (error == null && !emittedCloseFrame.getAndSet(true)) {
                     buildCloseFrame()?.let { emit(it) }
                 }
             }

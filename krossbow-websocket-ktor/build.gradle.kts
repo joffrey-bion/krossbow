@@ -28,6 +28,7 @@ kotlin {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 api(libs.ktor.client.websockets)
+                api(libs.kotlinx.atomicfu)
             }
         }
         val commonTest by getting {
