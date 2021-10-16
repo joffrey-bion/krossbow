@@ -7,9 +7,11 @@ import org.hildan.krossbow.websocket.test.runSuspendingTest
 import kotlin.test.*
 
 data class CaseExclusion(
-    val caseIdPrefix: String,
+    val caseIdPrefixes: List<String>,
     val reason: String,
-)
+) {
+    fun excludes(caseId: String) = caseIdPrefixes.any { caseId.startsWith(it) }
+}
 
 /**
  * Runs tests from the [Autobahn test suite](https://github.com/crossbario/autobahn-testsuite).
@@ -192,7 +194,7 @@ abstract class AutobahnClientTestSuite(
     fun autobahn_5_9_echo_payload() = runAutobahnTestCase("5.9")
 
     private fun runAutobahnTestCase(caseId: String) = runSuspendingTest {
-        val matchedExclusion = exclusions.find { caseId.startsWith(it.caseIdPrefix) }
+        val matchedExclusion = exclusions.find { it.excludes(caseId) }
         if (matchedExclusion != null) {
             println("Test case $caseId disabled for agent $agentUnderTest: ${matchedExclusion.reason}")
             return@runSuspendingTest

@@ -11,9 +11,9 @@ class KtorJavaClientAutobahnTests : AutobahnClientTestSuite(
     agentUnderTest = "krossbow-ktor-java-client",
     exclusions = listOf(
         CaseExclusion(
-            caseIdPrefix = "2.",
+            caseIdPrefixes = listOf("2.", "5.6", "5.7", "5.8"),
             reason = "Ktor sends double pongs with Java engine, which breaks autobahn ping-pong tests",
-        )
+        ),
     ),
 ) {
 
