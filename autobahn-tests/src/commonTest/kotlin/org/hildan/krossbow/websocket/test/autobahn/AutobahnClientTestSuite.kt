@@ -236,24 +236,32 @@ abstract class AutobahnClientTestSuite(
 }
 
 private suspend fun AutobahnClientTester.runTestCase(case: AutobahnCase) {
+    val receivedFrames = mutableListOf<WebSocketFrame>()
     try {
+        val session = connectForAutobahnTestCase(case.id)
         withTimeout(10000) {
-            val session = connectForAutobahnTestCase(case.id)
-            session.echoUntilClosed()
+            session.incomingFrames.receiveAsFlow()
+                .onEach { receivedFrames.add(it) }
+                .takeWhile { it !is WebSocketFrame.Close }
+                .collect {
+                    session.echoFrame(it)
+                }
         }
     } catch (e: TimeoutCancellationException) { // caught separately because it's never an expected failure
-        fail("Test case ${case.id} timed out", e)
+        val formattedReceivedFrames = receivedFrames.formatForPrinting()
+        fail("Test case ${case.id} timed out while echoing frames. $formattedReceivedFrames", e)
     } catch (e: Exception) {
         if (!case.expectFailure) {
-            throw IllegalStateException("Unexpected exception during test case ${case.id}: ${e.message}", e)
+            val formattedReceivedFrames = receivedFrames.formatForPrinting()
+            throw IllegalStateException("Unexpected exception during test case ${case.id}: ${e.message}\n$formattedReceivedFrames", e)
         }
     }
 }
 
-private suspend fun WebSocketConnection.echoUntilClosed() {
-    incomingFrames.receiveAsFlow().takeWhile { it !is WebSocketFrame.Close }.collect {
-        echoFrame(it)
-    }
+private fun List<WebSocketFrame>.formatForPrinting() = if (isEmpty()) {
+    "No frames received."
+} else {
+    "Received frames:\n" + joinToString("\n") { it.toString() }
 }
 
 private suspend fun WebSocketConnection.echoFrame(frame: WebSocketFrame) {

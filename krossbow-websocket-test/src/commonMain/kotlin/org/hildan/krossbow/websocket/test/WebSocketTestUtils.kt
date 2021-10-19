@@ -11,7 +11,8 @@ const val DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS = 2000L
 suspend fun WebSocketClient.connectWithTimeout(
     url: String,
     timeoutMillis: Long = 8000,
-) = withTimeoutOrNull(timeoutMillis) { connect(url) } ?: fail("Timed out while connecting to $url")
+) = withTimeoutOrNull(timeoutMillis) { connect(url) }
+    ?: fail("Timed out after ${timeoutMillis}ms while connecting to $url")
 
 suspend fun WebSocketConnection.expectTextFrame(
     frameDescription: String,
