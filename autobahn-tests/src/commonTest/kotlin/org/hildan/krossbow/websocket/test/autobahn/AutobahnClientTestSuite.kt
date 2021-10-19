@@ -107,11 +107,15 @@ abstract class AutobahnClientTestSuite(
     @Test
     fun autobahn_2_9_ping_pong() = runAutobahnTestCase("2.9")
 
-    @Ignore // FIXME not all pongs are necessary according to the spec, so FAILED status is acceptable here
+    // Not all pongs are required according to the spec, but this tests returns FAILED status if some are missing
+    // https://github.com/crossbario/autobahn-testsuite/issues/101
+    // It might be necessary to ignore this test case for some clients.
     @Test
     fun autobahn_2_10_ping_pong() = runAutobahnTestCase("2.10")
 
-    @Ignore // FIXME not all pongs are necessary according to the spec, so FAILED status is acceptable here
+    // Not all pongs are required according to the spec, but this tests returns FAILED status if some are missing
+    // https://github.com/crossbario/autobahn-testsuite/issues/101
+    // It might be necessary to ignore this test case for some clients.
     @Test
     fun autobahn_2_11_ping_pong() = runAutobahnTestCase("2.11")
 
