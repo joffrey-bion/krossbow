@@ -81,6 +81,8 @@ class StompSessionSubscriptionsTest {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
             wsSession.expectClose()
         }
+
+        delay(50) // leave some time for the frame to potentially be lost
         val message = messages.first()
         assertEquals("HELLO", message)
         stompSession.disconnect()
@@ -105,6 +107,7 @@ class StompSessionSubscriptionsTest {
         val messages = stompSession.subscribeText("/sub")
         stompSession.sendText("/send", "HELLO")
 
+        delay(50) // leave some time for the frame to potentially be lost
         val message = messages.first()
         assertEquals("HELLO", message)
         stompSession.disconnect()
