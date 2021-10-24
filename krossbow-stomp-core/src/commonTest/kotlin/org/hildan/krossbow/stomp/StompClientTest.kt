@@ -1,8 +1,6 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.test.runBlockingTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
@@ -186,6 +184,36 @@ class StompClientTest {
         }
         assertEquals("dummy.com", exception.host)
         assertNotNull(exception.cause, "StompConnectionException should have original exception as cause")
+    }
+
+    @Test
+    fun connect_shouldNotLeakWebSocketConnectionIfCancelled() = runBlockingTest {
+        val wsSession = WebSocketConnectionMock()
+        val stompClient = StompClient(webSocketClientMock { wsSession })
+
+        val connectJob = launch {
+            stompClient.connect("wss://dummy.com/path")
+        }
+        // ensures we have already connected the WS
+        wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+        // simulates the cancellation of the connect() call during the STOMP connect handshake
+        connectJob.cancel()
+        wsSession.expectClose()
+    }
+
+    @Test
+    fun stomp_shouldNotCloseWebSocketConnectionIfCancelled() = runBlockingTest {
+        val wsSession = WebSocketConnectionMock()
+
+        val connectJob = launch {
+            wsSession.stomp(StompConfig())
+        }
+        // ensures we have already connected the WS
+        wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+        // simulates the cancellation of the stomp() call during the STOMP connect handshake
+        connectJob.cancel()
+        // this time the user is responsible for the web socket, so it's the user's job to close it
+        wsSession.expectNoClose()
     }
 
     @Test
