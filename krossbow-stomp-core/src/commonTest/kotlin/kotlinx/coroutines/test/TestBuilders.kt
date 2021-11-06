@@ -4,6 +4,7 @@
 
 package kotlinx.coroutines.test
 
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,10 +59,24 @@ public fun runBlockingTest(
     val (safeContext, dispatcher) = context.checkArguments()
     val startingJobs = safeContext.activeJobs()
     val scope = TestCoroutineScope(safeContext)
+    val endOfTestReached = atomic(false)
     val deferred = scope.async {
         scope.testBody()
+        endOfTestReached.value = true
     }
     dispatcher.advanceUntilIdle()
+
+    // this part is custom (not from kotlinx-coroutines-test)
+    if (deferred.isActive) {
+        // getCompletionExceptionOrNull() below will fail, so we try to add some hint
+        if (endOfTestReached.value) {
+            println("WARN: Some background coroutines seem to still be running (the end of the test function was reached)")
+        } else {
+            println("WARN: The test seems to be hanging somewhere (didn't reach the end of the test function)")
+        }
+    }
+    // end of custom part
+
     deferred.getCompletionExceptionOrNull()?.let {
         throw it
     }
