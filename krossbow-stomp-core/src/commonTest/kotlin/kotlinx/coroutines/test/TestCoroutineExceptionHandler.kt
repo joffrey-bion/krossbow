@@ -67,7 +67,9 @@ inline fun <T> Mutex.withActiveNonSuspendingLock(action: () -> T): T {
     while(!tryLock()) {
         // retry
     }
-    return action().also {
+    return try {
+        action()
+    } finally {
         unlock()
     }
 }
