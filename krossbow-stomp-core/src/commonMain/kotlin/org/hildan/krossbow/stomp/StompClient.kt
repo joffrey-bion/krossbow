@@ -1,13 +1,13 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.*
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.default
-import kotlin.coroutines.coroutineContext
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * A STOMP 1.2 client based on web sockets.
@@ -46,6 +46,11 @@ class StompClient(
      * Some old STOMP servers may refuse connections with a `host` header, in which case you can force it to null to
      * prevent it from being sent.
      *
+     * An additional [sessionCoroutineContext] can be provided to override the context used for the collection and
+     * decoding of the STOMP frames in the created [StompSession].
+     * By default, the session uses [Dispatchers.Default][kotlinx.coroutines.Dispatchers.Default], but it can be
+     * overridden here. This is mostly useful to inject a test dispatcher.
+     *
      * @throws ConnectionTimeout if this method takes longer than the configured
      * [timeout][StompConfig.connectionTimeoutMillis] (as a whole for both WS connect and STOMP connect)
      */
@@ -55,9 +60,10 @@ class StompClient(
         passcode: String? = null,
         host: String? = extractHost(url),
         customStompConnectHeaders: Map<String, String> = emptyMap(),
+        sessionCoroutineContext: CoroutineContext = EmptyCoroutineContext,
     ): StompSession {
         val session = withTimeoutOrNull(config.connectionTimeoutMillis) {
-            val wsSession = webSocketConnect(url)
+            val webSocket = webSocketConnect(url)
             val connectHeaders = StompConnectHeaders(
                 host = host,
                 login = login,
@@ -65,7 +71,7 @@ class StompClient(
                 heartBeat = config.heartBeat,
                 customHeaders = customStompConnectHeaders
             )
-            wsSession.stomp(config, connectHeaders)
+            webSocket.stomp(config, connectHeaders, sessionCoroutineContext)
         }
         return session ?: throw ConnectionTimeout(url, config.connectionTimeoutMillis)
     }
@@ -93,38 +99,25 @@ class StompClient(
  *
  * The CONNECT/STOMP frame can be further customized by using [customHeaders], which may be useful for server-specific
  * behaviour, like token-based authentication.
+ *
+ * If the connection at the STOMP level fails, the underlying web socket is closed.
  */
 suspend fun WebSocketConnection.stomp(
     config: StompConfig,
     host: String? = this.host,
     login: String? = null,
     passcode: String? = null,
-    customHeaders: Map<String, String> = emptyMap()
+    customHeaders: Map<String, String> = emptyMap(),
+    sessionCoroutineContext: CoroutineContext = EmptyCoroutineContext,
 ): StompSession {
-    val session = withTimeoutOrNull(config.connectionTimeoutMillis) {
-        val connectHeaders = StompConnectHeaders(
-            host = host,
-            login = login,
-            passcode = passcode,
-            heartBeat = config.heartBeat,
-            customHeaders = customHeaders,
-        )
-        stomp(config, connectHeaders)
-    }
-    return session ?: throw ConnectionTimeout(host ?: "null", config.connectionTimeoutMillis)
-}
-
-internal suspend fun WebSocketConnection.stomp(config: StompConfig, headers: StompConnectHeaders): StompSession {
-    try {
-        val stompSession = BaseStompSession(config, StompSocket(this, config, coroutineContext))
-        stompSession.connect(headers)
-        return stompSession
-    } catch (e: CancellationException) {
-        // this cancellation comes from the outside, we should not wrap this exception
-        throw e
-    } catch (e: Exception) {
-        throw StompConnectionException(headers.host, cause = e)
-    }
+    val connectHeaders = StompConnectHeaders(
+        host = host,
+        login = login,
+        passcode = passcode,
+        heartBeat = config.heartBeat,
+        customHeaders = customHeaders,
+    )
+    return stomp(config, connectHeaders, sessionCoroutineContext)
 }
 
 private fun extractHost(url: String) = url.substringAfter("://").substringBefore("/").substringBefore(":")
@@ -138,8 +131,11 @@ class ConnectionTimeout(url: String, timeoutMillis: Long) :
 /**
  * Exception thrown when the connection attempt failed at web socket level.
  */
-class WebSocketConnectionException(url: String, cause: Throwable? = null) :
-    ConnectionException(url, "Failed to connect at web socket level to $url", cause)
+open class WebSocketConnectionException(
+    url: String,
+    message: String = "Failed to connect at web socket level to $url",
+    cause: Throwable? = null,
+) : ConnectionException(url, message, cause)
 
 /**
  * Exception thrown when the connection attempt failed at STOMP protocol level.

@@ -24,13 +24,13 @@ public final class org/hildan/krossbow/stomp/StompClient {
 	public fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;)V
 	public synthetic fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lorg/hildan/krossbow/stomp/config/StompConfig;)V
-	public final fun connect (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun connect$default (Lorg/hildan/krossbow/stomp/StompClient;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun connect (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun connect$default (Lorg/hildan/krossbow/stomp/StompClient;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/stomp/StompClientKt {
-	public static final fun stomp (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun stomp$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun stomp (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun stomp$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/stomp/StompConnectionException : org/hildan/krossbow/stomp/ConnectionException {
@@ -88,9 +88,9 @@ public final class org/hildan/krossbow/stomp/WebSocketClosedUnexpectedly : java/
 	public final fun getReason ()Ljava/lang/String;
 }
 
-public final class org/hildan/krossbow/stomp/WebSocketConnectionException : org/hildan/krossbow/stomp/ConnectionException {
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+public class org/hildan/krossbow/stomp/WebSocketConnectionException : org/hildan/krossbow/stomp/ConnectionException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class org/hildan/krossbow/stomp/config/HeartBeat {
@@ -129,6 +129,7 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun getAutoReceipt ()Z
 	public final fun getConnectWithStompCommand ()Z
 	public final fun getConnectionTimeoutMillis ()J
+	public final fun getDefaultSessionCoroutineContext ()Lkotlin/coroutines/CoroutineContext;
 	public final fun getDisconnectTimeoutMillis ()J
 	public final fun getGracefulDisconnect ()Z
 	public final fun getHeartBeat ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
@@ -139,6 +140,7 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun setAutoReceipt (Z)V
 	public final fun setConnectWithStompCommand (Z)V
 	public final fun setConnectionTimeoutMillis (J)V
+	public final fun setDefaultSessionCoroutineContext (Lkotlin/coroutines/CoroutineContext;)V
 	public final fun setDisconnectTimeoutMillis (J)V
 	public final fun setGracefulDisconnect (Z)V
 	public final fun setHeartBeat (Lorg/hildan/krossbow/stomp/config/HeartBeat;)V
@@ -235,7 +237,10 @@ public final class org/hildan/krossbow/stomp/frame/StompCommand : java/lang/Enum
 public final class org/hildan/krossbow/stomp/frame/StompCommand$Companion {
 }
 
-public abstract class org/hildan/krossbow/stomp/frame/StompFrame {
+public abstract class org/hildan/krossbow/stomp/frame/StompEvent {
+}
+
+public abstract class org/hildan/krossbow/stomp/frame/StompFrame : org/hildan/krossbow/stomp/frame/StompEvent {
 	public static final field Companion Lorg/hildan/krossbow/stomp/frame/StompFrame$Companion;
 	public synthetic fun <init> (Lorg/hildan/krossbow/stomp/frame/StompCommand;Lorg/hildan/krossbow/stomp/headers/StompHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lorg/hildan/krossbow/stomp/frame/StompCommand;Lorg/hildan/krossbow/stomp/headers/StompHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;Lkotlin/jvm/internal/DefaultConstructorMarker;)V

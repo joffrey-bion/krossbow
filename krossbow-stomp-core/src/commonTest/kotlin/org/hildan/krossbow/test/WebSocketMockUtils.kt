@@ -21,7 +21,11 @@ suspend fun connectWithMocks(
     configure: StompConfig.() -> Unit = {},
 ): Pair<WebSocketConnectionMock, StompSession> = coroutineScope {
     val wsSession = WebSocketConnectionMock()
-    val stompClient = StompClient(webSocketClientMock { wsSession }, configure)
+    val stompClient = StompClient(webSocketClientMock { wsSession }) {
+        configure()
+        // to use the test dispatcher
+        defaultSessionCoroutineContext = coroutineContext
+    }
     val session = async { stompClient.connect("dummy URL") }
     wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
     wsSession.simulateConnectedFrameReceived(connectedHeaders)

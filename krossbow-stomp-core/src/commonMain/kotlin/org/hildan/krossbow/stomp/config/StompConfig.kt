@@ -3,6 +3,8 @@ package org.hildan.krossbow.stomp.config
 import org.hildan.krossbow.stomp.LostReceiptException
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.instrumentation.KrossbowInstrumentation
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * Configuration for the STOMP client.
@@ -87,6 +89,17 @@ class StompConfig {
      * In this case, there is no guarantee that the server received all previous messages.
      */
     var gracefulDisconnect: Boolean = true
+
+    /**
+     * An additional coroutine context used for the collection and decoding of the STOMP frames within [StompSession]s
+     * created by this client.
+     *
+     * It can be overridden independently for each session when calling
+     * [StompClient.connect][org.hildan.krossbow.stomp.StompClient.connect].
+     *
+     * This is mostly useful to inject a test dispatcher.
+     */
+    var defaultSessionCoroutineContext: CoroutineContext = EmptyCoroutineContext
 
     /**
      * A set of hooks that are called in different places of the internal execution of Krossbow.

@@ -11,6 +11,7 @@ import org.hildan.krossbow.test.simulateConnectedFrameReceived
 import org.hildan.krossbow.test.simulateErrorFrameReceived
 import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import org.hildan.krossbow.websocket.test.*
+import kotlin.coroutines.ContinuationInterceptor
 import kotlin.test.*
 
 private const val TEST_CONNECTION_TIMEOUT: Long = 500
@@ -140,6 +141,7 @@ class StompClientTest {
         val stompClient = StompClient(ControlledWebSocketClientMock()) {
             connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
         }
+        // we don't expect the closure of the web socket here, because it has not even been connected at all
         assertTimesOutWith(ConnectionTimeout::class, TEST_CONNECTION_TIMEOUT) {
             stompClient.connect("dummy")
         }
@@ -147,8 +149,13 @@ class StompClientTest {
 
     @Test
     fun connect_timesOutIfConnectedFrameIsNotReceived() = runBlockingTest {
-        val stompClient = StompClient(webSocketClientMock()) {
+        val wsSession = WebSocketConnectionMock()
+        val stompClient = StompClient(webSocketClientMock { wsSession }) {
             connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
+        }
+        launch {
+            // should close WS on timeout to avoid leaking it (connection at WS level was done, just not at STOMP level)
+            wsSession.expectClose()
         }
         assertTimesOutWith(ConnectionTimeout::class, TEST_CONNECTION_TIMEOUT) {
             stompClient.connect("dummy")
@@ -187,6 +194,24 @@ class StompClientTest {
     }
 
     @Test
+    fun connect_failsIfWebSocketIsClosedWhenConnecting() = runBlockingTest {
+        val wsSession = WebSocketConnectionMock()
+        val stompClient = StompClient(webSocketClientMock { wsSession })
+
+        launch {
+            wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+            wsSession.simulateClose(1000, "abrupt close")
+            wsSession.expectNoClose()
+        }
+
+        val exception = assertFailsWith(StompConnectionException::class) {
+            stompClient.connect("wss://dummy.com/path")
+        }
+        assertEquals("dummy.com", exception.host)
+        assertNotNull(exception.cause, "StompConnectionException should have original exception as cause")
+    }
+
+    @Test
     fun connect_shouldNotLeakWebSocketConnectionIfCancelled() = runBlockingTest {
         val wsSession = WebSocketConnectionMock()
         val stompClient = StompClient(webSocketClientMock { wsSession })
@@ -202,18 +227,17 @@ class StompClientTest {
     }
 
     @Test
-    fun stomp_shouldNotCloseWebSocketConnectionIfCancelled() = runBlockingTest {
+    fun stomp_shouldCloseWebSocketConnectionIfCancelled() = runBlockingTest {
         val wsSession = WebSocketConnectionMock()
 
         val connectJob = launch {
             wsSession.stomp(StompConfig())
         }
-        // ensures we have already connected the WS
+        // ensures we have already connected the WS, and have started the STOMP handshake
         wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
         // simulates the cancellation of the stomp() call during the STOMP connect handshake
         connectJob.cancel()
-        // this time the user is responsible for the web socket, so it's the user's job to close it
-        wsSession.expectNoClose()
+        wsSession.expectClose()
     }
 
     @Test
@@ -221,7 +245,10 @@ class StompClientTest {
         val errorMessage = "some web socket exception with a very long message that exceeds the maximum " +
             "allowed length for the 'reason' in web socket close frames. It needs to be truncated."
         val wsSession = WebSocketConnectionMock()
-        val stompClient = StompClient(webSocketClientMock { wsSession })
+        val stompClient = StompClient(webSocketClientMock { wsSession }) {
+            // necessary so runBlockingTest knows to wait for the session's coroutines to progress
+            defaultSessionCoroutineContext = coroutineContext[ContinuationInterceptor.Key]!! // retrieves the test dispatcher
+        }
 
         launch {
             stompClient.connect("wss://dummy.com")
