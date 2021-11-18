@@ -6,13 +6,12 @@ import kotlin.system.getTimeNanos
 import kotlin.test.Ignore
 import kotlin.test.fail
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.milliseconds
 
 actual typealias IgnoreOnNative = Ignore
 
-@OptIn(ExperimentalTime::class)
 actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.() -> Unit) =
-    runOnMainThreadAlongMainLoop(Duration.milliseconds(timeoutMillis)) { block() }
+    runOnMainThreadAlongMainLoop(timeoutMillis.milliseconds) { block() }
 
 /**
  * Runs the given test [block] on the main thread, while still executing the main loop concurrently to make sure every
@@ -20,7 +19,7 @@ actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.
  *
  * Inspired by https://github.com/ktorio/ktor/issues/678#issuecomment-433756753
  */
-@OptIn(DelicateCoroutinesApi::class, ExperimentalTime::class)
+@OptIn(DelicateCoroutinesApi::class)
 private fun runOnMainThreadAlongMainLoop(timeout: Duration, block: suspend CoroutineScope.() -> Unit) {
     val maxTimeNanos = getTimeNanos() + timeout.inWholeNanoseconds
 

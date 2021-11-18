@@ -3,7 +3,7 @@ import com.gradle.scan.plugin.BuildScanExtension
 plugins {
     id("com.gradle.enterprise") version "3.2.1"
     id("com.louiscad.complete-kotlin") version "1.0.0" // for autocomplete of Apple libraries on non-macOS systems
-    kotlin("jvm") version "1.5.31" apply false // workaround https://github.com/LouisCAD/CompleteKotlin/issues/7
+    kotlin("jvm") version "1.6.0" apply false // workaround https://github.com/LouisCAD/CompleteKotlin/issues/7
 }
 
 rootProject.name = "krossbow"

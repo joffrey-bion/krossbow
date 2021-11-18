@@ -65,7 +65,6 @@ class StompDecoderInvalidFramesTest {
         assertInvalidFrame("MESSAGE\n\nabc$nullChar\n\r\ninvalid")
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     private fun assertInvalidFrame(frameText: String) {
         assertFailsWith<InvalidStompFrameException> {
             StompDecoder.decode(frameText)

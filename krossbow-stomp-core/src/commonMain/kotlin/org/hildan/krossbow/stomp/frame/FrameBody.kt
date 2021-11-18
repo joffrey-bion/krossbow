@@ -9,7 +9,6 @@ import org.hildan.krossbow.stomp.charsets.decode
  * If a STOMP frame was received as a binary web socket frame, its body will be a [Binary] body.
  * If a STOMP frame was received as a textual web socket frame, its body will be a [Text] body.
  */
-@OptIn(ExperimentalStdlibApi::class)
 sealed class FrameBody {
 
     /**

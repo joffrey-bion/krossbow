@@ -5,9 +5,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.selects.select
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.HeartBeatTolerance
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 internal class HeartBeater(
     private val heartBeat: HeartBeat,
     private val tolerance: HeartBeatTolerance,

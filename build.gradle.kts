@@ -1,7 +1,7 @@
 import org.hildan.github.changelog.builder.DEFAULT_EXCLUDED_LABELS
 
 plugins {
-    val kotlinVersion = "1.5.31"
+    val kotlinVersion = "1.6.0"
     kotlin("jvm") apply false
     kotlin("js") apply false
     kotlin("multiplatform") apply false
@@ -9,7 +9,7 @@ plugins {
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jetbrains.dokka") version "1.5.31" apply false
     id("org.hildan.github.changelog") version "1.8.0"
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.1"
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"

@@ -6,12 +6,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.websocket.test.*
 import kotlin.test.*
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.milliseconds
 
 // limitations on Kotlin/Native multithreaded coroutines prevent the reconnection wrapper from working properly
 @IgnoreOnNative
-@OptIn(ExperimentalTime::class)
 internal class ReconnectingWebSocketClientTest {
 
     @Test
@@ -67,7 +65,7 @@ internal class ReconnectingWebSocketClientTest {
             }
         }
 
-        val reconnectingClient = baseClient.withAutoReconnect(delayStrategy = FixedDelay(Duration.milliseconds(1)))
+        val reconnectingClient = baseClient.withAutoReconnect(delayStrategy = FixedDelay(1.milliseconds))
         val connection = reconnectingClient.connect("dummy")
         // if this fails, maybe an exception happened in the connect() method (only visible when reading frames)
         assertEquals(1, connections.size, "base client should have provided 1 connection")
@@ -97,7 +95,7 @@ internal class ReconnectingWebSocketClientTest {
 
         var reconnected = false
         val reconnectingClient = baseClient.withAutoReconnect {
-            delayStrategy = FixedDelay(Duration.milliseconds(1))
+            delayStrategy = FixedDelay(1.milliseconds)
             afterReconnect {
                 reconnected = true
             }

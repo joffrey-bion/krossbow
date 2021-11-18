@@ -27,13 +27,11 @@ actual object Charsets {
     actual val ISO_8859_1: Charset = CharsetImpl("ISO-8859-1")
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 actual fun CharsetEncoder.encode(input: String): ByteArray = when (_charset) {
     Charsets.UTF_8 -> input.encodeToByteArray()
     else -> error("Non UTF-8 encodings are not supported on JS platform")
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 actual fun CharsetDecoder.decode(bytes: ByteArray): String = when (_charset) {
     Charsets.UTF_8 -> bytes.decodeToString()
     else -> error("Non UTF-8 encodings are not supported on JS platform")

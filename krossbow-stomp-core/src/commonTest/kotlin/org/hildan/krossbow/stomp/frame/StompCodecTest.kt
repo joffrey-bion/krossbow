@@ -5,7 +5,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@OptIn(ExperimentalStdlibApi::class)
 class StompCodecTest {
     private val nullChar = '\u0000'
 

@@ -6,7 +6,6 @@ import kotlin.reflect.KClass
 import kotlin.reflect.cast
 import kotlin.test.fail
 
-@OptIn(ExperimentalStdlibApi::class)
 suspend fun <T : Throwable> TestCoroutineScope.assertTimesOutWith(
     expectedExceptionClass: KClass<T>,
     expectedTimeoutMillis: Long,
