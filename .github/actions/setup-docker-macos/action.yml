@@ -3,37 +3,16 @@ description: 'Sets up docker via docker-machine, and docker-compose on MacOS'
 runs:
   using: "composite"
   steps:
-    # https://github.com/TheJumpCloud/support/blob/master/PowerShell/JumpCloud%20Commands%20Gallery/Mac%20Commands/Application%20Installs/Mac%20-%20Generic%20DMG%20Installer.md
+    # https://github.com/docker/for-mac/issues/2359#issuecomment-943131345
     - shell: bash
       run: |
-        echo "Downloading and unpacking Docker Desktop..."
-        ./.github/actions/setup-docker-macos/docker-desktop-download-unpack.sh
-
-    # https://github.com/docker/roadmap/issues/80#issuecomment-633613240
-    - shell: bash
-      run: |
-        echo "Installing Docker & Docker Compose CLI clients..."
-        brew install docker docker-compose
+        brew install --cask docker
         
-        echo "Installing Docker Desktop..."
-        # allow the app to run without confirmation
-        xattr -d -r com.apple.quarantine /Applications/Docker.app
-        # preemptively do docker.app's setup to avoid any gui prompts
-        sudo /bin/cp /Applications/Docker.app/Contents/Library/LaunchServices/com.docker.vmnetd /Library/PrivilegedHelperTools
-        sudo /bin/cp /Applications/Docker.app/Contents/Resources/com.docker.vmnetd.plist /Library/LaunchDaemons/
-        sudo /bin/chmod 544 /Library/PrivilegedHelperTools/com.docker.vmnetd
-        sudo /bin/chmod 644 /Library/LaunchDaemons/com.docker.vmnetd.plist
-        sudo /bin/launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
+        echo "Installing Docker.app (unattended)..."
+        sudo /Applications/Docker.app/Contents/MacOS/Docker --unattended --install-privileged-components
         
-        echo "-- Starting Docker.app, if necessary..."
-        open -g -a Docker.app || exit
+        echo "Starting docker daemon..."
+        open -a /Applications/Docker.app --args --unattended --accept-license
         
-        # Wait for the server to start up, if applicable.
-        i=0
-        while ! docker system info &>/dev/null; do
-        (( i++ == 0 )) && printf %s '-- Waiting for Docker to finish starting up...' || printf '.'
-        sleep 1
-        done
-        (( i )) && printf '\n'
-        
-        echo "-- Docker is ready."
+        echo "Awaiting docker daemon..."
+        while ! /Applications/Docker.app/Contents/Resources/bin/docker info &>/dev/null; do sleep 1; done
