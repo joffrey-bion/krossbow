@@ -3,6 +3,12 @@ description: 'Sets up docker via docker-machine, and docker-compose on MacOS'
 runs:
   using: "composite"
   steps:
+    # https://github.com/TheJumpCloud/support/blob/master/PowerShell/JumpCloud%20Commands%20Gallery/Mac%20Commands/Application%20Installs/Mac%20-%20Generic%20DMG%20Installer.md
+    - shell: bash
+      run: |
+        echo "Downloading and unpacking Docker Desktop..."
+        ./.github/actions/setup-docker-macos/docker-desktop-download-unpack.sh
+
     # https://github.com/docker/roadmap/issues/80#issuecomment-633613240
     - shell: bash
       run: |
