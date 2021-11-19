@@ -12,15 +12,13 @@ dependencies {
     // For Spring's WebSocket clients
     api(libs.spring.websocket)
 
-    // TODO move this to testImplementation and make the users add it?
-    // JSR 356 - Java API for WebSocket (reference implementation)
-    // Low-level implementation required by Spring's client (javax.websocket.*)
-    implementation(libs.tyrusStandaloneClient)
-
     testImplementation(kotlin("test"))
     testImplementation(projects.krossbowWebsocketTest)
     testImplementation(libs.slf4j.simple)
 
+    // JSR 356 - Java API for WebSocket (reference implementation)
+    // Low-level implementation required by Spring's client (javax.websocket.*)
+    testImplementation(libs.tyrusStandaloneClient)
     // Implementation of Jetty client (for jetty tests)
     testImplementation(libs.jettyWebsocketCient)
 }

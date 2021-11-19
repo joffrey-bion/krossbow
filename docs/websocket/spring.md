@@ -66,8 +66,15 @@ You will need to declare the following Gradle dependency to use the Spring adapt
 implementation("org.hildan.krossbow:krossbow-websocket-spring:{{ git.tag }}")
 ```
 
+If you're using the `SpringDefaultWebSocketClient` (or `SpringSockJSWebSocketClient` with default settings), you'll
+need to add a dependency on a JSR-356 implementation, such as Tyrus:
+
+```kotlin
+implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:{{ versions.tyrus }}")
+```
+
 If you're using the `SpringJettyWebSocketClient`, you'll need to add a dependency on Jetty's web socket client:
 
 ```kotlin
-implementation("org.eclipse.jetty.websocket:websocket-client:9.4.43.v20210629")
+implementation("org.eclipse.jetty.websocket:websocket-client:{{ versions.jetty }}")
 ```
