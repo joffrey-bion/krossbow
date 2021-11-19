@@ -48,7 +48,7 @@ class WebSocketListenerFlowAdapter(
         frames.send(WebSocketFrame.Pong(bytes))
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class) // for isClosedForSend
     suspend fun onClose(code: Int, reason: String?) {
         // At least with Spring's Jetty implementation, onClose may be called after onError
         // (for instance, if frame parsing fails with unknown opcode).

@@ -19,7 +19,6 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
  * The STOMP frames sent by the returned session have a binary body (of type [FrameBody.Binary]).
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType].
  */
-@OptIn(ExperimentalSerializationApi::class)
 fun StompSession.withBinaryConversions(format: BinaryFormat, mediaType: String): StompSessionWithKxSerialization =
     StompSessionWithBinaryConversions(this, format, mediaType)
 
@@ -30,7 +29,6 @@ fun StompSession.withBinaryConversions(format: BinaryFormat, mediaType: String):
  * The STOMP frames sent by the returned session have a textual body (of type [FrameBody.Text]).
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType].
  */
-@OptIn(ExperimentalSerializationApi::class)
 fun StompSession.withTextConversions(format: StringFormat, mediaType: String): StompSessionWithKxSerialization =
     StompSessionWithTextConversions(this, format, mediaType)
 
@@ -41,7 +39,6 @@ fun StompSession.withTextConversions(format: StringFormat, mediaType: String): S
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType] (defaulting to
  * "application/json;charset=utf-8").
  */
-@OptIn(ExperimentalSerializationApi::class)
 fun StompSession.withJsonConversions(
     json: Json = Json,
     mediaType: String = "application/json;charset=utf-8",
@@ -69,7 +66,7 @@ private abstract class BaseStompSessionWithConversions(
 
     protected abstract fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>): FrameBody?
 
-    @OptIn(ExperimentalSerializationApi::class)
+    @OptIn(ExperimentalSerializationApi::class) // for serialName
     override suspend fun <T : Any> subscribe(
         headers: StompSubscribeHeaders,
         deserializer: DeserializationStrategy<T>,
@@ -91,7 +88,6 @@ private abstract class BaseStompSessionWithConversions(
     ): T?
 }
 
-@OptIn(ExperimentalSerializationApi::class)
 private class StompSessionWithBinaryConversions(
     session: StompSession,
     val format: BinaryFormat,
@@ -105,7 +101,6 @@ private class StompSessionWithBinaryConversions(
         frame.body?.bytes?.let { format.decodeFromByteArray(deserializer, it) }
 }
 
-@OptIn(ExperimentalSerializationApi::class)
 private class StompSessionWithTextConversions(
     session: StompSession,
     val format: StringFormat,

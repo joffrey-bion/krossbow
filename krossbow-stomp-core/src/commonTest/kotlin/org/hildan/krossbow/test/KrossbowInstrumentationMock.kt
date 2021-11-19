@@ -1,6 +1,5 @@
 package org.hildan.krossbow.test
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.instrumentation.KrossbowInstrumentation
@@ -35,28 +34,23 @@ class KrossbowInstrumentationMock : KrossbowInstrumentation {
         wsErrorsChannel.send(exception)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnWebsocketFrameReceived(): WebSocketFrame {
         return wsFramesChannel.expectElement("Expected onWebSocketFrameReceived to be called")
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnFrameDecoded(): StompFrame {
         return decodedFramesChannel.expectElement("Expected onFrameDecoded to be called")
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnStompFrameSent(): StompFrame {
         return sentFramesChannel.expectElement("Expected onStompFrameSent to be called")
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnWebSocketClosed(): Throwable? {
         val closeEvent = closeCausesChannel.expectElement("Expected onWebSocketClosed to be called")
         return closeEvent.cause
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun expectOnWebSocketClientError(): Throwable {
         return wsErrorsChannel.expectElement("Expected onWebSocketClientError to be called")
     }

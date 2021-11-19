@@ -1,6 +1,5 @@
 package org.hildan.krossbow.stomp.conversions
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -30,7 +29,6 @@ class MockStompSession : StompSession {
         return null
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> =
         incomingFrames.consumeAsFlow()
 

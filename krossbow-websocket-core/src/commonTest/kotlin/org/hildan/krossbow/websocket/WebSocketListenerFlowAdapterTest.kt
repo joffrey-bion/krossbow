@@ -1,6 +1,5 @@
 package org.hildan.krossbow.websocket
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.websocket.test.runSuspendingTest
@@ -85,7 +84,6 @@ class WebSocketListenerFlowAdapterTest {
         return frame.bytes
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun onClose_triggersCloseFrameAndCompletesTheFlow() = runSuspendingTest {
         val adapter = WebSocketListenerFlowAdapter()
@@ -97,7 +95,6 @@ class WebSocketListenerFlowAdapterTest {
         assertTrue(adapter.incomingFrames.count() == 0)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun onErrorText_propagatesExceptionToTheFlow() = runSuspendingTest {
         val adapter = WebSocketListenerFlowAdapter()
@@ -108,7 +105,6 @@ class WebSocketListenerFlowAdapterTest {
         assertEquals("some error", ex.message)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun onErrorThrowable_propagatesWrappedExceptionToFlow() = runSuspendingTest {
         val adapter = WebSocketListenerFlowAdapter()
