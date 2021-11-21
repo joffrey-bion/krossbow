@@ -2,13 +2,6 @@ package org.hildan.krossbow.websocket
 
 import kotlinx.coroutines.flow.*
 
-@Deprecated(
-    message = "This method pollutes the global namespace and will be removed in a future version. " +
-        "Please use WebSocketClient.default() factory function instead",
-    replaceWith = ReplaceWith("org.hildan.krossbow.websocket.WebSocketClient.default()"),
-)
-expect fun defaultWebSocketClient(): WebSocketClient
-
 /**
  * Gets the default [WebSocketClient] implementation for the current platform.
  */
