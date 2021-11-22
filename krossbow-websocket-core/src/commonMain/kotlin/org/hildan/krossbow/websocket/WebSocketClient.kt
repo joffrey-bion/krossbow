@@ -72,7 +72,7 @@ interface WebSocketConnection {
      * It's also ok to stop collecting the flow, and start again later: the frames that are received in the meantime
      * are buffered and sent to the collector when it comes back.
      */
-    val incomingFrames: Flow<WebSocketFrame>
+    val incomingFrames: Flow<WebSocketEvent>
 
     /**
      * Sends a web socket text frame.

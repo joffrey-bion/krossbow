@@ -3,10 +3,7 @@ package org.hildan.krossbow.websocket.reconnection
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketConnection
-import org.hildan.krossbow.websocket.WebSocketConnectionException
-import org.hildan.krossbow.websocket.WebSocketFrame
+import org.hildan.krossbow.websocket.*
 import kotlin.time.ExperimentalTime
 
 /**
@@ -21,7 +18,7 @@ import kotlin.time.ExperimentalTime
  * Note: limitations on Kotlin/Native multithreaded coroutines prevent the reconnection wrapper from working properly.
  * Please use the new memory model if you want the reconnection feature on Kotlin/Native.
  */
-fun WebSocketClient.withAutoReconnect(config: ReconnectConfig): WebSocketClient = when (this) {
+fun WebSocketClient.withAutoReconnect(config: ReconnectConfig): ReconnectingWebSocketClient = when (this) {
     is ReconnectingWebSocketClient -> ReconnectingWebSocketClient(baseClient, config)
     else -> ReconnectingWebSocketClient(this, config)
 }
@@ -38,7 +35,7 @@ fun WebSocketClient.withAutoReconnect(config: ReconnectConfig): WebSocketClient 
  * Note: limitations on Kotlin/Native multithreaded coroutines prevent the reconnection wrapper from working properly.
  * Please use the new memory model if you want the reconnection feature on Kotlin/Native.
  */
-fun WebSocketClient.withAutoReconnect(configure: ReconnectConfigBuilder.() -> Unit): WebSocketClient =
+fun WebSocketClient.withAutoReconnect(configure: ReconnectConfigBuilder.() -> Unit): ReconnectingWebSocketClient =
     withAutoReconnect(reconnectConfig(configure))
 
 /**
@@ -56,13 +53,13 @@ fun WebSocketClient.withAutoReconnect(configure: ReconnectConfigBuilder.() -> Un
 fun WebSocketClient.withAutoReconnect(
     maxAttempts: Int = DEFAULT_MAX_ATTEMPTS,
     delayStrategy: RetryDelayStrategy = DEFAULT_DELAY_STRATEGY,
-): WebSocketClient = withAutoReconnect {
+): ReconnectingWebSocketClient = withAutoReconnect {
     this.maxAttempts = maxAttempts
     this.delayStrategy = delayStrategy
 }
 
-private class ReconnectingWebSocketClient(
-    val baseClient: WebSocketClient,
+class ReconnectingWebSocketClient internal constructor(
+    internal val baseClient: WebSocketClient,
     private val reconnectConfig: ReconnectConfig,
 ) : WebSocketClient {
 
@@ -70,10 +67,19 @@ private class ReconnectingWebSocketClient(
         val firstConnection = baseClient.connect(url)
         return WebSocketConnectionProxy(baseClient, reconnectConfig, firstConnection)
     }
+
+    suspend fun connect(url: String, afterReconnect: (WebSocketConnection) -> Unit): WebSocketConnection {
+        val firstConnection = baseClient.connect(url)
+        val updatedConfig = reconnectConfig.copy(afterReconnect = {
+            reconnectConfig.afterReconnect(it)
+            afterReconnect(it)
+        })
+        return WebSocketConnectionProxy(baseClient, updatedConfig, firstConnection)
+    }
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-private class WebSocketConnectionProxy(
+class WebSocketConnectionProxy internal constructor(
     private val baseClient: WebSocketClient,
     private val reconnectConfig: ReconnectConfig,
     private var currentConnection: WebSocketConnection,
@@ -86,8 +92,8 @@ private class WebSocketConnectionProxy(
     override val canSend: Boolean
         get() = currentConnection.canSend
 
-    private val _frames: Channel<WebSocketFrame> = Channel()
-    override val incomingFrames: Flow<WebSocketFrame> = _frames.receiveAsFlow()
+    private val _frames: Channel<WebSocketEvent> = Channel()
+    override val incomingFrames: Flow<WebSocketEvent> = _frames.receiveAsFlow()
 
     init {
         scope.launch {
@@ -102,6 +108,7 @@ private class WebSocketConnectionProxy(
                     try {
                         currentConnection = reconnect(e)
                         reconnectConfig.afterReconnect(this@WebSocketConnectionProxy)
+                        _frames.send(WebSocketReconnected)
                     } catch (e: WebSocketReconnectionException) {
                         _frames.close(e)
                         break

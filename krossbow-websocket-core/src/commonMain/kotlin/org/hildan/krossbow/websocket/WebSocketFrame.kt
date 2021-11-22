@@ -1,19 +1,25 @@
 package org.hildan.krossbow.websocket
 
+interface WebSocketEvent
+
+object WebSocketReconnected : WebSocketEvent
+
+sealed interface WebSocketDataFrame : WebSocketEvent
+
 /**
  * A web socket frame.
  */
-sealed class WebSocketFrame {
+sealed class WebSocketFrame : WebSocketEvent {
 
     /**
      * A web socket text frame (0x1).
      */
-    data class Text(val text: String) : WebSocketFrame()
+    data class Text(val text: String) : WebSocketFrame(), WebSocketDataFrame
 
     /**
      * A web socket binary frame (0x2).
      */
-    class Binary(val bytes: ByteArray) : WebSocketFrame()
+    class Binary(val bytes: ByteArray) : WebSocketFrame(), WebSocketDataFrame
 
     /**
      * A web socket ping frame (0x9).

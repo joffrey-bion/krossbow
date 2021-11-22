@@ -3,6 +3,9 @@ package org.hildan.krossbow.stomp.config
 import org.hildan.krossbow.stomp.LostReceiptException
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.instrumentation.KrossbowInstrumentation
+import org.hildan.krossbow.websocket.WebSocketClient
+import org.hildan.krossbow.websocket.reconnection.ReconnectConfig
+import org.hildan.krossbow.websocket.reconnection.withAutoReconnect
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -106,6 +109,25 @@ class StompConfig {
      * The instrumentation can be used for monitoring, logging or debugging purposes.
      */
     var instrumentation: KrossbowInstrumentation? = null
+
+    /**
+     * If not null, the underlying web socket connection will be reconnected upon errors according to this
+     * [ReconnectConfig].
+     *
+     * Using this configuration here at the STOMP client level is different from simply providing a [WebSocketClient]
+     * wrapped with [withAutoReconnect], because subscriptions will be automatically re-established upon reconnection.
+     */
+    internal var reconnectConfig: ReconnectConfig? = null
+
+    /**
+     * Enables and configures auto-reconnection of the underlying web socket connection upon errors.
+     *
+     * Using this configuration here at the STOMP client level is different from simply providing a [WebSocketClient]
+     * wrapped with [withAutoReconnect], because subscriptions will be automatically re-established upon reconnection.
+     */
+    fun autoReconnect(configure: ReconnectConfig.() -> Unit) {
+        reconnectConfig = (reconnectConfig ?: ReconnectConfig()).apply(configure)
+    }
 }
 
 /**

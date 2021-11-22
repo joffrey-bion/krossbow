@@ -89,15 +89,21 @@ public final class org/hildan/krossbow/websocket/WebSocketConnectionWithPingPong
 	public static fun getHost (Lorg/hildan/krossbow/websocket/WebSocketConnectionWithPingPong;)Ljava/lang/String;
 }
 
+public abstract interface class org/hildan/krossbow/websocket/WebSocketDataFrame : org/hildan/krossbow/websocket/WebSocketEvent {
+}
+
+public abstract interface class org/hildan/krossbow/websocket/WebSocketEvent {
+}
+
 public class org/hildan/krossbow/websocket/WebSocketException : java/lang/Exception {
 	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
-public abstract class org/hildan/krossbow/websocket/WebSocketFrame {
+public abstract class org/hildan/krossbow/websocket/WebSocketFrame : org/hildan/krossbow/websocket/WebSocketEvent {
 }
 
-public final class org/hildan/krossbow/websocket/WebSocketFrame$Binary : org/hildan/krossbow/websocket/WebSocketFrame {
+public final class org/hildan/krossbow/websocket/WebSocketFrame$Binary : org/hildan/krossbow/websocket/WebSocketFrame, org/hildan/krossbow/websocket/WebSocketDataFrame {
 	public fun <init> ([B)V
 	public final fun getBytes ()[B
 }
@@ -125,7 +131,7 @@ public final class org/hildan/krossbow/websocket/WebSocketFrame$Pong : org/hilda
 	public final fun getBytes ()[B
 }
 
-public final class org/hildan/krossbow/websocket/WebSocketFrame$Text : org/hildan/krossbow/websocket/WebSocketFrame {
+public final class org/hildan/krossbow/websocket/WebSocketFrame$Text : org/hildan/krossbow/websocket/WebSocketFrame, org/hildan/krossbow/websocket/WebSocketDataFrame {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lorg/hildan/krossbow/websocket/WebSocketFrame$Text;
@@ -150,6 +156,10 @@ public final class org/hildan/krossbow/websocket/WebSocketListenerFlowAdapter {
 	public final fun onPong ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun onTextMessage (Ljava/lang/CharSequence;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun onTextMessage$default (Lorg/hildan/krossbow/websocket/WebSocketListenerFlowAdapter;Ljava/lang/CharSequence;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/websocket/WebSocketReconnected : org/hildan/krossbow/websocket/WebSocketEvent {
+	public static final field INSTANCE Lorg/hildan/krossbow/websocket/WebSocketReconnected;
 }
 
 public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClient : org/hildan/krossbow/websocket/WebSocketClient {
@@ -199,15 +209,30 @@ public final class org/hildan/krossbow/websocket/reconnection/ReconnectConfigKt 
 	public static final fun reconnectConfig (Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/websocket/reconnection/ReconnectConfig;
 }
 
+public final class org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient : org/hildan/krossbow/websocket/WebSocketClient {
+	public fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun connect (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public final class org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClientKt {
-	public static final fun withAutoReconnect (Lorg/hildan/krossbow/websocket/WebSocketClient;ILorg/hildan/krossbow/websocket/reconnection/RetryDelayStrategy;)Lorg/hildan/krossbow/websocket/WebSocketClient;
-	public static final fun withAutoReconnect (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/websocket/WebSocketClient;
-	public static final fun withAutoReconnect (Lorg/hildan/krossbow/websocket/WebSocketClient;Lorg/hildan/krossbow/websocket/reconnection/ReconnectConfig;)Lorg/hildan/krossbow/websocket/WebSocketClient;
-	public static synthetic fun withAutoReconnect$default (Lorg/hildan/krossbow/websocket/WebSocketClient;ILorg/hildan/krossbow/websocket/reconnection/RetryDelayStrategy;ILjava/lang/Object;)Lorg/hildan/krossbow/websocket/WebSocketClient;
+	public static final fun withAutoReconnect (Lorg/hildan/krossbow/websocket/WebSocketClient;ILorg/hildan/krossbow/websocket/reconnection/RetryDelayStrategy;)Lorg/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient;
+	public static final fun withAutoReconnect (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient;
+	public static final fun withAutoReconnect (Lorg/hildan/krossbow/websocket/WebSocketClient;Lorg/hildan/krossbow/websocket/reconnection/ReconnectConfig;)Lorg/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient;
+	public static synthetic fun withAutoReconnect$default (Lorg/hildan/krossbow/websocket/WebSocketClient;ILorg/hildan/krossbow/websocket/reconnection/RetryDelayStrategy;ILjava/lang/Object;)Lorg/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient;
 }
 
 public abstract interface class org/hildan/krossbow/websocket/reconnection/RetryDelayStrategy {
 	public abstract fun computeDelay-5sfh64U (I)J
+}
+
+public final class org/hildan/krossbow/websocket/reconnection/WebSocketConnectionProxy : org/hildan/krossbow/websocket/WebSocketConnection {
+	public fun close (ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getCanSend ()Z
+	public fun getHost ()Ljava/lang/String;
+	public fun getIncomingFrames ()Lkotlinx/coroutines/flow/Flow;
+	public fun getUrl ()Ljava/lang/String;
+	public fun sendBinary ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun sendText (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/websocket/reconnection/WebSocketReconnectionException : org/hildan/krossbow/websocket/WebSocketConnectionException {
