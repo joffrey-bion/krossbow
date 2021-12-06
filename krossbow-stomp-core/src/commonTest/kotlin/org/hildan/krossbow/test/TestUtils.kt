@@ -1,13 +1,17 @@
 package org.hildan.krossbow.test
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 import kotlin.test.fail
 import kotlin.time.Duration
 
-suspend fun <T : Throwable> TestCoroutineScope.assertTimesOutWith(
+@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun <T : Throwable> TestScope.assertTimesOutWith(
     expectedExceptionClass: KClass<T>,
     expectedTimeout: Duration,
     block: suspend () -> Unit,
@@ -31,6 +35,7 @@ suspend fun <T : Throwable> TestCoroutineScope.assertTimesOutWith(
         }
     }
     advanceTimeBy(1)
+    runCurrent()
     if (deferred.isActive) {
         fail("expected time out after $expectedTimeout (with ${expectedExceptionClass.simpleName}) but "
             + "nothing happened (block still suspended)")

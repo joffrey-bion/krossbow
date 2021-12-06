@@ -40,8 +40,7 @@ kotlin {
             dependencies {
                 implementation(projects.krossbowWebsocketTest)
                 implementation(kotlin("test"))
-                // For kotlinx-coroutines-test
-                implementation(libs.kotlinx.atomicfu)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
         val jvmTest by getting {

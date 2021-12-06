@@ -1,8 +1,10 @@
 package org.hildan.krossbow.stomp
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
@@ -28,22 +30,24 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private val TEST_RECEIPT_TIMEOUT: Duration = 500.milliseconds
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class StompSessionReceiptTests {
 
     @Test
-    fun send_doesntWaitIfNoReceipt() = runBlockingTest {
+    fun send_doesntWaitIfNoReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = false
         }
         val deferredSend = async { stompSession.sendEmptyMsg("/destination") }
         assertFalse(deferredSend.isCompleted, "send() should wait for the websocket to actually send the frame")
         wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
+        runCurrent()
         assertTrue(deferredSend.isCompleted, "send() should resume immediately after the SEND frame is sent")
         assertNull(deferredSend.await(), "send() should return null because receipt is not used here")
     }
 
     @Test
-    fun send_autoReceipt_waitsUntilReceipt() = runBlockingTest {
+    fun send_autoReceipt_waitsUntilReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
         }
@@ -52,14 +56,16 @@ class StompSessionReceiptTests {
         val receiptId = sendFrame.headers.receipt
         assertNotNull(receiptId, "receipt header should be auto-populated")
         assertFalse(deferredSend.isCompleted, "send() should wait until receipt is received")
+
         wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders(receiptId)))
+        runCurrent()
         assertTrue(deferredSend.isCompleted, "send() should resume when correct RECEIPT frame is received")
         val actualReceipt = deferredSend.await()
         assertEquals(StompReceipt(receiptId), actualReceipt, "send() should resume after correct receipt")
     }
 
     @Test
-    fun send_autoReceipt_timesOutIfLostReceipt() = runBlockingTest {
+    fun send_autoReceipt_timesOutIfLostReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
             receiptTimeout = TEST_RECEIPT_TIMEOUT
@@ -73,7 +79,7 @@ class StompSessionReceiptTests {
     }
 
     @Test
-    fun send_autoReceipt_failsOnStompErrorFrame() = runBlockingTest {
+    fun send_autoReceipt_failsOnStompErrorFrame() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
         }
@@ -89,7 +95,7 @@ class StompSessionReceiptTests {
     }
 
     @Test
-    fun send_autoReceipt_failsOnWebSocketError() = runBlockingTest {
+    fun send_autoReceipt_failsOnWebSocketError() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
         }
@@ -105,7 +111,7 @@ class StompSessionReceiptTests {
     }
 
     @Test
-    fun send_autoReceipt_failsOnWebSocketClosed() = runBlockingTest {
+    fun send_autoReceipt_failsOnWebSocketClosed() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
         }
@@ -122,7 +128,7 @@ class StompSessionReceiptTests {
     }
 
     @Test
-    fun send_manualReceipt_waitsForCorrectReceipt() = runBlockingTest {
+    fun send_manualReceipt_waitsForCorrectReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks()
         val manualReceiptId = "my-receipt"
         val headers = StompSendHeaders(destination = "/destination")
@@ -134,13 +140,14 @@ class StompSessionReceiptTests {
         wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders("other-receipt")))
         assertFalse(deferredSend.isCompleted, "send() should not resume on other receipts")
         wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders(manualReceiptId)))
+        runCurrent()
         assertTrue(deferredSend.isCompleted, "send() should resume when correct RECEIPT frame is received")
         val actualReceipt = deferredSend.await()
         assertEquals(StompReceipt(manualReceiptId), actualReceipt, "send() should resume with correct receipt")
     }
 
     @Test
-    fun send_manualReceipt_timesOutIfLostReceipt() = runBlockingTest {
+    fun send_manualReceipt_timesOutIfLostReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = false
             receiptTimeout = TEST_RECEIPT_TIMEOUT
@@ -157,19 +164,20 @@ class StompSessionReceiptTests {
     }
 
     @Test
-    fun subscribe_doesntWaitIfNoReceipt() = runBlockingTest {
+    fun subscribe_doesntWaitIfNoReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = false
         }
         val deferredSub = async { stompSession.subscribe("/destination") }
         assertFalse(deferredSub.isCompleted, "subscribe() should wait for the websocket to actually send the frame")
         wsSession.waitForSubscribeAndSimulateCompletion()
+        runCurrent()
         assertTrue(deferredSub.isCompleted, "subscribe() should resume immediately after the SUBSCRIBE frame is sent")
         deferredSub.await()
     }
 
     @Test
-    fun subscribe_autoReceipt_waitsUntilReceipt() = runBlockingTest {
+    fun subscribe_autoReceipt_waitsUntilReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
         }
@@ -179,12 +187,13 @@ class StompSessionReceiptTests {
         assertNotNull(receiptId, "receipt header should be auto-populated")
         assertFalse(deferredSub.isCompleted, "subscribe() should wait until receipt is received")
         wsSession.simulateTextStompFrameReceived(StompFrame.Receipt(StompReceiptHeaders(receiptId)))
+        runCurrent()
         assertTrue(deferredSub.isCompleted, "subscribe() should resume when correct RECEIPT frame is received")
         deferredSub.await()
     }
 
     @Test
-    fun subscribe_autoReceipt_timesOutIfLostReceipt() = runBlockingTest {
+    fun subscribe_autoReceipt_timesOutIfLostReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
             receiptTimeout = TEST_RECEIPT_TIMEOUT
@@ -198,7 +207,7 @@ class StompSessionReceiptTests {
     }
 
     @Test
-    fun subscribe_manualReceipt_timesOutIfLostReceipt() = runBlockingTest {
+    fun subscribe_manualReceipt_timesOutIfLostReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = false
             receiptTimeout = TEST_RECEIPT_TIMEOUT

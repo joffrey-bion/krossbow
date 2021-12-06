@@ -1,7 +1,8 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -18,10 +19,11 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private val TEST_CONNECTION_TIMEOUT: Duration = 500.milliseconds
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class StompClientTest {
 
     @Test
-    fun connect_suspendsUntilConnectedFrame() = runBlockingTest {
+    fun connect_suspendsUntilConnectedFrame() = runTest {
         val wsClient = ControlledWebSocketClientMock()
         val stompClient = StompClient(wsClient)
 
@@ -35,25 +37,26 @@ class StompClientTest {
         assertFalse(deferredStompSession.isCompleted, "connect() call should wait for STOMP connection")
 
         wsSession.simulateConnectedFrameReceived()
+        advanceUntilIdle()
         assertTrue(deferredStompSession.isCompleted, "connect() call should finish after receiving CONNECTED frame")
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_fullHttpUrl() = runBlockingTest {
+    fun connect_sendsCorrectHeaders_fullHttpUrl() = runTest {
         testConnectHeaders(StompConnectHeaders(host = "some.host", heartBeat = HeartBeat())) { client ->
             client.connect("http://some.host:8080/ws")
         }
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_standardWsUrl() = runBlockingTest {
+    fun connect_sendsCorrectHeaders_standardWsUrl() = runTest {
         testConnectHeaders(StompConnectHeaders(host = "some.host", heartBeat = HeartBeat())) { client ->
             client.connect("ws://some.host/socket")
         }
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_withCredentials() = runBlockingTest {
+    fun connect_sendsCorrectHeaders_withCredentials() = runTest {
         val expectedHeaders = StompConnectHeaders(
             host = "some.host", login = "login", passcode = "pass", heartBeat = HeartBeat()
         )
@@ -63,7 +66,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_withCustomHeartBeats() = runBlockingTest {
+    fun connect_sendsCorrectHeaders_withCustomHeartBeats() = runTest {
         val customHeartBeat = HeartBeat(10.milliseconds, 50.milliseconds)
         val expectedHeaders = StompConnectHeaders(
             host = "some.host",
@@ -78,43 +81,37 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_withCustomHeaders() {
+    fun connect_sendsCorrectHeaders_withCustomHeaders() = runTest {
         val userProvidedHeaders = mapOf("Authorization" to "Bearer -jwt-")
-        runBlockingTest {
-            val expectedHeaders = StompConnectHeaders(
-                host = "some.host",
-                heartBeat = HeartBeat(),
-                customHeaders = userProvidedHeaders
-            )
-            testConnectHeaders(expectedHeaders) { client ->
-                client.connect("http://some.host/ws", customStompConnectHeaders = userProvidedHeaders)
-            }
+        val expectedHeaders = StompConnectHeaders(
+            host = "some.host",
+            heartBeat = HeartBeat(),
+            customHeaders = userProvidedHeaders
+        )
+        testConnectHeaders(expectedHeaders) { client ->
+            client.connect("http://some.host/ws", customStompConnectHeaders = userProvidedHeaders)
         }
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_withCustomHostHeader() {
-        runBlockingTest {
-            val expectedHeaders = StompConnectHeaders(
-                host = "custom",
-                heartBeat = HeartBeat(),
-            )
-            testConnectHeaders(expectedHeaders) { client ->
-                client.connect("http://some.host/ws", host = "custom")
-            }
+    fun connect_sendsCorrectHeaders_withCustomHostHeader() = runTest {
+        val expectedHeaders = StompConnectHeaders(
+            host = "custom",
+            heartBeat = HeartBeat(),
+        )
+        testConnectHeaders(expectedHeaders) { client ->
+            client.connect("http://some.host/ws", host = "custom")
         }
     }
 
     @Test
-    fun connect_sendsCorrectHeaders_withNoHostHeader() {
-        runBlockingTest {
-            val expectedHeaders = StompConnectHeaders(
-                host = null,
-                heartBeat = HeartBeat(),
-            )
-            testConnectHeaders(expectedHeaders) { client ->
-                client.connect("http://some.host/ws", host = null)
-            }
+    fun connect_sendsCorrectHeaders_withNoHostHeader() = runTest {
+        val expectedHeaders = StompConnectHeaders(
+            host = null,
+            heartBeat = HeartBeat(),
+        )
+        testConnectHeaders(expectedHeaders) { client ->
+            client.connect("http://some.host/ws", host = null)
         }
     }
 
@@ -138,7 +135,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_timesOutIfWebSocketDoesNotConnect() = runBlockingTest {
+    fun connect_timesOutIfWebSocketDoesNotConnect() = runTest {
         // this WS client will suspend on connect() until manually triggered (which is not done during this test)
         val stompClient = StompClient(ControlledWebSocketClientMock()) {
             connectionTimeout = TEST_CONNECTION_TIMEOUT
@@ -150,7 +147,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_timesOutIfConnectedFrameIsNotReceived() = runBlockingTest {
+    fun connect_timesOutIfConnectedFrameIsNotReceived() = runTest {
         val wsSession = WebSocketConnectionMock()
         val stompClient = StompClient(webSocketClientMock { wsSession }) {
             connectionTimeout = TEST_CONNECTION_TIMEOUT
@@ -165,7 +162,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_failsIfWebSocketFailsToConnect() = runBlockingTest {
+    fun connect_failsIfWebSocketFailsToConnect() = runTest {
         val wsConnectionException = Exception("some web socket exception")
         val stompClient = StompClient(webSocketClientMock { throw wsConnectionException })
         val exception = assertFailsWith(WebSocketConnectionException::class) {
@@ -178,7 +175,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_failsIfErrorFrameReceived() = runBlockingTest {
+    fun connect_failsIfErrorFrameReceived() = runTest {
         val wsSession = WebSocketConnectionMock()
         val stompClient = StompClient(webSocketClientMock { wsSession })
 
@@ -196,7 +193,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_failsIfWebSocketIsClosedWhenConnecting() = runBlockingTest {
+    fun connect_failsIfWebSocketIsClosedWhenConnecting() = runTest {
         val wsSession = WebSocketConnectionMock()
         val stompClient = StompClient(webSocketClientMock { wsSession })
 
@@ -214,7 +211,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_shouldNotLeakWebSocketConnectionIfCancelled() = runBlockingTest {
+    fun connect_shouldNotLeakWebSocketConnectionIfCancelled() = runTest {
         val wsSession = WebSocketConnectionMock()
         val stompClient = StompClient(webSocketClientMock { wsSession })
 
@@ -229,7 +226,7 @@ class StompClientTest {
     }
 
     @Test
-    fun stomp_shouldCloseWebSocketConnectionIfCancelled() = runBlockingTest {
+    fun stomp_shouldCloseWebSocketConnectionIfCancelled() = runTest {
         val wsSession = WebSocketConnectionMock()
 
         val connectJob = launch {
@@ -243,12 +240,12 @@ class StompClientTest {
     }
 
     @Test
-    fun errorOnWebSocketShouldCloseTheSession_messageBiggerThanCloseReasonMaxLength() = runBlockingTest {
+    fun errorOnWebSocketShouldCloseTheSession_messageBiggerThanCloseReasonMaxLength() = runTest {
         val errorMessage = "some web socket exception with a very long message that exceeds the maximum " +
             "allowed length for the 'reason' in web socket close frames. It needs to be truncated."
         val wsSession = WebSocketConnectionMock()
         val stompClient = StompClient(webSocketClientMock { wsSession }) {
-            // necessary so runBlockingTest knows to wait for the session's coroutines to progress
+            // necessary so runTest knows to wait for the session's coroutines to progress
             defaultSessionCoroutineContext = coroutineContext[ContinuationInterceptor.Key]!! // retrieves the test dispatcher
         }
 

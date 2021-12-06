@@ -1,9 +1,11 @@
 package org.hildan.krossbow.stomp
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.HeartBeatTolerance
 import org.hildan.krossbow.stomp.frame.StompCommand
@@ -17,10 +19,11 @@ import kotlin.test.*
 import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.milliseconds
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class StompSessionHeartBeatsTests {
 
     @Test
-    fun heartBeatNegotiation_noneIfClientSaysNone() = runBlockingTest {
+    fun heartBeatNegotiation_noneIfClientSaysNone() = runTest {
         val (wsSession, _) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {
@@ -33,7 +36,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun heartBeatNegotiation_noneIfServerSaysNone() = runBlockingTest {
+    fun heartBeatNegotiation_noneIfServerSaysNone() = runTest {
         val (wsSession, _) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 0.milliseconds, expectedPeriod = ZERO))
         ) {
@@ -46,7 +49,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun heartBeatNegotiation_noneIfServerDoesntSay() = runBlockingTest {
+    fun heartBeatNegotiation_noneIfServerDoesntSay() = runTest {
         val (wsSession, _) = connectWithMocks(
             StompConnectedHeaders(heartBeat = null)
         ) {
@@ -59,7 +62,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun heartBeatNegotiation_clientExpectsBiggestPeriod_followClient() = runBlockingTest {
+    fun heartBeatNegotiation_clientExpectsBiggestPeriod_followClient() = runTest {
         val (wsSession, _) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {
@@ -73,7 +76,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun heartBeatNegotiation_serverExpectsBiggestPeriod_followServer() = runBlockingTest {
+    fun heartBeatNegotiation_serverExpectsBiggestPeriod_followServer() = runTest {
         val (wsSession, _) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 2000.milliseconds, expectedPeriod = ZERO))
         ) {
@@ -87,7 +90,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun wsSessionClosedOnHeartBeatTimeOut() = runBlockingTest {
+    fun wsSessionClosedOnHeartBeatTimeOut() = runTest {
         val (wsSession, _) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {
@@ -100,7 +103,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun receiveSubMessage_success() = runBlockingTest {
+    fun receiveSubMessage_success() = runTest {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(
                 version = "1.2",
@@ -127,7 +130,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun receiveSubMessage_failsOnHeartBeatTimeOut() = runBlockingTest {
+    fun receiveSubMessage_failsOnHeartBeatTimeOut() = runTest {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {
@@ -147,7 +150,7 @@ class StompSessionHeartBeatsTests {
     }
 
     @Test
-    fun receiveSubMessage_succeedsIfKeptAlive() = runBlockingTest {
+    fun receiveSubMessage_succeedsIfKeptAlive() = runTest {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {

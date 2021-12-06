@@ -1,7 +1,8 @@
 package org.hildan.krossbow.stomp.instrumentation
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.StompErrorFrameReceived
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.sendText
@@ -15,10 +16,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class KrossbowInstrumentationTest {
 
     @Test
-    fun testInstrumentation_sendAndNormalClosure() = runBlockingTest {
+    fun testInstrumentation_sendAndNormalClosure() = runTest {
         val inst = KrossbowInstrumentationMock()
 
         launch {
@@ -53,7 +55,7 @@ class KrossbowInstrumentationTest {
     }
 
     @Test
-    fun testInstrumentation_webSocketError() = runBlockingTest {
+    fun testInstrumentation_webSocketError() = runTest {
         val inst = KrossbowInstrumentationMock()
 
         launch {
@@ -76,7 +78,7 @@ class KrossbowInstrumentationTest {
     }
 
     @Test
-    fun testInstrumentation_stompErrorFrame() = runBlockingTest {
+    fun testInstrumentation_stompErrorFrame() = runTest {
         val inst = KrossbowInstrumentationMock()
 
         launch {

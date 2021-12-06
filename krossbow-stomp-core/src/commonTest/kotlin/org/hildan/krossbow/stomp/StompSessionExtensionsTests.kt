@@ -1,15 +1,17 @@
 package org.hildan.krossbow.stomp
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.test.*
 import kotlin.test.*
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class StompSessionExtensionsTests {
 
     @Test
-    fun use_whenBlockTerminatedNormally_shouldDisconnectAndClose() = runBlockingTest {
+    fun use_whenBlockTerminatedNormally_shouldDisconnectAndClose() = runTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
@@ -25,7 +27,7 @@ class StompSessionExtensionsTests {
     }
 
     @Test
-    fun use_whenBlockThrows_shouldThrowButStillDisconnectAndClose() = runBlockingTest {
+    fun use_whenBlockThrows_shouldThrowButStillDisconnectAndClose() = runTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
@@ -41,7 +43,7 @@ class StompSessionExtensionsTests {
     }
 
     @Test
-    fun withTransaction_commitsIfSuccessful() = runBlockingTest {
+    fun withTransaction_commitsIfSuccessful() = runTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
@@ -64,7 +66,7 @@ class StompSessionExtensionsTests {
     }
 
     @Test
-    fun withTransaction_abortsInCaseOfException() = runBlockingTest {
+    fun withTransaction_abortsInCaseOfException() = runTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
