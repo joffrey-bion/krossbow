@@ -17,7 +17,6 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 internal class BaseStompSession(
     private val config: StompConfig,
@@ -76,7 +75,6 @@ internal class BaseStompSession(
         }
     }
 
-    @OptIn(ExperimentalTime::class) // FIXME this is for withTimeoutOrNull(Duration), remove with coroutines 1.6.0
     private suspend fun awaitSubscriptionsCompletion() {
         withTimeoutOrNull(config.subscriptionCompletionTimeout) {
             sharedStompEvents.subscriptionCount.takeWhile { it > 0 }.collect()
@@ -136,7 +134,6 @@ internal class BaseStompSession(
         }
     }
 
-    @OptIn(ExperimentalTime::class) // FIXME this is for withTimeoutOrNull(Duration), remove with coroutines 1.6.0
     private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
         withTimeoutOrNull(frame.receiptTimeout) {
             sharedStompEvents

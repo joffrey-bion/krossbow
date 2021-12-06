@@ -7,7 +7,6 @@ import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
-import kotlin.time.ExperimentalTime
 
 /**
  * Returns a new [WebSocketClient] that automatically reconnects on web socket errors using this client.
@@ -114,7 +113,6 @@ private class WebSocketConnectionProxy(
         }
     }
 
-    @OptIn(ExperimentalTime::class)
     private suspend fun reconnect(cause: Exception): WebSocketConnection {
         var lastAttemptException: Exception = cause
         repeat(reconnectConfig.maxAttempts) { attempt ->

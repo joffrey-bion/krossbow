@@ -9,7 +9,6 @@ import org.hildan.krossbow.websocket.default
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 /**
  * A STOMP 1.2 client based on web sockets.
@@ -56,7 +55,6 @@ class StompClient(
      * @throws ConnectionTimeout if this method takes longer than the configured
      * [timeout][StompConfig.connectionTimeout] (as a whole for both WS connect and STOMP connect)
      */
-    @OptIn(ExperimentalTime::class) // FIXME this is for withTimeoutOrNull(Duration), remove with coroutines 1.6.0
     suspend fun connect(
         url: String,
         login: String? = null,

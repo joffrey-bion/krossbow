@@ -8,9 +8,7 @@ import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.heartbeats.negotiated
 import org.hildan.krossbow.websocket.WebSocketConnection
 import kotlin.coroutines.CoroutineContext
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class) // FIXME this is for withTimeoutOrNull(Duration), remove with coroutines 1.6.0
 internal suspend fun WebSocketConnection.stomp(
     config: StompConfig,
     headers: StompConnectHeaders,
