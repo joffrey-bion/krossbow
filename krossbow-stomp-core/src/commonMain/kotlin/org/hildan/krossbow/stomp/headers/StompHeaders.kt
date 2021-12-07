@@ -20,6 +20,7 @@ import org.hildan.krossbow.stomp.headers.HeaderNames.SESSION
 import org.hildan.krossbow.stomp.headers.HeaderNames.SUBSCRIPTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.TRANSACTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.VERSION
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Represents the headers of a STOMP frame.
@@ -244,9 +245,9 @@ private fun heartBeatHeader() = optionalHeader(HEART_BEAT) { it.toHeartBeat() }
 private fun String.toHeartBeat(): HeartBeat {
     val (minSendPeriod, expectedReceivePeriod) = split(',')
     return HeartBeat(
-        minSendPeriodMillis = minSendPeriod.toInt(),
-        expectedPeriodMillis = expectedReceivePeriod.toInt(),
+        minSendPeriod = minSendPeriod.toInt().milliseconds,
+        expectedPeriod = expectedReceivePeriod.toInt().milliseconds,
     )
 }
 
-private fun HeartBeat.formatAsHeaderValue() = "$minSendPeriodMillis,$expectedPeriodMillis"
+private fun HeartBeat.formatAsHeaderValue() = "${minSendPeriod.inWholeMilliseconds},${expectedPeriod.inWholeMilliseconds}"

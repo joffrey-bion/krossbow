@@ -5,6 +5,9 @@ import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.instrumentation.KrossbowInstrumentation
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Configuration for the STOMP client.
@@ -46,37 +49,37 @@ class StompConfig {
      * network latencies will make them miss their marks. That's why we need some sort of tolerance.
      *
      * In case the server is too strict about its expectations, we can send heart beats a little bit earlier than we're
-     * supposed to (see [HeartBeatTolerance.outgoingMarginMillis]).
+     * supposed to (see [HeartBeatTolerance.outgoingMargin]).
      *
      * In case the server really sticks to its own period without such margin, we need to allow a little bit of delay to
      * make up for network latencies before we fail and close the connection (see
-     * [HeartBeatTolerance.incomingMarginMillis]).
+     * [HeartBeatTolerance.incomingMargin]).
      */
     var heartBeatTolerance: HeartBeatTolerance = HeartBeatTolerance()
 
     /**
      * Defines how long to wait for the websocket+STOMP connection to be established before throwing an exception.
      */
-    var connectionTimeoutMillis: Long = 15000
+    var connectionTimeout: Duration = 15.seconds
 
     /**
      * Defines how long to wait for a RECEIPT frame from the server before throwing a [LostReceiptException].
      * Only crashes when a `receipt` header was actually present in the sent frame (and thus a RECEIPT was expected).
      * Such header is always present if [autoReceipt] is enabled.
      *
-     * Note that this doesn't apply to the DISCONNECT frames, use [disconnectTimeoutMillis] instead for that.
+     * Note that this doesn't apply to the DISCONNECT frames, use [disconnectTimeout] instead for that.
      */
-    var receiptTimeoutMillis: Long = 1000
+    var receiptTimeout: Duration = 1.seconds
 
     /**
-     * Like [receiptTimeoutMillis] but only for the receipt of the DISCONNECT frame.
+     * Like [receiptTimeout] but only for the receipt of the DISCONNECT frame.
      * This is ignored if [gracefulDisconnect] is disabled.
      *
      * Note that if this timeout expires, the [StompSession.disconnect] call doesn't throw an exception.
      * This is to allow servers to close the connection quickly (sometimes too quick for sending a RECEIPT/ERROR) as
      * [mentioned in the specification](http://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
      */
-    var disconnectTimeoutMillis: Long = 200
+    var disconnectTimeout: Duration = 200.milliseconds
 
     /**
      * Enables [graceful disconnect](https://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
@@ -115,16 +118,15 @@ class StompConfig {
 data class HeartBeat(
     /**
      * Represents what the sender of the frame can do (outgoing heart-beats).
-     * The value 0 means it cannot send heart-beats, otherwise it is the smallest number of milliseconds between
-     * heart-beats that it can guarantee.
+     * The value 0 means it cannot send heart-beats, otherwise it is the smallest time between heart-beats that it
+     * can guarantee.
      */
-    val minSendPeriodMillis: Int = 0,
+    val minSendPeriod: Duration = Duration.ZERO,
     /**
      * Represents what the sender of the frame would like to get (incoming heart-beats).
-     * The value 0 means it does not want to receive heart-beats, otherwise it is the desired number of milliseconds
-     * between heart-beats.
+     * The value 0 means it does not want to receive heart-beats, otherwise it is the desired time between heart-beats.
      */
-    val expectedPeriodMillis: Int = 0,
+    val expectedPeriod: Duration = Duration.ZERO,
 )
 
 /**
@@ -133,24 +135,24 @@ data class HeartBeat(
  * If both the client and server really stick to the heart beats periods negotiated and given by the CONNECTED frame,
  * network latencies will make them miss their marks. That's why we need some sort of tolerance.
  *
- * In case the server is too strict about its expectations, we can send heart beats a little bit earlier than we're
- * supposed to (see [outgoingMarginMillis]).
+ * In case the server is too strict about its expectations, we can send heart beats a little earlier than we're
+ * supposed to (see [outgoingMargin]).
  *
- * In case the server really sticks to its own period without such margin, we need to allow a little bit of delay to
- * make up for network latencies before we fail and close the connection (see [incomingMarginMillis]).
+ * In case the server really sticks to its own period without such margin, we need to allow a little delay to
+ * make up for network latencies before we fail and close the connection (see [incomingMargin]).
  */
 data class HeartBeatTolerance(
     /**
-     * How many milliseconds in advance heart beats should be sent.
+     * How much time in advance heart beats should be sent.
      * This is to avoid issues when servers are not very tolerant on heart beats reception.
      *
      * By default, we expect the server to be tolerant in its expectations, so we send heart beats on time.
      */
-    val outgoingMarginMillis: Int = 0,
+    val outgoingMargin: Duration = Duration.ZERO,
     /**
      * How much more to wait before failing when we don't receive a heart beat from the server in the expected time.
      *
      * By default, we expect the server to send heart beats on time, so we add some margin in our own expectation.
      */
-    val incomingMarginMillis: Int = 500,
+    val incomingMargin: Duration = 500.milliseconds,
 )

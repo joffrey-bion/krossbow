@@ -8,12 +8,19 @@ import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.HeartBeatTolerance
 import kotlin.test.Test
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.ZERO
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
-private const val TEST_PERIOD_CONFIG = 5000
-private const val TEST_OUTGOING_MARGIN = 200
-private const val TEST_INCOMING_MARGIN = 500
-private const val TEST_SEND_PERIOD: Long = (TEST_PERIOD_CONFIG - TEST_OUTGOING_MARGIN).toLong()
-private const val TEST_RECEIVED_PERIOD: Long = (TEST_PERIOD_CONFIG + TEST_INCOMING_MARGIN).toLong()
+private val TEST_PERIOD_CONFIG = 5.seconds
+private val TEST_OUTGOING_MARGIN = 200.milliseconds
+private val TEST_INCOMING_MARGIN = 500.milliseconds
+
+private val TEST_SEND_PERIOD = TEST_PERIOD_CONFIG - TEST_OUTGOING_MARGIN
+private val TEST_SEND_PERIOD_MILLIS = TEST_SEND_PERIOD.inWholeMilliseconds
+
+private val TEST_RECEIVED_PERIOD = TEST_PERIOD_CONFIG + TEST_INCOMING_MARGIN
+private val TEST_RECEIVED_PERIOD_MILLIS = TEST_RECEIVED_PERIOD.inWholeMilliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HeartBeaterTest {
@@ -35,9 +42,9 @@ class HeartBeaterTest {
 
     @Test
     fun zeroSendAndReceive_nothingHappens() = runBlockingTest {
-        val hbc = HeartBeaterConsumer(HeartBeat(0, 0))
-        assertTrue(hbc.sent.isEmpty)
-        assertTrue(hbc.received.isEmpty)
+        val hbc = HeartBeaterConsumer(HeartBeat(ZERO, ZERO))
+        assertTrue(hbc.sent.isEmpty, "shouldn't do anything before starting")
+        assertTrue(hbc.received.isEmpty, "shouldn't do anything before starting")
         hbc.heartBeater.startIn(this)
         advanceTimeBy(10000)
         assertTrue(hbc.sent.isEmpty)
@@ -46,7 +53,7 @@ class HeartBeaterTest {
 
     @Test
     fun zeroSendAndReceive_canCallNotifyWithoutEffect() = runBlockingTest {
-        val hbc = HeartBeaterConsumer(HeartBeat(0, 0))
+        val hbc = HeartBeaterConsumer(HeartBeat(ZERO, ZERO))
         hbc.heartBeater.startIn(this)
         hbc.heartBeater.notifyMsgReceived()
         hbc.heartBeater.notifyMsgSent()
@@ -54,26 +61,26 @@ class HeartBeaterTest {
 
     @Test
     fun nonZeroSend_zeroReceive_sendsHeartBeats() = runBlockingTest {
-        val hbc = HeartBeaterConsumer(HeartBeat(TEST_PERIOD_CONFIG, 0))
+        val hbc = HeartBeaterConsumer(HeartBeat(TEST_PERIOD_CONFIG, ZERO))
         assertTrue(hbc.sent.isEmpty, "shouldn't do anything if not started")
 
         val job = hbc.heartBeater.startIn(this)
         assertTrue(hbc.sent.isEmpty, "should NOT have sent a heartbeat right away")
-        advanceTimeBy(TEST_SEND_PERIOD - 1)
+        advanceTimeBy(TEST_SEND_PERIOD_MILLIS - 1)
         assertTrue(hbc.sent.isEmpty, "should NOT have sent a heartbeat before 1st period of inactivity")
         advanceTimeBy(1)
         assertTrue(hbc.sent.tryReceive().isSuccess, "should have sent a heartbeat after 1st period of inactivity")
-        advanceTimeBy(TEST_SEND_PERIOD)
+        advanceTimeBy(TEST_SEND_PERIOD_MILLIS)
         assertTrue(hbc.sent.tryReceive().isSuccess, "should have sent a heartbeat after 2nd period of inactivity")
 
         repeat(3) {
             hbc.heartBeater.notifyMsgSent()
-            advanceTimeBy(TEST_SEND_PERIOD / 2)
+            advanceTimeBy(TEST_SEND_PERIOD_MILLIS / 2)
         }
         assertTrue(hbc.sent.isEmpty, "shouldn't have sent any heart beat since messages were sent")
 
         hbc.heartBeater.notifyMsgSent()
-        advanceTimeBy(TEST_SEND_PERIOD)
+        advanceTimeBy(TEST_SEND_PERIOD_MILLIS)
         assertTrue(hbc.sent.tryReceive().isSuccess, "should have sent a heartbeat after 3rd period of inactivity")
 
         assertTrue(hbc.received.isEmpty, "shouldn't have received any heart beat")
@@ -82,7 +89,7 @@ class HeartBeaterTest {
 
     @Test
     fun nonZeroSend_zeroReceive_canCallNotifyReceived() = runBlockingTest {
-        val hbc = HeartBeaterConsumer(HeartBeat(TEST_PERIOD_CONFIG, 0))
+        val hbc = HeartBeaterConsumer(HeartBeat(TEST_PERIOD_CONFIG, ZERO))
         val job = hbc.heartBeater.startIn(this)
         hbc.heartBeater.notifyMsgReceived()
         job.cancel()
@@ -90,22 +97,22 @@ class HeartBeaterTest {
 
     @Test
     fun zeroSend_nonZeroReceive_sends() = runBlockingTest {
-        val hbc = HeartBeaterConsumer(HeartBeat(0, TEST_PERIOD_CONFIG))
+        val hbc = HeartBeaterConsumer(HeartBeat(ZERO, TEST_PERIOD_CONFIG))
         assertTrue(hbc.received.isEmpty, "shouldn't do anything if not started")
 
         val job = hbc.heartBeater.startIn(this)
-        delay(TEST_RECEIVED_PERIOD)
+        delay(TEST_RECEIVED_PERIOD_MILLIS)
         assertTrue(hbc.received.tryReceive().isSuccess, "should have received a heartbeat after 1st period of inactivity")
-        delay(TEST_RECEIVED_PERIOD)
+        delay(TEST_RECEIVED_PERIOD_MILLIS)
         assertTrue(hbc.received.tryReceive().isSuccess, "should have received a heartbeat after 2nd period of inactivity")
         repeat(3) {
             hbc.heartBeater.notifyMsgReceived()
-            delay(TEST_RECEIVED_PERIOD / 2)
+            delay(TEST_RECEIVED_PERIOD_MILLIS / 2)
         }
         assertTrue(hbc.received.isEmpty, "shouldn't have received heart beat since messages were received")
 
         hbc.heartBeater.notifyMsgReceived()
-        delay(TEST_RECEIVED_PERIOD)
+        delay(TEST_RECEIVED_PERIOD_MILLIS)
         assertTrue(hbc.received.tryReceive().isSuccess, "should have received a heartbeat after 3rd period of inactivity")
 
         assertTrue(hbc.sent.isEmpty, "shouldn't have sent any heart beat")
@@ -114,7 +121,7 @@ class HeartBeaterTest {
 
     @Test
     fun zeroSend_nonZeroReceive_canCallNotifySent() = runBlockingTest {
-        val hbc = HeartBeaterConsumer(HeartBeat(0, TEST_PERIOD_CONFIG))
+        val hbc = HeartBeaterConsumer(HeartBeat(ZERO, TEST_PERIOD_CONFIG))
         val job = hbc.heartBeater.startIn(this)
         hbc.heartBeater.notifyMsgSent()
         job.cancel()

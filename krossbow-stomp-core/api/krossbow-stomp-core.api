@@ -5,19 +5,19 @@ public class org/hildan/krossbow/stomp/ConnectionException : java/lang/Exception
 }
 
 public final class org/hildan/krossbow/stomp/ConnectionTimeout : org/hildan/krossbow/stomp/ConnectionException {
-	public fun <init> (Ljava/lang/String;J)V
+	public synthetic fun <init> (Ljava/lang/String;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class org/hildan/krossbow/stomp/LostReceiptException : java/lang/Exception {
-	public fun <init> (Ljava/lang/String;JLorg/hildan/krossbow/stomp/frame/StompFrame;)V
-	public final fun getConfiguredTimeoutMillis ()J
+	public synthetic fun <init> (Ljava/lang/String;JLorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getConfiguredTimeout-UwyO8pc ()J
 	public final fun getFrame ()Lorg/hildan/krossbow/stomp/frame/StompFrame;
 	public final fun getReceiptId ()Ljava/lang/String;
 }
 
 public final class org/hildan/krossbow/stomp/MissingHeartBeatException : java/lang/Exception {
-	public fun <init> (I)V
-	public final fun getExpectedPeriodMillis ()I
+	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getExpectedPeriod-UwyO8pc ()J
 }
 
 public final class org/hildan/krossbow/stomp/StompClient {
@@ -94,31 +94,29 @@ public class org/hildan/krossbow/stomp/WebSocketConnectionException : org/hildan
 }
 
 public final class org/hildan/krossbow/stomp/config/HeartBeat {
-	public fun <init> ()V
-	public fun <init> (II)V
-	public synthetic fun <init> (IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()I
-	public final fun component2 ()I
-	public final fun copy (II)Lorg/hildan/krossbow/stomp/config/HeartBeat;
-	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/config/HeartBeat;IIILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/HeartBeat;
+	public synthetic fun <init> (JJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-UwyO8pc ()J
+	public final fun component2-UwyO8pc ()J
+	public final fun copy-QTBD994 (JJ)Lorg/hildan/krossbow/stomp/config/HeartBeat;
+	public static synthetic fun copy-QTBD994$default (Lorg/hildan/krossbow/stomp/config/HeartBeat;JJILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/HeartBeat;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getExpectedPeriodMillis ()I
-	public final fun getMinSendPeriodMillis ()I
+	public final fun getExpectedPeriod-UwyO8pc ()J
+	public final fun getMinSendPeriod-UwyO8pc ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class org/hildan/krossbow/stomp/config/HeartBeatTolerance {
-	public fun <init> ()V
-	public fun <init> (II)V
-	public synthetic fun <init> (IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()I
-	public final fun component2 ()I
-	public final fun copy (II)Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
-	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;IIILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
+	public synthetic fun <init> (JJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-UwyO8pc ()J
+	public final fun component2-UwyO8pc ()J
+	public final fun copy-QTBD994 (JJ)Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
+	public static synthetic fun copy-QTBD994$default (Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;JJILjava/lang/Object;)Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getIncomingMarginMillis ()I
-	public final fun getOutgoingMarginMillis ()I
+	public final fun getIncomingMargin-UwyO8pc ()J
+	public final fun getOutgoingMargin-UwyO8pc ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -128,25 +126,25 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun getAutoContentLength ()Z
 	public final fun getAutoReceipt ()Z
 	public final fun getConnectWithStompCommand ()Z
-	public final fun getConnectionTimeoutMillis ()J
+	public final fun getConnectionTimeout-UwyO8pc ()J
 	public final fun getDefaultSessionCoroutineContext ()Lkotlin/coroutines/CoroutineContext;
-	public final fun getDisconnectTimeoutMillis ()J
+	public final fun getDisconnectTimeout-UwyO8pc ()J
 	public final fun getGracefulDisconnect ()Z
 	public final fun getHeartBeat ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
 	public final fun getHeartBeatTolerance ()Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
 	public final fun getInstrumentation ()Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;
-	public final fun getReceiptTimeoutMillis ()J
+	public final fun getReceiptTimeout-UwyO8pc ()J
 	public final fun setAutoContentLength (Z)V
 	public final fun setAutoReceipt (Z)V
 	public final fun setConnectWithStompCommand (Z)V
-	public final fun setConnectionTimeoutMillis (J)V
+	public final fun setConnectionTimeout-LRDsOJo (J)V
 	public final fun setDefaultSessionCoroutineContext (Lkotlin/coroutines/CoroutineContext;)V
-	public final fun setDisconnectTimeoutMillis (J)V
+	public final fun setDisconnectTimeout-LRDsOJo (J)V
 	public final fun setGracefulDisconnect (Z)V
 	public final fun setHeartBeat (Lorg/hildan/krossbow/stomp/config/HeartBeat;)V
 	public final fun setHeartBeatTolerance (Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;)V
 	public final fun setInstrumentation (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;)V
-	public final fun setReceiptTimeoutMillis (J)V
+	public final fun setReceiptTimeout-LRDsOJo (J)V
 }
 
 public abstract interface class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions : org/hildan/krossbow/stomp/StompSession {

@@ -23,8 +23,10 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
-private const val TEST_RECEIPT_TIMEOUT: Long = 500
+private val TEST_RECEIPT_TIMEOUT: Duration = 500.milliseconds
 
 class StompSessionReceiptTests {
 
@@ -60,7 +62,7 @@ class StompSessionReceiptTests {
     fun send_autoReceipt_timesOutIfLostReceipt() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
-            receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
+            receiptTimeout = TEST_RECEIPT_TIMEOUT
         }
         launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
@@ -141,7 +143,7 @@ class StompSessionReceiptTests {
     fun send_manualReceipt_timesOutIfLostReceipt() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = false
-            receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
+            receiptTimeout = TEST_RECEIPT_TIMEOUT
         }
         launch {
             wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
@@ -185,7 +187,7 @@ class StompSessionReceiptTests {
     fun subscribe_autoReceipt_timesOutIfLostReceipt() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = true
-            receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
+            receiptTimeout = TEST_RECEIPT_TIMEOUT
         }
         launch {
             wsSession.waitForSubscribeAndSimulateCompletion()
@@ -199,7 +201,7 @@ class StompSessionReceiptTests {
     fun subscribe_manualReceipt_timesOutIfLostReceipt() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks {
             autoReceipt = false
-            receiptTimeoutMillis = TEST_RECEIPT_TIMEOUT
+            receiptTimeout = TEST_RECEIPT_TIMEOUT
         }
         launch {
             wsSession.waitForSubscribeAndSimulateCompletion()

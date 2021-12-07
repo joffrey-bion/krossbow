@@ -22,7 +22,7 @@ interface StompSessionWithClassConversions : StompSession {
      * @return null right after sending the frame if auto-receipt is disabled and no receipt header is provided.
      * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
      * a [StompReceipt].
-     * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+     * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
      * a [LostReceiptException] is thrown.
      */
     suspend fun <T : Any> convertAndSend(
@@ -65,7 +65,7 @@ interface StompSessionWithClassConversions : StompSession {
  * @return null right after sending the frame if auto-receipt is disabled.
  * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
  * a [StompReceipt].
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
  */
 suspend fun <T : Any> StompSessionWithClassConversions.convertAndSend(
@@ -80,7 +80,7 @@ suspend fun <T : Any> StompSessionWithClassConversions.convertAndSend(
  * @return null right after sending the frame if auto-receipt is disabled.
  * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
  * a [StompReceipt].
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
  */
 suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAndSend(

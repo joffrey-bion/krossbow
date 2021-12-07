@@ -14,16 +14,18 @@ import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import org.hildan.krossbow.test.waitForSubscribeAndSimulateCompletion
 import org.hildan.krossbow.test.waitForUnsubscribeAndSimulateCompletion
 import kotlin.test.*
+import kotlin.time.Duration.Companion.ZERO
+import kotlin.time.Duration.Companion.milliseconds
 
 class StompSessionHeartBeatsTests {
 
     @Test
     fun heartBeatNegotiation_noneIfClientSaysNone() = runBlockingTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 1000, expectedPeriodMillis = 0))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {
-            heartBeat = HeartBeat(0, 0)
-            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+            heartBeat = HeartBeat(ZERO, ZERO)
+            heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
         }
         advanceTimeBy(1000L + 100 + 1)
         assertFalse(wsSession.closed, "the web socket session should NOT be closed because server heart beats should " +
@@ -33,10 +35,10 @@ class StompSessionHeartBeatsTests {
     @Test
     fun heartBeatNegotiation_noneIfServerSaysNone() = runBlockingTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 0, expectedPeriodMillis = 0))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 0.milliseconds, expectedPeriod = ZERO))
         ) {
-            heartBeat = HeartBeat(0, 1000)
-            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+            heartBeat = HeartBeat(ZERO, 1000.milliseconds)
+            heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
         }
         advanceTimeBy(1000L + 100 + 1)
         assertFalse(wsSession.closed, "the web socket session should NOT be closed because expected heart beats " +
@@ -48,8 +50,8 @@ class StompSessionHeartBeatsTests {
         val (wsSession, _) = connectWithMocks(
             StompConnectedHeaders(heartBeat = null)
         ) {
-            heartBeat = HeartBeat(0, 1000)
-            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+            heartBeat = HeartBeat(ZERO, 1000.milliseconds)
+            heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
         }
         advanceTimeBy(1000L + 100 + 1)
         assertFalse(wsSession.closed, "the web socket session should NOT be closed because expected heart beats " +
@@ -59,10 +61,10 @@ class StompSessionHeartBeatsTests {
     @Test
     fun heartBeatNegotiation_clientExpectsBiggestPeriod_followClient() = runBlockingTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 1000, expectedPeriodMillis = 0))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {
-            heartBeat = HeartBeat(0, 2000)
-            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+            heartBeat = HeartBeat(ZERO, 2000.milliseconds)
+            heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
         }
         assertFalse(wsSession.closed, "the web socket session should NOT be closed before CLIENT heart beat timeout " +
                 "of 2000ms (this is the biggest one, so it should be chosen)")
@@ -73,10 +75,10 @@ class StompSessionHeartBeatsTests {
     @Test
     fun heartBeatNegotiation_serverExpectsBiggestPeriod_followServer() = runBlockingTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 2000, expectedPeriodMillis = 0))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 2000.milliseconds, expectedPeriod = ZERO))
         ) {
-            heartBeat = HeartBeat(0, 1000)
-            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+            heartBeat = HeartBeat(ZERO, 1000.milliseconds)
+            heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
         }
         assertFalse(wsSession.closed, "the web socket session should NOT be closed before SERVER heart beat timeout " +
                 "of 2000ms (this is the biggest one, so it should be chosen)")
@@ -87,10 +89,10 @@ class StompSessionHeartBeatsTests {
     @Test
     fun wsSessionClosedOnHeartBeatTimeOut() = runBlockingTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 1000, expectedPeriodMillis = 0))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {
-            heartBeat = HeartBeat(0, 1000)
-            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+            heartBeat = HeartBeat(ZERO, 1000.milliseconds)
+            heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
         }
         assertFalse(wsSession.closed, "the web socket session should NOT be closed before heart beat timeout")
         advanceTimeBy(1000L + 100 + 1)
@@ -102,11 +104,11 @@ class StompSessionHeartBeatsTests {
         val (wsSession, stompSession) = connectWithMocks(
             StompConnectedHeaders(
                 version = "1.2",
-                heartBeat = HeartBeat(minSendPeriodMillis = 1000, expectedPeriodMillis = 0)
+                heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO)
             )
         ) {
-            heartBeat = HeartBeat(0, 1000)
-            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+            heartBeat = HeartBeat(ZERO, 1000.milliseconds)
+            heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
         }
 
         launch {
@@ -127,10 +129,10 @@ class StompSessionHeartBeatsTests {
     @Test
     fun receiveSubMessage_failsOnHeartBeatTimeOut() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 1000, expectedPeriodMillis = 0))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {
-            heartBeat = HeartBeat(0, 1000)
-            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+            heartBeat = HeartBeat(ZERO, 1000.milliseconds)
+            heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
         }
 
         launch {
@@ -147,10 +149,10 @@ class StompSessionHeartBeatsTests {
     @Test
     fun receiveSubMessage_succeedsIfKeptAlive() = runBlockingTest {
         val (wsSession, stompSession) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriodMillis = 1000, expectedPeriodMillis = 0))
+            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
         ) {
-            heartBeat = HeartBeat(0, 1000)
-            heartBeatTolerance = HeartBeatTolerance(incomingMarginMillis = 100)
+            heartBeat = HeartBeat(ZERO, 1000.milliseconds)
+            heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
         }
 
         launch {

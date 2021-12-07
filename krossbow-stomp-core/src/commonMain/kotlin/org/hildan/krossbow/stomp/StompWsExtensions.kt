@@ -8,7 +8,9 @@ import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.heartbeats.negotiated
 import org.hildan.krossbow.websocket.WebSocketConnection
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class) // FIXME this is for withTimeoutOrNull(Duration), remove with coroutines 1.6.0
 internal suspend fun WebSocketConnection.stomp(
     config: StompConfig,
     headers: StompConnectHeaders,
@@ -16,11 +18,11 @@ internal suspend fun WebSocketConnection.stomp(
 ): StompSession {
     val stompSocket = StompSocket(this, config)
     try {
-        val connectedFrame = withTimeoutOrNull(config.connectionTimeoutMillis) {
+        val connectedFrame = withTimeoutOrNull(config.connectionTimeout) {
             stompSocket.connectHandshake(headers, config.connectWithStompCommand)
         }
         if (connectedFrame == null) {
-            val connectionTimeout = ConnectionTimeout(headers.host ?: "null", config.connectionTimeoutMillis)
+            val connectionTimeout = ConnectionTimeout(headers.host ?: "null", config.connectionTimeout)
             stompSocket.close(connectionTimeout)
             throw connectionTimeout
         }

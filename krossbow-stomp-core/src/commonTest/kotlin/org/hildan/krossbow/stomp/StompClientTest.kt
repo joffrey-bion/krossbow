@@ -13,8 +13,10 @@ import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
 import org.hildan.krossbow.websocket.test.*
 import kotlin.coroutines.ContinuationInterceptor
 import kotlin.test.*
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
-private const val TEST_CONNECTION_TIMEOUT: Long = 500
+private val TEST_CONNECTION_TIMEOUT: Duration = 500.milliseconds
 
 class StompClientTest {
 
@@ -62,7 +64,7 @@ class StompClientTest {
 
     @Test
     fun connect_sendsCorrectHeaders_withCustomHeartBeats() = runBlockingTest {
-        val customHeartBeat = HeartBeat(10, 50)
+        val customHeartBeat = HeartBeat(10.milliseconds, 50.milliseconds)
         val expectedHeaders = StompConnectHeaders(
             host = "some.host",
             heartBeat = customHeartBeat
@@ -139,7 +141,7 @@ class StompClientTest {
     fun connect_timesOutIfWebSocketDoesNotConnect() = runBlockingTest {
         // this WS client will suspend on connect() until manually triggered (which is not done during this test)
         val stompClient = StompClient(ControlledWebSocketClientMock()) {
-            connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
+            connectionTimeout = TEST_CONNECTION_TIMEOUT
         }
         // we don't expect the closure of the web socket here, because it has not even been connected at all
         assertTimesOutWith(ConnectionTimeout::class, TEST_CONNECTION_TIMEOUT) {
@@ -151,7 +153,7 @@ class StompClientTest {
     fun connect_timesOutIfConnectedFrameIsNotReceived() = runBlockingTest {
         val wsSession = WebSocketConnectionMock()
         val stompClient = StompClient(webSocketClientMock { wsSession }) {
-            connectionTimeoutMillis = TEST_CONNECTION_TIMEOUT
+            connectionTimeout = TEST_CONNECTION_TIMEOUT
         }
         launch {
             // should close WS on timeout to avoid leaking it (connection at WS level was done, just not at STOMP level)

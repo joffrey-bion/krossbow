@@ -9,7 +9,7 @@ If auto-receipt is not enabled, a `receipt` header may still be provided manuall
 
 When a `receipt` header is present (automatically added or manually provided), the method that is used to send the
 frame suspends until the corresponding RECEIPT frame is received from the server.
-If no RECEIPT frame is received from the server in the configured [time limit](config.md#receiptTimeoutMillis),
+If no RECEIPT frame is received from the server in the configured [time limit](config.md#receiptTimeout),
 a `LostReceiptException` is thrown.
 
 If no receipt is provided and auto-receipt is disabled, the method used to send the frame doesn't wait for a

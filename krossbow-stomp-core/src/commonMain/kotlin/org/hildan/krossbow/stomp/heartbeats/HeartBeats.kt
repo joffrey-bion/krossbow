@@ -1,15 +1,16 @@
 package org.hildan.krossbow.stomp.heartbeats
 
 import org.hildan.krossbow.stomp.config.HeartBeat
+import kotlin.time.Duration
 
-internal val NO_HEART_BEATS = HeartBeat(0, 0)
+internal val NO_HEART_BEATS = HeartBeat(Duration.ZERO, Duration.ZERO)
 
 internal fun HeartBeat.negotiated(serverHeartBeats: HeartBeat?): HeartBeat = HeartBeat(
-    minSendPeriodMillis = computeNegotiatedPeriod(minSendPeriodMillis, serverHeartBeats?.expectedPeriodMillis),
-    expectedPeriodMillis = computeNegotiatedPeriod(expectedPeriodMillis, serverHeartBeats?.minSendPeriodMillis),
+    minSendPeriod = computeNegotiatedPeriod(minSendPeriod, serverHeartBeats?.expectedPeriod),
+    expectedPeriod = computeNegotiatedPeriod(expectedPeriod, serverHeartBeats?.minSendPeriod),
 )
 
-private fun computeNegotiatedPeriod(clientPeriod: Int, serverPeriod: Int?): Int = when {
-    serverPeriod == null || serverPeriod == 0 || clientPeriod == 0 -> 0
+private fun computeNegotiatedPeriod(clientPeriod: Duration, serverPeriod: Duration?): Duration = when {
+    serverPeriod == null || serverPeriod == Duration.ZERO || clientPeriod == Duration.ZERO -> Duration.ZERO
     else -> maxOf(clientPeriod, serverPeriod)
 }

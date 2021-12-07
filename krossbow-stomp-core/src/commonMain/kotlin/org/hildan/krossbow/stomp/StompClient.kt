@@ -8,6 +8,8 @@ import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.default
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 /**
  * A STOMP 1.2 client based on web sockets.
@@ -52,8 +54,9 @@ class StompClient(
      * overridden here. This is mostly useful to inject a test dispatcher.
      *
      * @throws ConnectionTimeout if this method takes longer than the configured
-     * [timeout][StompConfig.connectionTimeoutMillis] (as a whole for both WS connect and STOMP connect)
+     * [timeout][StompConfig.connectionTimeout] (as a whole for both WS connect and STOMP connect)
      */
+    @OptIn(ExperimentalTime::class) // FIXME this is for withTimeoutOrNull(Duration), remove with coroutines 1.6.0
     suspend fun connect(
         url: String,
         login: String? = null,
@@ -62,18 +65,18 @@ class StompClient(
         customStompConnectHeaders: Map<String, String> = emptyMap(),
         sessionCoroutineContext: CoroutineContext = EmptyCoroutineContext,
     ): StompSession {
-        val session = withTimeoutOrNull(config.connectionTimeoutMillis) {
+        val session = withTimeoutOrNull(config.connectionTimeout) {
             val webSocket = webSocketConnect(url)
             val connectHeaders = StompConnectHeaders(
                 host = host,
                 login = login,
                 passcode = passcode,
                 heartBeat = config.heartBeat,
-                customHeaders = customStompConnectHeaders
+                customHeaders = customStompConnectHeaders,
             )
             webSocket.stomp(config, connectHeaders, sessionCoroutineContext)
         }
-        return session ?: throw ConnectionTimeout(url, config.connectionTimeoutMillis)
+        return session ?: throw ConnectionTimeout(url, config.connectionTimeout)
     }
 
     private suspend fun webSocketConnect(url: String): WebSocketConnection {
@@ -92,7 +95,7 @@ class StompClient(
  * Establishes a STOMP session over an existing [WebSocketConnection].
  *
  * The behaviour of the STOMP protocol can be customized via the [config].
- * However, the semantics of [StompConfig.connectionTimeoutMillis] is slightly changed: it doesn't take into account
+ * However, the semantics of [StompConfig.connectionTimeout] is slightly changed: it doesn't take into account
  * the web socket connection time (since it already happened outside of this method call).
  *
  * If [login] and [passcode] are provided, they are used for STOMP authentication.
@@ -125,8 +128,8 @@ private fun extractHost(url: String) = url.substringAfter("://").substringBefore
 /**
  * Exception thrown when the websocket connection + STOMP connection takes too much time.
  */
-class ConnectionTimeout(url: String, timeoutMillis: Long) :
-    ConnectionException(url, "Timed out waiting for ${timeoutMillis}ms when connecting to $url")
+class ConnectionTimeout(url: String, timeout: Duration) :
+    ConnectionException(url, "Timed out waiting for $timeout when connecting to $url")
 
 /**
  * Exception thrown when the connection attempt failed at web socket level.

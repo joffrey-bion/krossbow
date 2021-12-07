@@ -4,7 +4,7 @@ The `StompClient` can be configured at construction time using a convenient lamb
 
 ```kotlin
 val stompClient = StompClient {
-    connectionTimeoutMillis = 3000
+    connectionTimeout = 3000
     gracefulDisconnect = false
 }
 ```
@@ -13,7 +13,7 @@ You can also create the configuration separately and then pass it when construct
 
 ```kotlin
 val stompConfig = StompConfig().apply {
-    connectionTimeoutMillis = 3000
+    connectionTimeout = 3000
     gracefulDisconnect = false
 }
 
@@ -50,23 +50,23 @@ val stompClient = StompClient(config = stompConfig)
     network latencies will make them miss their marks. That's why we need some sort of tolerance.
     
     In case the server is too strict about its expectations, we can send heart beats a little bit earlier than we're
-    supposed to (see `HeartBeatTolerance.outgoingMarginMillis`).
+    supposed to (see `HeartBeatTolerance.outgoingMargin`).
     
     In case the server really sticks to its own period without such margin, we need to allow a little bit of delay to
-    make up for network latencies before we fail and close the connection (see `HeartBeatTolerance.incomingMarginMillis`).
+    make up for network latencies before we fail and close the connection (see `HeartBeatTolerance.incomingMargin`).
 
-`connectionTimeoutMillis` (default: 15000)
+`connectionTimeout` (default: 15s)
 :   Defines how long to wait for the websocket+STOMP connection to be established before throwing an exception.
 
-`receiptTimeoutMillis` (default: 1000) { #receiptTimeoutMillis }
+`receiptTimeout` (default: 1s) { #receiptTimeout }
 :   Defines how long to wait for a RECEIPT frame from the server before throwing a `LostReceiptException`.
     Only crashes when a `receipt` header was actually present in the sent frame (and thus a RECEIPT was expected).
     Such header is always present if `autoReceipt` is enabled.
 
-    Note that this doesn't apply to the DISCONNECT frames, use `disconnectTimeoutMillis` instead for that.
+    Note that this doesn't apply to the DISCONNECT frames, use `disconnectTimeout` instead for that.
 
-`disconnectTimeoutMillis` (default: 200)
-:   Like `receiptTimeoutMillis` but only for the receipt of the DISCONNECT frame.
+`disconnectTimeout` (default: 200ms)
+:   Like `receiptTimeout` but only for the receipt of the DISCONNECT frame.
     This is ignored if `gracefulDisconnect` is disabled.
 
     Note that if this timeout expires, the [StompSession.disconnect] call doesn't throw an exception.

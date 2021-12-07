@@ -23,7 +23,7 @@ import org.hildan.krossbow.utils.generateUuid
  *
  * When a receipt header is present (automatically added or manually provided), the method that is used to send the
  * frame suspends until the corresponding RECEIPT frame is received from the server.
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
  *
  * If no receipt is provided and auto-receipt is disabled, the method used to send the frame doesn't wait for a
@@ -78,7 +78,7 @@ interface StompSession {
      *
      * If a `receipt` header is present (automatically added or manually provided), this method suspends until the
      * corresponding RECEIPT frame is received from the server.
-     * If no RECEIPT frame is received in the configured [time limit][StompConfig.receiptTimeoutMillis], a
+     * If no RECEIPT frame is received in the configured [time limit][StompConfig.receiptTimeout], a
      * [LostReceiptException] is thrown.
      *
      * If auto-receipt is disabled and no `receipt` header is provided, this method doesn't wait for a RECEIPT frame
@@ -105,7 +105,7 @@ interface StompSession {
      *
      * If a `receipt` header is present (automatically added or manually provided), this method suspends until the
      * corresponding RECEIPT frame is received from the server.
-     * If no RECEIPT frame is received in the configured [time limit][StompConfig.receiptTimeoutMillis], a
+     * If no RECEIPT frame is received in the configured [time limit][StompConfig.receiptTimeout], a
      * [LostReceiptException] is thrown.
      *
      * If auto-receipt is disabled and no `receipt` header is provided, this method doesn't wait for a RECEIPT frame
@@ -158,7 +158,7 @@ interface StompSession {
      * frame to close the session, waits for the relevant RECEIPT frame, and then closes the connection. Otherwise,
      * force-closes the connection.
      *
-     * If a RECEIPT frame is not received within the [configured time][StompConfig.disconnectTimeoutMillis], it may
+     * If a RECEIPT frame is not received within the [configured time][StompConfig.disconnectTimeout], it may
      * be because the server closed the connection too quickly to send a RECEIPT frame, which is
      * [not considered an error](http://stomp.github.io/stomp-specification-1.2.html#Connection_Lingering).
      * That's why this function doesn't throw an exception in this case, it just returns normally.
@@ -181,9 +181,9 @@ data class StompReceipt(
  * Sends a SEND frame to the server at the given [destination] with the given binary [body].
  *
  * @return null right after sending the frame if auto-receipt is disabled.
- * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+ * Otherwise, this method suspends until the relevant RECEIPT frame is received from the server, and then returns
  * a [StompReceipt].
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
  */
 suspend fun StompSession.sendBinary(destination: String, body: ByteArray?): StompReceipt? =
@@ -193,9 +193,9 @@ suspend fun StompSession.sendBinary(destination: String, body: ByteArray?): Stom
  * Sends a SEND frame to the server at the given [destination] with the given textual [body].
  *
  * @return null right after sending the frame if auto-receipt is disabled.
- * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+ * Otherwise, this method suspends until the relevant RECEIPT frame is received from the server, and then returns
  * a [StompReceipt].
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
  */
 suspend fun StompSession.sendText(destination: String, body: String?): StompReceipt? =
@@ -205,9 +205,9 @@ suspend fun StompSession.sendText(destination: String, body: String?): StompRece
  * Sends a SEND frame to the server at the given [destination] without body.
  *
  * @return null right after sending the frame if auto-receipt is disabled.
- * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+ * Otherwise, this method suspends until the relevant RECEIPT frame is received from the server, and then returns
  * a [StompReceipt].
- * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeoutMillis],
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
  */
 suspend fun StompSession.sendEmptyMsg(destination: String): StompReceipt? = send(StompSendHeaders(destination), null)

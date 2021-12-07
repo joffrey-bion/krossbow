@@ -16,6 +16,8 @@ import org.hildan.krossbow.utils.generateUuid
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 internal class BaseStompSession(
     private val config: StompConfig,
@@ -32,7 +34,7 @@ internal class BaseStompSession(
             tolerance = config.heartBeatTolerance,
             sendHeartBeat = { stompSocket.sendHeartBeat() },
             onMissingHeartBeat = {
-                val cause = MissingHeartBeatException(heartBeat.expectedPeriodMillis)
+                val cause = MissingHeartBeatException(heartBeat.expectedPeriod)
                 sharedStompEvents.emit(StompEvent.Error(cause))
                 stompSocket.close(cause)
                 scope.cancel("STOMP session cancelled due to upstream error", cause = cause)
@@ -116,6 +118,7 @@ internal class BaseStompSession(
         }
     }
 
+    @OptIn(ExperimentalTime::class) // FIXME this is for withTimeoutOrNull(Duration), remove with coroutines 1.6.0
     private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
         withTimeoutOrNull(frame.receiptTimeout) {
             sharedStompEvents
@@ -129,12 +132,8 @@ internal class BaseStompSession(
         } ?: throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
     }
 
-    private val StompFrame.receiptTimeout: Long
-        get() = if (command == StompCommand.DISCONNECT) {
-            config.disconnectTimeoutMillis
-        } else {
-            config.receiptTimeoutMillis
-        }
+    private val StompFrame.receiptTimeout: Duration
+        get() = if (command == StompCommand.DISCONNECT) config.disconnectTimeout else config.receiptTimeout
 
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> {
         val headersWithId = headers.withId()
