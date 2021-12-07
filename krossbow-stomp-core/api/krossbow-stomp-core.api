@@ -134,6 +134,7 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun getHeartBeatTolerance ()Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
 	public final fun getInstrumentation ()Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;
 	public final fun getReceiptTimeout-UwyO8pc ()J
+	public final fun getSubscriptionCompletionTimeout-UwyO8pc ()J
 	public final fun setAutoContentLength (Z)V
 	public final fun setAutoReceipt (Z)V
 	public final fun setConnectWithStompCommand (Z)V
@@ -145,6 +146,7 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun setHeartBeatTolerance (Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;)V
 	public final fun setInstrumentation (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;)V
 	public final fun setReceiptTimeout-LRDsOJo (J)V
+	public final fun setSubscriptionCompletionTimeout-LRDsOJo (J)V
 }
 
 public abstract interface class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions : org/hildan/krossbow/stomp/StompSession {

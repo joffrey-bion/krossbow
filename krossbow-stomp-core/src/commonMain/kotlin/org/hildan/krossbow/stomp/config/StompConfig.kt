@@ -82,6 +82,18 @@ class StompConfig {
     var disconnectTimeout: Duration = 200.milliseconds
 
     /**
+     * When the session is disconnected or when an error occurs, subscription flows complete or throw an exception.
+     * This timeout defines how long the STOMP session will wait for subscribers to reach this completion/error before
+     * cancelling them along with internal coroutines.
+     *
+     * Slow subscribers that take longer than this timeout may miss messages that were buffered before the completion
+     * or error, because they will instead get a [CancellationException][kotlinx.coroutines.CancellationException].
+     * The original error will be provided as cause of the cancellation in this case.
+     * They may miss previously buffered messages.
+     */
+    var subscriptionCompletionTimeout: Duration = 1.seconds
+
+    /**
      * Enables [graceful disconnect](https://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
      *
      * If enabled, when disconnecting from the server, the client first sends a DISCONNECT frame with a `receipt`

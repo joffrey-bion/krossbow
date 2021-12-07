@@ -37,7 +37,6 @@ internal class BaseStompSession(
                 val cause = MissingHeartBeatException(heartBeat.expectedPeriod)
                 sharedStompEvents.emit(StompEvent.Error(cause))
                 stompSocket.close(cause)
-                scope.cancel("STOMP session cancelled due to upstream error", cause = cause)
             },
         )
     } else {
@@ -57,11 +56,30 @@ internal class BaseStompSession(
                 .materializeErrorsAndCompletion()
                 .collect {
                     sharedStompEvents.emit(it)
-                    if (it is StompEvent.Error) {
-                        yield() // gives back control to subscriptions, so they can handle the error
+                }
+        }
+
+        scope.launch {
+            sharedStompEvents.collect {
+                when(it) {
+                    is StompEvent.Close -> {
+                        awaitSubscriptionsCompletion()
+                        scope.cancel("STOMP session disconnected")
+                    }
+                    is StompEvent.Error -> {
+                        awaitSubscriptionsCompletion() // let other subscribers handle the error before closing the scope
                         scope.cancel("STOMP session cancelled due to upstream error", cause = it.cause)
                     }
+                    else -> Unit
                 }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalTime::class) // FIXME this is for withTimeoutOrNull(Duration), remove with coroutines 1.6.0
+    private suspend fun awaitSubscriptionsCompletion() {
+        withTimeoutOrNull(config.subscriptionCompletionTimeout) {
+            sharedStompEvents.subscriptionCount.takeWhile { it > 0 }.collect()
         }
     }
 
@@ -197,7 +215,6 @@ internal class BaseStompSession(
         }
         stompSocket.close()
         sharedStompEvents.emit(StompEvent.Close)
-        scope.cancel("STOMP session disconnected")
     }
 
     private suspend fun sendDisconnectFrameAndWaitForReceipt() {
