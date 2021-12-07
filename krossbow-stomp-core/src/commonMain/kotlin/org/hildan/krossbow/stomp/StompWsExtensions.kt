@@ -20,12 +20,8 @@ internal suspend fun WebSocketConnection.stomp(
     try {
         val connectedFrame = withTimeoutOrNull(config.connectionTimeout) {
             stompSocket.connectHandshake(headers, config.connectWithStompCommand)
-        }
-        if (connectedFrame == null) {
-            val connectionTimeout = ConnectionTimeout(headers.host ?: "null", config.connectionTimeout)
-            stompSocket.close(connectionTimeout)
-            throw connectionTimeout
-        }
+        } ?: throw ConnectionTimeout(headers.host ?: "null", config.connectionTimeout)
+
         val negotiatedHeartBeat = config.heartBeat.negotiated(connectedFrame.headers.heartBeat)
         val contextOverrides = config.defaultSessionCoroutineContext + sessionCoroutineContext
         return BaseStompSession(config, stompSocket, negotiatedHeartBeat, contextOverrides)
@@ -34,6 +30,9 @@ internal suspend fun WebSocketConnection.stomp(
             stompSocket.close(e)
         }
         // this cancellation comes from the outside, we should not wrap this exception
+        throw e
+    } catch (e: ConnectionTimeout) {
+        stompSocket.close(e)
         throw e
     } catch (e: Exception) {
         throw StompConnectionException(headers.host, cause = e)
