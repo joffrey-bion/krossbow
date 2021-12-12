@@ -4,10 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.charsets.Charset
-import org.hildan.krossbow.stomp.charsets.Charsets
-import org.hildan.krossbow.stomp.charsets.encode
-import org.hildan.krossbow.stomp.charsets.extractCharset
+import org.hildan.krossbow.stomp.charsets.*
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
@@ -68,7 +65,7 @@ internal class StompSessionWithClassToTextConversions(
     }
 
     private fun createBody(bodyText: String): FrameBody = if (sendBinaryFrames) {
-        FrameBody.Binary(charset.newEncoder().encode(bodyText))
+        FrameBody.Binary(bodyText.encodeToBytes(charset))
     } else {
         FrameBody.Text(bodyText)
     }

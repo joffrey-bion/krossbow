@@ -1,7 +1,7 @@
 package org.hildan.krossbow.stomp.frame
 
 import org.hildan.krossbow.stomp.charsets.Charset
-import org.hildan.krossbow.stomp.charsets.decode
+import org.hildan.krossbow.stomp.charsets.decodeToString
 
 /**
  * Represents the body of a [StompFrame].
@@ -32,7 +32,7 @@ sealed class FrameBody {
      */
     data class Binary(override val bytes: ByteArray) : FrameBody() {
 
-        internal fun decodeAsText(charset: Charset): String = charset.newDecoder().decode(bytes)
+        internal fun decodeAsText(charset: Charset): String = bytes.decodeToString(charset)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true

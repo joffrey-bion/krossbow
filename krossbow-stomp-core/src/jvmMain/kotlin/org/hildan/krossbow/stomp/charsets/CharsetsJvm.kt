@@ -1,17 +1,18 @@
 package org.hildan.krossbow.stomp.charsets
 
 import java.nio.ByteBuffer
+import java.nio.charset.Charset
 
-actual typealias Charset = java.nio.charset.Charset
-
-actual typealias CharsetEncoder = java.nio.charset.CharsetEncoder
-actual typealias CharsetDecoder = java.nio.charset.CharsetDecoder
+actual typealias Charset = Charset
 
 actual typealias Charsets = kotlin.text.Charsets
 
-internal actual fun String.toCharset(): Charset = Charset.forName(this)
-
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-internal actual fun CharsetEncoder.encode(input: String): ByteArray = (input as java.lang.String).getBytes(charset())
+internal actual fun String.encodeToBytes(charset: Charset): ByteArray =
+    (this as java.lang.String).getBytes(charset.newEncoder().charset())
 
-internal actual fun CharsetDecoder.decode(bytes: ByteArray): String = buildString { decode(ByteBuffer.wrap(bytes)) }
+internal actual fun ByteArray.decodeToString(charset: Charset): String = buildString {
+    charset.decode(ByteBuffer.wrap(this@decodeToString))
+}
+
+internal actual fun String.toCharset(): Charset = Charset.forName(this)

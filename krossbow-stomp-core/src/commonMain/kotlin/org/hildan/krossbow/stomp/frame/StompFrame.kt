@@ -1,9 +1,9 @@
 package org.hildan.krossbow.stomp.frame
 
+import org.hildan.krossbow.stomp.charsets.*
 import org.hildan.krossbow.stomp.charsets.Charset
-import org.hildan.krossbow.stomp.charsets.Charsets
-import org.hildan.krossbow.stomp.headers.*
 import org.hildan.krossbow.stomp.charsets.extractCharset
+import org.hildan.krossbow.stomp.headers.*
 
 /**
  * This is an internal parent class to gather [StompFrame]s and other internal events under the same common type.
@@ -197,7 +197,7 @@ private fun inferCharset(contentTypeHeader: String?): Charset {
     }
     // "The implied text encoding for MIME types starting with text/ is UTF-8. If you are using a text based MIME type
     // with a different encoding then you SHOULD append ;charset= to the MIME type. For example, text/html;
-    // charset=utf-16 SHOULD be used if your sending an HTML body in UTF-16 encoding. The ;charset= SHOULD also get
+    // charset=utf-16 SHOULD be used if you're sending an HTML body in UTF-16 encoding. The ;charset= SHOULD also get
     // appended to any non text/ MIME types which can be interpreted as text. A good example of this would be a UTF-8
     // encoded XML. Its content-type SHOULD get set to application/xml;charset=utf-8"
     val charset = extractCharset(contentTypeHeader)
