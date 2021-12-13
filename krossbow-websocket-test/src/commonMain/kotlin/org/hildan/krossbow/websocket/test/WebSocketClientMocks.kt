@@ -12,11 +12,11 @@ fun webSocketClientMock(connect: suspend () -> WebSocketConnection = { WebSocket
 class ControlledWebSocketClientMock : WebSocketClient {
 
     private val connectEventChannel = Channel<Unit>()
-    private val connectedEventChannel = Channel<WebSocketConnection>()
+    private val connectedEventChannel = Channel<Result<WebSocketConnection>>()
 
     override suspend fun connect(url: String): WebSocketConnection {
         connectEventChannel.send(Unit)
-        return connectedEventChannel.receive()
+        return connectedEventChannel.receive().getOrThrow()
     }
 
     suspend fun waitForConnectCall() {
@@ -24,10 +24,10 @@ class ControlledWebSocketClientMock : WebSocketClient {
     }
 
     suspend fun simulateSuccessfulConnection(connection: WebSocketConnectionMock) {
-        connectedEventChannel.send(connection)
+        connectedEventChannel.send(Result.success(connection))
     }
 
-    fun simulateFailedConnection(cause: Throwable) {
-        connectedEventChannel.close(cause)
+    suspend fun simulateFailedConnection(cause: Throwable) {
+        connectedEventChannel.send(Result.failure(cause))
     }
 }

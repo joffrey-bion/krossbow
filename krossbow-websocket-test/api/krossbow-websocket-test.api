@@ -14,7 +14,7 @@ public final class org/hildan/krossbow/websocket/test/CloseEvent {
 public final class org/hildan/krossbow/websocket/test/ControlledWebSocketClientMock : org/hildan/krossbow/websocket/WebSocketClient {
 	public fun <init> ()V
 	public fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun simulateFailedConnection (Ljava/lang/Throwable;)V
+	public final fun simulateFailedConnection (Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun simulateSuccessfulConnection (Lorg/hildan/krossbow/websocket/test/WebSocketConnectionMock;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun waitForConnectCall (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }

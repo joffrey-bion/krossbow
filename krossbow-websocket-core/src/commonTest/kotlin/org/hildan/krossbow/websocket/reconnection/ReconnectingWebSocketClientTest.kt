@@ -2,6 +2,7 @@ package org.hildan.krossbow.websocket.reconnection
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import org.hildan.krossbow.websocket.test.*
@@ -113,5 +114,45 @@ internal class ReconnectingWebSocketClientTest {
         delay(100) // give time to trigger reconnect coroutine
         assertEquals(2, connections.size, "Should reconnect after error")
         assertTrue(reconnected, "afterReconnect callback should be called")
+    }
+
+    @Test
+    fun shouldFailAfterMaxAttempts() = runSuspendingTest {
+        val baseClient = ControlledWebSocketClientMock()
+
+        var reconnected = false
+        val reconnectingClient = baseClient.withAutoReconnect {
+            maxAttempts = 5
+            delayStrategy = FixedDelay(100.milliseconds)
+            afterReconnect {
+                reconnected = true
+            }
+        }
+
+        val baseConnection = WebSocketConnectionMock()
+        launch {
+            baseClient.waitForConnectCall()
+            baseClient.simulateSuccessfulConnection(baseConnection)
+        }
+        val connection = reconnectingClient.connect("dummy")
+
+        launch { baseConnection.simulateTextFrameReceived("test1") }
+        val received1 = connection.expectTextFrame("test frame")
+        assertEquals(received1.text, "test1", "The message of the forwarded frame should match the received frame")
+
+        launch {
+            repeat(5) {
+                baseClient.waitForConnectCall()
+                baseClient.simulateFailedConnection(RuntimeException("error $it"))
+            }
+        }
+        baseConnection.simulateError("simulated error")
+        delay(100) // give time to trigger reconnect coroutine
+
+        val exception = assertFailsWith(WebSocketReconnectionException::class) { connection.incomingFrames.first() }
+        val cause = exception.cause
+        assertNotNull(cause, "should provide the last attempt's exception as cause")
+        assertEquals("error 4", cause.message)
+        assertFalse(reconnected, "afterReconnect callback should not be called")
     }
 }
