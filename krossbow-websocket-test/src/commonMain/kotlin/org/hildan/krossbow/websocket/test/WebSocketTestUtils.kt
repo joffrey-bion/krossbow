@@ -8,36 +8,38 @@ import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketFrame
 import kotlin.test.*
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
-const val DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS = 2000L
+private val DEFAULT_EXPECTED_FRAME_TIMEOUT = 2.seconds
 
 suspend fun WebSocketClient.connectWithTimeout(
     url: String,
-    timeoutMillis: Long = 8000,
-) = withTimeoutOrNull(timeoutMillis) { connect(url) }
-    ?: fail("Timed out after ${timeoutMillis}ms while connecting to $url")
+    timeout: Duration = 8.seconds,
+) = withTimeoutOrNull(timeout) { connect(url) }
+    ?: fail("Timed out after $timeout while connecting to $url")
 
 suspend fun WebSocketConnection.expectTextFrame(
     frameDescription: String,
-    timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
-) = expectFrame<WebSocketFrame.Text>(frameDescription, timeoutMillis)
+    timeout: Duration = DEFAULT_EXPECTED_FRAME_TIMEOUT,
+) = expectFrame<WebSocketFrame.Text>(frameDescription, timeout)
 
 suspend fun WebSocketConnection.expectBinaryFrame(
     frameDescription: String,
-    timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
-) = expectFrame<WebSocketFrame.Binary>(frameDescription, timeoutMillis)
+    timeout: Duration = DEFAULT_EXPECTED_FRAME_TIMEOUT,
+) = expectFrame<WebSocketFrame.Binary>(frameDescription, timeout)
 
 suspend fun WebSocketConnection.expectCloseFrame(
     frameDescription: String = "no more data expected",
-    timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
-) = expectFrame<WebSocketFrame.Close>(frameDescription, timeoutMillis)
+    timeout: Duration = DEFAULT_EXPECTED_FRAME_TIMEOUT,
+) = expectFrame<WebSocketFrame.Close>(frameDescription, timeout)
 
-suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expectFrame(
+private suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expectFrame(
     frameDescription: String,
-    timeoutMillis: Long = DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS,
+    timeout: Duration = DEFAULT_EXPECTED_FRAME_TIMEOUT,
 ): T {
     val frameType = T::class.simpleName
-    val frame = withTimeoutOrNull(timeoutMillis) {
+    val frame = withTimeoutOrNull(timeout) {
         incomingFrames
             .catch { ex -> fail("Expected $frameType frame ($frameDescription), but the flow failed with $ex") }
             .firstOrNull() ?: fail("Expected $frameType frame ($frameDescription), but the flow was complete")
@@ -49,9 +51,9 @@ suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expectFrame(
 
 suspend fun WebSocketConnection.expectNoMoreFrames(
     eventDescription: String = "end of transmission",
-    timeoutMillis: Long = 1000,
+    timeout: Duration = 1.seconds,
 ) {
-    val lastFrames = withTimeoutOrNull(timeoutMillis) { incomingFrames.toList() }
+    val lastFrames = withTimeoutOrNull(timeout) { incomingFrames.toList() }
     assertNotNull(lastFrames, "Timed out while waiting for incoming frames flow to end ($eventDescription)")
     assertTrue(lastFrames.isEmpty(), "Frames flow should have completed ($eventDescription), but got ${lastFrames.size} more frame(s): $lastFrames")
 }

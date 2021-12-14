@@ -64,16 +64,15 @@ public final class org/hildan/krossbow/websocket/test/WebSocketConnectionMock : 
 }
 
 public final class org/hildan/krossbow/websocket/test/WebSocketTestUtilsKt {
-	public static final field DEFAULT_EXPECTED_FRAME_TIMEOUT_MILLIS J
-	public static final fun connectWithTimeout (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun connectWithTimeout$default (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static final fun expectBinaryFrame (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun expectBinaryFrame$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static final fun expectCloseFrame (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun expectCloseFrame$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static final fun expectNoMoreFrames (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun expectNoMoreFrames$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static final fun expectTextFrame (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun expectTextFrame$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun connectWithTimeout-exY8QGI (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun connectWithTimeout-exY8QGI$default (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun expectBinaryFrame-exY8QGI (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun expectBinaryFrame-exY8QGI$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun expectCloseFrame-exY8QGI (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun expectCloseFrame-exY8QGI$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun expectNoMoreFrames-exY8QGI (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun expectNoMoreFrames-exY8QGI$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun expectTextFrame-exY8QGI (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun expectTextFrame-exY8QGI$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
