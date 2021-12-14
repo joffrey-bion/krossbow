@@ -96,6 +96,8 @@ private class WebSocketConnectionProxy(
                     currentConnection.incomingFrames.collect {
                         _frames.send(it)
                     }
+                    _frames.close()
+                    break
                 } catch (e: CancellationException) {
                     throw e // let cancellation through
                 } catch (e: Exception) {

@@ -5,6 +5,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import org.hildan.krossbow.websocket.WebSocketCloseCodes
+import org.hildan.krossbow.websocket.WebSocketException
 import org.hildan.krossbow.websocket.test.*
 import kotlin.test.*
 import kotlin.time.Duration.Companion.milliseconds
@@ -58,6 +60,23 @@ internal class ReconnectingWebSocketClientTest {
     }
 
     @Test
+    fun shouldCompleteNormallyWhenUnderlyingFramesFlowCompletes() = runSuspendingTest {
+        val baseConnection = WebSocketConnectionMock()
+        val baseClient = webSocketClientMock { baseConnection }
+
+        val reconnectingClient = baseClient.withAutoReconnect()
+        val connection = reconnectingClient.connect("dummy")
+
+        launch {
+            baseConnection.simulateClose(code = WebSocketCloseCodes.NORMAL_CLOSURE, reason = "some reason")
+        }
+        val received = connection.expectCloseFrame()
+        assertEquals(received.code, WebSocketCloseCodes.NORMAL_CLOSURE, "The close code should match")
+        assertEquals(received.reason, "some reason", "The close reason should match")
+        connection.expectNoMoreFrames()
+    }
+
+    @Test
     fun shouldReconnectAndForwardFramesFromNewConnection() = runSuspendingTest {
         val connections = mutableListOf<WebSocketConnectionMock>()
         val baseClient = webSocketClientMock {
@@ -86,7 +105,7 @@ internal class ReconnectingWebSocketClientTest {
     }
 
     @Test
-    fun shouldCallOnReconnectWhenReconnected() = runSuspendingTest {
+    fun shouldCallReconnectCallbackWhenReconnected() = runSuspendingTest {
         val connections = mutableListOf<WebSocketConnectionMock>()
         val baseClient = webSocketClientMock {
             WebSocketConnectionMock().also {
