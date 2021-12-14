@@ -103,8 +103,9 @@ private class WebSocketConnectionProxy(
                 } catch (e: Exception) {
                     try {
                         currentConnection = reconnect(e)
-                        reconnectConfig.afterReconnect(this@WebSocketConnectionProxy)
-                    } catch (e: WebSocketReconnectionException) {
+                    } catch (e: CancellationException) {
+                        throw e // let cancellation through
+                    } catch (e: Exception) {
                         _frames.close(e)
                         break
                     }
@@ -117,9 +118,14 @@ private class WebSocketConnectionProxy(
     private suspend fun reconnect(cause: Exception): WebSocketConnection {
         var lastAttemptException: Exception = cause
         repeat(reconnectConfig.maxAttempts) { attempt ->
+            if (!reconnectConfig.shouldReconnect(lastAttemptException, attempt)) {
+                throw lastAttemptException
+            }
             try {
                 delay(reconnectConfig.delayStrategy.computeDelay(attempt))
-                return baseClient.connect(currentConnection.url)
+                return baseClient.connect(currentConnection.url).also {
+                    reconnectConfig.afterReconnect(this)
+                }
             } catch (e: CancellationException) {
                 throw e // let cancellation through
             } catch (e: Exception) {
@@ -147,5 +153,6 @@ class WebSocketReconnectionException(
     url: String,
     val nAttemptedReconnections: Int,
     cause: Exception,
-    message: String = "Could not reconnect to web socket at $url after $nAttemptedReconnections attempts. Giving up.",
+    message: String = "Could not reconnect to web socket at $url after $nAttemptedReconnections attempts. Giving up. " +
+        "The exception during the last attempt was $cause",
 ) : WebSocketConnectionException(url, message, cause)

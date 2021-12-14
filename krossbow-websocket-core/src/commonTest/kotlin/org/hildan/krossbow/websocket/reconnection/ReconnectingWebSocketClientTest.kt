@@ -174,4 +174,66 @@ internal class ReconnectingWebSocketClientTest {
         assertEquals("error 4", cause.message)
         assertFalse(reconnected, "afterReconnect callback should not be called")
     }
+
+    @Test
+    fun shouldFailIfReconnectPredicateIsFalse() = runSuspendingTest {
+        val baseConnection = WebSocketConnectionMock()
+        val baseClient = webSocketClientMock { baseConnection }
+
+        var reconnected = false
+        val reconnectingClient = baseClient.withAutoReconnect {
+            maxAttempts = 5
+            delayStrategy = FixedDelay(100.milliseconds)
+            reconnectWhen { _, _ -> false }
+            afterReconnect {
+                reconnected = true
+            }
+        }
+
+        val connection = reconnectingClient.connect("dummy")
+
+        launch { baseConnection.simulateTextFrameReceived("test1") }
+        val received1 = connection.expectTextFrame("test frame")
+        assertEquals(received1.text, "test1", "The message of the forwarded frame should match the received frame")
+
+        baseConnection.simulateError("simulated error")
+        delay(100) // give time to trigger reconnect coroutine
+
+        val exception = assertFailsWith(WebSocketException::class) { connection.incomingFrames.first() }
+        assertEquals("simulated error", exception.message)
+        assertFalse(reconnected, "afterReconnect callback should not be called")
+    }
+
+    @Test
+    fun shouldFailWhenReconnectPredicateBecomesFalse() = runSuspendingTest {
+        val baseClient = ControlledWebSocketClientMock()
+        val reconnectingClient = baseClient.withAutoReconnect {
+            delayStrategy = FixedDelay(100.milliseconds)
+            reconnectWhen { _, attempt -> attempt < 2 }
+        }
+
+        val baseConnection = WebSocketConnectionMock()
+        launch {
+            baseClient.waitForConnectCall()
+            baseClient.simulateSuccessfulConnection(baseConnection)
+        }
+
+        val connection = reconnectingClient.connect("dummy")
+
+        launch { baseConnection.simulateTextFrameReceived("test1") }
+        val received1 = connection.expectTextFrame("test frame 1")
+        assertEquals(received1.text, "test1", "The message of the forwarded frame should match the received frame (1)")
+
+        launch {
+            baseClient.waitForConnectCall()
+            baseClient.simulateFailedConnection(RuntimeException("connection failure 1"))
+            baseClient.waitForConnectCall()
+            baseClient.simulateFailedConnection(RuntimeException("connection failure 2"))
+        }
+        baseConnection.simulateError("simulated error 1")
+        delay(100) // give time to trigger reconnect coroutine
+
+        val exception = assertFailsWith(RuntimeException::class) { connection.incomingFrames.first() }
+        assertEquals("connection failure 2", exception.message)
+    }
 }
