@@ -1,14 +1,16 @@
 package org.hildan.krossbow.websocket
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.hildan.krossbow.websocket.test.runSuspendingTest
+import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class WebSocketListenerFlowAdapterTest {
 
     @Test
-    fun onTextMessage_triggersTextFrame() = runSuspendingTest {
+    fun onTextMessage_triggersTextFrame() = runTest {
         val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onTextMessage("test") }
@@ -17,7 +19,7 @@ class WebSocketListenerFlowAdapterTest {
     }
 
     @Test
-    fun onTextMessage_partialMessages() = runSuspendingTest {
+    fun onTextMessage_partialMessages() = runTest {
         val adapter = WebSocketListenerFlowAdapter()
         launch {
             adapter.onTextMessage("complete", isLast = true)
@@ -44,7 +46,7 @@ class WebSocketListenerFlowAdapterTest {
     }
 
     @Test
-    fun onBinaryMessage_triggersBinaryFrame() = runSuspendingTest {
+    fun onBinaryMessage_triggersBinaryFrame() = runTest {
         val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onBinaryMessage(ByteArray(2) { 42 }) }
@@ -53,7 +55,7 @@ class WebSocketListenerFlowAdapterTest {
     }
 
     @Test
-    fun onBinaryMessage_partialMessages() = runSuspendingTest {
+    fun onBinaryMessage_partialMessages() = runTest {
         val adapter = WebSocketListenerFlowAdapter()
 
         val zeroOneTwo = listOf<Byte>(0, 1, 2)
@@ -85,7 +87,7 @@ class WebSocketListenerFlowAdapterTest {
     }
 
     @Test
-    fun onClose_triggersCloseFrameAndCompletesTheFlow() = runSuspendingTest {
+    fun onClose_triggersCloseFrameAndCompletesTheFlow() = runTest {
         val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onClose(1024, "REASON") }
@@ -96,7 +98,7 @@ class WebSocketListenerFlowAdapterTest {
     }
 
     @Test
-    fun onErrorText_propagatesExceptionToTheFlow() = runSuspendingTest {
+    fun onErrorText_propagatesExceptionToTheFlow() = runTest {
         val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onError("some error") }
@@ -106,7 +108,7 @@ class WebSocketListenerFlowAdapterTest {
     }
 
     @Test
-    fun onErrorThrowable_propagatesWrappedExceptionToFlow() = runSuspendingTest {
+    fun onErrorThrowable_propagatesWrappedExceptionToFlow() = runTest {
         val adapter = WebSocketListenerFlowAdapter()
 
         launch { adapter.onError(RuntimeException("some error")) }

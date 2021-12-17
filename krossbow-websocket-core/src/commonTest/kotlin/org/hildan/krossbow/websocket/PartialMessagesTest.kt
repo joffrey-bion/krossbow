@@ -1,14 +1,16 @@
 package org.hildan.krossbow.websocket
 
-import org.hildan.krossbow.websocket.test.runSuspendingTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
+@OptIn(ExperimentalCoroutinesApi::class) // for runTest
 class PartialMessagesTest {
 
     @Test
-    fun testTextHandler() = runSuspendingTest {
+    fun testTextHandler() = runTest {
         var result: String? = null
         val handler = PartialTextMessageHandler { result = it.toString() }
 
@@ -31,7 +33,7 @@ class PartialMessagesTest {
     }
 
     @Test
-    fun testBinaryHandler() = runSuspendingTest {
+    fun testBinaryHandler() = runTest {
         var result: List<Byte>? = null
         val handler = PartialBinaryMessageHandler { result = it.toList() }
 
