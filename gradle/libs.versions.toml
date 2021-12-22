@@ -2,7 +2,7 @@
 jackson = "2.12.5"
 jetty-websocket = "9.4.43.v20210629"
 kotlinx-atomicfu = "0.17.0"
-kotlinx-coroutines = "1.6.0-RC3"
+kotlinx-coroutines = "1.6.0"
 kotlinx-serialization = "1.3.0"
 ktor-client = "1.6.3"
 okhttp = "4.9.1"
