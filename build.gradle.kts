@@ -40,6 +40,12 @@ changelog {
     futureVersionTag = project.version.toString()
     excludeLabels = listOf("internal") + DEFAULT_EXCLUDED_LABELS
     customTagByIssueNumber = mapOf(6 to "0.1.1", 10 to "0.1.2", 15 to "0.4.0")
+    sections = listOf(
+        org.hildan.github.changelog.builder.SectionDefinition(
+            title = "Upgraded dependencies",
+            labels = listOf("dependencies")
+        )
+    )
 }
 
 nexusPublishing {
