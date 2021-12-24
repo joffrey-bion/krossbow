@@ -8,7 +8,7 @@ ktor-client = "1.6.7"
 okhttp = "4.9.1"
 okio = "3.0.0"
 slf4j = "1.7.32"
-spring = "5.3.9"
+spring = "5.3.14"
 tyrus = "1.17"
 uuid = "0.3.1"
 
