@@ -17,6 +17,7 @@ module:krossbow-websocket-core
 org.hildan.krossbow.websocket
 org.hildan.krossbow.websocket.ios
 org.hildan.krossbow.websocket.jdk
+org.hildan.krossbow.websocket.js
 org.hildan.krossbow.websocket.reconnection
 module:krossbow-websocket-ktor
 org.hildan.krossbow.websocket.ktor
