@@ -1,6 +1,7 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
 import io.ktor.client.*
+import io.ktor.client.engine.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
@@ -9,8 +10,12 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.*
 import kotlinx.serialization.json.JsonPrimitive
 
+// Workaround for Ktor's bug with HttpClient() constructor using default engine
+// https://github.com/JetBrains/kotlin/blob/master/kotlin-native/NEW_MM.md#update-the-libraries
+expect fun ktorEngine(): HttpClientEngineFactory<*>
+
 internal class AutobahnReportsClient(private val config: AutobahnConfig) {
-    private val httpClient = HttpClient {
+    private val httpClient = HttpClient(ktorEngine()) {
         defaultRequest {
             host = config.host
             port = config.webPort
