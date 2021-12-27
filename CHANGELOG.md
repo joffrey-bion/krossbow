@@ -1,6 +1,7 @@
 # Change Log
 
-## Unreleased
+## [3.0.0](https://github.com/joffrey-bion/krossbow/tree/3.0.0) (2021-12-27)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/2.7.0...3.0.0)
 
 **Fixed bugs:**
 
@@ -10,6 +11,7 @@
 
 **Implemented enhancements:**
 
+- Switch iOS to new K/N memory model [\#183](https://github.com/joffrey-bion/krossbow/issues/183)
 - Conditional retry [\#172](https://github.com/joffrey-bion/krossbow/issues/172)
 - Hide internal Charsets APIs [\#171](https://github.com/joffrey-bion/krossbow/issues/171)
 - Use Duration instead of long millis in Stomp configuration [\#169](https://github.com/joffrey-bion/krossbow/issues/169)
@@ -19,6 +21,13 @@
 
 **Upgraded dependencies**
 
+- Upgrade OkHttp to version 4.9.3 [\#182](https://github.com/joffrey-bion/krossbow/issues/182)
+- Upgrade Jetty websocket client to version 9.4.44.v20210927 [\#181](https://github.com/joffrey-bion/krossbow/issues/181)
+- Upgrade Spring Websocket to version 5.3.14 [\#180](https://github.com/joffrey-bion/krossbow/issues/180)
+- Upgrade Jackson to version 2.13.1 [\#179](https://github.com/joffrey-bion/krossbow/issues/179)
+- Upgrade Kotlinx Serialization to version 1.3.2 [\#178](https://github.com/joffrey-bion/krossbow/issues/178)
+- Upgrade sockjs\-client to version 1.5.2 [\#177](https://github.com/joffrey-bion/krossbow/issues/177)
+- Upgrade Ktor to version 1.6.7 [\#176](https://github.com/joffrey-bion/krossbow/issues/176)
 - Upgrade Kotlin coroutines to version 1.6.0 [\#167](https://github.com/joffrey-bion/krossbow/issues/167)
 - Upgrade Kotlin to version 1.6.10 [\#175](https://github.com/joffrey-bion/krossbow/issues/175)
 - Upgrade Dokka to version 1.6.0 [\#170](https://github.com/joffrey-bion/krossbow/issues/170)
@@ -547,7 +556,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/d4cdf8956a37bd3f38490245199adaa97cf53f3a...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4f8c538c94e74237f88c95c098dcd08065f031a3...0.1.0)
 
 **Implemented enhancements:**
 
