@@ -1,6 +1,26 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-
+$dokka.location:////PointingToDeclaration/krossbow-websocket-sockjs/[root]/index.html
+$dokka.location:/SockJS.BaseEvent///PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-base-event/index.html
+$dokka.location:/SockJS.BaseEvent/type/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-base-event/type.html
+$dokka.location:/SockJS.CloseEvent///PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-close-event/index.html
+$dokka.location:/SockJS.CloseEvent/code/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-close-event/code.html
+$dokka.location:/SockJS.CloseEvent/reason/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-close-event/reason.html
+$dokka.location:/SockJS.CloseEvent/wasClean/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-close-event/was-clean.html
+$dokka.location:/SockJS.MessageEvent///PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-message-event/index.html
+$dokka.location:/SockJS.MessageEvent/data/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-message-event/data.html
+$dokka.location:/SockJS.OpenEvent///PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-open-event/index.html
+$dokka.location:/SockJS.Options///PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-options/index.html
+$dokka.location:/SockJS.Options/server/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-options/server.html
+$dokka.location:/SockJS.Options/sessionId/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-options/session-id.html
+$dokka.location:/SockJS.Options/transports/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-options/transports.html
+$dokka.location:/SockJS///PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/index.html
+$dokka.location:/SockJS/CLOSED/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-c-l-o-s-e-d.html
+$dokka.location:/SockJS/CLOSING/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-c-l-o-s-i-n-g.html
+$dokka.location:/SockJS/CONNECTING/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-c-o-n-n-e-c-t-i-n-g.html
+$dokka.location:/SockJS/OPEN/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-o-p-e-n.html
+$dokka.location:/SockJS/invoke/#kotlin.String#kotlin.Any?#SockJS.Options/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/invoke.html
+$dokka.location:/SockJS/prototype/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/prototype.html
 module:krossbow-stomp-core
 org.hildan.krossbow.stomp
 org.hildan.krossbow.stomp.charsets
