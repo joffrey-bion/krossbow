@@ -34,9 +34,3 @@ kotlin {
         }
     }
 }
-
-// suppressing Dokka generation for JS because of the ZipException on NPM dependencies
-// https://github.com/Kotlin/dokka/issues/537
-tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
-    dokkaSourceSets.findByName("jsMain")?.suppress?.set(true)
-}
