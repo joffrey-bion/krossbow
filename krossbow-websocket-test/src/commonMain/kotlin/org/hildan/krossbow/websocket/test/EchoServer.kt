@@ -1,20 +1,33 @@
 package org.hildan.krossbow.websocket.test
 
-internal expect suspend fun runAlongEchoWSServer(
-    onOpenActions: ActionsBuilder.() -> Unit = {},
-    block: suspend (port: Int) -> Unit,
-)
+import org.hildan.krossbow.websocket.WebSocketCloseCodes
 
-internal sealed class ServerAction {
-    data class SendTextFrame(val message: String): ServerAction()
-    class SendBinaryFrame(val data: ByteArray): ServerAction()
-    data class Close(val code: Int, val reason: String?): ServerAction()
-}
+internal expect suspend fun runAlongEchoWSServer(block: suspend (server: TestServer) -> Unit)
 
-internal class ActionsBuilder {
-    private val actions = mutableListOf<ServerAction>()
-    fun sendText(message: String) = actions.add(ServerAction.SendTextFrame(message))
-    fun sendBinary(data: ByteArray) = actions.add(ServerAction.SendBinaryFrame(data))
-    fun close(code: Int = 1000, reason: String? = null) = actions.add(ServerAction.Close(code, reason))
-    fun build(): List<ServerAction> = actions
+internal interface TestServer {
+
+    val port: Int
+
+    /**
+     * Sends text data to the last connected client.
+     */
+    fun send(text: String)
+
+    /**
+     * Sends binary data to the last connected client.
+     */
+    fun send(bytes: ByteArray)
+
+    /**
+     * Sends the closing handshake. May be sent in response to another handshake.
+     */
+    fun close(code: Int = WebSocketCloseCodes.NORMAL_CLOSURE, message: String? = null)
+
+    /**
+     * Closes the connection immediately without a proper close handshake.
+     *
+     * The code and the message therefore won't be transferred over the wire also they will be forwarded to
+     * onClose/onWebsocketClose.
+     */
+    fun closeConnection(code: Int = WebSocketCloseCodes.NO_STATUS_CODE, message: String? = null)
 }

@@ -8,29 +8,19 @@ import kotlinx.coroutines.withTimeout
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 
-internal actual suspend fun runAlongEchoWSServer(
-    onOpenActions: ActionsBuilder.() -> Unit,
-    block: suspend (port: Int) -> Unit,
-) {
-    val server = EchoWebSocketServer(ActionsBuilder().apply(onOpenActions).build())
-    val port = server.startAndAwaitPort()
-    block(port)
+internal actual suspend fun runAlongEchoWSServer(block: suspend (server: TestServer) -> Unit) {
+    val server = EchoWebSocketServer()
+    server.startAndAwaitPort()
+    block(server.asTestServer())
     server.stop()
 }
 
-internal class EchoWebSocketServer(
-    private val onOpenActions: List<ServerAction>,
-    port: Int = 0,
-) : WebSocketServer(InetSocketAddress(port)) {
+internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(port)) {
+
+    var lastConnectedSocket: WebSocket? = null
 
     override fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
-        for (a in onOpenActions) {
-            when (a) {
-                is ServerAction.SendTextFrame -> conn?.send(a.message)
-                is ServerAction.SendBinaryFrame -> conn?.send(a.data)
-                is ServerAction.Close -> conn?.close(a.code, a.reason)
-            }
-        }
+        lastConnectedSocket = conn
     }
 
     override fun onMessage(conn: WebSocket?, message: String?) {
@@ -59,5 +49,29 @@ internal class EchoWebSocketServer(
             delay(10)
         }
         port
+    }
+}
+
+private fun EchoWebSocketServer.asTestServer() = object : TestServer {
+    override val port: Int
+        get() = this@asTestServer.port
+
+    private val socket
+        get() = lastConnectedSocket ?: error("No connected client")
+
+    override fun send(text: String) {
+        socket.send(text)
+    }
+
+    override fun send(bytes: ByteArray) {
+        socket.send(bytes)
+    }
+
+    override fun close(code: Int, message: String?) {
+        socket.close(code, message)
+    }
+
+    override fun closeConnection(code: Int, message: String?) {
+        socket.closeConnection(code, message)
     }
 }

@@ -26,8 +26,8 @@ abstract class WebSocketClientTestSuite {
     @IgnoreOnNative
     @IgnoreOnJS
     @Test
-    fun testEchoText() = runSuspendingTestWithEchoServer { url ->
-        val session = wsClient.connect(url)
+    fun testEchoText() = runSuspendingTestWithEchoServer { server ->
+        val session = wsClient.connect(server.localUrl)
 
         session.sendText("hello")
         val helloResponse = session.expectTextFrame("hello frame")
@@ -42,8 +42,8 @@ abstract class WebSocketClientTestSuite {
     @IgnoreOnNative
     @IgnoreOnJS
     @Test
-    fun testEchoBinary() = runSuspendingTestWithEchoServer { url ->
-        val session = wsClient.connect(url)
+    fun testEchoBinary() = runSuspendingTestWithEchoServer { server ->
+        val session = wsClient.connect(server.localUrl)
 
         val fortyTwos = ByteArray(3) { 42 }
         session.sendBinary(fortyTwos)
@@ -59,23 +59,23 @@ abstract class WebSocketClientTestSuite {
     @IgnoreOnNative
     @IgnoreOnJS
     @Test
-    fun testClose() = runSuspendingTestWithEchoServer(onOpenActions = {
-        close()
-    }) { url ->
-        val session = wsClient.connect(url)
+    fun testClose() = runSuspendingTestWithEchoServer { server ->
+        val session = wsClient.connect(server.localUrl)
+
+        server.close()
 
         session.expectCloseFrame("after connect")
         session.expectNoMoreFrames("after CLOSE frame following connect")
     }
 }
 
-private fun runSuspendingTestWithEchoServer(
-    onOpenActions: ActionsBuilder.() -> Unit = {},
-    block: suspend (url: String) -> Unit,
-) {
+private fun runSuspendingTestWithEchoServer(block: suspend (server: TestServer) -> Unit) {
     runSuspendingTest {
-        runAlongEchoWSServer(onOpenActions) { port ->
-            block("ws://localhost:$port")
+        runAlongEchoWSServer { server ->
+            block(server)
         }
     }
 }
+
+private val TestServer.localUrl: String
+    get() = "ws://localhost:$port"
