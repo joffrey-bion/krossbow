@@ -5,7 +5,7 @@
 
 **Implemented enhancements:**
 
-- Add support for \`watchos\`, \`tvos\` and \`macos\` targets [\#158](https://github.com/joffrey-bion/krossbow/issues/158)
+- Add support for \`watchos\` and \`tvos\` targets [\#158](https://github.com/joffrey-bion/krossbow/issues/158)
 
 ## [3.0.0](https://github.com/joffrey-bion/krossbow/tree/3.0.0) (2021-12-27)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.7.0...3.0.0)
