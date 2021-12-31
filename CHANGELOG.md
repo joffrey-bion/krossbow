@@ -1,5 +1,12 @@
 # Change Log
 
+## [3.1.0](https://github.com/joffrey-bion/krossbow/tree/3.1.0) (2021-12-31)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.0.0...3.1.0)
+
+**Implemented enhancements:**
+
+- Add support for \`watchos\`, \`tvos\` and \`macos\` targets [\#158](https://github.com/joffrey-bion/krossbow/issues/158)
+
 ## [3.0.0](https://github.com/joffrey-bion/krossbow/tree/3.0.0) (2021-12-27)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.7.0...3.0.0)
 
@@ -556,7 +563,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/4f8c538c94e74237f88c95c098dcd08065f031a3...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/d3b4702c8c253067704b184885659d65d9e270a4...0.1.0)
 
 **Implemented enhancements:**
 
