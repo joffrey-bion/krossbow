@@ -4,12 +4,9 @@ import kotlinx.coroutines.*
 import platform.Foundation.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.system.getTimeNanos
-import kotlin.test.Ignore
 import kotlin.test.fail
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
-
-actual typealias IgnoreOnNative = Ignore
 
 actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.() -> Unit) =
     runBlockingButRunningMainLoop(timeoutMillis.milliseconds) { block() }

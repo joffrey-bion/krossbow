@@ -24,11 +24,18 @@ fun NamedDomainObjectContainer<KotlinSourceSet>.setupNativeSourceSets() {
     val commonMain by getting {}
     val commonTest by getting {}
 
-    val nativeDarwinMain by creating {
+    val nativeMain by creating {
         dependsOn(commonMain)
     }
-    val nativeDarwinTest by creating {
+    val nativeTest by creating {
         dependsOn(commonTest)
+    }
+
+    val nativeDarwinMain by creating {
+        dependsOn(nativeMain)
+    }
+    val nativeDarwinTest by creating {
+        dependsOn(nativeTest)
     }
 
     val iosMain by getting {
