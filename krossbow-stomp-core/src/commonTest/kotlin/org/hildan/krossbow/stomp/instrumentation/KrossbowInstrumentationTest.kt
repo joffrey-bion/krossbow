@@ -6,11 +6,7 @@ import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.StompErrorFrameReceived
 import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.sendText
-import org.hildan.krossbow.test.KrossbowInstrumentationMock
-import org.hildan.krossbow.test.connectWithMocks
-import org.hildan.krossbow.test.simulateErrorFrameReceived
-import org.hildan.krossbow.test.waitForDisconnectAndSimulateCompletion
-import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
+import org.hildan.krossbow.test.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -28,8 +24,8 @@ class KrossbowInstrumentationTest {
                 instrumentation = inst
             }
             launch {
-                wsSession.waitForSendAndSimulateCompletion(StompCommand.SEND)
-                wsSession.waitForDisconnectAndSimulateCompletion()
+                wsSession.awaitSendFrameAndSimulateCompletion()
+                wsSession.awaitDisconnectFrameAndSimulateCompletion()
                 wsSession.expectClose()
             }
             stompSession.sendText("/dest", "Some Body")

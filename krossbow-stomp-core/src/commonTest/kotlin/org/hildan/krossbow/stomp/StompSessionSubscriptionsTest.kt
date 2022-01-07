@@ -1,7 +1,6 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
@@ -10,7 +9,6 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.frame.InvalidStompFrameException
-import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.headers.AckMode
 import org.hildan.krossbow.stomp.headers.HeaderNames
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
@@ -29,12 +27,12 @@ class StompSessionSubscriptionsTest {
         val deferredFlow = async(start = CoroutineStart.UNDISPATCHED) { stompSession.subscribeText("/dest") }
         runCurrent()
         assertFalse(deferredFlow.isCompleted, "subscribe() should not return until SUBSCRIBE frame is sent")
-        wsSession.waitForSubscribeAndSimulateCompletion()
+        wsSession.awaitSubscribeFrameAndSimulateCompletion()
         runCurrent()
         assertTrue(deferredFlow.isCompleted, "subscribe() should return when SUBSCRIBE frame is sent")
 
         launch {
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
         stompSession.disconnect()
@@ -51,7 +49,7 @@ class StompSessionSubscriptionsTest {
         }
         runCurrent()
         assertFalse(deferredFlow.isCompleted, "subscribe() should not return until SUBSCRIBE frame is sent")
-        wsSession.waitForSubscribeAndSimulateCompletion()
+        wsSession.awaitSubscribeFrameAndSimulateCompletion()
         runCurrent()
         assertFalse(deferredFlow.isCompleted, "subscribe() should not return until the RECEIPT is received")
         wsSession.simulateReceiptFrameReceived("not-my-receipt")
@@ -62,7 +60,7 @@ class StompSessionSubscriptionsTest {
         assertTrue(deferredFlow.isCompleted, "subscribe() call should return when SUBSCRIBE frame is sent")
 
         launch {
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
         stompSession.disconnect()
@@ -72,15 +70,15 @@ class StompSessionSubscriptionsTest {
     fun subscribe_doesntLoseMessagesIfFlowIsNotCollectedImmediately() = runTest {
         val (wsSession, stompSession) = connectWithMocks()
 
-        val subFrame = async { wsSession.waitForSubscribeAndSimulateCompletion() }
+        val subFrame = async { wsSession.awaitSubscribeFrameAndSimulateCompletion() }
         val messages = stompSession.subscribeText("/dest")
 
         val subId = subFrame.await().headers.id
         wsSession.simulateMessageFrameReceived(subId, "HELLO")
 
         launch {
-            wsSession.waitForUnsubscribeAndSimulateCompletion(subId)
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.awaitUnsubscribeFrameAndSimulateCompletion(subId)
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
 
@@ -95,15 +93,15 @@ class StompSessionSubscriptionsTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
-            val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+            val subFrame = wsSession.awaitSubscribeFrameAndSimulateCompletion()
             val subId = subFrame.headers.id
 
             // we simulate that a SEND frame triggers a MESSAGE frame on the subscription
-            val sendFrame = wsSession.waitForSendAndSimulateCompletion()
+            val sendFrame = wsSession.awaitSendFrameAndSimulateCompletion()
             wsSession.simulateMessageFrameReceived(subId, sendFrame.bodyAsText)
 
-            wsSession.waitForUnsubscribeAndSimulateCompletion(subId)
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.awaitUnsubscribeFrameAndSimulateCompletion(subId)
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
         val messages = stompSession.subscribeText("/sub")
@@ -134,14 +132,14 @@ class StompSessionSubscriptionsTest {
             stompSession.subscribe(headers).first()
             stompSession.disconnect()
         }
-        val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+        val subFrame = wsSession.awaitSubscribeFrameAndSimulateCompletion()
         assertEquals(destination, subFrame.headers.destination)
         assertEquals(customId, subFrame.headers.id)
         assertEquals(customAck, subFrame.headers.ack)
         assertEquals(customHeaderValue, subFrame.headers[customHeaderKey])
         wsSession.simulateMessageFrameReceived(subFrame.headers.id, "HELLO")
-        wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+        wsSession.awaitUnsubscribeFrameAndSimulateCompletion(subFrame.headers.id)
+        wsSession.awaitDisconnectFrameAndSimulateCompletion()
         wsSession.expectClose()
     }
 
@@ -165,7 +163,7 @@ class StompSessionSubscriptionsTest {
             stompSession.disconnect()
         }
 
-        val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+        val subFrame = wsSession.awaitSubscribeFrameAndSimulateCompletion()
         assertTrue(subFrame.headers.id.isNotBlank(), "an ID should be generated")
         assertEquals(destination, subFrame.headers.destination)
         assertEquals(customAck, subFrame.headers.ack)
@@ -173,8 +171,8 @@ class StompSessionSubscriptionsTest {
         assertNull(headers[HeaderNames.ID], "The original headers (without ID) should not be modified.")
 
         wsSession.simulateMessageFrameReceived(subFrame.headers.id, "HELLO")
-        wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+        wsSession.awaitUnsubscribeFrameAndSimulateCompletion(subFrame.headers.id)
+        wsSession.awaitDisconnectFrameAndSimulateCompletion()
         wsSession.expectClose()
     }
 
@@ -183,10 +181,10 @@ class StompSessionSubscriptionsTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
-            val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+            val subFrame = wsSession.awaitSubscribeFrameAndSimulateCompletion()
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "HELLO")
-            wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.awaitUnsubscribeFrameAndSimulateCompletion(subFrame.headers.id)
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
         val messages = stompSession.subscribeText("/dest")
@@ -203,12 +201,12 @@ class StompSessionSubscriptionsTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
-            val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+            val subFrame = wsSession.awaitSubscribeFrameAndSimulateCompletion()
             repeat(3) {
                 wsSession.simulateMessageFrameReceived(subFrame.headers.id, "MSG_$it")
             }
-            wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.awaitUnsubscribeFrameAndSimulateCompletion(subFrame.headers.id)
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
         val messagesFlow = stompSession.subscribeText("/dest")
@@ -225,16 +223,16 @@ class StompSessionSubscriptionsTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
-            val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+            val subFrame = wsSession.awaitSubscribeFrameAndSimulateCompletion()
             val job = launch {
                 repeat(15) {
                     wsSession.simulateMessageFrameReceived(subFrame.headers.id, "MSG_$it")
                     delay(1000)
                 }
             }
-            wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
+            wsSession.awaitUnsubscribeFrameAndSimulateCompletion(subFrame.headers.id)
             job.cancel()
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
         val messagesFlow = stompSession.subscribeText("/dest")
@@ -261,14 +259,14 @@ class StompSessionSubscriptionsTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
-            val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+            val subFrame = wsSession.awaitSubscribeFrameAndSimulateCompletion()
             val job = launch {
                 repeat(15) {
                     delay(1000)
                     wsSession.simulateMessageFrameReceived(subFrame.headers.id, "MSG_$it")
                 }
             }
-            val disconnectFrame = wsSession.waitForDisconnectAndSimulateCompletion()
+            val disconnectFrame = wsSession.awaitDisconnectFrameAndSimulateCompletion()
             job.cancel()
             wsSession.simulateReceiptFrameReceived(disconnectFrame.headers.receipt!!)
             // after disconnecting, we should not attempt to send an UNSUBSCRIBE frame
@@ -298,7 +296,7 @@ class StompSessionSubscriptionsTest {
 
         val errorMessage = "some error message"
         launch {
-            wsSession.waitForSubscribeAndSimulateCompletion()
+            wsSession.awaitSubscribeFrameAndSimulateCompletion()
             wsSession.simulateErrorFrameReceived(errorMessage)
             // after receiving a STOMP error frame, we should not attempt to send an UNSUBSCRIBE or DISCONNECT frame
             wsSession.expectClose()
@@ -318,7 +316,7 @@ class StompSessionSubscriptionsTest {
 
         val errorMessage = "some error message"
         launch {
-            wsSession.waitForSubscribeAndSimulateCompletion()
+            wsSession.awaitSubscribeFrameAndSimulateCompletion()
             wsSession.simulateError(errorMessage)
             // after a web socket error, we should not attempt to send an UNSUBSCRIBE or DISCONNECT frame
             // we should also not try to close the web socket after an error
@@ -337,7 +335,7 @@ class StompSessionSubscriptionsTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
-            wsSession.waitForSubscribeAndSimulateCompletion()
+            wsSession.awaitSubscribeFrameAndSimulateCompletion()
             wsSession.simulateClose(WebSocketCloseCodes.NORMAL_CLOSURE, "some reason")
             // after a web socket closure, we should not attempt to send an UNSUBSCRIBE or DISCONNECT frame
             // the web socket is already closed so it should not be attempted to close it
@@ -357,7 +355,7 @@ class StompSessionSubscriptionsTest {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
-            wsSession.waitForSubscribeAndSimulateCompletion()
+            wsSession.awaitSubscribeFrameAndSimulateCompletion()
             wsSession.simulateTextFrameReceived("not a valid STOMP frame")
             // after an invalid STOMP frame, we should not attempt to send an UNSUBSCRIBE or DISCONNECT frame
             wsSession.expectClose()

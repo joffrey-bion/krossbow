@@ -3,7 +3,6 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.test.*
 import kotlin.test.*
 
@@ -15,8 +14,8 @@ class StompSessionExtensionsTests {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
-            wsSession.waitForSendAndSimulateCompletion()
-            wsSession.waitForDisconnectAndSimulateCompletion()
+            wsSession.awaitSendFrameAndSimulateCompletion()
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
         stompSession.use {
@@ -31,7 +30,7 @@ class StompSessionExtensionsTests {
         val (wsSession, stompSession) = connectWithMocks()
 
         launch {
-            wsSession.waitForDisconnectAndSimulateCompletion()
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
         assertFailsWith(NoSuchElementException::class) {
@@ -52,16 +51,16 @@ class StompSessionExtensionsTests {
             }
             stompSession.disconnect()
         }
-        val beginFrame = wsSession.waitForBeginAndSimulateCompletion()
+        val beginFrame = wsSession.awaitBeginFrameAndSimulateCompletion()
         val transactionId = beginFrame.headers.transaction
 
-        val sendFrame = wsSession.waitForSendAndSimulateCompletion()
+        val sendFrame = wsSession.awaitSendFrameAndSimulateCompletion()
         assertEquals(transactionId, sendFrame.headers.transaction)
 
-        val commitFrame = wsSession.waitForCommitAndSimulateCompletion()
+        val commitFrame = wsSession.awaitCommitFrameAndSimulateCompletion()
         assertEquals(transactionId, commitFrame.headers.transaction)
 
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+        wsSession.awaitDisconnectFrameAndSimulateCompletion()
         wsSession.expectClose()
     }
 
@@ -78,17 +77,17 @@ class StompSessionExtensionsTests {
             }
             stompSession.disconnect()
         }
-        val beginFrame = wsSession.waitForBeginAndSimulateCompletion()
+        val beginFrame = wsSession.awaitBeginFrameAndSimulateCompletion()
         val transactionId = beginFrame.headers.transaction
 
-        val sendFrame = wsSession.waitForSendAndSimulateCompletion()
+        val sendFrame = wsSession.awaitSendFrameAndSimulateCompletion()
         assertEquals(transactionId, sendFrame.headers.transaction)
         assertEquals("Transaction: $transactionId", sendFrame.bodyAsText)
 
-        val abortFrame = wsSession.waitForAbortAndSimulateCompletion()
+        val abortFrame = wsSession.awaitAbortFrameAndSimulateCompletion()
         assertEquals(transactionId, abortFrame.headers.transaction)
 
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+        wsSession.awaitDisconnectFrameAndSimulateCompletion()
         wsSession.expectClose()
     }
 }

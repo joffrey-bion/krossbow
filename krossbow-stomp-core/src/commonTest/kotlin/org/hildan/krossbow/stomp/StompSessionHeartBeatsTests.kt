@@ -8,13 +8,8 @@ import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.HeartBeatTolerance
-import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.headers.StompConnectedHeaders
-import org.hildan.krossbow.test.connectWithMocks
-import org.hildan.krossbow.test.simulateMessageFrameReceived
-import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
-import org.hildan.krossbow.test.waitForSubscribeAndSimulateCompletion
-import org.hildan.krossbow.test.waitForUnsubscribeAndSimulateCompletion
+import org.hildan.krossbow.test.*
 import kotlin.test.*
 import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.milliseconds
@@ -115,10 +110,10 @@ class StompSessionHeartBeatsTests {
         }
 
         launch {
-            val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+            val subFrame = wsSession.awaitSubscribeFrameAndSimulateCompletion()
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "HELLO")
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.UNSUBSCRIBE)
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.DISCONNECT)
+            wsSession.awaitUnsubscribeFrameAndSimulateCompletion(subFrame.headers.id)
+            wsSession.awaitDisconnectFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
 
@@ -139,7 +134,7 @@ class StompSessionHeartBeatsTests {
         }
 
         launch {
-            wsSession.waitForSubscribeAndSimulateCompletion()
+            wsSession.awaitSubscribeFrameAndSimulateCompletion()
             wsSession.expectClose()
         }
 
@@ -159,14 +154,14 @@ class StompSessionHeartBeatsTests {
         }
 
         launch {
-            val subFrame = wsSession.waitForSubscribeAndSimulateCompletion()
+            val subFrame = wsSession.awaitSubscribeFrameAndSimulateCompletion()
             delay(800)
             wsSession.simulateTextFrameReceived("\n")
             delay(1000)
             wsSession.simulateTextFrameReceived("\r\n")
             delay(900)
             wsSession.simulateMessageFrameReceived(subFrame.headers.id, "message")
-            wsSession.waitForUnsubscribeAndSimulateCompletion(subFrame.headers.id)
+            wsSession.awaitUnsubscribeFrameAndSimulateCompletion(subFrame.headers.id)
         }
 
         val messages = stompSession.subscribeText("/dest")

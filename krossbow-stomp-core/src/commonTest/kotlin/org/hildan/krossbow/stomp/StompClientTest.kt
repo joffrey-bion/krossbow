@@ -5,12 +5,8 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
-import org.hildan.krossbow.stomp.frame.StompCommand
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
-import org.hildan.krossbow.test.assertTimesOutWith
-import org.hildan.krossbow.test.simulateConnectedFrameReceived
-import org.hildan.krossbow.test.simulateErrorFrameReceived
-import org.hildan.krossbow.test.waitForSendAndSimulateCompletion
+import org.hildan.krossbow.test.*
 import org.hildan.krossbow.websocket.test.*
 import kotlin.coroutines.ContinuationInterceptor
 import kotlin.test.*
@@ -33,7 +29,7 @@ class StompClientTest {
 
         val wsSession = WebSocketConnectionMock()
         wsClient.simulateSuccessfulConnection(wsSession)
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+        wsSession.awaitConnectFrameAndSimulateCompletion()
         assertFalse(deferredStompSession.isCompleted, "connect() call should wait for STOMP connection")
 
         wsSession.simulateConnectedFrameReceived()
@@ -125,7 +121,7 @@ class StompClientTest {
             val stompClient = StompClient(webSocketClientMock { wsSession }, configureClient)
 
             launch { connectCall(stompClient) }
-            val frame = wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+            val frame = wsSession.awaitConnectFrameAndSimulateCompletion()
             assertEquals<Map<String, String>>(HashMap(expectedHeaders), HashMap(frame.headers))
             assertNull(frame.body, "connect frame should not have a body")
 
@@ -180,7 +176,7 @@ class StompClientTest {
         val stompClient = StompClient(webSocketClientMock { wsSession })
 
         launch {
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+            wsSession.awaitConnectFrameAndSimulateCompletion()
             wsSession.simulateErrorFrameReceived("connection failed")
             wsSession.expectClose()
         }
@@ -198,7 +194,7 @@ class StompClientTest {
         val stompClient = StompClient(webSocketClientMock { wsSession })
 
         launch {
-            wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+            wsSession.awaitConnectFrameAndSimulateCompletion()
             wsSession.simulateClose(1000, "abrupt close")
             wsSession.expectNoClose()
         }
@@ -219,7 +215,7 @@ class StompClientTest {
             stompClient.connect("wss://dummy.com/path")
         }
         // ensures we have already connected the WS
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+        wsSession.awaitConnectFrameAndSimulateCompletion()
         // simulates the cancellation of the connect() call during the STOMP connect handshake
         connectJob.cancel()
         wsSession.expectClose()
@@ -233,7 +229,7 @@ class StompClientTest {
             wsSession.stomp(StompConfig())
         }
         // ensures we have already connected the WS, and have started the STOMP handshake
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+        wsSession.awaitConnectFrameAndSimulateCompletion()
         // simulates the cancellation of the stomp() call during the STOMP connect handshake
         connectJob.cancel()
         wsSession.expectClose()
@@ -252,7 +248,7 @@ class StompClientTest {
         launch {
             stompClient.connect("wss://dummy.com")
         }
-        wsSession.waitForSendAndSimulateCompletion(StompCommand.CONNECT)
+        wsSession.awaitConnectFrameAndSimulateCompletion()
         wsSession.simulateConnectedFrameReceived()
         wsSession.simulateErrorFrameReceived(errorMessage)
         val closeEvent = wsSession.expectClose()
