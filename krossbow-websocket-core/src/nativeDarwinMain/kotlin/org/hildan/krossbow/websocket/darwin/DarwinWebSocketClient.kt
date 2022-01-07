@@ -23,8 +23,9 @@ import kotlin.coroutines.resumeWithException
 private const val ERROR_CODE_SOCKET_NOT_CONNECTED = 57
 
 /**
- * An implementation of [WebSocketClient] using iOS's native [NSURLSessionWebSocketTask].
- * This is only available is iOS >= 13.
+ * An implementation of [WebSocketClient] using darwin's native [NSURLSessionWebSocketTask].
+ * This is only available is iOS 13.0+, tvOS 13.0+, watchOS 6.0+, macOS 10.15+
+ * (see [documentation](https://developer.apple.com/documentation/foundation/urlsessionwebsockettask))
  *
  * A custom [sessionConfig] can be passed to customize the behaviour of the connection.
  * Also, if a non-null [maximumMessageSize] if provided, it will be used to configure the web socket.
@@ -250,6 +251,6 @@ private fun NSData.toByteArray(): ByteArray {
 private fun NSError.toIosWebSocketException() = DarwinWebSocketException(this)
 
 /**
- * A [WebSocketException] caused by an iOS [NSError]. It contains details about the actual error cause.
+ * A [WebSocketException] caused by a darwin [NSError]. It contains details about the actual error cause.
  */
 class DarwinWebSocketException(val nsError: NSError) : WebSocketException(nsError.localizedDescription)

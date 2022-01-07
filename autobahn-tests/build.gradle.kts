@@ -104,7 +104,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest> {
 tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest> {
     doFirst {
         val autobahnContainer = getAutobahnTestServerContainerInfo()
-        // SIMCTL_CHILD_ prefix to pass those variables from test process to the iOS emulator
+        // SIMCTL_CHILD_ prefix to pass those variables from test process to the iOS/tvOS/watchOS emulators
         environment("SIMCTL_CHILD_AUTOBAHN_SERVER_HOST", autobahnContainer.host)
         environment("SIMCTL_CHILD_AUTOBAHN_SERVER_TCP_8080", autobahnContainer.ports.getValue(8080))
         environment("SIMCTL_CHILD_AUTOBAHN_SERVER_TCP_9001", autobahnContainer.ports.getValue(9001))

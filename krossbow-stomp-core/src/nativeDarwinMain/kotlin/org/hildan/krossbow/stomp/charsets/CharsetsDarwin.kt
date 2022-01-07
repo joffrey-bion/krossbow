@@ -10,15 +10,15 @@ actual object Charsets {
 
 internal actual fun String.encodeToBytes(charset: Charset): ByteArray = when (charset) {
     Charsets.UTF_8 -> encodeToByteArray()
-    else -> error("Non UTF-8 encodings are not supported on iOS platform")
+    else -> error("Non UTF-8 encodings are not supported on darwin platforms")
 }
 
 internal actual fun ByteArray.decodeToString(charset: Charset): String = when (charset) {
     Charsets.UTF_8 -> decodeToString()
-    else -> error("Non UTF-8 encodings are not supported on iOS platform")
+    else -> error("Non UTF-8 encodings are not supported on darwin platforms")
 }
 
 internal actual fun String.toCharset() = when (lowercase().replace('_', '-')) {
     "utf-8", "utf8" -> Charsets.UTF_8
-    else -> throw IllegalArgumentException("Charset $this is not supported on iOS platform")
+    else -> throw IllegalArgumentException("Charset $this is not supported on darwin platforms")
 }

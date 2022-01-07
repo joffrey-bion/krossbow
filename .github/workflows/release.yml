@@ -9,7 +9,7 @@ on:
 
 jobs:
   release:
-    runs-on: macos-latest # For iOS publications
+    runs-on: macos-latest # For darwin publications
     strategy:
       matrix:
         jdk-version: [ 17 ]
