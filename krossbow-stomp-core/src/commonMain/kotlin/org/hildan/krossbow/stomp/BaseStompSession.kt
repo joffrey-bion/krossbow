@@ -27,6 +27,10 @@ internal class BaseStompSession(
 
     private val scope = CoroutineScope(coroutineContext + Job() + CoroutineName("stomp-session"))
 
+    // extra buffer required, so we can wait for the receipt frame from within the onSubscribe
+    // of some other shared flow subscription (e.g. in startSubscription())
+    private val sharedStompEvents = MutableSharedFlow<StompEvent>(extraBufferCapacity = 32)
+
     private val heartBeater = if (heartBeat != NO_HEART_BEATS) {
         HeartBeater(
             heartBeat = heartBeat,
@@ -42,13 +46,9 @@ internal class BaseStompSession(
         null
     }
 
-    // extra buffer required, so we can wait for the receipt frame from within the onSubscribe
-    // of some other shared flow subscription (e.g. in startSubscription())
-    private val sharedStompEvents = MutableSharedFlow<StompEvent>(extraBufferCapacity = 32)
+    private val heartBeaterJob = heartBeater?.startIn(scope)
 
     init {
-        heartBeater?.startIn(scope)
-
         scope.launch {
             stompSocket.incomingEvents
                 .onEach { heartBeater?.notifyMsgReceived() }
@@ -60,19 +60,21 @@ internal class BaseStompSession(
 
         scope.launch {
             sharedStompEvents.collect {
-                when(it) {
-                    is StompEvent.Close -> {
-                        awaitSubscriptionsCompletion()
-                        scope.cancel("STOMP session disconnected")
-                    }
-                    is StompEvent.Error -> {
-                        awaitSubscriptionsCompletion() // let other subscribers handle the error before closing the scope
-                        scope.cancel("STOMP session cancelled due to upstream error", cause = it.cause)
-                    }
+                when (it) {
+                    is StompEvent.Close -> shutdown("STOMP session disconnected")
+                    is StompEvent.Error -> shutdown("STOMP session cancelled due to upstream error", cause = it.cause)
                     else -> Unit
                 }
             }
         }
+    }
+
+    private suspend fun shutdown(message: String, cause: Throwable? = null) {
+        // cancel heartbeats immediately to limit the chances of sending a heartbeat to a closed socket
+        heartBeaterJob?.cancel()
+        // let other subscribers handle the error/closure before cancelling the scope
+        awaitSubscriptionsCompletion()
+        scope.cancel(message, cause = cause)
     }
 
     private suspend fun awaitSubscriptionsCompletion() {
