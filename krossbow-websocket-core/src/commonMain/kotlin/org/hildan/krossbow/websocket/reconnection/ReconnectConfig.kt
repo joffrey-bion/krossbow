@@ -9,7 +9,7 @@ import kotlin.time.Duration.Companion.seconds
 internal const val DEFAULT_MAX_ATTEMPTS = 5
 
 /**
- * The default value for the maximum number of reconnection attempts before giving up.
+ * The default value for the reconnection delay strategy.
  */
 internal val DEFAULT_DELAY_STRATEGY = FixedDelay(1.seconds)
 
