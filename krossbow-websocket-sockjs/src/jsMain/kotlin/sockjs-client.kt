@@ -39,5 +39,8 @@ external object SockJS {
         var transports: dynamic /* String | Array<String> */
             get() = definedExternally
             set(value) = definedExternally
+        var timeout: Number?
+            get() = definedExternally
+            set(value) = definedExternally
     }
 }
