@@ -5,28 +5,34 @@
 
 **Implemented enhancements:**
 
-- Add support for \`watchos\` and \`tvos\` targets [\#158](https://github.com/joffrey-bion/krossbow/issues/158)
+- Add support for `watchos` and `tvos` targets [\#158](https://github.com/joffrey-bion/krossbow/issues/158)
 
 ## [3.0.0](https://github.com/joffrey-bion/krossbow/tree/3.0.0) (2021-12-27)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.7.0...3.0.0)
 
+**Breaking changes:**
+
+- Use Duration instead of long millis in Stomp configuration [\#169](https://github.com/joffrey-bion/krossbow/issues/169)
+- Use Flow instead of Channel in WebSocketConnection API  [\#120](https://github.com/joffrey-bion/krossbow/issues/120)
+
 **Fixed bugs:**
 
 - Reconnecting web socket doesn't close normally its incomingFrames flow [\#174](https://github.com/joffrey-bion/krossbow/issues/174)
-- \`StompClient.connect\(\)\` might leak the WS connection if cancelled just before STOMP handshake [\#163](https://github.com/joffrey-bion/krossbow/issues/163)
+- `StompClient.connect\(\)` might leak the WS connection if cancelled just before STOMP handshake [\#163](https://github.com/joffrey-bion/krossbow/issues/163)
 - Ktor client errors are not wrapped in Krossbow's WebSocketException [\#160](https://github.com/joffrey-bion/krossbow/issues/160)
 
 **Implemented enhancements:**
 
 - Switch iOS to new K/N memory model [\#183](https://github.com/joffrey-bion/krossbow/issues/183)
 - Conditional retry [\#172](https://github.com/joffrey-bion/krossbow/issues/172)
-- Hide internal Charsets APIs [\#171](https://github.com/joffrey-bion/krossbow/issues/171)
-- Use Duration instead of long millis in Stomp configuration [\#169](https://github.com/joffrey-bion/krossbow/issues/169)
-- Remove the deprecated \`defaultWebSocketClient\(\)\` top\-level function [\#166](https://github.com/joffrey-bion/krossbow/issues/166)
-- \[spring\] Stop embedding Tyrus implementation of JSR\-356 by default [\#135](https://github.com/joffrey-bion/krossbow/issues/135)
-- Use Flow instead of Channel in WebSocketConnection API  [\#120](https://github.com/joffrey-bion/krossbow/issues/120)
 
-**Upgraded dependencies**
+**Removals:**
+
+- Hide internal Charsets APIs [\#171](https://github.com/joffrey-bion/krossbow/issues/171)
+- Remove the deprecated `defaultWebSocketClient\(\)` top\-level function [\#166](https://github.com/joffrey-bion/krossbow/issues/166)
+- Stop embedding Tyrus implementation of JSR\-356 with `krossbow\-websocket\-spring` [\#135](https://github.com/joffrey-bion/krossbow/issues/135)
+
+**Upgraded dependencies:**
 
 - Upgrade OkHttp to version 4.9.3 [\#182](https://github.com/joffrey-bion/krossbow/issues/182)
 - Upgrade Jetty websocket client to version 9.4.44.v20210927 [\#181](https://github.com/joffrey-bion/krossbow/issues/181)
@@ -44,7 +50,7 @@
 ## [2.7.0](https://github.com/joffrey-bion/krossbow/tree/2.7.0) (2021-10-11)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.6.0...2.7.0)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Kotlinx Serialization to version 1.3.0 [\#159](https://github.com/joffrey-bion/krossbow/issues/159)
 
@@ -64,7 +70,7 @@
 
 **Fixed bugs:**
 
-- \`connect\(\)\` doesn't fail on connection failure with OkHttp client [\#138](https://github.com/joffrey-bion/krossbow/issues/138)
+- `connect\(\)` doesn't fail on connection failure with OkHttp client [\#138](https://github.com/joffrey-bion/krossbow/issues/138)
 
 ## [2.5.1](https://github.com/joffrey-bion/krossbow/tree/2.5.1) (2021-10-08)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.5.0...2.5.1)
@@ -73,7 +79,7 @@
 
 - Ktor adapter tries to consume incomingFrames channel twice [\#155](https://github.com/joffrey-bion/krossbow/issues/155)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Dokka to version 1.5.30 [\#152](https://github.com/joffrey-bion/krossbow/issues/152)
 - Upgrade Kotlin to version 1.5.31 [\#151](https://github.com/joffrey-bion/krossbow/issues/151)
@@ -81,7 +87,7 @@
 ## [2.5.0](https://github.com/joffrey-bion/krossbow/tree/2.5.0) (2021-09-13)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.4.1...2.5.0)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Jackson to version 2.12.5 [\#147](https://github.com/joffrey-bion/krossbow/issues/147)
 - Upgrade uuid to version 0.3.1 [\#146](https://github.com/joffrey-bion/krossbow/issues/146)
@@ -98,21 +104,24 @@
 
 **Implemented enhancements:**
 
-- Ensure all web socket clients throw \`WebSocketConnectionException\` when failing to connect [\#137](https://github.com/joffrey-bion/krossbow/issues/137)
+- Ensure all web socket clients throw `WebSocketConnectionException` when failing to connect [\#137](https://github.com/joffrey-bion/krossbow/issues/137)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade OkHttp to version 4.9.1 [\#139](https://github.com/joffrey-bion/krossbow/issues/139)
 
 ## [2.4.0](https://github.com/joffrey-bion/krossbow/tree/2.4.0) (2021-09-05)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.3.0...2.4.0)
 
+**Deprecations:**
+
+- Deprecate global defaultWebSocketClient\(\) in favor of WebSocketClient.default\(\) [\#132](https://github.com/joffrey-bion/krossbow/issues/132)
+
 **Implemented enhancements:**
 
 - Add adapter for Spring Jetty's implementation [\#134](https://github.com/joffrey-bion/krossbow/issues/134)
-- Deprecate global defaultWebSocketClient\(\) in favor of WebSocketClient.default\(\) [\#132](https://github.com/joffrey-bion/krossbow/issues/132)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade spring\-websocket to version 5.3.9 [\#133](https://github.com/joffrey-bion/krossbow/issues/133)
 - Upgrade Kotlin Coroutines to version 1.5.1 [\#131](https://github.com/joffrey-bion/krossbow/issues/131)
@@ -138,7 +147,7 @@
 
 - Send frame should suspend until delivery of the message  [\#125](https://github.com/joffrey-bion/krossbow/issues/125)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Dokka to version 1.5.0 [\#127](https://github.com/joffrey-bion/krossbow/issues/127)
 - Upgrade Kotlin to version 1.5.21 [\#124](https://github.com/joffrey-bion/krossbow/issues/124)
@@ -148,8 +157,8 @@
 
 **Implemented enhancements:**
 
-- Make \`host\` header more easily customizable [\#123](https://github.com/joffrey-bion/krossbow/issues/123)
-- Allow sending CONNECT frame without \`host\` header [\#122](https://github.com/joffrey-bion/krossbow/issues/122)
+- Make `host` header more easily customizable [\#123](https://github.com/joffrey-bion/krossbow/issues/123)
+- Allow sending CONNECT frame without `host` header [\#122](https://github.com/joffrey-bion/krossbow/issues/122)
 
 ## [2.0.0](https://github.com/joffrey-bion/krossbow/tree/2.0.0) (2021-05-28)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.4.0...2.0.0)
@@ -162,7 +171,7 @@
 
 - withTransaction doesn't allow suspending calls inside [\#114](https://github.com/joffrey-bion/krossbow/issues/114)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Ktor to version 1.6.0 \(Kotlin 1.5\) [\#119](https://github.com/joffrey-bion/krossbow/issues/119)
 - Upgrade Kotlin coroutines to version 1.5.0 [\#117](https://github.com/joffrey-bion/krossbow/issues/117)
@@ -172,11 +181,7 @@
 ## [1.4.0](https://github.com/joffrey-bion/krossbow/tree/1.4.0) (2021-05-11)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.3.1...1.4.0)
 
-**Closed issues:**
-
-- Add typealias for WebSocketSession \(renamed to WebSocketConnection\) [\#121](https://github.com/joffrey-bion/krossbow/issues/121)
-
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Dokka to version 1.4.32 [\#113](https://github.com/joffrey-bion/krossbow/issues/113)
 - Upgrade Jackson to version 2.12.3 [\#112](https://github.com/joffrey-bion/krossbow/issues/112)
@@ -199,23 +204,26 @@
 - Remove dependency on kotlinx\-io's charsets [\#99](https://github.com/joffrey-bion/krossbow/issues/99)
 - Migrate from kotlinx\-io to okio [\#97](https://github.com/joffrey-bion/krossbow/issues/97)
 
-**Implemented enhancements:**
+**Deprecations:**
 
 - Rename WebSocketSession to WebSocketConnection [\#100](https://github.com/joffrey-bion/krossbow/issues/100)
+
+**Implemented enhancements:**
+
 - Feature \- WebSocket Reconnecting Strategy [\#94](https://github.com/joffrey-bion/krossbow/issues/94)
 
 **Merged pull requests:**
 
 - Add custom header support to SUBSCRIBE frame. [\#105](https://github.com/joffrey-bion/krossbow/pull/105) ([@jatsqi](https://github.com/jatsqi))
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Kotlin coroutines to version 1.4.3 [\#101](https://github.com/joffrey-bion/krossbow/issues/101)
 
 ## [1.2.0](https://github.com/joffrey-bion/krossbow/tree/1.2.0) (2021-03-20)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.1.5...1.2.0)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Kotlinx Serialization to version 1.1.0 [\#96](https://github.com/joffrey-bion/krossbow/issues/96)
 - Upgrade Kotlin to version 1.4.31 [\#95](https://github.com/joffrey-bion/krossbow/issues/95)
@@ -241,7 +249,7 @@
 
 - Stop transferring experimental status of Kotlinx Serialization [\#87](https://github.com/joffrey-bion/krossbow/issues/87)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Kotlin to version 1.4.20 [\#89](https://github.com/joffrey-bion/krossbow/issues/89)
 
@@ -260,7 +268,7 @@
 - Support PING/PONG web socket frames for engines that support it [\#84](https://github.com/joffrey-bion/krossbow/issues/84)
 - Add configurable web socket frame buffer [\#83](https://github.com/joffrey-bion/krossbow/issues/83)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Kotlinx Serialization to version 1.0.1 [\#85](https://github.com/joffrey-bion/krossbow/issues/85)
 
@@ -271,14 +279,14 @@
 
 - Add WebSocketSession.stomp\(\) extension [\#81](https://github.com/joffrey-bion/krossbow/issues/81)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Kotlin coroutines to version 1.4.1 [\#82](https://github.com/joffrey-bion/krossbow/issues/82)
 
 ## [1.0.0](https://github.com/joffrey-bion/krossbow/tree/1.0.0) (2020-10-31)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.43.0...1.0.0)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade spring\-websocket to version 5.3.0 [\#80](https://github.com/joffrey-bion/krossbow/issues/80)
 - Upgrade SockJS client to version 1.5.0 [\#79](https://github.com/joffrey-bion/krossbow/issues/79)
@@ -295,7 +303,7 @@
 - Spring websocket adapter deadlocks on close\(\) [\#72](https://github.com/joffrey-bion/krossbow/issues/72)
 - JDK11 websocket adapter doesn't let the received CLOSE frame through [\#71](https://github.com/joffrey-bion/krossbow/issues/71)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Kotlin to version 1.4.10 [\#74](https://github.com/joffrey-bion/krossbow/issues/74)
 - Upgrade kotlinx.serialization to version 1.0 [\#73](https://github.com/joffrey-bion/krossbow/issues/73)
@@ -303,7 +311,7 @@
 ## [0.42.0](https://github.com/joffrey-bion/krossbow/tree/0.42.0) (2020-09-23)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.41.0...0.42.0)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Kotlinx Serialization to version 1.0.0\-RC2 [\#70](https://github.com/joffrey-bion/krossbow/issues/70)
 
@@ -317,7 +325,7 @@
 ## [0.40.0](https://github.com/joffrey-bion/krossbow/tree/0.40.0) (2020-09-12)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.32.0...0.40.0)
 
-**Implemented enhancements:**
+**Breaking changes:**
 
 - Make subscribe methods suspending [\#68](https://github.com/joffrey-bion/krossbow/issues/68)
 
@@ -396,13 +404,16 @@
 ## [0.20.0](https://github.com/joffrey-bion/krossbow/tree/0.20.0) (2020-05-04)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.12.0...0.20.0)
 
+**Breaking changes:**
+
+- Represent subscriptions with Kotlin Flows [\#53](https://github.com/joffrey-bion/krossbow/issues/53)
+
 **Fixed bugs:**
 
 - Textual content\-type on binary websocket frames is always decoded as UTF\-8 [\#51](https://github.com/joffrey-bion/krossbow/issues/51)
 
 **Implemented enhancements:**
 
-- Represent subscriptions with Kotlin Flows [\#53](https://github.com/joffrey-bion/krossbow/issues/53)
 - Add base adapters to support all Kotlinx Serialization formats [\#52](https://github.com/joffrey-bion/krossbow/issues/52)
 
 ## [0.12.0](https://github.com/joffrey-bion/krossbow/tree/0.12.0) (2020-04-24)
@@ -439,7 +450,7 @@
 ## [0.10.3](https://github.com/joffrey-bion/krossbow/tree/0.10.3) (2020-03-27)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.10.2...0.10.3)
 
-**Upgraded dependencies**
+**Upgraded dependencies:**
 
 - Upgrade Kotlinx.serialization to version 0.20.0 [\#39](https://github.com/joffrey-bion/krossbow/issues/39)
 - Upgrade Jackson to version 2.10.0 [\#38](https://github.com/joffrey-bion/krossbow/issues/38)
@@ -447,11 +458,14 @@
 ## [0.10.2](https://github.com/joffrey-bion/krossbow/tree/0.10.2) (2020-03-19)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.10.1...0.10.2)
 
-**Implemented enhancements:**
+**Breaking changes:**
 
 - Change default WebSocket impl on JVM to JDK 11 async client [\#34](https://github.com/joffrey-bion/krossbow/issues/34)
-- Add support for heart beats [\#33](https://github.com/joffrey-bion/krossbow/issues/33)
 - Rework WebSocket API to use a channel instead of a listener [\#32](https://github.com/joffrey-bion/krossbow/issues/32)
+
+**Implemented enhancements:**
+
+- Add support for heart beats [\#33](https://github.com/joffrey-bion/krossbow/issues/33)
 - Add JDK11 async WebSocket bridge [\#27](https://github.com/joffrey-bion/krossbow/issues/27)
 
 ## [0.10.1](https://github.com/joffrey-bion/krossbow/tree/0.10.1) (2020-03-12)
@@ -563,7 +577,7 @@
 - Publish Maven artifacts on Jcenter [\#6](https://github.com/joffrey-bion/krossbow/issues/6)
 
 ## [0.1.0](https://github.com/joffrey-bion/krossbow/tree/0.1.0) (2019-06-23)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/d3b4702c8c253067704b184885659d65d9e270a4...0.1.0)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/d274bafb8ba391187c7b64378b5e4071a869581a...0.1.0)
 
 **Implemented enhancements:**
 

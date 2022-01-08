@@ -8,7 +8,7 @@ plugins {
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jetbrains.dokka") version "1.6.10" apply false
-    id("org.hildan.github.changelog") version "1.8.0"
+    id("org.hildan.github.changelog") version "1.11.1"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
     `maven-publish`
     signing
@@ -38,14 +38,7 @@ val githubRepoUrl = "https://github.com/$githubSlug"
 changelog {
     githubUser = project.githubUser
     futureVersionTag = project.version.toString()
-    excludeLabels = listOf("internal") + DEFAULT_EXCLUDED_LABELS
     customTagByIssueNumber = mapOf(6 to "0.1.1", 10 to "0.1.2", 15 to "0.4.0")
-    sections = listOf(
-        org.hildan.github.changelog.builder.SectionDefinition(
-            title = "Upgraded dependencies",
-            labels = listOf("dependencies")
-        )
-    )
 }
 
 nexusPublishing {
