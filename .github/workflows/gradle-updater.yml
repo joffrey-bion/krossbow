@@ -1,0 +1,13 @@
+name: Gradle Updater
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every night at 5am
+    - cron: "0 5 * * *"
+
+jobs:
+  upgrade-gradle-wrapper:
+    uses: joffrey-bion/.github/.github/workflows/upgrade-gradle-wrapper.yml@main
+    secrets:
+      GH_PAT: ${{ secrets.GH_PAT }}
