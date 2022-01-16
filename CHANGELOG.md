@@ -1,5 +1,12 @@
 # Change Log
 
+## [3.1.1](https://github.com/joffrey-bion/krossbow/tree/3.1.1) (2022-01-16)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.1.0...3.1.1)
+
+**Fixed bugs:**
+
+- Software caused connection abort on network disconnection [\#173](https://github.com/joffrey-bion/krossbow/issues/173)
+
 ## [3.1.0](https://github.com/joffrey-bion/krossbow/tree/3.1.0) (2021-12-31)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.0.0...3.1.0)
 
