@@ -13,6 +13,7 @@ $dokka.location:/SockJS.OpenEvent///PointingToDeclaration/krossbow-websocket-so
 $dokka.location:/SockJS.Options///PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-options/index.html
 $dokka.location:/SockJS.Options/server/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-options/server.html
 $dokka.location:/SockJS.Options/sessionId/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-options/session-id.html
+$dokka.location:/SockJS.Options/timeout/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-options/timeout.html
 $dokka.location:/SockJS.Options/transports/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-options/transports.html
 $dokka.location:/SockJS///PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/index.html
 $dokka.location:/SockJS/CLOSED/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-c-l-o-s-e-d.html
