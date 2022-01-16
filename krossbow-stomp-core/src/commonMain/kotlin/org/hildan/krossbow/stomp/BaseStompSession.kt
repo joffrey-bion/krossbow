@@ -13,6 +13,7 @@ import org.hildan.krossbow.stomp.headers.*
 import org.hildan.krossbow.stomp.heartbeats.HeartBeater
 import org.hildan.krossbow.stomp.heartbeats.NO_HEART_BEATS
 import org.hildan.krossbow.utils.generateUuid
+import org.hildan.krossbow.websocket.WebSocketException
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
@@ -35,7 +36,15 @@ internal class BaseStompSession(
         HeartBeater(
             heartBeat = heartBeat,
             tolerance = config.heartBeatTolerance,
-            sendHeartBeat = { stompSocket.sendHeartBeat() },
+            sendHeartBeat = {
+                // The web socket could have errored or be closed, and the heart beater's job not yet be cancelled.
+                // In this case, we don't want the heart beater to crash
+                try {
+                    stompSocket.sendHeartBeat()
+                } catch(e : WebSocketException) {
+                    shutdown("STOMP session failed: heart beat couldn't be sent", cause = e)
+                }
+            },
             onMissingHeartBeat = {
                 val cause = MissingHeartBeatException(heartBeat.expectedPeriod)
                 sharedStompEvents.emit(StompEvent.Error(cause))
