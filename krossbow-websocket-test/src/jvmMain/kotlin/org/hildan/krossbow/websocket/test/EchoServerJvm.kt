@@ -17,6 +17,7 @@ internal actual suspend fun runAlongEchoWSServer(block: suspend (server: TestSer
 
 internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(port)) {
 
+    @Volatile
     var lastConnectedSocket: WebSocket? = null
 
     override fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
