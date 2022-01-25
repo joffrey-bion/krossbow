@@ -44,4 +44,6 @@ jobs:
         run: pip install mkdocs-material mkdocs-macros-plugin
 
       - name: Deploy doc to GitHub pages
+        # --strict aborts on any warning
+        # --force forces the push to the repo (gh-pages branch)
         run: mkdocs gh-deploy --strict --force
