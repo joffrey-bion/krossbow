@@ -1,5 +1,3 @@
-import org.hildan.github.changelog.builder.DEFAULT_EXCLUDED_LABELS
-
 plugins {
     val kotlinVersion = "1.6.10"
     kotlin("jvm") apply false
