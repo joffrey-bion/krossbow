@@ -11,8 +11,7 @@ kotlin {
         nodejs()
         browser()
     }
-    ios()
-    iosSimulatorArm64()
+    setupNativeTargets()
 
     sourceSets {
         all {
