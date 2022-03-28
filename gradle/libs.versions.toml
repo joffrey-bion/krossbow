@@ -16,7 +16,7 @@ npm-sockjs-client = "1.5.2"
 
 # test-only
 npm-isomorphic-ws = "4.0.1"
-npm-ws = "8.4.2"
+npm-ws = "8.5.0"
 
 [libraries]
 jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
