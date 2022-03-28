@@ -7,6 +7,8 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 fun KotlinMultiplatformExtension.setupNativeTargets() {
     ios()
+    iosSimulatorArm64()
+
     tvos()
 
     // watchos() shortcut cannot be used because okio is missing watchosX64()
@@ -43,6 +45,13 @@ fun NamedDomainObjectContainer<KotlinSourceSet>.setupNativeSourceSets() {
     }
     val iosTest by getting {
         dependsOn(nativeDarwinTest)
+    }
+
+    val iosSimulatorArm64Main by getting {
+        dependsOn(iosMain)
+    }
+    val iosSimulatorArm64Test by getting {
+        dependsOn(iosTest)
     }
 
     val watchosX86Main by getting {
