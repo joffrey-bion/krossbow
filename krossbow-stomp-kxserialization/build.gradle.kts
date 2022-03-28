@@ -12,6 +12,7 @@ kotlin {
         browser()
     }
     ios()
+    iosSimulatorArm64()
 
     sourceSets {
         all {
