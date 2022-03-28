@@ -12,7 +12,7 @@ spring = "5.3.14"
 tyrus = "1.17"
 uuid = "0.4.0"
 
-npm-sockjs-client = "1.5.2"
+npm-sockjs-client = "1.6.0"
 
 # test-only
 npm-isomorphic-ws = "4.0.1"
