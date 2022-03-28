@@ -1,5 +1,16 @@
 # Change Log
 
+## [3.2.0](https://github.com/joffrey-bion/krossbow/tree/3.2.0) (2022-03-28)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.1.1...3.2.0)
+
+**Implemented enhancements:**
+
+- watchOS/tvOS support for `krossbow\-stomp\-kxserialization` [\#193](https://github.com/joffrey-bion/krossbow/issues/193)
+
+**Merged pull requests:**
+
+- Add iOS ARM64 Simulator Support \(M1\) [\#192](https://github.com/joffrey-bion/krossbow/pull/192) ([@remy-bardou-lifeonair](https://github.com/remy-bardou-lifeonair))
+
 ## [3.1.1](https://github.com/joffrey-bion/krossbow/tree/3.1.1) (2022-01-16)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.1.0...3.1.1)
 
