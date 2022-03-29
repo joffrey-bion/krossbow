@@ -1,5 +1,18 @@
 # Change Log
 
+## [3.3.0](https://github.com/joffrey-bion/krossbow/tree/3.3.0) (2022-03-29)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.2.0...3.3.0)
+
+**Upgraded dependencies:**
+
+- Upgrade spring\-websocket to version 5.3.17 [\#200](https://github.com/joffrey-bion/krossbow/issues/200)
+- Upgrade kotlinx\-atomicfu to version 0.17.1 [\#199](https://github.com/joffrey-bion/krossbow/issues/199)
+- Upgrade sockjs\-client to version 1.6.0 [\#198](https://github.com/joffrey-bion/krossbow/issues/198)
+- Upgrade jackson\-core to version 2.13.2 [\#197](https://github.com/joffrey-bion/krossbow/issues/197)
+- Upgrade slf4j to version 1.7.36 [\#196](https://github.com/joffrey-bion/krossbow/issues/196)
+- Upgrade uuid to version 0.4.0 [\#195](https://github.com/joffrey-bion/krossbow/issues/195)
+- Upgrade Ktor to version 1.6.8 [\#194](https://github.com/joffrey-bion/krossbow/issues/194)
+
 ## [3.2.0](https://github.com/joffrey-bion/krossbow/tree/3.2.0) (2022-03-28)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.1.1...3.2.0)
 
