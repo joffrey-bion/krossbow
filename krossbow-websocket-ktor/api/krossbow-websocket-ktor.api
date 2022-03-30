@@ -1,0 +1,7 @@
+public final class org/hildan/krossbow/websocket/ktor/KtorWebSocketClient : org/hildan/krossbow/websocket/WebSocketClient {
+	public fun <init> ()V
+	public fun <init> (Lio/ktor/client/HttpClient;)V
+	public synthetic fun <init> (Lio/ktor/client/HttpClient;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
