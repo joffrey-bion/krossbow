@@ -47,7 +47,7 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                implementation(projects.krossbowWebsocketKtor)
+                implementation(projects.krossbowWebsocketKtorLegacy)
                 implementation(projects.krossbowWebsocketOkhttp)
                 implementation(projects.krossbowWebsocketSpring)
                 implementation(libs.ktor.client.java)
