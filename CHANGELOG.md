@@ -1,5 +1,12 @@
 # Change Log
 
+## [3.3.1](https://github.com/joffrey-bion/krossbow/tree/3.3.1) (2022-04-01)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.3.0...3.3.1)
+
+**Merged pull requests:**
+
+- Mark `NO\_HEART\_BEATS` as `@SharedImmutable` to fix `IncorrectDereferenceException` on iOS  [\#202](https://github.com/joffrey-bion/krossbow/pull/202) ([@remy-bardou-lifeonair](https://github.com/remy-bardou-lifeonair))
+
 ## [3.3.0](https://github.com/joffrey-bion/krossbow/tree/3.3.0) (2022-03-29)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.2.0...3.3.0)
 
