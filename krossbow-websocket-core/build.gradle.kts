@@ -6,23 +6,7 @@ description = "WebSocket client API used by the Krossbow STOMP client, with defa
 
 kotlin {
     jvm()
-    js {
-        useCommonJs()
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
-            }
-        }
-        browser {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
-            }
-        }
-    }
+    jsWithBigTimeouts()
     setupNativeTargets()
 
     sourceSets {

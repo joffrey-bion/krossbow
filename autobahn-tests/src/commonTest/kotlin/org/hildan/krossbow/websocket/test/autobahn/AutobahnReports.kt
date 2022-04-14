@@ -1,43 +1,28 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
-import io.ktor.client.*
-import io.ktor.client.engine.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.request.*
 import kotlinx.coroutines.delay
 import kotlinx.serialization.*
-import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.*
 
-// Workaround for Ktor's bug with HttpClient() constructor using default engine
-// https://github.com/JetBrains/kotlin/blob/master/kotlin-native/NEW_MM.md#update-the-libraries
-expect fun ktorEngine(): HttpClientEngineFactory<*>
+// Using an expect/actual to be able to use Ktor 1 or 2 depending on the source set
+// to avoid conflicts when testing one or the other.
+expect class HttpGetter {
+    suspend fun get(url: String): String
+}
 
 internal class AutobahnReportsClient(private val config: AutobahnConfig) {
-    private val httpClient = HttpClient(ktorEngine()) {
-        defaultRequest {
-            host = config.host
-            port = config.webPort
-        }
-        Json {
-            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
-                ignoreUnknownKeys = true
-            })
-        }
-    }
+    private val baseUrl = "http://${config.host}:${config.webPort}"
+    private val json = Json { ignoreUnknownKeys = true }
+    private val httpClient = HttpGetter()
 
-    suspend fun getReportsIndex(): AutobahnReportIndex = httpClient.get {
-        url {
-            encodedPath = "/cwd/reports/clients/index.json"
-        }
-    }
+    suspend fun getReportsIndex(): AutobahnReportIndex =
+        getEndpoint("cwd/reports/clients/index.json")
 
-    suspend fun getTestCaseReport(fileName: String): AutobahnTestCaseReport = httpClient.get {
-        url {
-            encodedPath = "/cwd/reports/clients/$fileName"
-        }
-    }
+    suspend fun getTestCaseReport(fileName: String): AutobahnTestCaseReport =
+        getEndpoint("cwd/reports/clients/$fileName")
+
+    private suspend inline fun <reified T> getEndpoint(endpoint: String): T =
+        json.decodeFromString(httpClient.get("$baseUrl/$endpoint"))
 }
 
 internal suspend fun AutobahnReportsClient.getAgentResults(agentUnderTest: String): AutobahnAgentResults {

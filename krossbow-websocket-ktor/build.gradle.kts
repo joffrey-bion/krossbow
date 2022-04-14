@@ -6,23 +6,7 @@ description = "Multiplatform implementation of Krossbow's WebSocket API using Kt
 
 kotlin {
     jvm()
-    js {
-        useCommonJs() // required for SockJS top-level declarations usage
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
-            }
-        }
-        browser {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
-            }
-        }
-    }
+    jsWithBigTimeouts()
     setupNativeTargets()
 
     sourceSets {

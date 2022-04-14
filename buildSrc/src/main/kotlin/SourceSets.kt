@@ -5,6 +5,26 @@ import org.gradle.kotlin.dsl.getting
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
+fun KotlinMultiplatformExtension.jsWithBigTimeouts(name: String = "js") {
+    js(name) {
+        useCommonJs()
+        nodejs {
+            testTask {
+                useMocha {
+                    timeout = "10s"
+                }
+            }
+        }
+        browser {
+            testTask {
+                useMocha {
+                    timeout = "10s"
+                }
+            }
+        }
+    }
+}
+
 fun KotlinMultiplatformExtension.setupNativeTargets() {
     ios()
     iosSimulatorArm64()

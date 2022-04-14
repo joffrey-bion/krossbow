@@ -1,6 +1,7 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
-import io.ktor.client.engine.*
-import io.ktor.client.engine.java.*
+import java.net.*
 
-actual fun ktorEngine(): HttpClientEngineFactory<*> = Java
+actual class HttpGetter {
+    actual suspend fun get(url: String): String = URL(url).readText()
+}

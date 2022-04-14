@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
@@ -6,25 +8,18 @@ plugins {
 
 description = "A non-published project to run Autobahn Test Suite on all implementations."
 
+apply<org.jetbrains.kotlin.gradle.targets.js.npm.NpmResolverPlugin>()
+
 kotlin {
     jvm()
-    js {
-        useCommonJs()
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
-            }
-        }
-        browser {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
-            }
-        }
-    }
+    jvm("jvmKtor")
+    jvm("jvmKtorLegacy")
+    jvm("jvmOkhttp")
+    jvm("jvmSpring")
+    jsWithBigTimeouts("js")
+    jsWithBigTimeouts("jsKtor")
+    jsWithBigTimeouts("jsKtorLegacy")
+    jsWithBigTimeouts("jsOther")
     setupNativeTargets()
 
     sourceSets {
@@ -37,29 +32,66 @@ kotlin {
                 implementation(projects.krossbowWebsocketTest)
                 implementation(projects.krossbowWebsocketCore)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.kotlinx.serialization.core)
                 implementation(libs.kotlinx.serialization.json)
-
-                // for autobahn test server HTTP endpoints
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.serialization)
             }
         }
-        val jvmTest by getting {
+
+        val jvmTest by getting {}
+
+        val jvmOkhttpTest by getting {
+            dependsOn(jvmTest)
             dependencies {
-                implementation(projects.krossbowWebsocketKtorLegacy)
                 implementation(projects.krossbowWebsocketOkhttp)
+            }
+        }
+        val jvmSpringTest by getting {
+            dependsOn(jvmTest)
+            dependencies {
                 implementation(projects.krossbowWebsocketSpring)
-                implementation(libs.ktor.client.java)
-                implementation(libs.ktor.client.okhttp)
                 implementation(libs.jettyWebsocketCient)
                 implementation(libs.slf4j.simple) // for jetty client logs
             }
         }
-        val jsTest by getting {
+        val jvmKtorLegacyTest by getting {
+            dependsOn(jvmTest)
+            dependencies {
+                implementation(projects.krossbowWebsocketKtorLegacy)
+                implementation(libs.ktor1.client.java)
+                implementation(libs.ktor1.client.okhttp)
+            }
+        }
+        val jvmKtorTest by getting {
+            dependsOn(jvmTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
-                implementation(libs.ktor.client.js)
+                implementation(libs.ktor2.client.java)
+                implementation(libs.ktor2.client.okhttp)
+                implementation(libs.slf4j.simple)
+            }
+        }
+
+        val jsTest by getting {}
+
+        val jsKtorTest by getting {
+            dependsOn(jsTest)
+            dependencies {
+                implementation(projects.krossbowWebsocketKtor)
+                implementation(libs.ktor2.client.js)
+            }
+        }
+        val jsKtorLegacyTest by getting {
+            dependsOn(jsTest)
+            dependencies {
+                implementation(projects.krossbowWebsocketKtorLegacy)
+                implementation(libs.ktor1.client.js)
+            }
+        }
+        val jsOtherTest by getting {
+            dependsOn(jsTest)
+            dependencies {
+                // to call the Autobahn HTTP APIs
+                implementation(npm("isomorphic-fetch", libs.versions.npm.isomorphic.fetch.get()))
+
                 implementation(npm("isomorphic-ws", libs.versions.npm.isomorphic.ws.get()))
                 implementation(npm("ws", libs.versions.npm.ws.get()))
             }
@@ -69,8 +101,7 @@ kotlin {
 
         val nativeDarwinTest by getting {
             dependencies {
-                // Ktor's iOS client works on all darwin targets including desktop macosX64
-                implementation(libs.ktor.client.ios)
+                implementation(libs.ktor2.client.darwin)
             }
         }
     }
@@ -111,22 +142,34 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimu
     }
 }
 
-val generateAutobahnConfigJsonForJs by tasks.creating {
-    dockerCompose.isRequiredBy(this)
-    val config = "${rootProject.buildDir}/js/packages/${rootProject.name}-${project.name}-test/autobahn-server.json"
-    outputs.file(config)
-    doFirst {
-        val autobahnContainer = getAutobahnTestServerContainerInfo()
-        file(config).writeText("""{
-            "host":"${autobahnContainer.host}",
-            "webPort":${autobahnContainer.ports.getValue(8080)},
-            "wsPort":${autobahnContainer.ports.getValue(9001)}
-        }""".trimMargin())
-    }
-}
+val jsTestTasks = tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest>().map { it }
 
-tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest> {
-    dependsOn(generateAutobahnConfigJsonForJs)
+jsTestTasks.forEach { testTask ->
+    val sourceSet = testTask.compilation.defaultSourceSetName
+    val npmProjectDir = testTask.compilation.npmProject.dir
+    val autobahnServerConfigFile = npmProjectDir.resolve("autobahn-server.json")
+
+    val generateConfigTaskName = "${sourceSet}_autobahnConfig"
+
+    // There is a browser test task AND a node test task for each source set, and they use the same NPM project dir.
+    // So we only need to create the task once per source set, but we need both test tasks to depend on it.
+    val generateAutobahnConfigJson = tasks.findByName(generateConfigTaskName) ?: tasks.create(generateConfigTaskName) {
+        group = "autobahn config js"
+        dockerCompose.isRequiredBy(this)
+        outputs.file(autobahnServerConfigFile)
+        doFirst {
+            val autobahnContainer = getAutobahnTestServerContainerInfo()
+            file(autobahnServerConfigFile).writeText(
+                """{
+        "host":"${autobahnContainer.host}",
+        "webPort":${autobahnContainer.ports.getValue(8080)},
+        "wsPort":${autobahnContainer.ports.getValue(9001)}
+    }""".trimMargin()
+            )
+        }
+    }
+
+    testTask.dependsOn(generateAutobahnConfigJson)
 }
 
 fun getAutobahnTestServerContainerInfo() = dockerCompose.servicesInfos["autobahn_server"]?.firstContainer

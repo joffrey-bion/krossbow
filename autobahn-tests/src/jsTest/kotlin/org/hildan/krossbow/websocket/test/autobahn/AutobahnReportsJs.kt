@@ -1,6 +1,9 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
-import io.ktor.client.engine.*
-import io.ktor.client.engine.js.*
+import fetch
+import kotlinx.coroutines.await
 
-actual fun ktorEngine(): HttpClientEngineFactory<*> = Js
+actual class HttpGetter {
+
+    actual suspend fun get(url: String): String = fetch(url).await().text().await()
+}
