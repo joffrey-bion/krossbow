@@ -3,6 +3,7 @@ package org.hildan.krossbow.websocket.test.autobahn
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.websocket.*
+import org.hildan.krossbow.websocket.test.TestConnectionTimeoutException
 import org.hildan.krossbow.websocket.test.runSuspendingTest
 import kotlin.test.*
 
@@ -215,7 +216,7 @@ abstract class AutobahnClientTestSuite(
     }
 
     private suspend fun AutobahnClientTester.assertTestCaseResult(case: AutobahnCase) {
-        val status = getCaseStatus(case.id)
+        val status = retryOnTimeout(3) { getCaseStatus(case.id) }
         if (!status.isAcceptable) {
             updateReports() // required to fetch the report details
             failTestCaseWithReportDetails(case)
@@ -225,8 +226,7 @@ abstract class AutobahnClientTestSuite(
     private suspend fun failTestCaseWithReportDetails(case: AutobahnCase) {
         val testResult = reportsClient.getTestResult(agentUnderTest, case.id)
         val status = testResult.behavior
-        assertFalse(status.isAcceptable, "Case status was not acceptable but the report says $status")
-
+        assertFalse(status.isAcceptable, "Case status via WS was not acceptable but the JSON report says $status")
         val details = testResult.fetchReport()?.describeExpectedAndActual()
         fail("Test case ${case.id} finished with status $status, expected OK or NON-STRICT:\n$details")
     }
@@ -342,4 +342,16 @@ private fun WebSocketFrame.truncated(length: Int) = if (this is WebSocketFrame.T
     copy(text = text.take(length))
 } else {
     this
+}
+
+private inline fun <T> retryOnTimeout(maxTries: Int, call: () -> T): T {
+    var lastException: Exception? = null
+    repeat(maxTries) {
+        try {
+            return call()
+        } catch (e: TestConnectionTimeoutException) {
+            lastException = e
+        }
+    }
+    throw lastException!!
 }
