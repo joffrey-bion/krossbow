@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 fun KotlinMultiplatformExtension.jsWithBigTimeouts(name: String = "js") {
-    js(name) {
+    js(name, BOTH) {
         useCommonJs()
         nodejs {
             testTask {

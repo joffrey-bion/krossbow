@@ -145,14 +145,16 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimu
 val jsTestTasks = tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest>().map { it }
 
 jsTestTasks.forEach { testTask ->
-    val sourceSet = testTask.compilation.defaultSourceSetName
     val npmProjectDir = testTask.compilation.npmProject.dir
     val autobahnServerConfigFile = npmProjectDir.resolve("autobahn-server.json")
 
-    val generateConfigTaskName = "${sourceSet}_autobahnConfig"
+    val taskPrefix = npmProjectDir.name.removePrefix("krossbow-autobahn-tests").toCamelCase()
+    val generateConfigTaskName = "${taskPrefix}_autobahnConfig"
 
     // There is a browser test task AND a node test task for each source set, and they use the same NPM project dir.
-    // So we only need to create the task once per source set, but we need both test tasks to depend on it.
+    // There is a legacy AND an IR test task for each source set, but they DON'T use the same NPM project dir.
+    // We only need to create the task once per generated NPM project, but we need all test tasks using this project to
+    // depend on the config generation task.
     val generateAutobahnConfigJson = tasks.findByName(generateConfigTaskName) ?: tasks.create(generateConfigTaskName) {
         group = "autobahn config js"
         dockerCompose.isRequiredBy(this)
@@ -161,10 +163,10 @@ jsTestTasks.forEach { testTask ->
             val autobahnContainer = getAutobahnTestServerContainerInfo()
             file(autobahnServerConfigFile).writeText(
                 """{
-        "host":"${autobahnContainer.host}",
-        "webPort":${autobahnContainer.ports.getValue(8080)},
-        "wsPort":${autobahnContainer.ports.getValue(9001)}
-    }""".trimMargin()
+                    "host":"${autobahnContainer.host}",
+                    "webPort":${autobahnContainer.ports.getValue(8080)},
+                    "wsPort":${autobahnContainer.ports.getValue(9001)}
+                }""".trimMargin()
             )
         }
     }
@@ -174,3 +176,5 @@ jsTestTasks.forEach { testTask ->
 
 fun getAutobahnTestServerContainerInfo() = dockerCompose.servicesInfos["autobahn_server"]?.firstContainer
     ?: error("autobahn_server container not found")
+
+fun String.toCamelCase() = replace(Regex("""\-(\w)""")) { match -> match.groupValues[1].toUpperCase() }

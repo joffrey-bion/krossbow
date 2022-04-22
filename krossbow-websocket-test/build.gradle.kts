@@ -7,7 +7,7 @@ description = "Test utilities for Krossbow WebSocket adapter implementations."
 
 kotlin {
     jvm()
-    js {
+    js(BOTH) {
         useCommonJs()
         nodejs()
         browser()

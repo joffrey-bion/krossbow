@@ -7,7 +7,7 @@ description = "An extension of Krossbow STOMP client using Kotlinx Serialization
 
 kotlin {
     jvm()
-    js {
+    js(BOTH) {
         nodejs()
         browser()
     }
