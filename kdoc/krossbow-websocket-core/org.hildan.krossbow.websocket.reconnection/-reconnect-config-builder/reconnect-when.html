@@ -1,43 +1,59 @@
+<!doctype html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>reconnectWhen</title>
-</head><body><link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
-    <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script><link href="../../../styles/style.css" rel="Stylesheet"><link href="../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../styles/main.css" rel="Stylesheet"><link href="../../../styles/prism.css" rel="Stylesheet"><link href="../../../styles/logo-styles.css" rel="Stylesheet"><script type="text/javascript" src="../../../scripts/clipboard.js" async></script><script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script><script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script><script type="text/javascript" src="../../../scripts/main.js" defer></script><script type="text/javascript" src="../../../scripts/prism.js" async></script><script>const storage = localStorage.getItem("dokka-dark-mode")
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
 const savedDarkMode = storage ? JSON.parse(storage) : false
 if(savedDarkMode === true){
     document.getElementsByTagName("html")[0].classList.add("theme-dark")
 }</script>
-
-  
-    <div class="navigation-wrapper" id="navigation-wrapper">
-      <div id="leftToggler"><span class="icon-toggler"></span></div>
-      <div class="library-name"><a href="../../../index.html"><span>krossbow</span></a></div>
-      <div></div>
-      <div class="pull-right d-flex">
-        <div class="filter-section" id="filter-section"><button class="platform-tag platform-selector common-like" data-active="" data-filter=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">common</button></div>
-<button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script></head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+<a href="../../../index.html">
+<span>krossbow</span>            </a>    </div>
+    <div>
+    </div>
+    <div class="pull-right d-flex">
+            <div class="filter-section" id="filter-section">
+                    <button class="platform-tag platform-selector common-like" data-active="" data-filter=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">common</button>
+            </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
-      </div>
     </div>
-    <div id="container">
-      <div id="leftColumn">
+</div>
+<div id="container">
+    <div id="leftColumn">
         <div id="sideMenu"></div>
-      </div>
-      <div id="main">
-        <div class="main-content" id="content" pageids="krossbow-websocket-core::org.hildan.krossbow.websocket.reconnection/ReconnectConfigBuilder/reconnectWhen/#kotlin.coroutines.SuspendFunction2[kotlin.Throwable,kotlin.Int,kotlin.Boolean]/PointingToDeclaration//-845055019">
-          <div class="breadcrumbs"><a href="../../index.html">krossbow-websocket-core</a>/<a href="../index.html">org.hildan.krossbow.websocket.reconnection</a>/<a href="index.html">ReconnectConfigBuilder</a>/<a href="reconnect-when.html">reconnectWhen</a></div>
-          <div class="cover ">
-            <h1 class="cover"><span>reconnect</span><wbr><span><span>When</span></span></h1>
-          </div>
-          <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-            <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="reconnect-when.html"><span class="token function">reconnectWhen</span></a><span class="token punctuation">(</span>predicate<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><span class="token keyword"></span>exception<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token punctuation">, </span><span class="token keyword"></span>attempt<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Registers a <a href="reconnect-when.html">predicate</a> to decide whether the web socket should be reconnected when the given <code class="lang-kotlin">exception</code> occur. The <code class="lang-kotlin">attempt</code> parameter is the index of the current reconnection attempt in a series of retries.</p><p class="paragraph">When the web socket throws an exception, this predicate is called with attempt 0 before trying to reconnect. If the predicate returns false, the exception is rethrown and no reconnection is attempted. If the predicate returns true, a reconnection is attempted.</p><p class="paragraph">If the reconnection fails, the predicate is called again with attempt 1, and so on. If the reconnection succeeds, and later a new error occurs on the web socket, the predicate will be called again, with attempt 0.</p><p class="paragraph">The predicate will not be called if <a href="max-attempts.html">maxAttempts</a> is reached. If you want to control the maximum attempts via the predicate, set <a href="max-attempts.html">maxAttempts</a> to a bigger value (such as <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/-m-a-x_-v-a-l-u-e.html">Int.MAX_VALUE</a>).</p></div>          </div>
-        </div>
-        <div class="footer"><span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
-      </div>
     </div>
-  
-</body></html>
+    <div id="main">
+<div class="main-content" id="content" pageids="krossbow-websocket-core::org.hildan.krossbow.websocket.reconnection/ReconnectConfigBuilder/reconnectWhen/#kotlin.coroutines.SuspendFunction2[kotlin.Throwable,kotlin.Int,kotlin.Boolean]/PointingToDeclaration//-845055019">
+  <div class="breadcrumbs"><a href="../../index.html">krossbow-websocket-core</a><span class="delimiter">/</span><a href="../index.html">org.hildan.krossbow.websocket.reconnection</a><span class="delimiter">/</span><a href="index.html">ReconnectConfigBuilder</a><span class="delimiter">/</span><a href="reconnect-when.html">reconnectWhen</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span>reconnect</span><wbr><span><span>When</span></span></h1>
+  </div>
+  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="reconnect-when.html"><span class="token function">reconnectWhen</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">predicate<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><span class="token keyword"></span>exception<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token punctuation">, </span><span class="token keyword"></span>attempt<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Registers a <a href="reconnect-when.html">predicate</a> to decide whether the web socket should be reconnected when the given <code class="lang-kotlin">exception</code> occur. The <code class="lang-kotlin">attempt</code> parameter is the index of the current reconnection attempt in a series of retries.</p><p class="paragraph">When the web socket throws an exception, this predicate is called with attempt 0 before trying to reconnect. If the predicate returns false, the exception is rethrown and no reconnection is attempted. If the predicate returns true, a reconnection is attempted.</p><p class="paragraph">If the reconnection fails, the predicate is called again with attempt 1, and so on. If the reconnection succeeds, and later a new error occurs on the web socket, the predicate will be called again, with attempt 0.</p><p class="paragraph">The predicate will not be called if <a href="max-attempts.html">maxAttempts</a> is reached. If you want to control the maximum attempts via the predicate, set <a href="max-attempts.html">maxAttempts</a> to a bigger value (such as <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/-m-a-x_-v-a-l-u-e.html">Int.MAX_VALUE</a>).</p></div>  </div>
+</div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+        </div>
+    </div>
+</div>
 
+</body></html>
 

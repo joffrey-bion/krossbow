@@ -1,463 +1,479 @@
+<!doctype html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>StompHeaders</title>
-</head><body><link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
-    <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script><link href="../../../styles/style.css" rel="Stylesheet"><link href="../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../styles/main.css" rel="Stylesheet"><link href="../../../styles/prism.css" rel="Stylesheet"><link href="../../../styles/logo-styles.css" rel="Stylesheet"><script type="text/javascript" src="../../../scripts/clipboard.js" async></script><script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script><script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script><script type="text/javascript" src="../../../scripts/main.js" defer></script><script type="text/javascript" src="../../../scripts/prism.js" async></script><script>const storage = localStorage.getItem("dokka-dark-mode")
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
 const savedDarkMode = storage ? JSON.parse(storage) : false
 if(savedDarkMode === true){
     document.getElementsByTagName("html")[0].classList.add("theme-dark")
 }</script>
-
-  
-    <div class="navigation-wrapper" id="navigation-wrapper">
-      <div id="leftToggler"><span class="icon-toggler"></span></div>
-      <div class="library-name"><a href="../../../index.html"><span>krossbow</span></a></div>
-      <div></div>
-      <div class="pull-right d-flex">
-        <div class="filter-section" id="filter-section"><button class="platform-tag platform-selector common-like" data-active="" data-filter=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<button id="theme-toggle-button"><span id="theme-toggle"></span></button>
-        <div id="searchBar"></div>
-      </div>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script></head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+<a href="../../../index.html">
+<span>krossbow</span>            </a>    </div>
+    <div>
     </div>
-    <div id="container">
-      <div id="leftColumn">
+    <div class="pull-right d-flex">
+            <div class="filter-section" id="filter-section">
+                    <button class="platform-tag platform-selector common-like" data-active="" data-filter=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button>
+            </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
         <div id="sideMenu"></div>
-      </div>
-      <div id="main">
-        <div class="main-content" id="content" pageids="krossbow-stomp-core::org.hildan.krossbow.stomp.headers/StompHeaders///PointingToDeclaration//-1714576161">
-          <div class="breadcrumbs"><a href="../../index.html">krossbow-stomp-core</a>/<a href="../index.html">org.hildan.krossbow.stomp.headers</a>/<a href="index.html">StompHeaders</a></div>
-          <div class="cover ">
-            <h1 class="cover"><span>Stomp</span><wbr><span><span>Headers</span></span></h1>
-            <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-              <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">StompHeaders</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt; </span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Represents the headers of a STOMP frame.</p></div>            </div>
-          </div>
-          <div class="tabbedcontent">
-            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Inheritors">Inheritors</button></div>
-            <div class="tabs-section-body">
-              <h2 class="">Functions</h2>
-              <div class="table" data-togglable="Functions"><a data-name="1264776610%2FFunctions%2F-1714576161" anchor-label="clear" id="1264776610%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#1264776610%2FFunctions%2F-1714576161"><span><span>clear</span></span></a></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageids="krossbow-stomp-core::org.hildan.krossbow.stomp.headers/StompHeaders///PointingToDeclaration//-1714576161">
+  <div class="breadcrumbs"><a href="../../index.html">krossbow-stomp-core</a><span class="delimiter">/</span><a href="../index.html">org.hildan.krossbow.stomp.headers</a><span class="delimiter">/</span><a href="index.html">StompHeaders</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Stomp</span><wbr><span><span>Headers</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">StompHeaders</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt; </span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Represents the headers of a STOMP frame.</p></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Inheritors">Inheritors</button></div>
+    <div class="tabs-section-body">
+      <h2 class="">Functions</h2>
+      <div class="table" data-togglable="Functions"><a data-name="1264776610%2FFunctions%2F-1714576161" anchor-label="clear" id="1264776610%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#1264776610%2FFunctions%2F-1714576161"><span><span>clear</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1264776610%2FFunctions%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#1264776610%2FFunctions%2F-1714576161"><span class="token function">clear</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="182506349%2FFunctions%2F-1714576161" anchor-label="containsKey" id="182506349%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#182506349%2FFunctions%2F-1714576161"><span>contains</span><wbr><span><span>Key</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="182506349%2FFunctions%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#182506349%2FFunctions%2F-1714576161"><span class="token function">containsKey</span></a><span class="token punctuation">(</span>key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="810257215%2FFunctions%2F-1714576161" anchor-label="containsValue" id="810257215%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#810257215%2FFunctions%2F-1714576161"><span>contains</span><wbr><span><span>Value</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="810257215%2FFunctions%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#810257215%2FFunctions%2F-1714576161"><span class="token function">containsValue</span></a><span class="token punctuation">(</span>value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1885167485%2FFunctions%2F-1714576161" anchor-label="get" id="-1885167485%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#-1885167485%2FFunctions%2F-1714576161"><span><span>get</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1885167485%2FFunctions%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#-1885167485%2FFunctions%2F-1714576161"><span class="token function">get</span></a><span class="token punctuation">(</span>key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1708477740%2FFunctions%2F-1714576161" anchor-label="isEmpty" id="-1708477740%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#-1708477740%2FFunctions%2F-1714576161"><span>is</span><wbr><span><span>Empty</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1708477740%2FFunctions%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#-1708477740%2FFunctions%2F-1714576161"><span class="token function">isEmpty</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="762176329%2FFunctions%2F-1714576161" anchor-label="put" id="762176329%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#762176329%2FFunctions%2F-1714576161"><span><span>put</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="762176329%2FFunctions%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#762176329%2FFunctions%2F-1714576161"><span class="token function">put</span></a><span class="token punctuation">(</span>key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span>value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-381435625%2FFunctions%2F-1714576161" anchor-label="putAll" id="-381435625%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#-381435625%2FFunctions%2F-1714576161"><span>put</span><wbr><span><span>All</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-381435625%2FFunctions%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#-381435625%2FFunctions%2F-1714576161"><span class="token function">putAll</span></a><span class="token punctuation">(</span>from<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><span class="token keyword">out </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-2016920067%2FFunctions%2F-1714576161" anchor-label="remove" id="-2016920067%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#-2016920067%2FFunctions%2F-1714576161"><span><span>remove</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2016920067%2FFunctions%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#-2016920067%2FFunctions%2F-1714576161"><span class="token function">remove</span></a><span class="token punctuation">(</span>key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <h2 class="">Properties</h2>
-              <div class="table" data-togglable="Properties"><a data-name="2021270724%2FProperties%2F-1714576161" anchor-label="contentLength" id="2021270724%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="content-length.html">contentLength</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2021270724%2FProperties%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="2021270724%2FProperties%2F-1714576161" anchor-label="contentLength" id="2021270724%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="content-length.html">contentLength</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-358416848%2FProperties%2F-1714576161" anchor-label="contentType" id="-358416848%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="content-type.html">contentType</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-358416848%2FProperties%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-358416848%2FProperties%2F-1714576161" anchor-label="contentType" id="-358416848%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="content-type.html">contentType</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="313986111%2FProperties%2F-1714576161" anchor-label="entries" id="313986111%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#313986111%2FProperties%2F-1714576161">entries</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="313986111%2FProperties%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="313986111%2FProperties%2F-1714576161" anchor-label="entries" id="313986111%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../-stomp-error-headers/index.html#313986111%2FProperties%2F-1714576161">entries</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/-mutable-entry/index.html">MutableMap.MutableEntry</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1153773961%2FProperties%2F-1714576161" anchor-label="keys" id="-1153773961%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#-1153773961%2FProperties%2F-1714576161">keys</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1153773961%2FProperties%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-1153773961%2FProperties%2F-1714576161" anchor-label="keys" id="-1153773961%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../-stomp-error-headers/index.html#-1153773961%2FProperties%2F-1714576161">keys</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1308811797%2FProperties%2F-1714576161" anchor-label="receipt" id="-1308811797%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="receipt.html">receipt</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1308811797%2FProperties%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-1308811797%2FProperties%2F-1714576161" anchor-label="receipt" id="-1308811797%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="receipt.html">receipt</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-157521630%2FProperties%2F-1714576161" anchor-label="size" id="-157521630%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#-157521630%2FProperties%2F-1714576161">size</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-157521630%2FProperties%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-157521630%2FProperties%2F-1714576161" anchor-label="size" id="-157521630%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-stomp-error-headers/index.html#-157521630%2FProperties%2F-1714576161">size</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="211311497%2FProperties%2F-1714576161" anchor-label="values" id="211311497%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html#211311497%2FProperties%2F-1714576161">values</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="211311497%2FProperties%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title">
-                        <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                          <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="211311497%2FProperties%2F-1714576161" anchor-label="values" id="211311497%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../-stomp-error-headers/index.html#211311497%2FProperties%2F-1714576161">values</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html">MutableCollection</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <h2 class="">Inheritors</h2>
-              <div class="table" data-togglable="Inheritors"><a data-name="-446149928%2FInheritors%2F-1714576161" anchor-label="StompConnectHeaders" id="-446149928%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-connect-headers/index.html">StompConnectHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-446149928%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="518782007%2FInheritors%2F-1714576161" anchor-label="StompConnectedHeaders" id="518782007%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-connected-headers/index.html">StompConnectedHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="518782007%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-1780915312%2FInheritors%2F-1714576161" anchor-label="StompSendHeaders" id="-1780915312%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-send-headers/index.html">StompSendHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1780915312%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="1908449912%2FInheritors%2F-1714576161" anchor-label="StompSubscribeHeaders" id="1908449912%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1908449912%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="1515960127%2FInheritors%2F-1714576161" anchor-label="StompUnsubscribeHeaders" id="1515960127%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-unsubscribe-headers/index.html">StompUnsubscribeHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1515960127%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="482216676%2FInheritors%2F-1714576161" anchor-label="StompDisconnectHeaders" id="482216676%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-disconnect-headers/index.html">StompDisconnectHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="482216676%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-156583945%2FInheritors%2F-1714576161" anchor-label="StompAckHeaders" id="-156583945%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-ack-headers/index.html">StompAckHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-156583945%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-2050817693%2FInheritors%2F-1714576161" anchor-label="StompNackHeaders" id="-2050817693%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-nack-headers/index.html">StompNackHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2050817693%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="687295319%2FInheritors%2F-1714576161" anchor-label="StompBeginHeaders" id="687295319%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-begin-headers/index.html">StompBeginHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="687295319%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="574133759%2FInheritors%2F-1714576161" anchor-label="StompCommitHeaders" id="574133759%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-commit-headers/index.html">StompCommitHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="574133759%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="142875102%2FInheritors%2F-1714576161" anchor-label="StompAbortHeaders" id="142875102%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-abort-headers/index.html">StompAbortHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="142875102%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-1825366539%2FInheritors%2F-1714576161" anchor-label="StompMessageHeaders" id="-1825366539%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-message-headers/index.html">StompMessageHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1825366539%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-1496478682%2FInheritors%2F-1714576161" anchor-label="StompReceiptHeaders" id="-1496478682%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-receipt-headers/index.html">StompReceiptHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1496478682%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="479357110%2FInheritors%2F-1714576161" anchor-label="StompErrorHeaders" id="479357110%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-                <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex">
-                        <div><a href="../-stomp-error-headers/index.html">StompErrorHeaders</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="479357110%2FInheritors%2F-1714576161"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#1264776610%2FFunctions%2F-1714576161"><span class="token function">clear</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="footer"><span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+<a data-name="182506349%2FFunctions%2F-1714576161" anchor-label="containsKey" id="182506349%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#182506349%2FFunctions%2F-1714576161"><span>contains</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="182506349%2FFunctions%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#182506349%2FFunctions%2F-1714576161"><span class="token function">containsKey</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="810257215%2FFunctions%2F-1714576161" anchor-label="containsValue" id="810257215%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#810257215%2FFunctions%2F-1714576161"><span>contains</span><wbr><span><span>Value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="810257215%2FFunctions%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#810257215%2FFunctions%2F-1714576161"><span class="token function">containsValue</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1885167485%2FFunctions%2F-1714576161" anchor-label="get" id="-1885167485%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#-1885167485%2FFunctions%2F-1714576161"><span><span>get</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1885167485%2FFunctions%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#-1885167485%2FFunctions%2F-1714576161"><span class="token function">get</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1708477740%2FFunctions%2F-1714576161" anchor-label="isEmpty" id="-1708477740%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#-1708477740%2FFunctions%2F-1714576161"><span>is</span><wbr><span><span>Empty</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1708477740%2FFunctions%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#-1708477740%2FFunctions%2F-1714576161"><span class="token function">isEmpty</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="762176329%2FFunctions%2F-1714576161" anchor-label="put" id="762176329%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#762176329%2FFunctions%2F-1714576161"><span><span>put</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="762176329%2FFunctions%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#762176329%2FFunctions%2F-1714576161"><span class="token function">put</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-381435625%2FFunctions%2F-1714576161" anchor-label="putAll" id="-381435625%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#-381435625%2FFunctions%2F-1714576161"><span>put</span><wbr><span><span>All</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-381435625%2FFunctions%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#-381435625%2FFunctions%2F-1714576161"><span class="token function">putAll</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">from<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><span class="token keyword">out </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-2016920067%2FFunctions%2F-1714576161" anchor-label="remove" id="-2016920067%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#-2016920067%2FFunctions%2F-1714576161"><span><span>remove</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2016920067%2FFunctions%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-stomp-error-headers/index.html#-2016920067%2FFunctions%2F-1714576161"><span class="token function">remove</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Properties</h2>
+      <div class="table" data-togglable="Properties"><a data-name="2021270724%2FProperties%2F-1714576161" anchor-label="contentLength" id="2021270724%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="content-length.html">contentLength</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2021270724%2FProperties%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="2021270724%2FProperties%2F-1714576161" anchor-label="contentLength" id="2021270724%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="content-length.html">contentLength</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-358416848%2FProperties%2F-1714576161" anchor-label="contentType" id="-358416848%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="content-type.html">contentType</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-358416848%2FProperties%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-358416848%2FProperties%2F-1714576161" anchor-label="contentType" id="-358416848%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="content-type.html">contentType</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="313986111%2FProperties%2F-1714576161" anchor-label="entries" id="313986111%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#313986111%2FProperties%2F-1714576161">entries</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="313986111%2FProperties%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="313986111%2FProperties%2F-1714576161" anchor-label="entries" id="313986111%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../-stomp-error-headers/index.html#313986111%2FProperties%2F-1714576161">entries</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/-mutable-entry/index.html">MutableMap.MutableEntry</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1153773961%2FProperties%2F-1714576161" anchor-label="keys" id="-1153773961%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#-1153773961%2FProperties%2F-1714576161">keys</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1153773961%2FProperties%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-1153773961%2FProperties%2F-1714576161" anchor-label="keys" id="-1153773961%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../-stomp-error-headers/index.html#-1153773961%2FProperties%2F-1714576161">keys</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1308811797%2FProperties%2F-1714576161" anchor-label="receipt" id="-1308811797%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="receipt.html">receipt</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1308811797%2FProperties%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-1308811797%2FProperties%2F-1714576161" anchor-label="receipt" id="-1308811797%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="receipt.html">receipt</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-157521630%2FProperties%2F-1714576161" anchor-label="size" id="-157521630%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#-157521630%2FProperties%2F-1714576161">size</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-157521630%2FProperties%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-157521630%2FProperties%2F-1714576161" anchor-label="size" id="-157521630%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-stomp-error-headers/index.html#-157521630%2FProperties%2F-1714576161">size</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="211311497%2FProperties%2F-1714576161" anchor-label="values" id="211311497%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html#211311497%2FProperties%2F-1714576161">values</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="211311497%2FProperties%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="211311497%2FProperties%2F-1714576161" anchor-label="values" id="211311497%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../-stomp-error-headers/index.html#211311497%2FProperties%2F-1714576161">values</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html">MutableCollection</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Inheritors</h2>
+      <div class="table" data-togglable="Inheritors"><a data-name="-446149928%2FInheritors%2F-1714576161" anchor-label="StompConnectHeaders" id="-446149928%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-connect-headers/index.html">StompConnectHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-446149928%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="518782007%2FInheritors%2F-1714576161" anchor-label="StompConnectedHeaders" id="518782007%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-connected-headers/index.html">StompConnectedHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="518782007%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-1780915312%2FInheritors%2F-1714576161" anchor-label="StompSendHeaders" id="-1780915312%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-send-headers/index.html">StompSendHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1780915312%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="1908449912%2FInheritors%2F-1714576161" anchor-label="StompSubscribeHeaders" id="1908449912%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1908449912%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="1515960127%2FInheritors%2F-1714576161" anchor-label="StompUnsubscribeHeaders" id="1515960127%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-unsubscribe-headers/index.html">StompUnsubscribeHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1515960127%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="482216676%2FInheritors%2F-1714576161" anchor-label="StompDisconnectHeaders" id="482216676%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-disconnect-headers/index.html">StompDisconnectHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="482216676%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-156583945%2FInheritors%2F-1714576161" anchor-label="StompAckHeaders" id="-156583945%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-ack-headers/index.html">StompAckHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-156583945%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-2050817693%2FInheritors%2F-1714576161" anchor-label="StompNackHeaders" id="-2050817693%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-nack-headers/index.html">StompNackHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2050817693%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="687295319%2FInheritors%2F-1714576161" anchor-label="StompBeginHeaders" id="687295319%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-begin-headers/index.html">StompBeginHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="687295319%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="574133759%2FInheritors%2F-1714576161" anchor-label="StompCommitHeaders" id="574133759%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-commit-headers/index.html">StompCommitHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="574133759%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="142875102%2FInheritors%2F-1714576161" anchor-label="StompAbortHeaders" id="142875102%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-abort-headers/index.html">StompAbortHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="142875102%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-1825366539%2FInheritors%2F-1714576161" anchor-label="StompMessageHeaders" id="-1825366539%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-message-headers/index.html">StompMessageHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1825366539%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-1496478682%2FInheritors%2F-1714576161" anchor-label="StompReceiptHeaders" id="-1496478682%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-receipt-headers/index.html">StompReceiptHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1496478682%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="479357110%2FInheritors%2F-1714576161" anchor-label="StompErrorHeaders" id="479357110%2FInheritors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-stomp-error-headers/index.html">StompErrorHeaders</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="479357110%2FInheritors%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
       </div>
     </div>
-  
-</body></html>
+  </div>
+</div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+        </div>
+    </div>
+</div>
 
+</body></html>
 
