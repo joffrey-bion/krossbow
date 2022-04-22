@@ -1,9 +1,24 @@
 # Change Log
 
+## [3.4.0](https://github.com/joffrey-bion/krossbow/tree/3.4.0) (2022-04-22)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.3.1...3.4.0)
+
+**Implemented enhancements:**
+
+- Release Kotlin/JS artifacts built with IR compiler [\#98](https://github.com/joffrey-bion/krossbow/issues/98)
+- Support Ktor client 2.0 [\#186](https://github.com/joffrey-bion/krossbow/issues/186)
+
+**Upgraded dependencies:**
+
+- Bump actions/upload\-artifact from 2 to 3 [\#208](https://github.com/joffrey-bion/krossbow/pull/208) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump actions/setup\-python from 2 to 3 [\#207](https://github.com/joffrey-bion/krossbow/pull/207) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Upgrade Kotlin coroutines to version 1.6.1 [\#203](https://github.com/joffrey-bion/krossbow/issues/203)
+- Upgrade Kotlin to version 1.6.21 [\#184](https://github.com/joffrey-bion/krossbow/issues/184)
+
 ## [3.3.1](https://github.com/joffrey-bion/krossbow/tree/3.3.1) (2022-04-01)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.3.0...3.3.1)
 
-**Merged pull requests:**
+**Fixed bugs:**
 
 - Mark `NO\_HEART\_BEATS` as `@SharedImmutable` to fix `IncorrectDereferenceException` on iOS  [\#202](https://github.com/joffrey-bion/krossbow/pull/202) ([@remy-bardou-lifeonair](https://github.com/remy-bardou-lifeonair))
 
