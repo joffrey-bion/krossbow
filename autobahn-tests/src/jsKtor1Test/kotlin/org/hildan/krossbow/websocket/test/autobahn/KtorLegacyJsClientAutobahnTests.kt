@@ -1,6 +1,6 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
-import org.hildan.krossbow.websocket.ktor.KtorLegacyWebSocketClient
+import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
 import org.hildan.krossbow.websocket.test.environment
 import kotlin.test.Ignore
 
@@ -11,5 +11,5 @@ import kotlin.test.Ignore
 @Ignore
 class KtorLegacyJsClientAutobahnTests : AutobahnClientTestSuite("krossbow-ktor-legacy-js-client-${environment()}") {
 
-    override fun provideClient() = KtorLegacyWebSocketClient()
+    override fun provideClient() = KtorWebSocketClient()
 }

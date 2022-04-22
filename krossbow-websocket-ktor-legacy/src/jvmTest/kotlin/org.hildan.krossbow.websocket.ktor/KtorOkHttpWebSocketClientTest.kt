@@ -8,5 +8,5 @@ import org.hildan.krossbow.websocket.test.WebSocketClientTestSuite
 
 class KtorOkHttpWebSocketClientTest : WebSocketClientTestSuite() {
 
-    override fun provideClient(): WebSocketClient = KtorLegacyWebSocketClient(HttpClient(OkHttp) { install(WebSockets) })
+    override fun provideClient(): WebSocketClient = KtorWebSocketClient(HttpClient(OkHttp) { install(WebSockets) })
 }

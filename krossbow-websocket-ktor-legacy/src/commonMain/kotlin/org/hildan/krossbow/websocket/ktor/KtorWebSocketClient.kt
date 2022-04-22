@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.WebSocketException
 
-class KtorLegacyWebSocketClient(
+class KtorWebSocketClient(
     private val httpClient: HttpClient = HttpClient { install(WebSockets) }
 ) : WebSocketClient {
 

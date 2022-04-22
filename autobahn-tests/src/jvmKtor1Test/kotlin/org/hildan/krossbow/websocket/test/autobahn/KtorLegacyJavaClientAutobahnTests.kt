@@ -3,7 +3,7 @@ package org.hildan.krossbow.websocket.test.autobahn
 import io.ktor.client.*
 import io.ktor.client.engine.java.*
 import io.ktor.client.features.websocket.*
-import org.hildan.krossbow.websocket.ktor.KtorLegacyWebSocketClient
+import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
 
 class KtorLegacyJavaClientAutobahnTests : AutobahnClientTestSuite(
     agentUnderTest = "krossbow-ktor-legacy-java-client",
@@ -27,5 +27,5 @@ class KtorLegacyJavaClientAutobahnTests : AutobahnClientTestSuite(
     ),
 ) {
 
-    override fun provideClient() = KtorLegacyWebSocketClient(HttpClient(Java) { install(WebSockets) })
+    override fun provideClient() = KtorWebSocketClient(HttpClient(Java) { install(WebSockets) })
 }

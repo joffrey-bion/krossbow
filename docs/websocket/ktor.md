@@ -4,8 +4,12 @@ Krossbow allows you to use [Ktor's web socket](https://ktor.io/clients/websocket
 
 Ktor's implementation supports a variety of platforms and is very popular in the Kotlin world, especially in Kotlin multiplatform.
 
-The `krossbow-websocket-ktor` module provides the `KtorWebSocketClient`, which adapts Ktor's `HttpClient` to
-Krossbow's web socket interface.
+The `krossbow-websocket-ktor` module provides the `KtorWebSocketClient`, which adapts Ktor {{ versions.ktor }}'s
+`HttpClient` to Krossbow's web socket interface.
+
+!!! info "Still stuck with Ktor 1.6?"
+    Not all projects can easily migrate to Ktor 2, that's why Krossbow provides the `krossbow-websocket-ktor-legacy`.
+    Use that module instead of `krossbow-websocket-ktor` if you want to use Ktor {{ versions.ktorLegacy }}'s `HttpClient`.
 
 ## Usage with StompClient
 
@@ -46,4 +50,11 @@ For instance, if you want to use Ktor's CIO engine with Krossbow, you need to de
 ```kotlin
 implementation("org.hildan.krossbow:krossbow-websocket-ktor:{{ git.tag }}")
 implementation("io.ktor:ktor-client-cio:{{ versions.ktor }}")
+```
+
+If you want to use the older version 1.6.x of Ktor, use `krossbow-websocket-ktor-legacy` instead:
+
+```kotlin
+implementation("org.hildan.krossbow:krossbow-websocket-ktor-legacy:{{ git.tag }}")
+implementation("io.ktor:ktor-client-cio:{{ versions.ktorLegacy }}")
 ```
