@@ -12,13 +12,13 @@ apply<org.jetbrains.kotlin.gradle.targets.js.npm.NpmResolverPlugin>()
 
 kotlin {
     jvm()
-    jvm("jvmKtor")
-    jvm("jvmKtorLegacy")
+    jvm("jvmKtor1")
+    jvm("jvmKtor2")
     jvm("jvmOkhttp")
     jvm("jvmSpring")
     jsWithBigTimeouts("js")
-    jsWithBigTimeouts("jsKtor")
-    jsWithBigTimeouts("jsKtorLegacy")
+    jsWithBigTimeouts("jsKtor1")
+    jsWithBigTimeouts("jsKtor2")
     jsWithBigTimeouts("jsOther")
     setupNativeTargets()
 
@@ -52,7 +52,7 @@ kotlin {
                 implementation(libs.slf4j.simple) // for jetty client logs
             }
         }
-        val jvmKtorLegacyTest by getting {
+        val jvmKtor1Test by getting {
             dependsOn(jvmTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtorLegacy)
@@ -60,7 +60,7 @@ kotlin {
                 implementation(libs.ktor1.client.okhttp)
             }
         }
-        val jvmKtorTest by getting {
+        val jvmKtor2Test by getting {
             dependsOn(jvmTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
@@ -72,18 +72,18 @@ kotlin {
 
         val jsTest by getting {}
 
-        val jsKtorTest by getting {
-            dependsOn(jsTest)
-            dependencies {
-                implementation(projects.krossbowWebsocketKtor)
-                implementation(libs.ktor2.client.js)
-            }
-        }
-        val jsKtorLegacyTest by getting {
+        val jsKtor1Test by getting {
             dependsOn(jsTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtorLegacy)
                 implementation(libs.ktor1.client.js)
+            }
+        }
+        val jsKtor2Test by getting {
+            dependsOn(jsTest)
+            dependencies {
+                implementation(projects.krossbowWebsocketKtor)
+                implementation(libs.ktor2.client.js)
             }
         }
         val jsOtherTest by getting {
