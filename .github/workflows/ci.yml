@@ -19,7 +19,7 @@ jobs:
         jdk-version: [ 17 ]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up JDK ${{ matrix.jdk-version }}
         uses: actions/setup-java@v2
