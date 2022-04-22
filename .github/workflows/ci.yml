@@ -40,7 +40,7 @@ jobs:
           arguments: build
 
       - name: Upload Autobahn reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: autobahn-reports-${{ runner.os }}-jdk${{ matrix.jdk-version }}
