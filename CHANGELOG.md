@@ -10,8 +10,6 @@
 
 **Upgraded dependencies:**
 
-- Bump actions/upload\-artifact from 2 to 3 [\#208](https://github.com/joffrey-bion/krossbow/pull/208) ([@dependabot[bot]](https://github.com/apps/dependabot))
-- Bump actions/setup\-python from 2 to 3 [\#207](https://github.com/joffrey-bion/krossbow/pull/207) ([@dependabot[bot]](https://github.com/apps/dependabot))
 - Upgrade Kotlin coroutines to version 1.6.1 [\#203](https://github.com/joffrey-bion/krossbow/issues/203)
 - Upgrade Kotlin to version 1.6.21 [\#184](https://github.com/joffrey-bion/krossbow/issues/184)
 
