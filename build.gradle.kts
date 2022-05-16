@@ -53,7 +53,7 @@ nexusPublishing {
 subprojects {
 
     tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>> {
-        kotlinOptions.freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
+        kotlinOptions.freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
     }
 
     tasks.withType<AbstractTestTask> {
