@@ -27,7 +27,7 @@ gradleEnterprise {
         termsOfServiceAgree = "yes"
 
         val isCIBuild = !System.getenv("CI").isNullOrEmpty()
-        publishOnFailureIf(isCIBuild)
+        publishAlwaysIf(isCIBuild)
         tag(if (isCIBuild) "CI" else "local")
 
         val isGithubActionsBuild = !System.getenv("GITHUB_ACTIONS").isNullOrEmpty()
