@@ -91,7 +91,7 @@ private class IosWebSocketListener(
         didCompleteWithError: NSError?
     ) {
         if (isConnecting) {
-            val ex = WebSocketConnectionException(url, cause = didCompleteWithError?.toIosWebSocketException())
+            val ex = WebSocketConnectionException(url, cause = didCompleteWithError?.toIosWebSocketException(task.response))
             completeConnection {
                 resumeWithException(ex)
             }
@@ -113,7 +113,7 @@ private class IosWebSocketListener(
             return
         }
 
-        incomingFrames.close(didCompleteWithError.toIosWebSocketException())
+        incomingFrames.close(didCompleteWithError.toIosWebSocketException(task.response))
     }
 
     private fun passCloseFrameThroughChannel(code: Int, reason: String?) {
@@ -248,9 +248,32 @@ private fun NSData.toByteArray(): ByteArray {
     }
 }
 
-private fun NSError.toIosWebSocketException() = DarwinWebSocketException(this)
+private fun NSError.toIosWebSocketException(
+    urlResponse: NSURLResponse? = null
+): DarwinWebSocketException {
 
+    return if (urlResponse != null) {
+        val httpResponse = urlResponse as? NSHTTPURLResponse
+        val statusCode = httpResponse?.statusCode?.toInt()
+        DarwinWebSocketException(this, statusCode)
+    } else {
+        DarwinWebSocketException(this, null)
+    }
+}
 /**
  * A [WebSocketException] caused by a darwin [NSError]. It contains details about the actual error cause.
  */
-class DarwinWebSocketException(val nsError: NSError) : WebSocketException(nsError.localizedDescription)
+class DarwinWebSocketException(
+    nsError: NSError,
+    httpStatusCode: Int?,
+) : WebSocketException(exceptionMessage(nsError, httpStatusCode))
+
+private fun exceptionMessage(nsError: NSError, httpStatusCode: Int?): String {
+    val baseMessage =
+        "${nsError.domain} ${nsError.code}: ${nsError.localizedDescription}"
+    return if (httpStatusCode != null) {
+        "$baseMessage (HTTP Status Code: $httpStatusCode)"
+    } else {
+        baseMessage
+    }
+}
