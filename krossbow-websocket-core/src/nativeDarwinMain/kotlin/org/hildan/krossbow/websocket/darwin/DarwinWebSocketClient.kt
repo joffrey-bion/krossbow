@@ -91,7 +91,8 @@ private class IosWebSocketListener(
         didCompleteWithError: NSError?
     ) {
         if (isConnecting) {
-            val ex = WebSocketConnectionException(url, cause = didCompleteWithError?.toIosWebSocketException())
+            val ex =
+                WebSocketConnectionException(url, cause = didCompleteWithError?.toWebSocketHandshakeException(task.response))
             completeConnection {
                 resumeWithException(ex)
             }
@@ -127,7 +128,6 @@ private class IosWebSocketListener(
         incomingFrames.close()
     }
 }
-
 private class IosWebSocketConnection(
     override val url: String,
     override val incomingFrames: Flow<WebSocketFrame>,
@@ -248,9 +248,40 @@ private fun NSData.toByteArray(): ByteArray {
     }
 }
 
-private fun NSError.toIosWebSocketException() = DarwinWebSocketException(this)
+private fun NSError.toIosWebSocketException(): WebSocketException = DarwinWebSocketException(this)
+
+private fun NSError.toWebSocketHandshakeException(
+    urlResponse: NSURLResponse? = null
+): WebSocketException {
+    val httpResponse = urlResponse as? NSHTTPURLResponse
+    val statusCode = httpResponse?.statusCode?.toInt()
+    return DarwinWebSocketHandshakeException(this, statusCode)
+}
 
 /**
- * A [WebSocketException] caused by a darwin [NSError]. It contains details about the actual error cause.
+ * A [WebSocketException] caused by a darwin [NSError].
+ * It contains details about the actual error cause.
  */
-class DarwinWebSocketException(val nsError: NSError) : WebSocketException(nsError.localizedDescription)
+class DarwinWebSocketException(
+    val nsError: NSError,
+) : WebSocketException(nsError.description ?: nsError.localizedDescription)
+
+/**
+ * A [WebSocketException] caused by a darwin [NSError], during the handshake phase.
+ * It contains details about the actual error cause, as well as the [httpStatusCode], if applicable.
+ */
+class DarwinWebSocketHandshakeException(
+    val nsError: NSError,
+    val httpStatusCode: Int?,
+) : WebSocketException(handshakeExceptionMessage(nsError, httpStatusCode))
+
+private fun handshakeExceptionMessage(nsError: NSError, httpStatusCode: Int?): String {
+    // [baseMessage] will look something like:
+    // Error Domain=<domain> Code=<code> UserInfo={NSLocalizedDescription=<localized_description>}
+    val baseMessage = nsError.description ?: nsError.localizedDescription
+    return if (httpStatusCode != null) {
+        "$baseMessage HTTP Status Code=$httpStatusCode"
+    } else {
+        baseMessage
+    }
+}
