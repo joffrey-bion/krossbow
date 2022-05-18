@@ -135,6 +135,7 @@ private class IosWebSocketConnection(
 ) : WebSocketConnectionWithPing {
 
     // no clear way to know if the websocket was closed by the peer, and we can't even fail in sendMessage reliably    override val canSend: Boolean = true
+    override val canSend: Boolean = true
 
     override suspend fun sendText(frameText: String) {
         sendMessage(NSURLSessionWebSocketMessage(frameText))
