@@ -264,7 +264,7 @@ private fun NSError.toIosWebSocketException(
  * A [WebSocketException] caused by a darwin [NSError]. It contains details about the actual error cause.
  */
 class DarwinWebSocketException(
-    nsError: NSError,
+    val nsError: NSError,
     httpStatusCode: Int?,
 ) : WebSocketException(exceptionMessage(nsError, httpStatusCode))
 
