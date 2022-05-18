@@ -265,7 +265,7 @@ private fun NSError.toIosWebSocketException(
  */
 class DarwinWebSocketException(
     val nsError: NSError,
-    httpStatusCode: Int?,
+    val httpStatusCode: Int? = null,
 ) : WebSocketException(exceptionMessage(nsError, httpStatusCode))
 
 private fun exceptionMessage(nsError: NSError, httpStatusCode: Int?): String {
