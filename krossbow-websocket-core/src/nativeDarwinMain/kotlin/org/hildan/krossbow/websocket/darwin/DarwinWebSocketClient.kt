@@ -254,7 +254,7 @@ private fun NSError.toWebSocketHandshakeException(
     urlResponse: NSURLResponse? = null
 ): WebSocketException {
     val httpResponse = urlResponse as? NSHTTPURLResponse
-    val statusCode = httpResponse?.statusCode
+    val statusCode = httpResponse?.statusCode?.toInt()
     return DarwinWebSocketHandshakeException(this, statusCode)
 }
 
