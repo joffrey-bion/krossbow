@@ -269,10 +269,11 @@ class DarwinWebSocketException(
 ) : WebSocketException(exceptionMessage(nsError, httpStatusCode))
 
 private fun exceptionMessage(nsError: NSError, httpStatusCode: Int?): String {
-    val baseMessage =
-        "${nsError.domain} ${nsError.code}: ${nsError.localizedDescription}"
+    // [baseMessage] will look something like:
+    // Error Domain=<domain> Code=<code> UserInfo={NSLocalizedDescription=<localized_description>}
+    val baseMessage = nsError.description ?: ""
     return if (httpStatusCode != null) {
-        "$baseMessage (HTTP Status Code: $httpStatusCode)"
+        "$baseMessage HTTP Status Code=$httpStatusCode"
     } else {
         baseMessage
     }
