@@ -91,7 +91,8 @@ private class IosWebSocketListener(
         didCompleteWithError: NSError?
     ) {
         if (isConnecting) {
-            val ex = WebSocketConnectionException(url, cause = didCompleteWithError?.toIosWebSocketException(task.response))
+            val ex =
+                WebSocketConnectionException(url, cause = didCompleteWithError?.toWebSocketHandshakeException(task.response))
             completeConnection {
                 resumeWithException(ex)
             }
@@ -113,7 +114,7 @@ private class IosWebSocketListener(
             return
         }
 
-        incomingFrames.close(didCompleteWithError.toIosWebSocketException(task.response))
+        incomingFrames.close(didCompleteWithError.toIosWebSocketException())
     }
 
     private fun passCloseFrameThroughChannel(code: Int, reason: String?) {
@@ -127,15 +128,13 @@ private class IosWebSocketListener(
         incomingFrames.close()
     }
 }
-
 private class IosWebSocketConnection(
     override val url: String,
     override val incomingFrames: Flow<WebSocketFrame>,
     private val webSocket: NSURLSessionWebSocketTask,
 ) : WebSocketConnectionWithPing {
 
-    // no clear way to know if the websocket was closed by the peer, and we can't even fail in sendMessage reliably
-    override val canSend: Boolean = true
+    // no clear way to know if the websocket was closed by the peer, and we can't even fail in sendMessage reliably    override val canSend: Boolean = true
 
     override suspend fun sendText(frameText: String) {
         sendMessage(NSURLSessionWebSocketMessage(frameText))
@@ -248,30 +247,37 @@ private fun NSData.toByteArray(): ByteArray {
     }
 }
 
-private fun NSError.toIosWebSocketException(
-    urlResponse: NSURLResponse? = null
-): DarwinWebSocketException {
+private fun NSError.toIosWebSocketException(): WebSocketException = DarwinWebSocketException(this)
 
-    return if (urlResponse != null) {
-        val httpResponse = urlResponse as? NSHTTPURLResponse
-        val statusCode = httpResponse?.statusCode
-        DarwinWebSocketException(this, statusCode)
-    } else {
-        DarwinWebSocketException(this, null)
-    }
+private fun NSError.toWebSocketHandshakeException(
+    urlResponse: NSURLResponse? = null
+): WebSocketException {
+    val httpResponse = urlResponse as? NSHTTPURLResponse
+    val statusCode = httpResponse?.statusCode
+    return DarwinWebSocketHandshakeException(this, statusCode)
 }
+
 /**
- * A [WebSocketException] caused by a darwin [NSError]. It contains details about the actual error cause.
+ * A [WebSocketException] caused by a darwin [NSError].
+ * It contains details about the actual error cause.
  */
 class DarwinWebSocketException(
     val nsError: NSError,
-    val httpStatusCode: Int? = null,
-) : WebSocketException(exceptionMessage(nsError, httpStatusCode))
+) : WebSocketException(nsError.description ?: nsError.localizedDescription)
 
-private fun exceptionMessage(nsError: NSError, httpStatusCode: Int?): String {
+/**
+ * A [WebSocketException] caused by a darwin [NSError], during the handshake phase.
+ * It contains details about the actual error cause, as well as the [httpStatusCode], if applicable.
+ */
+class DarwinWebSocketHandshakeException(
+    val nsError: NSError,
+    val httpStatusCode: Int?,
+) : WebSocketException(handshakeExceptionMessage(nsError, httpStatusCode))
+
+private fun handshakeExceptionMessage(nsError: NSError, httpStatusCode: Int?): String {
     // [baseMessage] will look something like:
     // Error Domain=<domain> Code=<code> UserInfo={NSLocalizedDescription=<localized_description>}
-    val baseMessage = nsError.description ?: ""
+    val baseMessage = nsError.description ?: nsError.localizedDescription
     return if (httpStatusCode != null) {
         "$baseMessage HTTP Status Code=$httpStatusCode"
     } else {
