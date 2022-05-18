@@ -254,7 +254,7 @@ private fun NSError.toIosWebSocketException(
 
     return if (urlResponse != null) {
         val httpResponse = urlResponse as? NSHTTPURLResponse
-        val statusCode = httpResponse?.statusCode?.toInt()
+        val statusCode = httpResponse?.statusCode
         DarwinWebSocketException(this, statusCode)
     } else {
         DarwinWebSocketException(this, null)
