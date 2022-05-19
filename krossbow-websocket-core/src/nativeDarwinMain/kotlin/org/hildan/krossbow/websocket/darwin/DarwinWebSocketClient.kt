@@ -3,12 +3,14 @@
 package org.hildan.krossbow.websocket.darwin
 
 import kotlinx.cinterop.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import org.hildan.krossbow.websocket.*
 import platform.Foundation.*
 import platform.darwin.NSObject
@@ -23,6 +25,13 @@ import kotlin.coroutines.resumeWithException
 private const val ERROR_CODE_SOCKET_NOT_CONNECTED = 57
 
 /**
+ * Signature for a callback to be passed around to initialize a [WebSocketConnectionWithPing] from the given parameters.
+ * This is used to either build a [IosWebSocketConnection] or [MainThreadedIosWebSocketConnection],
+ * based on the memory model in use at runtime.
+ */
+private typealias WebSocketConnectionWithPingFactory = (String, Flow<WebSocketFrame>, NSURLSessionWebSocketTask) -> WebSocketConnectionWithPing
+
+/**
  * An implementation of [WebSocketClient] using darwin's native [NSURLSessionWebSocketTask].
  * This is only available is iOS 13.0+, tvOS 13.0+, watchOS 6.0+, macOS 10.15+
  * (see [documentation](https://developer.apple.com/documentation/foundation/urlsessionwebsockettask))
@@ -35,15 +44,38 @@ class DarwinWebSocketClient(
     private val maximumMessageSize: Long? = null,
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketConnectionWithPing {
-        val socketEndpoint = NSURL.URLWithString(url)!!
+    @Suppress("NAME_SHADOWING")
+    @OptIn(ExperimentalStdlibApi::class)
+    override suspend fun connect(url: String): WebSocketConnectionWithPing = if (isExperimentalMM()) {
+        makeWebSocketConnectionWithPing(
+            url = url,
+            delegateOnMainQueue = false,
+        ) { url, incomingFrames, webSocketTask ->
+            IosWebSocketConnection(url, incomingFrames, webSocketTask)
+        }
+    } else {
+        withContext(Dispatchers.Main) {
+            makeWebSocketConnectionWithPing(
+                url = url,
+                delegateOnMainQueue = false,
+            ) { url, incomingFrames, webSocketTask ->
+                MainThreadedIosWebSocketConnection(url, incomingFrames, webSocketTask)
+            }
+        }
+    }
 
+    private suspend fun makeWebSocketConnectionWithPing(
+        url: String,
+        delegateOnMainQueue: Boolean,
+        makeConnection: WebSocketConnectionWithPingFactory,
+    ): WebSocketConnectionWithPing {
+        val socketEndpoint = NSURL.URLWithString(url)!!
         return suspendCancellableCoroutine { cont ->
             val incomingFrames: Channel<WebSocketFrame> = Channel(BUFFERED)
             val urlSession = NSURLSession.sessionWithConfiguration(
                 configuration = sessionConfig,
-                delegate = IosWebSocketListener(url, cont, incomingFrames),
-                delegateQueue = NSOperationQueue.currentQueue()
+                delegate = IosWebSocketListener(url, cont, incomingFrames, makeConnection),
+                delegateQueue = if (delegateOnMainQueue) NSOperationQueue.mainQueue() else NSOperationQueue.currentQueue()
             )
             val webSocket = urlSession.webSocketTaskWithURL(socketEndpoint)
             maximumMessageSize?.let { webSocket.setMaximumMessageSize(it.convert()) }
@@ -58,12 +90,13 @@ class DarwinWebSocketClient(
 
 private class IosWebSocketListener(
     private val url: String,
-    private var connectionContinuation: Continuation<IosWebSocketConnection>?,
+    private var connectionContinuation: Continuation<WebSocketConnectionWithPing>?,
     private val incomingFrames: Channel<WebSocketFrame>,
+    private val makeConnection: WebSocketConnectionWithPingFactory,
 ) : NSObject(), NSURLSessionWebSocketDelegateProtocol {
     private var isConnecting = true
 
-    private inline fun completeConnection(resume: Continuation<IosWebSocketConnection>.() -> Unit) {
+    private inline fun completeConnection(resume: Continuation<WebSocketConnectionWithPing>.() -> Unit) {
         val cont = connectionContinuation ?: error("web socket connection continuation already consumed")
         connectionContinuation = null // avoid leaking the continuation
         isConnecting = false
@@ -72,7 +105,7 @@ private class IosWebSocketListener(
 
     override fun URLSession(session: NSURLSession, webSocketTask: NSURLSessionWebSocketTask, didOpenWithProtocol: String?) {
         completeConnection {
-            resume(IosWebSocketConnection(url, incomingFrames.receiveAsFlow(), webSocketTask))
+            resume(makeConnection(url, incomingFrames.receiveAsFlow(), webSocketTask))
         }
     }
 
@@ -128,7 +161,8 @@ private class IosWebSocketListener(
         incomingFrames.close()
     }
 }
-private class IosWebSocketConnection(
+
+private open class IosWebSocketConnection(
     override val url: String,
     override val incomingFrames: Flow<WebSocketFrame>,
     private val webSocket: NSURLSessionWebSocketTask,
@@ -145,7 +179,7 @@ private class IosWebSocketConnection(
         sendMessage(NSURLSessionWebSocketMessage(frameData.toNSData()))
     }
 
-    private fun sendMessage(message: NSURLSessionWebSocketMessage) {
+    internal open suspend fun sendMessage(message: NSURLSessionWebSocketMessage) {
         // We can't rely on the callback for suspension because it is sometimes not called by iOS
         // (for instance when the web socket is closing at the same time).
         // To avoid suspending forever in those cases, we just never suspend.
@@ -166,6 +200,29 @@ private class IosWebSocketConnection(
 
     override suspend fun close(code: Int, reason: String?) {
         webSocket.cancelWithCloseCode(code.convert(), reason?.encodeToNSData())
+    }
+}
+
+/**
+ * [MainThreadedIosWebSocketConnection] is a variant of [IosWebSocketConnection] that processes
+ * all its callbacks on the same thread, which fixes memory access issues with the old memory model.
+ */
+private class MainThreadedIosWebSocketConnection(
+    url: String,
+    incomingFrames: Flow<WebSocketFrame>,
+    webSocket: NSURLSessionWebSocketTask
+) : IosWebSocketConnection(url, incomingFrames, webSocket) {
+
+    override suspend fun sendMessage(message: NSURLSessionWebSocketMessage) = withContext(Dispatchers.Main) {
+        super.sendMessage(message)
+    }
+
+    override suspend fun sendPing(frameData: ByteArray) = withContext(Dispatchers.Main) {
+        super.sendPing(frameData)
+    }
+
+    override suspend fun close(code: Int, reason: String?) = withContext(Dispatchers.Main) {
+        super.close(code, reason)
     }
 }
 
