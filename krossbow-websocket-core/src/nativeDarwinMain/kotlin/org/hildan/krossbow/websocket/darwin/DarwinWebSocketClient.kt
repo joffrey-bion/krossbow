@@ -3,12 +3,14 @@
 package org.hildan.krossbow.websocket.darwin
 
 import kotlinx.cinterop.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import org.hildan.krossbow.websocket.*
 import platform.Foundation.*
 import platform.darwin.NSObject
@@ -35,10 +37,29 @@ class DarwinWebSocketClient(
     private val maximumMessageSize: Long? = null,
 ) : WebSocketClient {
 
+    @OptIn(ExperimentalStdlibApi::class)
     override suspend fun connect(url: String): WebSocketConnectionWithPing {
         val socketEndpoint = NSURL.URLWithString(url)!!
 
-        return suspendCancellableCoroutine { cont ->
+        return if (isExperimentalMM()) {
+            connect(url, socketEndpoint)
+        } else {
+            if (NSOperationQueue.currentQueue() != null) {
+                connect(url, socketEndpoint)
+            } else {
+                /**
+                 * With the old memory model, if [NSURLSessionWebSocketTask] is unable
+                 * to reuse the current queue for its callbacks, things will crash at runtime.
+                 */
+                withContext(Dispatchers.Main) {
+                    connect(url, socketEndpoint)
+                }
+            }
+        }
+    }
+
+    private suspend fun connect(url: String, socketEndpoint: NSURL): WebSocketConnectionWithPing =
+        suspendCancellableCoroutine { cont ->
             val incomingFrames: Channel<WebSocketFrame> = Channel(BUFFERED)
             val urlSession = NSURLSession.sessionWithConfiguration(
                 configuration = sessionConfig,
@@ -53,7 +74,6 @@ class DarwinWebSocketClient(
                 webSocket.cancel()
             }
         }
-    }
 }
 
 private class IosWebSocketListener(
