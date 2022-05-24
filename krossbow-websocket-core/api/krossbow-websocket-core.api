@@ -68,8 +68,9 @@ public final class org/hildan/krossbow/websocket/WebSocketConnectionClosedExcept
 }
 
 public class org/hildan/krossbow/websocket/WebSocketConnectionException : org/hildan/krossbow/websocket/WebSocketException {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getHttpStatusCode ()Ljava/lang/Integer;
 	public final fun getUrl ()Ljava/lang/String;
 }
 

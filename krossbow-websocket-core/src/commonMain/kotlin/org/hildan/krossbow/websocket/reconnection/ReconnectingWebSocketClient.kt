@@ -153,4 +153,9 @@ class WebSocketReconnectionException(
     cause: Exception,
     message: String = "Could not reconnect to web socket at $url after $nAttemptedReconnections attempts. Giving up. " +
         "The exception during the last attempt was $cause",
-) : WebSocketConnectionException(url, message, cause)
+) : WebSocketConnectionException(
+    url = url,
+    httpStatusCode = null,
+    message = message,
+    cause = cause,
+)

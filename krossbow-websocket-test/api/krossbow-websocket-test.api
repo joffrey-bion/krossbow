@@ -31,10 +31,14 @@ public final class org/hildan/krossbow/websocket/test/WebSocketClientMocksKt {
 
 public abstract class org/hildan/krossbow/websocket/test/WebSocketClientTestSuite {
 	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getSupportsStatusCodes ()Z
 	public abstract fun provideClient ()Lorg/hildan/krossbow/websocket/WebSocketClient;
 	public final fun setupClient ()V
 	public final fun testClose ()V
 	public final fun testConnectFailure ()V
+	public final fun testConnectFailure_correctStatusCodeInException ()V
 	public final fun testEchoBinary ()V
 	public final fun testEchoText ()V
 }

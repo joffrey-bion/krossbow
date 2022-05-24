@@ -3,7 +3,7 @@ package org.hildan.krossbow.websocket.test
 import org.hildan.krossbow.websocket.*
 import kotlin.test.*
 
-abstract class WebSocketClientTestSuite {
+abstract class WebSocketClientTestSuite(val supportsStatusCodes: Boolean = true) {
 
     abstract fun provideClient(): WebSocketClient
 
@@ -20,6 +20,35 @@ abstract class WebSocketClientTestSuite {
         // https://youtrack.jetbrains.com/issue/KT-37645
         assertFailsWith(WebSocketConnectionException::class) {
             wsClient.connect("ws://garbage")
+        }
+    }
+
+    @IgnoreOnNative
+    @IgnoreOnJS
+    @Test
+    fun testConnectFailure_correctStatusCodeInException() = runSuspendingTest {
+        runAlongHttpServer { baseUrl ->
+            assertCorrectStatusReported(baseUrl, 200) // not good for WS, should be 101
+            assertCorrectStatusReported(baseUrl, 301)
+            assertCorrectStatusReported(baseUrl, 302)
+            assertCorrectStatusReported(baseUrl, 401)
+            assertCorrectStatusReported(baseUrl, 403)
+            assertCorrectStatusReported(baseUrl, 404)
+            assertCorrectStatusReported(baseUrl, 500)
+            assertCorrectStatusReported(baseUrl, 503)
+        }
+    }
+
+    private suspend fun assertCorrectStatusReported(baseUrl: String, statusCodeToTest: Int) {
+        // Using the non-reified version because of the suspend inline function bug on JS platform
+        // https://youtrack.jetbrains.com/issue/KT-37645
+        val ex = assertFailsWith(WebSocketConnectionException::class) {
+            wsClient.connect("$baseUrl/failHandshakeWithStatusCode/$statusCodeToTest")
+        }
+        if (supportsStatusCodes) {
+            assertEquals(statusCodeToTest, ex.httpStatusCode)
+        } else {
+            assertNull(ex.httpStatusCode, "${wsClient::class} is not expected to support status codes")
         }
     }
 

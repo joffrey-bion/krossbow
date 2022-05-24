@@ -139,19 +139,24 @@ open class WebSocketException(message: String, cause: Throwable? = null) : Excep
  * An exception thrown when something went wrong during the web socket connection.
  */
 open class WebSocketConnectionException(
+    /** The target URL of the failed connection. */
     val url: String,
-    message: String = "Couldn't connect to web socket at $url",
-    cause: Throwable? = null
+    /** The status code in the HTTP response from the handshake request, if available. */
+    val httpStatusCode: Int? = null,
+    message: String = "Couldn't connect to web socket at $url" + statusInfo(httpStatusCode),
+    cause: Throwable? = null,
 ) : WebSocketException(message, cause)
 
+private fun statusInfo(httpStatusCode: Int?): String = if (httpStatusCode == null) "" else " (HTTP $httpStatusCode)"
+
 /**
- * An exception thrown when the server closed the connection unexpectedly.
+ * An exception thrown when the server closed the connection unexpectedly during the handshake.
  */
 class WebSocketConnectionClosedException(
     url: String,
     val code: Int,
     val reason: String?
 ) : WebSocketConnectionException(
-    url,
-    "Couldn't connect to web socket at $url. The server closed the connection. Code: $code Reason: $reason"
+    url = url,
+    message = "Couldn't connect to web socket at $url. The server closed the connection. Code: $code Reason: $reason",
 )

@@ -54,7 +54,11 @@ open class JsWebSocketClientAdapter(
                     val code = closeEvent.code.toInt()
                     if (pendingConnect) {
                         pendingConnect = false
-                        cont.resumeWithException(WebSocketConnectionClosedException(url, code, closeEvent.reason))
+                        cont.resumeWithException(WebSocketConnectionClosedException(
+                            url = url,
+                            code = code,
+                            reason = closeEvent.reason,
+                        ))
                     } else {
                         listener.onClose(code, closeEvent.reason)
                     }
@@ -63,7 +67,14 @@ open class JsWebSocketClientAdapter(
                     val errorEvent: ErrorEvent = event.unsafeCast<ErrorEvent>()
                     if (pendingConnect) {
                         pendingConnect = false
-                        cont.resumeWithException(WebSocketConnectionException(url, errorEvent.message))
+                        cont.resumeWithException(WebSocketConnectionException(
+                            url = url,
+                            // It is by design (for security reasons) that browsers don't give access to the status code.
+                            // See the end of the section about feedback here:
+                            // https://websockets.spec.whatwg.org//#feedback-from-the-protocol
+                            httpStatusCode = null,
+                            message = errorEvent.message,
+                        ))
                     } else {
                         listener.onError(errorEvent.message)
                     }

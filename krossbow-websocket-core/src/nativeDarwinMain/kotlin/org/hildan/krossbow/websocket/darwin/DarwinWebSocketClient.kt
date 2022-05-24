@@ -42,7 +42,7 @@ class DarwinWebSocketClient(
             val incomingFrames: Channel<WebSocketFrame> = Channel(BUFFERED)
             val urlSession = NSURLSession.sessionWithConfiguration(
                 configuration = sessionConfig,
-                delegate = IosWebSocketListener(url, cont, incomingFrames),
+                delegate = DarwinWebSocketListener(url, cont, incomingFrames),
                 delegateQueue = NSOperationQueue.currentQueue()
             )
             val webSocket = urlSession.webSocketTaskWithURL(socketEndpoint)
@@ -56,7 +56,7 @@ class DarwinWebSocketClient(
     }
 }
 
-private class IosWebSocketListener(
+private class DarwinWebSocketListener(
     private val url: String,
     private var connectionContinuation: Continuation<IosWebSocketConnection>?,
     private val incomingFrames: Channel<WebSocketFrame>,
@@ -91,8 +91,7 @@ private class IosWebSocketListener(
         didCompleteWithError: NSError?
     ) {
         if (isConnecting) {
-            val ex =
-                WebSocketConnectionException(url, cause = didCompleteWithError?.toWebSocketHandshakeException(task.response))
+            val ex = createConnectionException(task, didCompleteWithError)
             completeConnection {
                 resumeWithException(ex)
             }
@@ -114,8 +113,17 @@ private class IosWebSocketListener(
             return
         }
 
-        incomingFrames.close(didCompleteWithError.toIosWebSocketException())
+        incomingFrames.close(DarwinWebSocketException(nsError = didCompleteWithError))
     }
+
+    private fun createConnectionException(
+        task: NSURLSessionTask,
+        didCompleteWithError: NSError?,
+    ) = WebSocketConnectionException(
+        url = url,
+        httpStatusCode = task.response?.httpStatusCode,
+        cause = didCompleteWithError?.let { DarwinWebSocketException(it) },
+    )
 
     private fun passCloseFrameThroughChannel(code: Int, reason: String?) {
         val closeResult = incomingFrames.trySend(WebSocketFrame.Close(code, reason))
@@ -128,6 +136,11 @@ private class IosWebSocketListener(
         incomingFrames.close()
     }
 }
+
+private val NSURLResponse.httpStatusCode: Int?
+    get() = (this as? NSHTTPURLResponse)?.statusCode?.toInt()
+
+
 private class IosWebSocketConnection(
     override val url: String,
     override val incomingFrames: Flow<WebSocketFrame>,
@@ -192,7 +205,7 @@ private fun NSURLSessionWebSocketTask.forwardNextIncomingMessagesAsyncTo(incomin
                     }
                     return@receiveMessageWithCompletionHandler
                 }
-                incomingFrames.close(nsError.toIosWebSocketException())
+                incomingFrames.close(DarwinWebSocketException(nsError))
                 // No recursive call here, so we stop listening to messages in a closed or failed web socket
             }
             message != null -> {
@@ -248,16 +261,6 @@ private fun NSData.toByteArray(): ByteArray {
     }
 }
 
-private fun NSError.toIosWebSocketException(): WebSocketException = DarwinWebSocketException(this)
-
-private fun NSError.toWebSocketHandshakeException(
-    urlResponse: NSURLResponse? = null
-): WebSocketException {
-    val httpResponse = urlResponse as? NSHTTPURLResponse
-    val statusCode = httpResponse?.statusCode?.toInt()
-    return DarwinWebSocketHandshakeException(this, statusCode)
-}
-
 /**
  * A [WebSocketException] caused by a darwin [NSError].
  * It contains details about the actual error cause.
@@ -265,23 +268,3 @@ private fun NSError.toWebSocketHandshakeException(
 class DarwinWebSocketException(
     val nsError: NSError,
 ) : WebSocketException(nsError.description ?: nsError.localizedDescription)
-
-/**
- * A [WebSocketException] caused by a darwin [NSError], during the handshake phase.
- * It contains details about the actual error cause, as well as the [httpStatusCode], if applicable.
- */
-class DarwinWebSocketHandshakeException(
-    val nsError: NSError,
-    val httpStatusCode: Int?,
-) : WebSocketException(handshakeExceptionMessage(nsError, httpStatusCode))
-
-private fun handshakeExceptionMessage(nsError: NSError, httpStatusCode: Int?): String {
-    // [baseMessage] will look something like:
-    // Error Domain=<domain> Code=<code> UserInfo={NSLocalizedDescription=<localized_description>}
-    val baseMessage = nsError.description ?: nsError.localizedDescription
-    return if (httpStatusCode != null) {
-        "$baseMessage HTTP Status Code=$httpStatusCode"
-    } else {
-        baseMessage
-    }
-}

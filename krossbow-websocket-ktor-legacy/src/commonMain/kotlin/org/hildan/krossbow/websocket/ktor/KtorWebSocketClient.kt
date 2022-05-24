@@ -1,6 +1,7 @@
 package org.hildan.krossbow.websocket.ktor
 
 import io.ktor.client.*
+import io.ktor.client.features.*
 import io.ktor.client.features.websocket.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
@@ -22,8 +23,11 @@ class KtorWebSocketClient(
             return KtorWebSocketConnectionAdapter(wsKtorSession)
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here
+        } catch (e: ResponseException) {
+            throw WebSocketConnectionException(url, httpStatusCode = e.response.status.value, cause = e)
         } catch (e: Exception) {
-            throw WebSocketConnectionException(url, cause = e)
+            val statusCode = extractHandshakeStatusCode(e)
+            throw WebSocketConnectionException(url, httpStatusCode = statusCode, cause = e)
         }
     }
 }

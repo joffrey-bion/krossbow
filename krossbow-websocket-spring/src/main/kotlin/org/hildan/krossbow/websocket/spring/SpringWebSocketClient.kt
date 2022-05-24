@@ -49,7 +49,16 @@ open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClien
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here
         } catch (e: Exception) {
-            throw WebSocketConnectionException(url, cause = e)
+            // javax.websocket.DeploymentException (when the handshake fails)
+            //   Caused by DeploymentException (again, for some reason)
+            //     Caused by:
+            //      - java.nio.channels.UnresolvedAddressException (if host is not resolved)
+            //      - org.glassfish.tyrus.client.auth.AuthenticationException: Authentication failed. (on 401)
+            throw WebSocketConnectionException(
+                url = url,
+                httpStatusCode = null,
+                cause = e,
+            )
         }
     }
 }

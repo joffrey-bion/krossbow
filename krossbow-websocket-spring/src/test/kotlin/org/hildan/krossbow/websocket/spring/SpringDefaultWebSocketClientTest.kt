@@ -3,7 +3,7 @@ package org.hildan.krossbow.websocket.spring
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.test.WebSocketClientTestSuite
 
-class SpringDefaultWebSocketClientTest : WebSocketClientTestSuite() {
+class SpringDefaultWebSocketClientTest : WebSocketClientTestSuite(supportsStatusCodes = false) {
 
     override fun provideClient(): WebSocketClient = SpringDefaultWebSocketClient
 }

@@ -10,6 +10,7 @@ import org.hildan.krossbow.websocket.*
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.WebSocket
+import java.net.http.WebSocketHandshakeException
 import java.nio.ByteBuffer
 import java.util.concurrent.CompletionStage
 
@@ -32,8 +33,10 @@ class Jdk11WebSocketClient(
             return Jdk11WebSocketConnection(webSocket, url, listener.incomingFrames)
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here
+        } catch (e: WebSocketHandshakeException) {
+            throw WebSocketConnectionException(url, httpStatusCode = e.response.statusCode(), cause = e)
         } catch (e: Exception) {
-            throw WebSocketConnectionException(url, cause = e)
+            throw WebSocketConnectionException(url, httpStatusCode = null, cause = e)
         }
     }
 }
