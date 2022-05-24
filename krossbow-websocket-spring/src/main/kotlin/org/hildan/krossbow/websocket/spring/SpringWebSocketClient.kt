@@ -89,7 +89,8 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
         // Note: afterConnectionClosed is synchronously called by Tyrus implementation during a session.close() call.
         // It is not called when receiving the server close frame if the closure is initiated on the client side.
         // Source: org.glassfish.tyrus.core.ProtocolHandler.close()
-        // This means that if no receiver is listening on the incoming frames channel, onClose() here may suspend forever
+        // This means that if no receiver is listening on the incoming frames channel, onClose() here may suspend
+        // forever (if the buffer is full).
         runBlocking {
             channelListener.onClose(closeStatus.code, closeStatus.reason)
         }
