@@ -58,12 +58,12 @@ class DarwinWebSocketClient(
 
 private class DarwinWebSocketListener(
     private val url: String,
-    private var connectionContinuation: Continuation<IosWebSocketConnection>?,
+    private var connectionContinuation: Continuation<DarwinWebSocketConnection>?,
     private val incomingFrames: Channel<WebSocketFrame>,
 ) : NSObject(), NSURLSessionWebSocketDelegateProtocol {
     private var isConnecting = true
 
-    private inline fun completeConnection(resume: Continuation<IosWebSocketConnection>.() -> Unit) {
+    private inline fun completeConnection(resume: Continuation<DarwinWebSocketConnection>.() -> Unit) {
         val cont = connectionContinuation ?: error("web socket connection continuation already consumed")
         connectionContinuation = null // avoid leaking the continuation
         isConnecting = false
@@ -72,7 +72,7 @@ private class DarwinWebSocketListener(
 
     override fun URLSession(session: NSURLSession, webSocketTask: NSURLSessionWebSocketTask, didOpenWithProtocol: String?) {
         completeConnection {
-            resume(IosWebSocketConnection(url, incomingFrames.receiveAsFlow(), webSocketTask))
+            resume(DarwinWebSocketConnection(url, incomingFrames.receiveAsFlow(), webSocketTask))
         }
     }
 
@@ -140,8 +140,7 @@ private class DarwinWebSocketListener(
 private val NSURLResponse.httpStatusCode: Int?
     get() = (this as? NSHTTPURLResponse)?.statusCode?.toInt()
 
-
-private class IosWebSocketConnection(
+private class DarwinWebSocketConnection(
     override val url: String,
     override val incomingFrames: Flow<WebSocketFrame>,
     private val webSocket: NSURLSessionWebSocketTask,
