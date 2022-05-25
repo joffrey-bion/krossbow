@@ -1,7 +1,7 @@
 import com.gradle.scan.plugin.BuildScanExtension
 
 plugins {
-    id("com.gradle.enterprise") version "3.10"
+    id("com.gradle.enterprise") version "3.10.1"
 }
 
 rootProject.name = "krossbow"
