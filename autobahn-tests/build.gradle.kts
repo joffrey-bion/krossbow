@@ -70,7 +70,12 @@ kotlin {
             }
         }
 
-        val jsTest by getting {}
+        val jsTest by getting {
+            dependencies {
+                // to call the Autobahn HTTP APIs
+                implementation(npm("isomorphic-fetch", libs.versions.npm.isomorphic.fetch.get()))
+            }
+        }
 
         val jsKtor1Test by getting {
             dependsOn(jsTest)
@@ -89,9 +94,6 @@ kotlin {
         val jsOtherTest by getting {
             dependsOn(jsTest)
             dependencies {
-                // to call the Autobahn HTTP APIs
-                implementation(npm("isomorphic-fetch", libs.versions.npm.isomorphic.fetch.get()))
-
                 implementation(npm("isomorphic-ws", libs.versions.npm.isomorphic.ws.get()))
                 implementation(npm("ws", libs.versions.npm.ws.get()))
             }
