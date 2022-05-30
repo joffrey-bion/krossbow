@@ -63,7 +63,7 @@ interface StompSessionWithClassConversions : StompSession {
  * Sends a SEND frame to the server at the given [destination] with the given [body], converted appropriately.
  *
  * @return null right after sending the frame if auto-receipt is disabled.
- * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+ * Otherwise, this method suspends until the relevant RECEIPT frame is received from the server, and then returns
  * a [StompReceipt].
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
@@ -78,7 +78,7 @@ suspend fun <T : Any> StompSessionWithClassConversions.convertAndSend(
  * Sends a SEND frame to the server at the given [destination] with the given [body], converted appropriately.
  *
  * @return null right after sending the frame if auto-receipt is disabled.
- * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+ * Otherwise, this method suspends until the relevant RECEIPT frame is received from the server, and then returns
  * a [StompReceipt].
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
@@ -89,8 +89,10 @@ suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAnd
 ): StompReceipt? = convertAndSend(destination, body, T::class)
 
 /**
- * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
- * coroutine is cancelled.
+ * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the
+ * collector is done or cancelled.
+ * The returned flow can be collected only once.
+ *
  * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T], but the exact conversion
  * is implementation-dependent.
  * Message frames without a body MAY be skipped or result in an exception depending on the implementation.
@@ -101,8 +103,10 @@ suspend fun <T : Any> StompSessionWithClassConversions.subscribe(destination: St
     subscribe(StompSubscribeHeaders(destination), clazz)
 
 /**
- * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
- * coroutine is cancelled.
+ * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the
+ * collector is done or cancelled.
+ * The returned flow can be collected only once.
+ *
  * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] or `null`, but the exact
  * conversion is implementation-dependent.
  * Message frames without a body MAY be skipped or result in an exception depending on the implementation, they
@@ -118,8 +122,10 @@ suspend fun <T : Any> StompSessionWithClassConversions.subscribeOptional(
 ): Flow<T?> = subscribeOptional(StompSubscribeHeaders(destination), clazz)
 
 /**
- * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
- * coroutine is cancelled.
+ * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the
+ * collector is done or cancelled.
+ * The returned flow can be collected only once.
+ *
  * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T], but the exact conversion
  * is implementation-dependent.
  * Message frames without a body MAY be skipped or result in an exception depending on the implementation.
@@ -130,8 +136,9 @@ suspend inline fun <reified T : Any> StompSessionWithClassConversions.subscribe(
     subscribe(destination, T::class)
 
 /**
- * Returns a cold [Flow] of [T]s that subscribes on [collect][Flow.collect], and unsubscribes when the consuming
- * coroutine is cancelled.
+ * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the
+ * collector is done or cancelled.
+ * The returned flow can be collected only once.
  *
  * The received [MESSAGE][StompFrame.Message] frames are converted to instances of [T] or `null`, but the exact
  * conversion is implementation-dependent.
