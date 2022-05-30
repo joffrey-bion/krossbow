@@ -272,7 +272,11 @@ suspend fun <T> StompSession.withTransaction(block: suspend StompSession.(transa
         commit(transactionId)
         return result
     } catch (e: Exception) {
-        abort(transactionId)
+        try {
+            abort(transactionId)
+        } catch (abortException: Exception) {
+            e.addSuppressed(abortException)
+        }
         throw e
     }
 }

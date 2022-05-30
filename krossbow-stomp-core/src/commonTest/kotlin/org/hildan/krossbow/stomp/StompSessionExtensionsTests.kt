@@ -22,7 +22,7 @@ class StompSessionExtensionsTests {
             it.sendText("/dest", "Hello")
             assertFalse(wsSession.closed, "The web socket session should not be closed until the end of the use block")
         }
-        assertTrue(wsSession.closed, "The web socket session should not be closed after the use block")
+        assertTrue(wsSession.closed, "The web socket session should be closed after the use block")
     }
 
     @Test
@@ -38,7 +38,7 @@ class StompSessionExtensionsTests {
                 emptyList<Int>().first() // this fails
             }
         }
-        assertTrue(wsSession.closed, "The web socket session should not be closed after the use block")
+        assertTrue(wsSession.closed, "The web socket session should be closed after the use block")
     }
 
     @Test
@@ -89,5 +89,24 @@ class StompSessionExtensionsTests {
 
         wsSession.awaitDisconnectFrameAndSimulateCompletion()
         wsSession.expectClose()
+    }
+
+    @Test
+    fun withTransaction_abortsWithSuppressedException() = runTest {
+        class MyAbortException : Exception("exception during abort")
+
+        val stompSession = object : NoopStompSession() {
+            override suspend fun abort(transactionId: String) {
+                throw MyAbortException()
+            }
+        }
+
+        val ex = assertFailsWith(NoSuchElementException::class) {
+            stompSession.withTransaction {
+                emptyList<Int>().first() // this fails
+            }
+        }
+        assertEquals(1, ex.suppressedExceptions.size)
+        assertIs<MyAbortException>(ex.suppressedExceptions.single())
     }
 }
