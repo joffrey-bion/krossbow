@@ -60,6 +60,20 @@ interface StompSessionWithClassConversions : StompSession {
 }
 
 /**
+ * Sends a SEND frame to the server with the given [headers] and [body], converted appropriately.
+ *
+ * @return null right after sending the frame if auto-receipt is disabled.
+ * Otherwise, this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+ * a [StompReceipt].
+ * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
+ * a [LostReceiptException] is thrown.
+ */
+suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAndSend(
+    headers: StompSendHeaders,
+    body: T? = null,
+): StompReceipt? = convertAndSend(headers, body, T::class)
+
+/**
  * Sends a SEND frame to the server at the given [destination] with the given [body], converted appropriately.
  *
  * @return null right after sending the frame if auto-receipt is disabled.
@@ -68,6 +82,10 @@ interface StompSessionWithClassConversions : StompSession {
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
  */
+@Deprecated(
+    "This overload will be removed in a future release, prefer the reified version without bodyType argument",
+    ReplaceWith("this.convertAndSend(destination, body)"),
+)
 suspend fun <T : Any> StompSessionWithClassConversions.convertAndSend(
     destination: String,
     body: T? = null,
@@ -86,7 +104,7 @@ suspend fun <T : Any> StompSessionWithClassConversions.convertAndSend(
 suspend inline fun <reified T : Any> StompSessionWithClassConversions.convertAndSend(
     destination: String,
     body: T?,
-): StompReceipt? = convertAndSend(destination, body, T::class)
+): StompReceipt? = convertAndSend(StompSendHeaders(destination), body)
 
 /**
  * Subscribes and returns a [Flow] of messages of type [T] that unsubscribes automatically when the
