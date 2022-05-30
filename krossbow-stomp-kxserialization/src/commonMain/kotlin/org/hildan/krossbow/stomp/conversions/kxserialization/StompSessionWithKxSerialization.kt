@@ -25,7 +25,7 @@ interface StompSessionWithKxSerialization : StompSession {
      * Sends a SEND frame to the server with the given [headers] and the given [body], converted appropriately using
      * the provided [serializer].
      *
-     * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise this method
+     * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise, this method
      * suspends until the relevant RECEIPT frame is received from the server, and then returns a [StompReceipt].
      */
     suspend fun <T : Any> convertAndSend(
@@ -68,7 +68,7 @@ interface StompSessionWithKxSerialization : StompSession {
  * Sends a SEND frame to the given [destination] with the given [body], converted appropriately using the provided
  * [serializer].
  *
- * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise this method
+ * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise, this method
  * suspends until the relevant RECEIPT frame is received from the server, and then returns a [StompReceipt].
  */
 suspend fun <T : Any> StompSessionWithKxSerialization.convertAndSend(
@@ -83,7 +83,7 @@ suspend fun <T : Any> StompSessionWithKxSerialization.convertAndSend(
  * This overload uses reflection to find the relevant deserializer for [T]. This has limited support in JavaScript
  * and may break on generic types.
  *
- * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise this method
+ * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise, this method
  * suspends until the relevant RECEIPT frame is received from the server, and then returns a [StompReceipt].
  */
 suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndSend(
@@ -100,7 +100,7 @@ suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndS
  * This overload uses reflection to find the relevant deserializer for [T]. This has limited support in JavaScript
  * and may break on generic types.
  *
- * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise this method
+ * @return null (immediately) if auto-receipt is disabled and no receipt header is provided. Otherwise, this method
  * suspends until the relevant RECEIPT frame is received from the server, and then returns a [StompReceipt].
  */
 suspend inline fun <reified T : Any> StompSessionWithKxSerialization.convertAndSend(

@@ -24,7 +24,7 @@ interface StompSessionWithClassConversions : StompSession {
      * on [bodyType].
      *
      * @return null right after sending the frame if auto-receipt is disabled and no receipt header is provided.
-     * Otherwise this method suspends until the relevant RECEIPT frame is received from the server, and then returns
+     * Otherwise, this method suspends until the relevant RECEIPT frame is received from the server, and then returns
      * a [StompReceipt].
      * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
      * a [LostReceiptException] is thrown.

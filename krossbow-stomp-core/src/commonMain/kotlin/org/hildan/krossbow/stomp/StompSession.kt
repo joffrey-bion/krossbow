@@ -88,7 +88,12 @@ interface StompSession {
      * See the general [StompSession] documentation for more details about suspension and receipts.
      *
      * @return the [StompReceipt] received from the server if receipts are enabled, or null if receipts were not used
+     *
+     * @see sendBinary
+     * @see sendText
+     * @see sendEmptyMsg
      */
+    // No default value null on purpose, because sendEmptyMsg() should be used if we statically know there is no body
     suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt?
 
     /**
@@ -119,6 +124,9 @@ interface StompSession {
      * consumer's side.
      *
      * See the general [StompSession] documentation for more details about subscription flows, suspension and receipts.
+     *
+     * @see subscribeText
+     * @see subscribeBinary
      */
     suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message>
 
@@ -218,6 +226,9 @@ suspend fun StompSession.sendEmptyMsg(destination: String): StompReceipt? = send
  * The returned flow can be collected only once.
  *
  * See the general [StompSession] documentation for more details about subscription flows, suspension and receipts.
+ *
+ * @see subscribeBinary
+ * @see subscribeText
  */
 suspend fun StompSession.subscribe(destination: String): Flow<StompFrame.Message> =
     subscribe(StompSubscribeHeaders(destination))
