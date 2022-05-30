@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/stomp/basics/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.9">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.16">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.120efc48.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.1c3799f8.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.9647289d.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
         
       
     
@@ -676,51 +676,51 @@
 
 <h2 id="gradle-dependency">Gradle dependency<a class="headerlink" href="#gradle-dependency" title="Permanent link">&para;</a></h2>
 <p>For the basic usage of STOMP without body conversions, you only need the following Gradle dependency:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-core:3.4.0&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-core:3.4.0&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>You need to replace it if you want to use serialization/deserialization features (<a href="#using-body-conversions">see below</a>).</p>
 <h2 id="basic-usage-without-body-conversions">Basic usage (without body conversions)<a class="headerlink" href="#basic-usage-without-body-conversions" title="Permanent link">&para;</a></h2>
 <p>This is how to create a STOMP client and interact with it:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nn">kotlinx.coroutines.flow.*</span>
-<span class="k">import</span> <span class="nn">org.hildan.krossbow.stomp.*</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">kotlinx.coroutines.flow.*</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org.hildan.krossbow.stomp.*</span><span class="w"></span>
 
-<span class="kd">val</span> <span class="nv">client</span> <span class="o">=</span> <span class="n">StompClient</span><span class="p">()</span> <span class="c1">// custom WebSocketClient and other config can be passed in here</span>
-<span class="kd">val</span> <span class="nv">session</span><span class="p">:</span> <span class="n">StompSession</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="c1">// optional login/passcode can be provided here</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">()</span><span class="w"> </span><span class="c1">// custom WebSocketClient and other config can be passed in here</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="p">:</span><span class="w"> </span><span class="n">StompSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"> </span><span class="c1">// optional login/passcode can be provided here</span><span class="w"></span>
 
-<span class="n">session</span><span class="p">.</span><span class="na">sendText</span><span class="p">(</span><span class="s">&quot;/some/destination&quot;</span><span class="p">,</span> <span class="s">&quot;Basic text message&quot;</span><span class="p">)</span> 
+<span class="n">session</span><span class="p">.</span><span class="na">sendText</span><span class="p">(</span><span class="s">&quot;/some/destination&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Basic text message&quot;</span><span class="p">)</span><span class="w"> </span>
 
-<span class="c1">// this triggers a SUBSCRIBE frame and returns the flow of messages for the subscription</span>
-<span class="kd">val</span> <span class="nv">subscription</span><span class="p">:</span> <span class="n">Flow</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="na">subscribeText</span><span class="p">(</span><span class="s">&quot;/some/topic/destination&quot;</span><span class="p">)</span>
+<span class="c1">// this triggers a SUBSCRIBE frame and returns the flow of messages for the subscription</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">subscription</span><span class="p">:</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">subscribeText</span><span class="p">(</span><span class="s">&quot;/some/topic/destination&quot;</span><span class="p">)</span><span class="w"></span>
 
-<span class="kd">val</span> <span class="nv">collectorJob</span> <span class="o">=</span> <span class="n">launch</span> <span class="p">{</span>
-    <span class="n">subscription</span><span class="p">.</span><span class="na">collect</span> <span class="p">{</span> <span class="n">msg</span> <span class="o">-&gt;</span>
-        <span class="n">println</span><span class="p">(</span><span class="s">&quot;Received: </span><span class="si">$</span><span class="n">msg</span><span class="s">&quot;</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-<span class="n">delay</span><span class="p">(</span><span class="m">3000</span><span class="p">)</span>
-<span class="c1">// cancelling the flow collector triggers an UNSUBSCRIBE frame</span>
-<span class="n">collectorJob</span><span class="p">.</span><span class="na">cancel</span><span class="p">()</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">collectorJob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">launch</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">subscription</span><span class="p">.</span><span class="na">collect</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Received: </span><span class="si">$</span><span class="n">msg</span><span class="s">&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="n">delay</span><span class="p">(</span><span class="m">3000</span><span class="p">)</span><span class="w"></span>
+<span class="c1">// cancelling the flow collector triggers an UNSUBSCRIBE frame</span><span class="w"></span>
+<span class="n">collectorJob</span><span class="p">.</span><span class="na">cancel</span><span class="p">()</span><span class="w"></span>
 
-<span class="n">session</span><span class="p">.</span><span class="na">disconnect</span><span class="p">()</span>
+<span class="n">session</span><span class="p">.</span><span class="na">disconnect</span><span class="p">()</span><span class="w"></span>
 </code></pre></div>
 <p>If you want to disconnect automatically in case of exception or normal termination, you can use
 a <code>try</code>/<code>finally</code> block, or use <code>StompSession.use()</code>, which is similar to <code>Closeable.use()</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nn">kotlinx.coroutines.flow.*</span>
-<span class="k">import</span> <span class="nn">org.hildan.krossbow.stomp.*</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">kotlinx.coroutines.flow.*</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org.hildan.krossbow.stomp.*</span><span class="w"></span>
 
-<span class="kd">val</span> <span class="nv">client</span> <span class="o">=</span> <span class="n">StompClient</span><span class="p">()</span> <span class="c1">// custom WebSocketClient and other config can be passed in here</span>
-<span class="kd">val</span> <span class="nv">session</span><span class="p">:</span> <span class="n">StompSession</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="c1">// optional login/passcode can be provided here</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">()</span><span class="w"> </span><span class="c1">// custom WebSocketClient and other config can be passed in here</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="p">:</span><span class="w"> </span><span class="n">StompSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"> </span><span class="c1">// optional login/passcode can be provided here</span><span class="w"></span>
 
-<span class="n">session</span><span class="p">.</span><span class="na">use</span> <span class="p">{</span> <span class="n">s</span> <span class="o">-&gt;</span>
-    <span class="n">s</span><span class="p">.</span><span class="na">sendText</span><span class="p">(</span><span class="s">&quot;/some/destination&quot;</span><span class="p">,</span> <span class="s">&quot;Basic text message&quot;</span><span class="p">)</span> 
+<span class="n">session</span><span class="p">.</span><span class="na">use</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="na">sendText</span><span class="p">(</span><span class="s">&quot;/some/destination&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Basic text message&quot;</span><span class="p">)</span><span class="w"> </span>
 
-    <span class="kd">val</span> <span class="nv">subscription</span><span class="p">:</span> <span class="n">Flow</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="na">subscribeText</span><span class="p">(</span><span class="s">&quot;/some/topic/destination&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">subscription</span><span class="p">:</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">subscribeText</span><span class="p">(</span><span class="s">&quot;/some/topic/destination&quot;</span><span class="p">)</span><span class="w"></span>
 
-    <span class="c1">// terminal operators that finish early (like first) also trigger UNSUBSCRIBE automatically</span>
-    <span class="kd">val</span> <span class="nv">firstMessage</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">subscription</span><span class="p">.</span><span class="na">first</span><span class="p">()</span>
-    <span class="n">println</span><span class="p">(</span><span class="s">&quot;Received: </span><span class="si">$</span><span class="n">firstMessage</span><span class="s">&quot;</span><span class="p">)</span>
-<span class="p">}</span>
-<span class="c1">// DISCONNECT frame was automatically sent at the end of the use{...} block</span>
+<span class="w">    </span><span class="c1">// terminal operators that finish early (like first) also trigger UNSUBSCRIBE automatically</span><span class="w"></span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">firstMessage</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subscription</span><span class="p">.</span><span class="na">first</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Received: </span><span class="si">$</span><span class="n">firstMessage</span><span class="s">&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="c1">// DISCONNECT frame was automatically sent at the end of the use{...} block</span><span class="w"></span>
 </code></pre></div>
 <h2 id="using-body-conversions">Using body conversions<a class="headerlink" href="#using-body-conversions" title="Permanent link">&para;</a></h2>
 <p>You can use STOMP with basic text as frame bodies, but it really becomes interesting when you can
@@ -813,7 +813,7 @@ convert the frame bodies back and forth into Kotlin objects.</p>
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand"], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.6e54b5cd.min.js"></script>
+      <script src="../../assets/javascripts/bundle.3a4b43e5.min.js"></script>
       
     
   </body>

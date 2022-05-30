@@ -27,11 +27,13 @@ org.hildan.krossbow.stomp
 org.hildan.krossbow.stomp.charsets
 org.hildan.krossbow.stomp.config
 org.hildan.krossbow.stomp.conversions
+org.hildan.krossbow.stomp.conversions.text
 org.hildan.krossbow.stomp.frame
 org.hildan.krossbow.stomp.headers
 org.hildan.krossbow.stomp.instrumentation
 module:krossbow-stomp-jackson
 org.hildan.krossbow.stomp.conversions
+org.hildan.krossbow.stomp.conversions.jackson
 module:krossbow-stomp-kxserialization
 org.hildan.krossbow.stomp.conversions.kxserialization
 module:krossbow-websocket-core
