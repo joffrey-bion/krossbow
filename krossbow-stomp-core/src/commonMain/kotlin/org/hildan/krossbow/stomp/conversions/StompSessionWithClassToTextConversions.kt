@@ -14,12 +14,24 @@ import kotlin.reflect.KClass
 /**
  * Wraps this [StompSession] to add methods that can convert message bodies using the provided [converter].
  */
+@Suppress("DeprecatedCallableAddReplaceWith") // no direct replacement possible
+@Deprecated(
+    message = "This yields a session that gets type information via KClass<T>, " +
+        "it doesn't handle generic types properly and will be removed in a future version. " +
+        "Please use withTextConversions() and TextMessageConverter from the package " +
+        "org.hildan.krossbow.stomp.conversions.text, which is based on proper type references.",
+)
 fun StompSession.withTextConversions(converter: TextMessageConverter): StompSessionWithClassConversions =
     StompSessionWithClassToTextConversions(this, converter)
 
 /**
  * Converts between text and objects based on a [KClass].
  */
+@Deprecated(
+    message = "This converter interface passes type information via KClass<T>, " +
+        "it doesn't handle generic types like List<CustomClass> properly. " +
+        "Use a dedicated alternative for your converter.",
+)
 interface TextMessageConverter {
 
     /**

@@ -8,6 +8,14 @@ import kotlin.reflect.KClass
 /**
  * Wraps this [StompSession] to add methods that can convert message bodies using the provided Jackson [objectMapper].
  */
+@Deprecated(
+    message = "This yields a session that gets type information via KClass<T>, " +
+        "it doesn't handle generic types properly",
+    ReplaceWith(
+        expression = "this.withJackson(objectMapper)",
+        imports = ["org.hildan.krossbow.stomp.conversions.jackson.withJackson"],
+    )
+)
 fun StompSession.withJacksonConversions(
     objectMapper: ObjectMapper = jacksonObjectMapper(),
 ): StompSessionWithClassConversions = withTextConversions(JacksonConverter(objectMapper))

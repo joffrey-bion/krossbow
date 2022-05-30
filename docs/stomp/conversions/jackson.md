@@ -2,14 +2,15 @@
 
 The `krossbow-stomp-jackson` module is a JVM-only extension of `krossbow-stomp-core` that provides new APIs to
 send and receive properly typed classes, and automatically convert them to/from the JSON bodies of STOMP frames
-by leveraging [Jackson](https://github.com/FasterXML/jackson) and [jackson-module-kotlin](https://github.com/FasterXML/jackson-module-kotlin).
+by leveraging [Jackson](https://github.com/FasterXML/jackson) and 
+[jackson-module-kotlin](https://github.com/FasterXML/jackson-module-kotlin).
 
-The main addition is the extension function `StompSession.withJacksonConversions()`, which turns your `StompSession`
-into a `StompSessionWithClassConversions`.
-This new session type has additional methods that use reflection to convert your objects into JSON and back:
+The main addition is the extension function `StompSession.withJackson()`, which turns your `StompSession`
+into a `TypedStompSession`.
+This new session type has additional methods that use Jackson to convert your objects into JSON and back:
 
 ```kotlin
-StompClient().connect(url).withJacksonConversions().use { session ->
+StompClient().connect(url).withJackson().use { session ->
     session.convertAndSend("/some/destination", Person("Bob", 42)) 
 
     val messages: Flow<MyMessage> = session.subscribe<MyMessage>("/some/topic/destination")
@@ -23,7 +24,7 @@ StompClient().connect(url).withJacksonConversions().use { session ->
 
 Jackson is highly configurable, and it's often useful to configure the `ObjectMapper` manually.
 
-The `withJacksonConversions()` method takes an optional `ObjectMapper` parameter, so you can configure it as you please:
+The `withJackson()` method takes an optional `ObjectMapper` parameter, so you can configure it as you please:
 
 ```kotlin
 val customObjectMapper: ObjectMapper = jacksonObjectMapper()

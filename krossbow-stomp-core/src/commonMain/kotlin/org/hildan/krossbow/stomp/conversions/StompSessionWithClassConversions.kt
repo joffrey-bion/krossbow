@@ -13,6 +13,10 @@ import kotlin.reflect.KClass
 /**
  * A [StompSession] with additional methods to serialize/deserialize message bodies based on a [KClass].
  */
+@Deprecated(
+    message = "This interface uses KClass<T> to convey type information, which is not enough for generic types.",
+    ReplaceWith("TypedStompSession", imports = ["org.hildan.krossbow.stomp.conversions.TypedStompSession"]),
+)
 interface StompSessionWithClassConversions : StompSession {
 
     /**

@@ -1,4 +1,4 @@
-package org.hildan.krossbow.stomp.conversions
+package org.hildan.krossbow.stomp.conversions.jackson
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

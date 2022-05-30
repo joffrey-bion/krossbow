@@ -149,6 +149,11 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun setSubscriptionCompletionTimeout-LRDsOJo (J)V
 }
 
+public final class org/hildan/krossbow/stomp/conversions/KTypeRef {
+	public fun <init> (Lkotlin/reflect/KType;)V
+	public final fun getKType ()Lkotlin/reflect/KType;
+}
+
 public abstract interface class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions : org/hildan/krossbow/stomp/StompSession {
 	public abstract fun convertAndSend (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Ljava/lang/Object;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -174,6 +179,21 @@ public abstract interface class org/hildan/krossbow/stomp/conversions/TextMessag
 	public abstract fun convertFromString (Ljava/lang/String;Lkotlin/reflect/KClass;)Ljava/lang/Object;
 	public abstract fun convertToString (Ljava/lang/Object;Lkotlin/reflect/KClass;)Ljava/lang/String;
 	public abstract fun getMimeType ()Ljava/lang/String;
+}
+
+public abstract interface class org/hildan/krossbow/stomp/conversions/TypedStompSession : org/hildan/krossbow/stomp/StompSession {
+	public abstract fun convertAndSend (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Ljava/lang/Object;Lorg/hildan/krossbow/stomp/conversions/KTypeRef;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lorg/hildan/krossbow/stomp/conversions/KTypeRef;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/stomp/conversions/text/TextConversionsKt {
+	public static final fun withTextConversions (Lorg/hildan/krossbow/stomp/StompSession;Lorg/hildan/krossbow/stomp/conversions/text/TextMessageConverter;)Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;
+}
+
+public abstract interface class org/hildan/krossbow/stomp/conversions/text/TextMessageConverter {
+	public abstract fun convertFromString (Ljava/lang/String;Lorg/hildan/krossbow/stomp/conversions/KTypeRef;)Ljava/lang/Object;
+	public abstract fun convertToString (Ljava/lang/Object;Lorg/hildan/krossbow/stomp/conversions/KTypeRef;)Ljava/lang/String;
+	public abstract fun getMediaType ()Ljava/lang/String;
 }
 
 public abstract class org/hildan/krossbow/stomp/frame/FrameBody {
