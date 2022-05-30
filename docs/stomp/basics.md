@@ -67,4 +67,5 @@ Check out the following sections to see how to automatically convert your object
 
  * [using Kotlinx Serialization](./conversions/kx-serialization.md) (multiplatform)
  * [using Jackson](./conversions/jackson.md) (JVM-only)
+ * [using Moshi](./conversions/moshi.md) (JVM-only)
  * [using custom conversions](./conversions/custom.md)

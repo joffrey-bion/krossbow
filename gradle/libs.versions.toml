@@ -6,6 +6,7 @@ kotlinx-coroutines = "1.6.1"
 kotlinx-serialization = "1.3.2"
 ktor1 = "1.6.8"
 ktor2 = "2.0.0"
+moshi = "1.13.0"
 okhttp = "4.9.3"
 okio = "3.0.0"
 slf4j = "1.7.36"
@@ -44,6 +45,8 @@ ktor2-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor2" }
 ktor2-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor2" }
 ktor2-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor2" }
 ktor2-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor2" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+moshiKotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }

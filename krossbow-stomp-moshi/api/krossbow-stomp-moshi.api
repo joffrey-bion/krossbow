@@ -1,0 +1,5 @@
+public final class org/hildan/krossbow/stomp/conversions/moshi/MoshiKt {
+	public static final fun withMoshi (Lorg/hildan/krossbow/stomp/StompSession;Lcom/squareup/moshi/Moshi;)Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;
+	public static synthetic fun withMoshi$default (Lorg/hildan/krossbow/stomp/StompSession;Lcom/squareup/moshi/Moshi;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;
+}
+
