@@ -1,7 +1,7 @@
 ---
 name: Dependency upgrade
 about: Upgrade a dependency
-title: Upgrade <DEPENDENCY> to version <VERSION>
+title: Upgrade ARTIFACT_NAME to version VERSION
 labels: dependencies
 assignees: ''
 
