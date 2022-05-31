@@ -1,5 +1,21 @@
 # Change Log
 
+## [3.6.0](https://github.com/joffrey-bion/krossbow/tree/3.6.0) (2022-05-31)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.5.0...3.6.0)
+
+**Fixed bugs:**
+
+- `krossbow\-stomp\-moshi` missing in Maven Central [\#226](https://github.com/joffrey-bion/krossbow/issues/226)
+
+**Upgraded dependencies:**
+
+- Upgrade jetty\-websocket to version 9.4.46.v20220331 [\#221](https://github.com/joffrey-bion/krossbow/issues/221)
+- Upgrade Jackson to version 2.13.3 [\#220](https://github.com/joffrey-bion/krossbow/issues/220)
+- Upgrade Spring to version 5.3.20 [\#225](https://github.com/joffrey-bion/krossbow/issues/225)
+- Upgrade Ktor to version 2.0.2 [\#223](https://github.com/joffrey-bion/krossbow/issues/223)
+- Upgrade kotlinx\-serialization to version 1.3.3 [\#222](https://github.com/joffrey-bion/krossbow/issues/222)
+- Upgrade Atomicfu to version 0.17.3 [\#218](https://github.com/joffrey-bion/krossbow/issues/218)
+
 ## [3.5.0](https://github.com/joffrey-bion/krossbow/tree/3.5.0) (2022-05-31)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.4.0...3.5.0)
 
