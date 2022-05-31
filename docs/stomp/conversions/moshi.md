@@ -6,7 +6,7 @@ by leveraging [Moshi](https://github.com/square/moshi).
 
 The main addition is the extension function `StompSession.withMoshi()`, which turns your `StompSession`
 into a `TypedStompSession`.
-This new session type has additional methods that use Jackson to convert your objects into JSON and back:
+This new session type has additional methods that use Moshi to convert your objects into JSON and back:
 
 ```kotlin
 // example Moshi instance that converts Kotlin types using reflection
