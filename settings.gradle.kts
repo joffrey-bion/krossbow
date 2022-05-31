@@ -9,6 +9,7 @@ rootProject.name = "krossbow"
 include("krossbow-stomp-core")
 include("krossbow-stomp-kxserialization")
 include("krossbow-stomp-jackson")
+include("krossbow-stomp-moshi")
 include("krossbow-websocket-core")
 include("krossbow-websocket-ktor")
 include("krossbow-websocket-ktor-legacy")
