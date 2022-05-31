@@ -681,7 +681,7 @@
 <h1 id="krossbow-with-ktor">Krossbow with Ktor<a class="headerlink" href="#krossbow-with-ktor" title="Permanent link">&para;</a></h1>
 <p>Krossbow allows you to use <a href="https://ktor.io/clients/websockets.html">Ktor's web socket</a> as transport for STOMP.</p>
 <p>Ktor's implementation supports a variety of platforms and is very popular in the Kotlin world, especially in Kotlin multiplatform.</p>
-<p>The <code>krossbow-websocket-ktor</code> module provides the <code>KtorWebSocketClient</code>, which adapts Ktor 2.0.0's
+<p>The <code>krossbow-websocket-ktor</code> module provides the <code>KtorWebSocketClient</code>, which adapts Ktor 2.0.2's
 <code>HttpClient</code> to Krossbow's web socket interface.</p>
 <div class="admonition info">
 <p class="admonition-title">Still stuck with Ktor 1.6?</p>
@@ -712,7 +712,7 @@ You need to pick an engine that supports web sockets in order to use Ktor's <cod
 Follow Ktor's documentation to find out more about how to use engines.</p>
 <p>For instance, if you want to use Ktor's CIO engine with Krossbow, you need to declare the following:</p>
 <div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:3.5.0&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.ktor:ktor-client-cio:2.0.0&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.ktor:ktor-client-cio:2.0.2&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>If you want to use the older version 1.6.x of Ktor, use <code>krossbow-websocket-ktor-legacy</code> instead:</p>
 <div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor-legacy:3.5.0&quot;</span><span class="p">)</span><span class="w"></span>
