@@ -1,8 +1,7 @@
 [versions]
 jackson = "2.13.2"
 ### available = "2.13.3"
-jetty-websocket = "9.4.45.v20220203"
-##  # available = "9.4.46.v20220331"
+jetty-websocket = "9.4.46.v20220331"
 kotlinx-atomicfu = "0.17.3"
 kotlinx-coroutines = "1.6.1"
 ##     # available = "1.6.2"
