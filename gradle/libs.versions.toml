@@ -14,7 +14,7 @@ spring = "5.3.17"
 tyrus = "1.17"
 uuid = "0.4.0"
 
-npm-sockjs-client = "1.6.0"
+npm-sockjs-client = "1.6.1"
 
 # test-only
 npm-isomorphic-fetch = "3.0.0"
