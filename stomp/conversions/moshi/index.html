@@ -12,21 +12,21 @@
         <meta name="author" content="Joffrey Bion">
       
       
-        <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/stomp/basics/">
+        <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/stomp/conversions/moshi/">
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.16">
     
     
       
-        <title>Basic usage - Krossbow</title>
+        <title>Moshi - Krossbow</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.1c3799f8.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.1c3799f8.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.cc9b2e1e.min.css">
         
       
     
@@ -41,7 +41,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -69,7 +69,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gradle-dependency" class="md-skip">
+        <a href="#stomp-with-moshi" class="md-skip">
           Skip to content
         </a>
       
@@ -83,7 +83,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Krossbow" class="md-header__button md-logo" aria-label="Krossbow" data-md-component="logo">
+    <a href="../../.." title="Krossbow" class="md-header__button md-logo" aria-label="Krossbow" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Basic usage
+              Moshi
             
           </span>
         </div>
@@ -203,7 +203,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Krossbow" class="md-nav__button md-logo" aria-label="Krossbow" data-md-component="logo">
+    <a href="../../.." title="Krossbow" class="md-nav__button md-logo" aria-label="Krossbow" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -234,7 +234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         Overview
       </a>
     </li>
@@ -275,62 +275,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Basic usage
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../basics/" class="md-nav__link">
         Basic usage
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#gradle-dependency" class="md-nav__link">
-    Gradle dependency
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage-without-body-conversions" class="md-nav__link">
-    Basic usage (without body conversions)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-body-conversions" class="md-nav__link">
-    Using body conversions
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -342,7 +291,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../config/" class="md-nav__link">
+      <a href="../../config/" class="md-nav__link">
         Configuration
       </a>
     </li>
@@ -354,12 +303,14 @@
               
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" data-md-state="indeterminate" type="checkbox" id="__nav_2_3" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" checked>
       
       
       
@@ -382,7 +333,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversions/kx-serialization/" class="md-nav__link">
+      <a href="../kx-serialization/" class="md-nav__link">
         Kotlinx Serialization
       </a>
     </li>
@@ -396,7 +347,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversions/jackson/" class="md-nav__link">
+      <a href="../jackson/" class="md-nav__link">
         Jackson
       </a>
     </li>
@@ -408,11 +359,52 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../conversions/moshi/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Moshi
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Moshi
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dependency" class="md-nav__link">
+    Dependency
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -424,7 +416,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversions/custom/" class="md-nav__link">
+      <a href="../custom/" class="md-nav__link">
         Custom conversions
       </a>
     </li>
@@ -445,7 +437,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced-features/" class="md-nav__link">
+      <a href="../../advanced-features/" class="md-nav__link">
         Advanced features
       </a>
     </li>
@@ -493,7 +485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../websocket/core/" class="md-nav__link">
+      <a href="../../../websocket/core/" class="md-nav__link">
         Core (built-in)
       </a>
     </li>
@@ -507,7 +499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../websocket/ktor/" class="md-nav__link">
+      <a href="../../../websocket/ktor/" class="md-nav__link">
         Ktor
       </a>
     </li>
@@ -521,7 +513,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../websocket/okhttp/" class="md-nav__link">
+      <a href="../../../websocket/okhttp/" class="md-nav__link">
         OkHttp
       </a>
     </li>
@@ -535,7 +527,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../websocket/spring/" class="md-nav__link">
+      <a href="../../../websocket/spring/" class="md-nav__link">
         Spring
       </a>
     </li>
@@ -549,7 +541,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../websocket/sockjs/" class="md-nav__link">
+      <a href="../../../websocket/sockjs/" class="md-nav__link">
         SockJS
       </a>
     </li>
@@ -571,7 +563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../artifacts/" class="md-nav__link">
+      <a href="../../../artifacts/" class="md-nav__link">
         Artifacts summary
       </a>
     </li>
@@ -586,7 +578,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../kdoc/" class="md-nav__link">
+      <a href="../../../kdoc/" class="md-nav__link">
         API Docs 🡕
       </a>
     </li>
@@ -616,7 +608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../license/" class="md-nav__link">
+      <a href="../../../license/" class="md-nav__link">
         License
       </a>
     </li>
@@ -640,6 +632,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -648,22 +642,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gradle-dependency" class="md-nav__link">
-    Gradle dependency
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage-without-body-conversions" class="md-nav__link">
-    Basic usage (without body conversions)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-body-conversions" class="md-nav__link">
-    Using body conversions
+  <a href="#dependency" class="md-nav__link">
+    Dependency
   </a>
   
 </li>
@@ -680,72 +660,38 @@
             <article class="md-content__inner md-typeset">
               
                 
-  <a href="https://github.com/joffrey-bion/krossbow/edit/master/docs/stomp/basics.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/joffrey-bion/krossbow/edit/master/docs/stomp/conversions/moshi.md" title="Edit this page" class="md-content__button md-icon">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
 
-  <h1>Basic usage</h1>
+<h1 id="stomp-with-moshi">STOMP with Moshi<a class="headerlink" href="#stomp-with-moshi" title="Permanent link">&para;</a></h1>
+<p>The <code>krossbow-stomp-moshi</code> module is a JVM-only extension of <code>krossbow-stomp-core</code> that provides new APIs to
+send and receive properly typed classes, and automatically convert them to/from the JSON bodies of STOMP frames
+by leveraging <a href="https://github.com/square/moshi">Moshi</a>.</p>
+<p>The main addition is the extension function <code>StompSession.withMoshi()</code>, which turns your <code>StompSession</code>
+into a <code>TypedStompSession</code>.
+This new session type has additional methods that use Jackson to convert your objects into JSON and back:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// example Moshi instance that converts Kotlin types using reflection</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">moshi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Moshi</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="na">addLast</span><span class="p">(</span><span class="n">KotlinJsonAdapterFactory</span><span class="p">())</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">()</span><span class="w"></span>
+<span class="n">StompClient</span><span class="p">().</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="na">withMoshi</span><span class="p">(</span><span class="n">moshi</span><span class="p">).</span><span class="na">use</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">session</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="n">session</span><span class="p">.</span><span class="na">convertAndSend</span><span class="p">(</span><span class="s">&quot;/some/destination&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Person</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">42</span><span class="p">))</span><span class="w"> </span>
 
-<h2 id="gradle-dependency">Gradle dependency<a class="headerlink" href="#gradle-dependency" title="Permanent link">&para;</a></h2>
-<p>For the basic usage of STOMP without body conversions, you only need the following Gradle dependency:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-core:3.5.0&quot;</span><span class="p">)</span><span class="w"></span>
-</code></pre></div>
-<p>You need to replace it if you want to use serialization/deserialization features (<a href="#using-body-conversions">see below</a>).</p>
-<h2 id="basic-usage-without-body-conversions">Basic usage (without body conversions)<a class="headerlink" href="#basic-usage-without-body-conversions" title="Permanent link">&para;</a></h2>
-<p>This is how to create a STOMP client and interact with it:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">kotlinx.coroutines.flow.*</span><span class="w"></span>
-<span class="k">import</span><span class="w"> </span><span class="nn">org.hildan.krossbow.stomp.*</span><span class="w"></span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">messages</span><span class="p">:</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="n">MyMessage</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">subscribe</span><span class="o">&lt;</span><span class="n">MyMessage</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;/some/topic/destination&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">firstMessage</span><span class="p">:</span><span class="w"> </span><span class="n">MyMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">messages</span><span class="p">.</span><span class="na">first</span><span class="p">()</span><span class="w"></span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">()</span><span class="w"> </span><span class="c1">// custom WebSocketClient and other config can be passed in here</span><span class="w"></span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="p">:</span><span class="w"> </span><span class="n">StompSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"> </span><span class="c1">// optional login/passcode can be provided here</span><span class="w"></span>
-
-<span class="n">session</span><span class="p">.</span><span class="na">sendText</span><span class="p">(</span><span class="s">&quot;/some/destination&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Basic text message&quot;</span><span class="p">)</span><span class="w"> </span>
-
-<span class="c1">// this triggers a SUBSCRIBE frame and returns the flow of messages for the subscription</span><span class="w"></span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">subscription</span><span class="p">:</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">subscribeText</span><span class="p">(</span><span class="s">&quot;/some/topic/destination&quot;</span><span class="p">)</span><span class="w"></span>
-
-<span class="kd">val</span><span class="w"> </span><span class="nv">collectorJob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">launch</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">subscription</span><span class="p">.</span><span class="na">collect</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
-<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Received: </span><span class="si">$</span><span class="n">msg</span><span class="s">&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
-<span class="n">delay</span><span class="p">(</span><span class="m">3000</span><span class="p">)</span><span class="w"></span>
-<span class="c1">// cancelling the flow collector triggers an UNSUBSCRIBE frame</span><span class="w"></span>
-<span class="n">collectorJob</span><span class="p">.</span><span class="na">cancel</span><span class="p">()</span><span class="w"></span>
-
-<span class="n">session</span><span class="p">.</span><span class="na">disconnect</span><span class="p">()</span><span class="w"></span>
-</code></pre></div>
-<p>If you want to disconnect automatically in case of exception or normal termination, you can use
-a <code>try</code>/<code>finally</code> block, or use <code>StompSession.use()</code>, which is similar to <code>Closeable.use()</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">kotlinx.coroutines.flow.*</span><span class="w"></span>
-<span class="k">import</span><span class="w"> </span><span class="nn">org.hildan.krossbow.stomp.*</span><span class="w"></span>
-
-<span class="kd">val</span><span class="w"> </span><span class="nv">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">()</span><span class="w"> </span><span class="c1">// custom WebSocketClient and other config can be passed in here</span><span class="w"></span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="p">:</span><span class="w"> </span><span class="n">StompSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"> </span><span class="c1">// optional login/passcode can be provided here</span><span class="w"></span>
-
-<span class="n">session</span><span class="p">.</span><span class="na">use</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="na">sendText</span><span class="p">(</span><span class="s">&quot;/some/destination&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Basic text message&quot;</span><span class="p">)</span><span class="w"> </span>
-
-<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">subscription</span><span class="p">:</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">subscribeText</span><span class="p">(</span><span class="s">&quot;/some/topic/destination&quot;</span><span class="p">)</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1">// terminal operators that finish early (like first) also trigger UNSUBSCRIBE automatically</span><span class="w"></span>
-<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">firstMessage</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subscription</span><span class="p">.</span><span class="na">first</span><span class="p">()</span><span class="w"></span>
 <span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Received: </span><span class="si">$</span><span class="n">firstMessage</span><span class="s">&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
-<span class="c1">// DISCONNECT frame was automatically sent at the end of the use{...} block</span><span class="w"></span>
 </code></pre></div>
-<h2 id="using-body-conversions">Using body conversions<a class="headerlink" href="#using-body-conversions" title="Permanent link">&para;</a></h2>
-<p>You can use STOMP with basic text as frame bodies, but it really becomes interesting when you can
-convert the frame bodies back and forth into Kotlin objects.</p>
-<p>Check out the following sections to see how to automatically convert your objects into STOMP frame bodies:</p>
-<ul>
-<li><a href="../conversions/kx-serialization/">using Kotlinx Serialization</a> (multiplatform)</li>
-<li><a href="../conversions/jackson/">using Jackson</a> (JVM-only)</li>
-<li><a href="../conversions/moshi/">using Moshi</a> (JVM-only)</li>
-<li><a href="../conversions/custom/">using custom conversions</a></li>
-</ul>
+<h2 id="dependency">Dependency<a class="headerlink" href="#dependency" title="Permanent link">&para;</a></h2>
+<p>You will need to declare the following Gradle dependency to add these capabilities
+(you don't need the core module anymore as it is transitively brought by this one):</p>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-moshi:3.5.0&quot;</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+<p>This dependency transitively brings Moshi 1.13.0.</p>
 
               
             </article>
@@ -759,7 +705,7 @@ convert the frame bodies back and forth into Kotlin objects.</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../.." class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview" rel="prev">
+        <a href="../jackson/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Jackson" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -768,20 +714,20 @@ convert the frame bodies back and forth into Kotlin objects.</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Overview
+              Jackson
             </div>
           </div>
         </a>
       
       
         
-        <a href="../config/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration" rel="next">
+        <a href="../custom/" class="md-footer__link md-footer__link--next" aria-label="Next: Custom conversions" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Configuration
+              Custom conversions
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -825,10 +771,10 @@ convert the frame bodies back and forth into Kotlin objects.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand"], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.expand"], "search": "../../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.3a4b43e5.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.3a4b43e5.min.js"></script>
       
     
   </body>
