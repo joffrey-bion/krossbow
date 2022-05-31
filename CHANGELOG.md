@@ -1,5 +1,31 @@
 # Change Log
 
+## [3.5.0](https://github.com/joffrey-bion/krossbow/tree/3.5.0) (2022-05-31)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.4.0...3.5.0)
+
+**Deprecations:**
+
+- Deprecate `StompSessionWithClassConversions` in favor of the new `TypedStompSession` [\#215](https://github.com/joffrey-bion/krossbow/issues/215)
+
+**Fixed bugs:**
+
+- `withTransaction` ignores 2nd exception if `abort` throws [\#216](https://github.com/joffrey-bion/krossbow/issues/216)
+- Jackson deserialization doesn't work on generic types [\#212](https://github.com/joffrey-bion/krossbow/issues/212)
+
+**Implemented enhancements:**
+
+- Add support for JSON conversions with Moshi [\#206](https://github.com/joffrey-bion/krossbow/issues/206)
+- New `TypedStompSession` which handles full generic types [\#214](https://github.com/joffrey-bion/krossbow/issues/214)
+- Add HTTP status code to WebSocketConnectionException [\#210](https://github.com/joffrey-bion/krossbow/issues/210)
+
+**Merged pull requests:**
+
+- Include NSError code, domain and HTTP Status code in DarwinWebSocketException message [\#209](https://github.com/joffrey-bion/krossbow/pull/209) ([@remy-bardou-lifeonair](https://github.com/remy-bardou-lifeonair))
+
+**Upgraded dependencies:**
+
+- Upgrade sockjs\-client to version 1.6.1 [\#217](https://github.com/joffrey-bion/krossbow/issues/217)
+
 ## [3.4.0](https://github.com/joffrey-bion/krossbow/tree/3.4.0) (2022-04-22)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.3.1...3.4.0)
 
