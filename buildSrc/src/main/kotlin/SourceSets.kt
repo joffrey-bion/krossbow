@@ -30,11 +30,13 @@ fun KotlinMultiplatformExtension.setupNativeTargets() {
     iosSimulatorArm64()
 
     tvos()
+    tvosSimulatorArm64()
 
     // watchos() shortcut cannot be used because okio is missing watchosX64()
     watchosArm32()
     watchosArm64()
     watchosX86()
+    watchosSimulatorArm64()
 
     // Desktop not supported yet
     // macosX64()
@@ -93,10 +95,24 @@ fun NamedDomainObjectContainer<KotlinSourceSet>.setupNativeSourceSets() {
         dependsOn(nativeDarwinTest)
     }
 
+    val watchosSimulatorArm64Main by getting {
+        dependsOn(nativeDarwinMain)
+    }
+    val watchosSimulatorArm64Test by getting {
+        dependsOn(nativeDarwinTest)
+    }
+
     val tvosMain by getting {
         dependsOn(nativeDarwinMain)
     }
     val tvosTest by getting {
         dependsOn(nativeDarwinTest)
+    }
+
+    val tvosSimulatorArm64Main by getting {
+        dependsOn(tvosMain)
+    }
+    val tvosSimulatorArm64Test by getting {
+        dependsOn(tvosTest)
     }
 }
