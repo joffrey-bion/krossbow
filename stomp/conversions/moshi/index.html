@@ -672,7 +672,7 @@ send and receive properly typed classes, and automatically convert them to/from 
 by leveraging <a href="https://github.com/square/moshi">Moshi</a>.</p>
 <p>The main addition is the extension function <code>StompSession.withMoshi()</code>, which turns your <code>StompSession</code>
 into a <code>TypedStompSession</code>.
-This new session type has additional methods that use Jackson to convert your objects into JSON and back:</p>
+This new session type has additional methods that use Moshi to convert your objects into JSON and back:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// example Moshi instance that converts Kotlin types using reflection</span><span class="w"></span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">moshi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Moshi</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span><span class="w"></span>
 <span class="w">    </span><span class="p">.</span><span class="na">addLast</span><span class="p">(</span><span class="n">KotlinJsonAdapterFactory</span><span class="p">())</span><span class="w"></span>
