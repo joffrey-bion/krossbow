@@ -22,7 +22,7 @@ fun StompSession.withJacksonConversions(
 
 private class JacksonConverter(private val objectMapper: ObjectMapper) : TextMessageConverter {
 
-    override val mimeType: String = "application/json"
+    override val mimeType: String = "application/json;charset=utf-8"
 
     override fun <T : Any> convertToString(body: T, bodyType: KClass<T>): String = objectMapper.writeValueAsString(body)
 

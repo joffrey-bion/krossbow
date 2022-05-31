@@ -25,8 +25,8 @@ interface TextMessageConverter {
     /**
      * The media type produced by this converter (to use as content-type header).
      *
-     * If the media type contains a `charset` parameter and it is different from UTF-8, frames are sent as binary web
-     * socket frames (because text frames can only be UTF-8).
+     * If the media type contains a `charset` parameter and it is different from UTF-8, frames are encoded to bytes
+     * using the given charset, and sent as binary web socket frames (because text frames can only be UTF-8).
      * If no `charset` is specified, or if it is specified as UTF-8, then text web socket frames are sent, which means
      * they will be encoded as UTF-8.
      */
