@@ -19,10 +19,6 @@ val sourcesJar by tasks.creating(Jar::class) {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = project.group.toString()
-            artifactId = project.name
-            version = project.version.toString()
-
             from(components["kotlin"])
             artifact(sourcesJar)
         }
