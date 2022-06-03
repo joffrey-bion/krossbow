@@ -1,7 +1,5 @@
 # Krossbow STOMP Core
 
-This is the core module of Krossbow, which provides a pure-Kotlin (multiplatform) STOMP protocol implementation.
+This is the core module of Krossbow, containing the implementation of the STOMP protocol in common code.
 
-It depends on `krossbow-websocket-core` for the definition of a general websocket interface.
- 
-The major types you can use from this module are `StompClient` and `StompSession`.
+Check out the [project's website](https://joffrey-bion.github.io/krossbow/stomp/basics/) for more information.
