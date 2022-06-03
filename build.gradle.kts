@@ -30,12 +30,7 @@ allprojects {
     }
 }
 
-val Project.githubUser: String? get() = findProperty("githubUser") as String? ?: System.getenv("GITHUB_USER")
-val githubSlug = "$githubUser/${rootProject.name}"
-val githubRepoUrl = "https://github.com/$githubSlug"
-
 changelog {
-    githubUser = project.githubUser
     futureVersionTag = project.version.toString()
     customTagByIssueNumber = mapOf(6 to "0.1.1", 10 to "0.1.2", 15 to "0.4.0")
 }
@@ -62,55 +57,5 @@ subprojects {
             exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             showStackTraces = true
         }
-    }
-
-    if (project.name != "autobahn-tests") {
-        apply(plugin = "maven-publish")
-        apply(plugin = "signing")
-
-        val dokkaJar by tasks.creating(Jar::class) {
-            archiveClassifier.set("javadoc")
-            from(tasks.findByName("dokkaHtml"))
-        }
-
-        afterEvaluate {
-            publishing.publications.filterIsInstance<MavenPublication>().forEach { pub ->
-                pub.artifact(dokkaJar)
-                pub.configurePomForMavenCentral(project)
-            }
-
-            signing {
-                val signingKey: String? by project
-                val signingPassword: String? by project
-                useInMemoryPgpKeys(signingKey, signingPassword)
-                sign(publishing.publications)
-            }
-
-            tasks["assemble"].dependsOn(tasks["dokkaHtml"])
-        }
-    }
-}
-
-fun MavenPublication.configurePomForMavenCentral(project: Project) = pom {
-    name.set(project.name)
-    description.set(project.description)
-    url.set("https://joffrey-bion.github.io/krossbow")
-    licenses {
-        license {
-            name.set("The MIT License")
-            url.set("https://opensource.org/licenses/MIT")
-        }
-    }
-    developers {
-        developer {
-            id.set("joffrey-bion")
-            name.set("Joffrey Bion")
-            email.set("joffrey.bion@gmail.com")
-        }
-    }
-    scm {
-        connection.set("scm:git:$githubRepoUrl.git")
-        developerConnection.set("scm:git:git@github.com:$githubSlug.git")
-        url.set(githubRepoUrl)
     }
 }

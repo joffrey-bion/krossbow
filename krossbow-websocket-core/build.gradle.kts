@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    `kotlin-maven-central-publish`
 }
 
 description = "WebSocket client API used by the Krossbow STOMP client, with default JS and JVM implementations."

@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    `kotlin-maven-central-publish`
 }
 
 description = "A Kotlin multiplatform STOMP client with JVM, Browser, and NodeJS support"

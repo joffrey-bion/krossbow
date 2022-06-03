@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    `kotlin-maven-central-publish`
 }
 
 description = "A Krossbow adapter for Spring's default WebSocket client and SockJS client"
@@ -21,18 +22,4 @@ dependencies {
     testImplementation(libs.tyrusStandaloneClient)
     // Implementation of Jetty client (for jetty tests)
     testImplementation(libs.jettyWebsocketCient)
-}
-
-val sourcesJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["kotlin"])
-            artifact(sourcesJar)
-        }
-    }
 }

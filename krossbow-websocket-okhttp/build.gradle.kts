@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    `kotlin-maven-central-publish`
 }
 
 description = "A Krossbow adapter for OkHttp's WebSocket client"
@@ -11,18 +12,4 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(projects.krossbowWebsocketTest)
-}
-
-val sourcesJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["kotlin"])
-            artifact(sourcesJar)
-        }
-    }
 }

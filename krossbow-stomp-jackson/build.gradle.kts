@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    `kotlin-maven-central-publish`
 }
 
 description = "An extension of Krossbow STOMP client using Jackson for message conversions"
@@ -10,18 +11,4 @@ dependencies {
     api(libs.jackson.module.kotlin)
 
     testImplementation(kotlin("test"))
-}
-
-val sourcesJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["kotlin"])
-            artifact(sourcesJar)
-        }
-    }
 }
