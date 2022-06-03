@@ -33,6 +33,7 @@ npm-ws = "8.5.0"
 [libraries]
 jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+jettyWebsocketCient = { module = "org.eclipse.jetty.websocket:websocket-client", version.ref = "jetty-websocket" }
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "kotlinx-atomicfu" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-jdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", version.ref = "kotlinx-coroutines" }
@@ -46,8 +47,8 @@ ktor1-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor1" }
 ktor1-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor1" }
 ktor1-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor1" }
 ktor1-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor1" }
-ktor2-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor2" }
 ktor2-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor2" }
+ktor2-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor2" }
 ktor2-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor2" }
 ktor2-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor2" }
 ktor2-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor2" }
@@ -61,5 +62,4 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 spring-websocket = { module = "org.springframework:spring-websocket", version.ref = "spring" }
 tyrusStandaloneClient = { module = "org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk", version.ref = "tyrus" }
-jettyWebsocketCient = { module = "org.eclipse.jetty.websocket:websocket-client", version.ref = "jetty-websocket" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
