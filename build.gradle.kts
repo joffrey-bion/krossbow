@@ -1,11 +1,11 @@
 plugins {
-    val kotlinVersion = "1.6.21"
+    val kotlinVersion = "1.6.21" // also update in buildSrc/build.gradle.kts
     kotlin("jvm") apply false
     kotlin("js") apply false
     kotlin("multiplatform") apply false
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
-    id("org.jetbrains.dokka") version "1.6.20" apply false
+    id("org.jetbrains.dokka") version kotlinVersion apply false
     id("org.hildan.github.changelog") version "1.11.1"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
     `maven-publish`
