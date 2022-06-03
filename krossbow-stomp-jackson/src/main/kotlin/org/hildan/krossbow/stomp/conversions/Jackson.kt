@@ -1,3 +1,6 @@
+// This extension is deprecated, so we ignore the warnings regarding usage of other deprecated stuff
+@file:Suppress("DEPRECATION")
+
 package org.hildan.krossbow.stomp.conversions
 
 import com.fasterxml.jackson.databind.ObjectMapper

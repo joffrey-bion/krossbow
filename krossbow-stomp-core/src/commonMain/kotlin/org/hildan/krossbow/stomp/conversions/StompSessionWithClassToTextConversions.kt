@@ -1,3 +1,6 @@
+// All declarations here are deprecated, so we don't want the corresponding warnings
+@file:Suppress("DEPRECATION")
+
 package org.hildan.krossbow.stomp.conversions
 
 import kotlinx.coroutines.flow.Flow

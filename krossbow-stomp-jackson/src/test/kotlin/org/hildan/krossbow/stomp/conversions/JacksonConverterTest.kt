@@ -1,3 +1,6 @@
+// The tested feature is deprecated, so those warnings should be ignored
+@file:Suppress("DEPRECATION")
+
 package org.hildan.krossbow.stomp.conversions
 
 import com.fasterxml.jackson.core.util.DefaultIndenter

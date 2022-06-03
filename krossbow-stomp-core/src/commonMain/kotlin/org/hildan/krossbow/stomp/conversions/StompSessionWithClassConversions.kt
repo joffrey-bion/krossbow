@@ -1,3 +1,6 @@
+// This class is deprecated, thus all extensions generate unnecessary warnings
+@file:Suppress("DEPRECATION")
+
 package org.hildan.krossbow.stomp.conversions
 
 import kotlinx.coroutines.flow.Flow
