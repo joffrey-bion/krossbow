@@ -21,7 +21,7 @@ spring = "5.3.20"
 tyrus = "1.17"
 ### available = "1.18"
 ### available = "2.0.2"
-uuid = "0.4.0"
+uuid = "0.4.1"
 
 npm-sockjs-client = "1.6.1"
 
