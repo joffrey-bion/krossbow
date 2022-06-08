@@ -12,9 +12,17 @@ import org.gradle.plugins.signing.SigningExtension
 import org.gradle.plugins.signing.SigningPlugin
 import org.hildan.krossbow.gradle.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
+import org.jetbrains.dokka.gradle.*
 
 /**
  * Adds Dokka documentation as javadoc jar to the all publications, and sign them.
+ *
+ * Also reacts to the Kotlin/JVM plugin to add the relevant publications with sources jar so it's on par with MPP.
+ *
+ * The plugin relies on the following project properties to be present:
+ * - `githubUser` - to generate proper git-scm URLs in Maven Central POMs
+ * - `signingKey` - the ASCII armored GPG key to use
+ * - `signingPassword` - the password for the GPG key to use
  */
 class KotlinMavenCentralPublishPlugin : Plugin<Project> {
 
@@ -28,6 +36,7 @@ class KotlinMavenCentralPublishPlugin : Plugin<Project> {
             project.apply<KotlinJvmPublishPlugin>()
         }
 
+        project.apply<DokkaPlugin>()
         project.apply<MavenPublishPlugin>()
         project.apply<SigningPlugin>()
 
@@ -47,8 +56,6 @@ class KotlinMavenCentralPublishPlugin : Plugin<Project> {
             }
 
             project.signAllPublications()
-
-            project.tasks.getByName("assemble").dependsOn(project.tasks.named("dokkaHtml"))
         }
     }
 }
