@@ -13,6 +13,7 @@ import org.gradle.plugins.signing.SigningPlugin
 import org.hildan.krossbow.gradle.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.dokka.gradle.*
+import java.net.URL
 
 /**
  * Adds Dokka documentation as javadoc jar to the all publications, and sign them.
@@ -23,6 +24,11 @@ import org.jetbrains.dokka.gradle.*
  * - `githubUser` - to generate proper git-scm URLs in Maven Central POMs
  * - `signingKey` - the ASCII armored GPG key to use
  * - `signingPassword` - the password for the GPG key to use
+ *
+ * The plugin makes the following assumptions for Dokka source links:
+ * - sources to document are in src/<sourceSet>/kotlin
+ * - the main branch of the GitHub repository is named "main"
+ * - this plugin is being applied to a subproject stored in a dir with the same name under the repo root
  */
 class KotlinMavenCentralPublishPlugin : Plugin<Project> {
 
@@ -40,6 +46,8 @@ class KotlinMavenCentralPublishPlugin : Plugin<Project> {
         project.apply<MavenPublishPlugin>()
         project.apply<SigningPlugin>()
 
+        project.configureDokkaSourceLinks()
+
         val dokkaJar by project.tasks.registering(Jar::class) {
             archiveClassifier.set("javadoc")
             from(project.tasks.named("dokkaHtml"))
@@ -56,6 +64,24 @@ class KotlinMavenCentralPublishPlugin : Plugin<Project> {
             }
 
             project.signAllPublications()
+        }
+    }
+}
+
+private fun Project.configureDokkaSourceLinks(repoMainBranch: String = "main") {
+    tasks.withType<AbstractDokkaLeafTask>().configureEach {
+        dokkaSourceSets {
+            configureEach {
+                val sourceSet = this
+                val sourceSetDir = file("src/${sourceSet.name}/kotlin")
+                if (sourceSetDir.exists()) {
+                    sourceLink {
+                        localDirectory.set(sourceSetDir)
+                        remoteUrl.set(URL("${github.repoUrl}/blob/$repoMainBranch/${project.name}/src/${sourceSet.name}/kotlin"))
+                        remoteLineSuffix.set("#L")
+                    }
+                }
+            }
         }
     }
 }
