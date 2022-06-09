@@ -1,5 +1,18 @@
 # Change Log
 
+## [3.7.0](https://github.com/joffrey-bion/krossbow/tree/3.7.0) (2022-06-09)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.6.0...3.7.0)
+
+**Implemented enhancements:**
+
+- Add support for `watchosSimulatorArm64` and `tvosSimulatorArm64` targets [\#227](https://github.com/joffrey-bion/krossbow/issues/227)
+
+**Upgraded dependencies:**
+
+- Bump actions/setup\-python from 3 to 4 [\#232](https://github.com/joffrey-bion/krossbow/pull/232) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Upgrade uuid to version 0.4.1 \(which got support for watchosX64 target\) [\#230](https://github.com/joffrey-bion/krossbow/issues/230)
+- Upgrade Dokka to version 1.6.21 [\#229](https://github.com/joffrey-bion/krossbow/issues/229)
+
 ## [3.6.0](https://github.com/joffrey-bion/krossbow/tree/3.6.0) (2022-05-31)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.5.0...3.6.0)
 
