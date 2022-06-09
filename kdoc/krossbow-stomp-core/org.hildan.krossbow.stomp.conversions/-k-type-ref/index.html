@@ -50,7 +50,7 @@ if(savedDarkMode === true){
 <div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">KTypeRef</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Wraps a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-type/index.html">KType</a> instance with a generic type parameter, to ensure type-safe usages.</p><p class="paragraph">Using <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-type/index.html">KType</a> directly, we can't guarantee that the method type parameter matches the instance of <code class="lang-kotlin">KType</code> that we get:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">fun &lt;T&gt; doSomething(returnType: KType): T {<br>    // ...<br>}<br><br>// could be misused like this<br>doSomething&lt;String&gt;(typeOf&lt;Int&gt;()) // mismatch String vs Int</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>    </div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Properties">Properties</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Sources">Sources</button></div>
     <div class="tabs-section-body">
       <h2 class="">Properties</h2>
       <div class="table" data-togglable="Properties"><a data-name="1566677468%2FProperties%2F-1714576161" anchor-label="kType" id="1566677468%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
@@ -68,6 +68,19 @@ if(savedDarkMode === true){
 <div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="1566677468%2FProperties%2F-1714576161" anchor-label="kType" id="1566677468%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="k-type.html">kType</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-type/index.html">KType</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Sources</h2>
+      <div class="table" data-togglable="Sources"><a data-name="1416477382%2FSource%2F-1714576161" anchor-label="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/conversions/TypeRef.kt#L11" id="1416477382%2FSource%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/conversions/TypeRef.kt#L11">common source</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1416477382%2FSource%2F-1714576161"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
           </div>
         </div>
       </div>
