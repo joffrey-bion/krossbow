@@ -3,11 +3,6 @@ name: Publish website
 on:
   workflow_dispatch: {}
   push:
-    paths:
-      - 'mkdocs.yml'
-      - 'docs/**'
-    branches:
-      - main
     tags:
       - '*'
 
