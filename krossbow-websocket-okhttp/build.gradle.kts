@@ -13,3 +13,6 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(projects.krossbowWebsocketTest)
 }
+
+// using "latest" because not all versions are published (e.g. 4.x.x are not published)
+dokkaExternalDocLink("https://javadoc.io/doc/com.squareup.okhttp3/okhttp/latest/")

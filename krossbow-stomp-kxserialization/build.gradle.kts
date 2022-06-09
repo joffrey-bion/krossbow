@@ -27,3 +27,5 @@ kotlin {
         }
     }
 }
+
+dokkaExternalDocLink("https://kotlin.github.io/kotlinx.serialization/")

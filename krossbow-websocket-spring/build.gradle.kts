@@ -23,3 +23,5 @@ dependencies {
     // Implementation of Jetty client (for jetty tests)
     testImplementation(libs.jettyWebsocketCient)
 }
+
+dokkaExternalDocLink("https://javadoc.io/doc/org.springframework/spring-websocket/${libs.versions.spring.get()}/")

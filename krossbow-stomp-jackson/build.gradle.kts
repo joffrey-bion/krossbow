@@ -12,3 +12,6 @@ dependencies {
 
     testImplementation(kotlin("test"))
 }
+
+val jacksonMinorVersion = libs.versions.jackson.get().substringBeforeLast(".")
+dokkaExternalDocLink("https://fasterxml.github.io/jackson-databind/javadoc/$jacksonMinorVersion/")

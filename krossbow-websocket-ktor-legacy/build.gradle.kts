@@ -33,3 +33,8 @@ kotlin {
         }
     }
 }
+
+dokkaExternalDocLink(
+    docsUrl = "https://api.ktor.io/older/${libs.versions.ktor1.get()}/ktor-client/",
+    packageListUrl = "https://api.ktor.io/older/${libs.versions.ktor1.get()}/package-list",
+)
