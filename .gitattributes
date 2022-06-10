@@ -2,3 +2,6 @@
 
 *.sh text eol=lf
 *.bat text eol=crlf
+
+# Binary compatibility validator generates LF
+*.api text eol=lf
