@@ -7,16 +7,25 @@ It is a popular choice for Kotlin multiplatform libraries especially because of 
 The `krossbow-stomp-kxserialization` module is an extension of `krossbow-stomp-core` that provides new APIs to 
 send and receive properly typed classes, and automatically convert STOMP frame bodies by leveraging Kotlinx Serialization.
 
+## A note on JSON format
+
+Since Kotlinx Serialization supports multiple formats with different dependencies, you have to add your own dependency
+to bring the format of your choice.
+
+However, since JSON is so popular, Krossbow comes with the `krossbow-stomp-kxserialization-json` module, which adds 
+dedicated helpers for JSON and the necessary transitive dependency on the JSON format.
+
 ## Basic usage
 
-This module brings the following extension functions:
+This module brings the following extension functions on `StompSession`:
 
-- `StompSession.withBinaryConversions(format: BinaryFormat, mediaType: String)`
-- `StompSession.withTextConversions(format: StringFormat, mediaType: String)`
-- `StompSession.withJsonConversions()` (requires a peer dependency on `kotlinx-serialization-json`, see below)
+- [`withBinaryConversions(format: BinaryFormat, mediaType: String)`](../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-binary-conversions.html)
+- [`withTextConversions(format: StringFormat, mediaType: String)`](../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-text-conversions.html)
 
-which turn your `StompSession` into a `StompSessionWithKxSerialization`.
+!!! tip If you're using JSON, dedicated [withJsonConversions](../../kdoc/krossbow-stomp-kxserialization-json/org.hildan.krossbow.stomp.conversions.kxserialization.json/with-json-conversions.html)
+helpers for JSON serialization is provided in the `krossbow-stomp-serialization-json` module.
 
+These helpers turn your `StompSession` into a `StompSessionWithKxSerialization`.
 This new session type has additional methods that use Kotlinx Serialization's serializers to serialize/deserialize your
 objects using the format of your choice (JSON, protobuf, etc.).
 

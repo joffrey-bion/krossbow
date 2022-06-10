@@ -1,0 +1,5 @@
+public final class org/hildan/krossbow/stomp/conversions/kxserialization/json/KotlinxSerializationJsonKt {
+	public static final fun withJsonConversions (Lorg/hildan/krossbow/stomp/StompSession;Lkotlinx/serialization/json/Json;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/stomp/conversions/kxserialization/StompSessionWithKxSerialization;
+	public static synthetic fun withJsonConversions$default (Lorg/hildan/krossbow/stomp/StompSession;Lkotlinx/serialization/json/Json;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/conversions/kxserialization/StompSessionWithKxSerialization;
+}
+

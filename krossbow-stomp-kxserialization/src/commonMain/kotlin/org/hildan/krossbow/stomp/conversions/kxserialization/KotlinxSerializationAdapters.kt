@@ -39,6 +39,15 @@ fun StompSession.withTextConversions(format: StringFormat, mediaType: String): S
  * All frames with a non-null body are sent with a `content-type` header equal to [mediaType] (defaulting to
  * "application/json;charset=utf-8").
  */
+@Deprecated(
+    message = "Because Kotlin/Native doesn't support compileOnly dependencies, and we don't want to force the " +
+    "dependency on the JSON format onto the consumers of Krossbow, this helper is now moved to the new module " +
+        "krossbow-stomp-kxserialization-json and will be removed in the next major version.",
+    replaceWith = ReplaceWith(
+        expression = "this.withJsonConversions(json, mediaType)",
+        imports = ["org.hildan.krossbow.stomp.conversions.kxserialization.json"],
+    ),
+)
 fun StompSession.withJsonConversions(
     json: Json = Json,
     mediaType: String = "application/json;charset=utf-8",

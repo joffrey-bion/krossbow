@@ -8,6 +8,7 @@ rootProject.name = "krossbow"
 
 include("krossbow-stomp-core")
 include("krossbow-stomp-kxserialization")
+include("krossbow-stomp-kxserialization-json")
 include("krossbow-stomp-jackson")
 include("krossbow-stomp-moshi")
 include("krossbow-websocket-core")
