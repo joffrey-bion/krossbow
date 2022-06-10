@@ -19,7 +19,6 @@ kotlin {
             dependencies {
                 api(projects.krossbowStompCore)
                 api(libs.kotlinx.serialization.core)
-                compileOnly(libs.kotlinx.serialization.json)
             }
         }
     }

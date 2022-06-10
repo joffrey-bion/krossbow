@@ -1,7 +1,5 @@
 public final class org/hildan/krossbow/stomp/conversions/kxserialization/KotlinxSerializationAdaptersKt {
 	public static final fun withBinaryConversions (Lorg/hildan/krossbow/stomp/StompSession;Lkotlinx/serialization/BinaryFormat;Ljava/lang/String;)Lorg/hildan/krossbow/stomp/conversions/kxserialization/StompSessionWithKxSerialization;
-	public static final fun withJsonConversions (Lorg/hildan/krossbow/stomp/StompSession;Lkotlinx/serialization/json/Json;Ljava/lang/String;)Lorg/hildan/krossbow/stomp/conversions/kxserialization/StompSessionWithKxSerialization;
-	public static synthetic fun withJsonConversions$default (Lorg/hildan/krossbow/stomp/StompSession;Lkotlinx/serialization/json/Json;Ljava/lang/String;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/conversions/kxserialization/StompSessionWithKxSerialization;
 	public static final fun withTextConversions (Lorg/hildan/krossbow/stomp/StompSession;Lkotlinx/serialization/StringFormat;Ljava/lang/String;)Lorg/hildan/krossbow/stomp/conversions/kxserialization/StompSessionWithKxSerialization;
 }
 

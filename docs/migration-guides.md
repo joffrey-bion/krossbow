@@ -1,5 +1,13 @@
 Here are some details about how to migrate from one major version to another.
 
+## From 3.x to 4.x
+
+### withJsonConversions moved to its own module
+
+If you were using Krossbow with `krossbow-stomp-kxserialization`, the `withJsonConversions` helper has moved to a new
+module called `krossbow-stomp-kxserialization-json`.
+This new module now transitively brings `kotlinx-serialization-json` so you don't need to depend on that one explicitly.
+
 ## From 2.x to 3.x
 
 ### Use Durations instead of millis
