@@ -3,6 +3,7 @@ package org.hildan.krossbow.websocket.test
 import com.pusher.java_websocket.WebSocket
 import com.pusher.java_websocket.handshake.ClientHandshake
 import com.pusher.java_websocket.server.WebSocketServer
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 import java.net.InetSocketAddress
@@ -18,10 +19,10 @@ internal actual suspend fun runAlongEchoWSServer(block: suspend (server: TestSer
 internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(port)) {
 
     @Volatile
-    var lastConnectedSocket: WebSocket? = null
+    var openedSocket: CompletableDeferred<WebSocket> = CompletableDeferred()
 
     override fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
-        lastConnectedSocket = conn
+        openedSocket.complete(conn ?: error("onOpen got a null WebSocket"))
     }
 
     override fun onMessage(conn: WebSocket?, message: String?) {
@@ -57,22 +58,21 @@ private fun EchoWebSocketServer.asTestServer() = object : TestServer {
     override val port: Int
         get() = this@asTestServer.port
 
-    private val socket
-        get() = lastConnectedSocket ?: error("No connected client")
+    private suspend fun getSocket(): WebSocket = openedSocket.await()
 
-    override fun send(text: String) {
-        socket.send(text)
+    override suspend fun send(text: String) {
+        getSocket().send(text)
     }
 
-    override fun send(bytes: ByteArray) {
-        socket.send(bytes)
+    override suspend fun send(bytes: ByteArray) {
+        getSocket().send(bytes)
     }
 
-    override fun close(code: Int, message: String?) {
-        socket.close(code, message)
+    override suspend fun close(code: Int, message: String?) {
+        getSocket().close(code, message)
     }
 
-    override fun closeConnection(code: Int, message: String?) {
-        socket.closeConnection(code, message)
+    override suspend fun closeConnection(code: Int, message: String?) {
+        getSocket().closeConnection(code, message)
     }
 }
