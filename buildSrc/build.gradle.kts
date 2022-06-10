@@ -10,9 +10,8 @@ dependencies {
     implementation(gradleApi())
     implementation(gradleKotlinDsl())
 
-    val kotlinVersion = "1.6.21"
-    implementation(kotlin("gradle-plugin", kotlinVersion))
-    implementation("org.jetbrains.dokka:dokka-gradle-plugin:$kotlinVersion")
+    implementation(kotlin("gradle-plugin", "1.7.0"))
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.6.21")
 }
 
 gradlePlugin {

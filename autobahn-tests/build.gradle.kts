@@ -24,9 +24,6 @@ kotlin {
     setupNativeTargets()
 
     sourceSets {
-        all {
-            languageSettings.optIn("kotlin.RequiresOptIn")
-        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))

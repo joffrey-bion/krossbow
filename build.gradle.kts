@@ -1,5 +1,5 @@
 plugins {
-    val kotlinVersion = "1.6.21" // also update in buildSrc/build.gradle.kts
+    val kotlinVersion = "1.7.0" // also update in buildSrc/build.gradle.kts
     kotlin("jvm") apply false
     kotlin("js") apply false
     kotlin("multiplatform") apply false
@@ -40,11 +40,6 @@ nexusPublishing {
 }
 
 subprojects {
-
-    tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>> {
-        kotlinOptions.freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
-    }
-
     tasks.withType<AbstractTestTask> {
         testLogging {
             events("failed", "standardOut", "standardError")

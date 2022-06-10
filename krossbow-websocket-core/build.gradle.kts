@@ -11,9 +11,6 @@ kotlin {
     setupNativeTargets()
 
     sourceSets {
-        all {
-            languageSettings.optIn("kotlin.RequiresOptIn")
-        }
         val commonMain by getting {
             dependencies {
                 api(libs.kotlinx.coroutines.core)

@@ -9,9 +9,6 @@ kotlin {
     jvm()
     jsWithBigTimeouts()
     sourceSets {
-        all {
-            languageSettings.optIn("kotlin.RequiresOptIn")
-        }
         val commonMain by getting {
             dependencies {
                 api(projects.krossbowWebsocketCore)
