@@ -1,9 +1,12 @@
 package org.hildan.krossbow.websocket.ktor
 
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.test.WebSocketClientTestSuite
+// FIXME these tests don't work on JS platform because Ktor 2 is incorrectly present at runtime (due to how JS modules
+//  are organized)
+//  See https://youtrack.jetbrains.com/issue/KT-31504
+//  Interestingly, even ignoring them is not sufficient and we need to completely comment them.
 
-class KtorWebSocketClientTest : WebSocketClientTestSuite() {
-
-    override fun provideClient(): WebSocketClient = KtorWebSocketClient()
-}
+//@IgnoreOnJS
+//class KtorWebSocketClientTest : WebSocketClientTestSuite() {
+//
+//    override fun provideClient(): WebSocketClient = KtorWebSocketClient()
+//}
