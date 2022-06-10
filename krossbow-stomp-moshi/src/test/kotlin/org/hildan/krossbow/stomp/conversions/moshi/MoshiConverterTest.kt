@@ -5,7 +5,6 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeout
 import org.hildan.krossbow.stomp.conversions.*
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -91,21 +90,17 @@ class MoshiConverterTest {
     }
 
     @Test
-    fun subscribe_failsOnNullBody() {
-        runBlocking {
-            withTimeout(1000) {
-                val session = MockStompSession()
-                val jsonSession = session.withMoshi()
+    fun subscribe_failsOnNullBody(): Unit = runBlocking {
+        val session = MockStompSession()
+        val jsonSession = session.withMoshi()
 
-                val messages = jsonSession.subscribe<Int>("/test")
-                launch {
-                    session.simulateSubscriptionFrame(null)
-                }
+        val messages = jsonSession.subscribe<Int>("/test")
+        launch {
+            session.simulateSubscriptionFrame(null)
+        }
 
-                assertFailsWith(EOFException::class) {
-                    messages.first()
-                }
-            }
+        assertFailsWith(EOFException::class) {
+            messages.first()
         }
     }
 }
