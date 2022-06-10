@@ -12,6 +12,7 @@ apply<org.jetbrains.kotlin.gradle.targets.js.npm.NpmResolverPlugin>()
 
 kotlin {
     jvm()
+    jvm("jvmJava")
     jvm("jvmKtor1")
     jvm("jvmKtor2")
     jvm("jvmOkhttp")
@@ -37,6 +38,10 @@ kotlin {
         }
 
         val jvmTest by getting {}
+
+        val jvmJavaTest by getting {
+            dependsOn(jvmTest)
+        }
 
         val jvmOkhttpTest by getting {
             dependsOn(jvmTest)
