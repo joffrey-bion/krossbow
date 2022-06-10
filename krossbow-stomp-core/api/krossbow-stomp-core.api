@@ -154,33 +154,6 @@ public final class org/hildan/krossbow/stomp/conversions/KTypeRef {
 	public final fun getKType ()Lkotlin/reflect/KType;
 }
 
-public abstract interface class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions : org/hildan/krossbow/stomp/StompSession {
-	public abstract fun convertAndSend (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Ljava/lang/Object;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun subscribeOptional (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions$DefaultImpls {
-	public static synthetic fun convertAndSend$default (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Ljava/lang/Object;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-}
-
-public final class org/hildan/krossbow/stomp/conversions/StompSessionWithClassConversionsKt {
-	public static final fun convertAndSend (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Ljava/lang/String;Ljava/lang/Object;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun convertAndSend$default (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Ljava/lang/String;Ljava/lang/Object;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static final fun subscribe (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Ljava/lang/String;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun subscribeOptional (Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;Ljava/lang/String;Lkotlin/reflect/KClass;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class org/hildan/krossbow/stomp/conversions/StompSessionWithClassToTextConversionsKt {
-	public static final fun withTextConversions (Lorg/hildan/krossbow/stomp/StompSession;Lorg/hildan/krossbow/stomp/conversions/TextMessageConverter;)Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;
-}
-
-public abstract interface class org/hildan/krossbow/stomp/conversions/TextMessageConverter {
-	public abstract fun convertFromString (Ljava/lang/String;Lkotlin/reflect/KClass;)Ljava/lang/Object;
-	public abstract fun convertToString (Ljava/lang/Object;Lkotlin/reflect/KClass;)Ljava/lang/String;
-	public abstract fun getMimeType ()Ljava/lang/String;
-}
-
 public abstract interface class org/hildan/krossbow/stomp/conversions/TypedStompSession : org/hildan/krossbow/stomp/StompSession {
 	public abstract fun convertAndSend (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Ljava/lang/Object;Lorg/hildan/krossbow/stomp/conversions/KTypeRef;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lorg/hildan/krossbow/stomp/conversions/KTypeRef;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

@@ -1,8 +1,3 @@
-public final class org/hildan/krossbow/stomp/conversions/JacksonKt {
-	public static final fun withJacksonConversions (Lorg/hildan/krossbow/stomp/StompSession;Lcom/fasterxml/jackson/databind/ObjectMapper;)Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;
-	public static synthetic fun withJacksonConversions$default (Lorg/hildan/krossbow/stomp/StompSession;Lcom/fasterxml/jackson/databind/ObjectMapper;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/conversions/StompSessionWithClassConversions;
-}
-
 public final class org/hildan/krossbow/stomp/conversions/jackson/JacksonKt {
 	public static final fun withJackson (Lorg/hildan/krossbow/stomp/StompSession;Lcom/fasterxml/jackson/databind/ObjectMapper;)Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;
 	public static synthetic fun withJackson$default (Lorg/hildan/krossbow/stomp/StompSession;Lcom/fasterxml/jackson/databind/ObjectMapper;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;
