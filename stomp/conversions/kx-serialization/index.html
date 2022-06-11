@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/stomp/conversions/kx-serialization/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.3">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
     
     
       
@@ -368,6 +368,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#a-note-on-json-format" class="md-nav__link">
+    A note on JSON format
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-usage" class="md-nav__link">
     Basic usage
   </a>
@@ -670,6 +677,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#a-note-on-json-format" class="md-nav__link">
+    A note on JSON format
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-usage" class="md-nav__link">
     Basic usage
   </a>
@@ -727,15 +741,21 @@ serialization library provided by the Kotlin team.
 It is a popular choice for Kotlin multiplatform libraries especially because of its extensive support of Kotlin features.</p>
 <p>The <code>krossbow-stomp-kxserialization</code> module is an extension of <code>krossbow-stomp-core</code> that provides new APIs to 
 send and receive properly typed classes, and automatically convert STOMP frame bodies by leveraging Kotlinx Serialization.</p>
+<h2 id="a-note-on-json-format">A note on JSON format<a class="headerlink" href="#a-note-on-json-format" title="Permanent link">&para;</a></h2>
+<p>Since Kotlinx Serialization supports multiple formats with different dependencies, you have to add your own dependency
+to bring the format of your choice.</p>
+<p>However, since JSON is so popular, Krossbow comes with the <code>krossbow-stomp-kxserialization-json</code> module, which adds 
+dedicated helpers for JSON and the necessary transitive dependency on the JSON format.</p>
 <h2 id="basic-usage">Basic usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
-<p>This module brings the following extension functions:</p>
+<p>This module brings the following extension functions on <code>StompSession</code>:</p>
 <ul>
-<li><code>StompSession.withBinaryConversions(format: BinaryFormat, mediaType: String)</code></li>
-<li><code>StompSession.withTextConversions(format: StringFormat, mediaType: String)</code></li>
-<li><code>StompSession.withJsonConversions()</code> (requires a peer dependency on <code>kotlinx-serialization-json</code>, see below)</li>
+<li><a href="../../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-binary-conversions.html"><code>withBinaryConversions(format: BinaryFormat, mediaType: String)</code></a></li>
+<li><a href="../../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-text-conversions.html"><code>withTextConversions(format: StringFormat, mediaType: String)</code></a></li>
 </ul>
-<p>which turn your <code>StompSession</code> into a <code>StompSessionWithKxSerialization</code>.</p>
-<p>This new session type has additional methods that use Kotlinx Serialization's serializers to serialize/deserialize your
+<p>!!! tip If you're using JSON, dedicated <a href="../../../kdoc/krossbow-stomp-kxserialization-json/org.hildan.krossbow.stomp.conversions.kxserialization.json/with-json-conversions.html">withJsonConversions</a>
+helpers for JSON serialization is provided in the <code>krossbow-stomp-serialization-json</code> module.</p>
+<p>These helpers turn your <code>StompSession</code> into a <code>StompSessionWithKxSerialization</code>.
+This new session type has additional methods that use Kotlinx Serialization's serializers to serialize/deserialize your
 objects using the format of your choice (JSON, protobuf, etc.).</p>
 <p>You can for instance use <code>convertAndSend</code> and <code>subscribe</code> overloads with serializers like this:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">org.hildan.krossbow.stomp.*</span><span class="w"></span>
@@ -774,12 +794,12 @@ objects using the format of your choice (JSON, protobuf, etc.).</p>
 <h2 id="dependency">Dependency<a class="headerlink" href="#dependency" title="Permanent link">&para;</a></h2>
 <p>You will need to declare the following Gradle dependency to add these capabilities
 (you don't need the core module anymore as it is transitively brought by this one):</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:3.7.0&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:3.8.0&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <h3 id="extra-configuration">Extra configuration<a class="headerlink" href="#extra-configuration" title="Permanent link">&para;</a></h3>
 <p>Krossbow is format-agnostic, so you also need to add a Kotlinx Serialization dependency for the format you want to use.
 In the case of JSON, that would be <code>kotlinx-serialization-json</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:3.7.0&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:3.8.0&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>Note that Kotlinx Serialization also requires a compiler plugin to generate serializers for your <code>@Serializable</code> classes.
@@ -837,7 +857,7 @@ for more information about this.</p>
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2019 - 2021 Joffrey Bion
+      Copyright &copy; 2019 - 2022 Joffrey Bion
     </div>
   
   
@@ -866,7 +886,7 @@ for more information about this.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.expand"], "search": "../../../assets/javascripts/workers/search.b028fd86.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.expand"], "search": "../../../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f758a944.min.js"></script>

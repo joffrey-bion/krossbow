@@ -36,6 +36,8 @@ org.hildan.krossbow.stomp.conversions
 org.hildan.krossbow.stomp.conversions.jackson
 module:krossbow-stomp-kxserialization
 org.hildan.krossbow.stomp.conversions.kxserialization
+module:krossbow-stomp-kxserialization-json
+org.hildan.krossbow.stomp.conversions.kxserialization.json
 module:krossbow-stomp-moshi
 org.hildan.krossbow.stomp.conversions.moshi
 module:krossbow-websocket-core
