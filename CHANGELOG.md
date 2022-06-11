@@ -1,5 +1,12 @@
 # Change Log
 
+## [3.8.0](https://github.com/joffrey-bion/krossbow/tree/3.8.0) (2022-06-11)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.7.0...3.8.0)
+
+**Deprecations:**
+
+- Move `withJsonConversions` to its own module `krossbow\-stomp\-kxserialization\-json` [\#238](https://github.com/joffrey-bion/krossbow/issues/238)
+
 ## [3.7.0](https://github.com/joffrey-bion/krossbow/tree/3.7.0) (2022-06-09)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.6.0...3.7.0)
 
