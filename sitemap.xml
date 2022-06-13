@@ -2,77 +2,82 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/artifacts/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/license/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://joffrey-bion.github.io/krossbow/migration-guides/</loc>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/stomp/advanced-features/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/stomp/basics/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/stomp/config/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/stomp/conversions/custom/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/stomp/conversions/jackson/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/stomp/conversions/kx-serialization/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/stomp/conversions/moshi/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/websocket/core/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/websocket/ktor/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/websocket/okhttp/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/websocket/sockjs/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://joffrey-bion.github.io/krossbow/websocket/spring/</loc>
-         <lastmod>2022-06-11</lastmod>
+         <lastmod>2022-06-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

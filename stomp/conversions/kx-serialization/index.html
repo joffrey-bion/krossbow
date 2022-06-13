@@ -397,14 +397,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#extra-configuration" class="md-nav__link">
-    Extra configuration
+  <a href="#general-case" class="md-nav__link">
+    General case
   </a>
   
 </li>
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#json-format" class="md-nav__link">
+    JSON format
+  </a>
   
 </li>
       
@@ -613,6 +620,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../migration-guides/" class="md-nav__link">
+        Migration guides
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../kdoc/" class="md-nav__link">
         API Docs 🡕
       </a>
@@ -706,14 +728,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#extra-configuration" class="md-nav__link">
-    Extra configuration
+  <a href="#general-case" class="md-nav__link">
+    General case
   </a>
   
 </li>
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#json-format" class="md-nav__link">
+    JSON format
+  </a>
   
 </li>
       
@@ -752,8 +781,12 @@ dedicated helpers for JSON and the necessary transitive dependency on the JSON f
 <li><a href="../../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-binary-conversions.html"><code>withBinaryConversions(format: BinaryFormat, mediaType: String)</code></a></li>
 <li><a href="../../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-text-conversions.html"><code>withTextConversions(format: StringFormat, mediaType: String)</code></a></li>
 </ul>
-<p>!!! tip If you're using JSON, dedicated <a href="../../../kdoc/krossbow-stomp-kxserialization-json/org.hildan.krossbow.stomp.conversions.kxserialization.json/with-json-conversions.html">withJsonConversions</a>
-helpers for JSON serialization is provided in the <code>krossbow-stomp-serialization-json</code> module.</p>
+<div class="admonition tip">
+<p class="admonition-title">JSON convenience</p>
+<p>If you're using JSON, a dedicated
+<a href="../../../kdoc/krossbow-stomp-kxserialization-json/org.hildan.krossbow.stomp.conversions.kxserialization.json/with-json-conversions.html">withJsonConversions</a>
+helper for JSON serialization is provided in the <code>krossbow-stomp-serialization-json</code> module.</p>
+</div>
 <p>These helpers turn your <code>StompSession</code> into a <code>StompSessionWithKxSerialization</code>.
 This new session type has additional methods that use Kotlinx Serialization's serializers to serialize/deserialize your
 objects using the format of your choice (JSON, protobuf, etc.).</p>
@@ -792,16 +825,18 @@ objects using the format of your choice (JSON, protobuf, etc.).</p>
 <span class="kd">val</span><span class="w"> </span><span class="nv">jsonStompSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">withJsonConversions</span><span class="p">(</span><span class="n">json</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <h2 id="dependency">Dependency<a class="headerlink" href="#dependency" title="Permanent link">&para;</a></h2>
-<p>You will need to declare the following Gradle dependency to add these capabilities
-(you don't need the core module anymore as it is transitively brought by this one):</p>
+<h3 id="general-case">General case<a class="headerlink" href="#general-case" title="Permanent link">&para;</a></h3>
+<p>Krossbow's base Kotlinx Serialization module is format-agnostic, so you need to add both the
+<code>krossbow-stomp-kxserialization</code> dependency and the Kotlinx Serialization dependency for the format you want to use.
+For instance in the case of protobuf, that would be <code>kotlinx-serialization-protobuf</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:3.8.0&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.3.3&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
-<h3 id="extra-configuration">Extra configuration<a class="headerlink" href="#extra-configuration" title="Permanent link">&para;</a></h3>
-<p>Krossbow is format-agnostic, so you also need to add a Kotlinx Serialization dependency for the format you want to use.
-In the case of JSON, that would be <code>kotlinx-serialization-json</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:3.8.0&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3&quot;</span><span class="p">)</span><span class="w"></span>
+<h2 id="json-format">JSON format<a class="headerlink" href="#json-format" title="Permanent link">&para;</a></h2>
+<p>Since JSON is so common, Krossbow provides an all-in-one module with additional helpers for JSON:</p>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization-json:3.8.0&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
+<p>This module brings <code>kotlinx-serialization-json</code> transitively, so you don't have to add it yourself.</p>
 <p>Note that Kotlinx Serialization also requires a compiler plugin to generate serializers for your <code>@Serializable</code> classes.
 See the <a href="https://github.com/Kotlin/kotlinx.serialization#dependency-on-the-json-library">Kotlinx Serialization doc</a>
 for more information about this.</p>
