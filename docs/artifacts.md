@@ -6,11 +6,12 @@ All these artifacts are published to Maven Central under the group ID `org.hilda
 
 You should pick only one of the `krossbow-stomp-*` artifacts, depending on whether you need automatic serialization of frame bodies:
 
-| Artifact                                  | Description                                                                                                                                                                                                              |
-|-------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <pre>krossbow-stomp-core</pre>            | The basic multiplatform STOMP client. It implements the STOMP 1.2 protocol on top of the web socket abstraction defined by the `krossbow-websocket-core` module.                                                         |
-| <pre>krossbow-stomp-jackson</pre>         | A superset of `krossbow-stomp-core` adding JSON conversion features using Jackson (JVM only)                                                                                                                             |
-| <pre>krossbow-stomp-kxserialization</pre> | A superset of `krossbow-stomp-core` adding conversion features using Kotlinx Serialization library (multiplatform). You can leverage the multi-format capabilities of Kotlinx Serialization (JSON, protobuf, CBOR, ...). |
+| Artifact                                       | Description                                                                                                                                                                                                              |
+|------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <pre>krossbow-stomp-core</pre>                 | The basic multiplatform STOMP client. It implements the STOMP 1.2 protocol on top of the web socket abstraction defined by the `krossbow-websocket-core` module.                                                         |
+| <pre>krossbow-stomp-jackson</pre>              | A superset of `krossbow-stomp-core` adding JSON conversion features using Jackson (JVM only)                                                                                                                             |
+| <pre>krossbow-stomp-kxserialization</pre>      | A superset of `krossbow-stomp-core` adding conversion features using Kotlinx Serialization library (multiplatform). You can leverage the multi-format capabilities of Kotlinx Serialization (JSON, protobuf, CBOR, ...). |
+| <pre>krossbow-stomp-kxserialization-json</pre> | A superset of `krossbow-stomp-kxserialization` adding JSON helpers and the JSON format dependency.                                                                                                                       |
 
 Then add the dependency of your choice to your Gradle build.
 For instance, if you intend to use Krossbow with Kotlinx Serialization:
