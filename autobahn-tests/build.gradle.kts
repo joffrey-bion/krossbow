@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
+import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
 
 plugins {
     kotlin("multiplatform")
@@ -11,17 +12,21 @@ description = "A non-published project to run Autobahn Test Suite on all impleme
 apply<org.jetbrains.kotlin.gradle.targets.js.npm.NpmResolverPlugin>()
 
 kotlin {
-    jvm()
-    jvm("jvmJava")
+    jvm("jvmBuiltin")
     jvm("jvmKtor1")
     jvm("jvmKtor2")
     jvm("jvmOkhttp")
     jvm("jvmSpring")
-    jsWithBigTimeouts("js")
+    jsWithBigTimeouts("jsBuiltin")
     jsWithBigTimeouts("jsKtor1")
     jsWithBigTimeouts("jsKtor2")
-    jsWithBigTimeouts("jsOther")
-    setupNativeTargets()
+
+    val hostOS = System.getProperty("os.name")
+    val isWindowsOS = hostOS.startsWith("win", ignoreCase = true)
+
+    // we don't run Windows tests on other hosts because mingw64's libcurl will be missing
+    nativeTargets("Ktor2", includeWindows = isWindowsOS)
+    darwinTargets("Builtin")
 
     sourceSets {
         val commonTest by getting {
@@ -34,9 +39,11 @@ kotlin {
             }
         }
 
-        val jvmTest by getting {}
+        val jvmTest by creating {
+            dependsOn(commonTest)
+        }
 
-        val jvmJavaTest by getting {
+        val jvmBuiltinTest by getting {
             dependsOn(jvmTest)
             dependencies {
                 implementation(projects.krossbowWebsocketBuiltin)
@@ -75,13 +82,21 @@ kotlin {
             }
         }
 
-        val jsTest by getting {
+        val jsTest by creating {
+            dependsOn(commonTest)
             dependencies {
                 // to call the Autobahn HTTP APIs
                 implementation(npm("isomorphic-fetch", libs.versions.npm.isomorphic.fetch.get()))
             }
         }
-
+        val jsBuiltinTest by getting {
+            dependsOn(jsTest)
+            dependencies {
+                implementation(projects.krossbowWebsocketBuiltin)
+                implementation(npm("isomorphic-ws", libs.versions.npm.isomorphic.ws.get()))
+                implementation(npm("ws", libs.versions.npm.ws.get()))
+            }
+        }
         val jsKtor1Test by getting {
             dependsOn(jsTest)
             dependencies {
@@ -96,21 +111,65 @@ kotlin {
                 implementation(libs.ktor2.client.js)
             }
         }
-        val jsOtherTest by getting {
-            dependsOn(jsTest)
+
+        // Those common native source sets are for the HTTP getter actual implementations.
+        // This is used during tests to access Autobahn reports via HTTP.
+        val nativeTest by creating {
+            dependsOn(commonTest)
             dependencies {
-                implementation(projects.krossbowWebsocketBuiltin)
-                implementation(npm("isomorphic-ws", libs.versions.npm.isomorphic.ws.get()))
-                implementation(npm("ws", libs.versions.npm.ws.get()))
+                implementation(libs.ktor2.client.core)
+            }
+        }
+        val darwinTest by creating {
+            dependsOn(nativeTest)
+            dependencies {
+                implementation(libs.ktor2.client.darwin)
+            }
+        }
+        val linuxX64Test by creating {
+            dependsOn(nativeTest)
+            dependencies {
+                implementation(libs.ktor2.client.cio)
+            }
+        }
+        // we don't run Windows tests on other hosts because mingw64's libcurl will be missing
+        if (isWindowsOS) {
+            val mingwX64Test by creating {
+                dependsOn(nativeTest)
+                dependencies {
+                    implementation(libs.ktor2.client.curl)
+                }
+            }
+            val mingwX64Ktor2Test by getting {
+                dependsOn(mingwX64Test)
+                dependencies {
+                    implementation(projects.krossbowWebsocketKtor)
+                    implementation(libs.ktor2.client.curl)
+                }
             }
         }
 
-        setupNativeSourceSets()
+        val unixKtor2Test by getting {
+            dependsOn(nativeTest)
+            dependencies {
+                implementation(projects.krossbowWebsocketKtor)
+                implementation(libs.ktor2.client.cio)
+            }
+        }
+        val linuxX64Ktor2Test by getting {
+            dependsOn(linuxX64Test)
+        }
+        val darwinKtor2Test by getting {
+            dependsOn(darwinTest)
+            dependencies {
+                implementation(projects.krossbowWebsocketKtor)
+            }
+        }
 
-        val nativeDarwinTest by getting {
+        val darwinBuiltinTest by getting {
+            dependsOn(darwinTest)
             dependencies {
                 implementation(projects.krossbowWebsocketBuiltin)
-                implementation(libs.ktor2.client.darwin)
             }
         }
     }
@@ -133,6 +192,15 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest> {
     // https://github.com/crossbario/autobahn-testsuite/issues/119
     maxParallelForks = 1
 
+    doFirst {
+        val autobahnContainer = getAutobahnTestServerContainerInfo()
+        environment("AUTOBAHN_SERVER_HOST", autobahnContainer.host)
+        environment("AUTOBAHN_SERVER_TCP_8080", autobahnContainer.ports.getValue(8080))
+        environment("AUTOBAHN_SERVER_TCP_9001", autobahnContainer.ports.getValue(9001))
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest> {
     doFirst {
         val autobahnContainer = getAutobahnTestServerContainerInfo()
         environment("AUTOBAHN_SERVER_HOST", autobahnContainer.host)

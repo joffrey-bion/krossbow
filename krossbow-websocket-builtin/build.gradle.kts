@@ -9,9 +9,9 @@ description = "Multiplatform implementation of Krossbow's WebSocket API adapting
 kotlin {
     jvm()
     js(BOTH) {
-        browser()
+        browserWithBigTimeout()
     }
-    setupNativeTargets()
+    darwinTargets()
 
     sourceSets {
         val commonMain by getting {
@@ -37,6 +37,5 @@ kotlin {
                 implementation(npm("ws", libs.versions.npm.ws.get()))
             }
         }
-        setupNativeSourceSets()
     }
 }

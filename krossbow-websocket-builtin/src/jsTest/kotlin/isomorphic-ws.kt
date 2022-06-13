@@ -1,6 +1,8 @@
 import org.hildan.krossbow.websocket.js.JsWebSocketClientAdapter
 
+// both annotations, so it's accessible from UMD
 @JsModule("isomorphic-ws")
+@JsNonModule
 external class WebSocket(url: String)
 
 /**

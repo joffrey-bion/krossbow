@@ -7,11 +7,8 @@ description = "Multiplatform SockJS implementation of Krossbow's WebSocket API."
 
 kotlin {
     jvm()
-    js(BOTH) {
-        useCommonJs() // required for SockJS top-level declarations usage
-        nodejs()
-        browser()
-    }
+    jsTargets()
+
     sourceSets {
         val commonMain by getting {
             dependencies {

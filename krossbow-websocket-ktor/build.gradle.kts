@@ -8,7 +8,7 @@ description = "Multiplatform implementation of Krossbow's WebSocket API using Kt
 kotlin {
     jvm()
     jsWithBigTimeouts()
-    setupNativeTargets()
+    nativeTargets()
 
     sourceSets {
         val commonMain by getting {
@@ -32,14 +32,27 @@ kotlin {
             }
         }
 
-        setupNativeSourceSets()
-
-        val nativeDarwinTest by getting {
+        val linuxX64Test by getting {
+            dependencies {
+                implementation(libs.ktor2.client.cio)
+            }
+        }
+        val mingwX64Test by getting {
+            dependencies {
+                implementation(libs.ktor2.client.curl)
+            }
+        }
+        val darwinTest by getting {
             dependencies {
                 implementation(libs.ktor2.client.darwin)
             }
         }
     }
+}
+
+tasks.named("linkDebugTestMingwX64") {
+    // we don't run Windows tests on other hosts because mingw64's libcurl will be missing
+    enabled = System.getProperty("os.name").startsWith("Win", ignoreCase = true)
 }
 
 dokkaExternalDocLink(

@@ -11,7 +11,7 @@ kotlin {
     js(BOTH) {
         browser()
     }
-    setupNativeTargets()
+    darwinTargets()
 
     sourceSets {
         val commonMain by getting {
@@ -20,6 +20,5 @@ kotlin {
                 implementation(projects.krossbowWebsocketBuiltin)
             }
         }
-        setupNativeSourceSets()
     }
 }

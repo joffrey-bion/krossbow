@@ -7,12 +7,8 @@ description = "Test utilities for Krossbow WebSocket adapter implementations."
 
 kotlin {
     jvm()
-    js(BOTH) {
-        useCommonJs()
-        nodejs()
-        browser()
-    }
-    setupNativeTargets()
+    jsTargets()
+    nativeTargets()
 
     sourceSets {
         val commonMain by getting {
@@ -40,6 +36,5 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        setupNativeSourceSets()
     }
 }

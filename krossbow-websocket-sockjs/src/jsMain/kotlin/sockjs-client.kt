@@ -3,7 +3,9 @@
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
 
+// both annotations, so it's accessible from UMD
 @JsModule("sockjs-client")
+@JsNonModule
 external object SockJS {
     @nativeInvoke
     operator fun invoke(url: String, _reserved: Any? = definedExternally, options: Options = definedExternally): WebSocket

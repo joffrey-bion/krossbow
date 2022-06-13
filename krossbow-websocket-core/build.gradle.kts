@@ -7,8 +7,8 @@ description = "WebSocket client API used by the Krossbow STOMP client"
 
 kotlin {
     jvm()
-    jsWithBigTimeouts()
-    setupNativeTargets()
+    jsTargets()
+    nativeTargets()
 
     sourceSets {
         val commonMain by getting {
@@ -24,6 +24,5 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        setupNativeSourceSets()
     }
 }

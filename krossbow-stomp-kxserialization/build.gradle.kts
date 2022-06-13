@@ -8,11 +8,8 @@ description = "An extension of Krossbow STOMP client using Kotlinx Serialization
 
 kotlin {
     jvm()
-    js(BOTH) {
-        nodejs()
-        browser()
-    }
-    setupNativeTargets()
+    jsTargets()
+    nativeTargets()
 
     sourceSets {
         val commonMain by getting {

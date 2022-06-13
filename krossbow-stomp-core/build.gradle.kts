@@ -8,7 +8,7 @@ description = "A Kotlin multiplatform STOMP client based on a generic web socket
 kotlin {
     jvm()
     jsWithBigTimeouts()
-    setupNativeTargets()
+    nativeTargets()
 
     sourceSets {
         val commonMain by getting {
@@ -31,6 +31,5 @@ kotlin {
                 implementation("uk.org.lidalia:slf4j-test:1.1.0")
             }
         }
-        setupNativeSourceSets()
     }
 }

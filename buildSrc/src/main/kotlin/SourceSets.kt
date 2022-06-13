@@ -1,118 +1,166 @@
 import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.getting
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.gradle.kotlin.dsl.*
+import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
+
+fun KotlinMultiplatformExtension.jsTargets() {
+    js(BOTH) {
+        browser()
+        nodejs()
+    }
+}
 
 fun KotlinMultiplatformExtension.jsWithBigTimeouts(name: String = "js") {
     js(name, BOTH) {
         useCommonJs()
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
-            }
-        }
-        browser {
-            testTask {
-                useMocha {
-                    timeout = "10s"
-                }
+        nodejsWithBigTimeout()
+        browserWithBigTimeout()
+    }
+}
+
+private fun KotlinJsTargetDsl.nodejsWithBigTimeout() {
+    nodejs {
+        testTask {
+            useMocha {
+                timeout = "10s"
             }
         }
     }
 }
 
-fun KotlinMultiplatformExtension.setupNativeTargets() {
-    ios()
-    iosSimulatorArm64()
-
-    tvos()
-    tvosSimulatorArm64()
-
-    // watchos() shortcut cannot be used because okio is missing watchosX64()
-    watchosArm32()
-    watchosArm64()
-    watchosX86()
-    watchosSimulatorArm64()
-
-    // Desktop not supported yet
-    // macosX64()
-    // linuxX64()
-    // mingwX64()
+fun KotlinJsTargetDsl.browserWithBigTimeout() {
+    browser {
+        testTask {
+            useMocha {
+                timeout = "10s"
+            }
+        }
+    }
 }
 
-fun NamedDomainObjectContainer<KotlinSourceSet>.setupNativeSourceSets() {
+fun KotlinTargetContainerWithNativeShortcuts.nativeTargets(flavor: String = "", includeWindows: Boolean = true) {
+    darwinTargets(flavor, setupSourceSets = false)
+
+    linuxX64("linuxX64$flavor")
+    if (includeWindows) {
+        mingwX64("mingwX64$flavor")
+    }
+
+    sourceSets {
+        val allSourceSetsMaybeWithoutWindows = allSourceSetRefs.filter { includeWindows || !it.isWindows }
+        setupMainAndTestSourceSets(allSourceSetsMaybeWithoutWindows, flavor)
+    }
+}
+
+fun KotlinTargetContainerWithNativeShortcuts.darwinTargets(flavor: String = "", setupSourceSets: Boolean = true) {
+    ios("ios$flavor")
+    iosSimulatorArm64("iosSimulatorArm64$flavor")
+
+    tvos("tvos$flavor")
+    tvosSimulatorArm64("tvosSimulatorArm64$flavor")
+
+    // watchos() shortcut cannot be used because okio is missing watchosX64()
+    watchosArm32("watchosArm32$flavor")
+    watchosArm64("watchosArm64$flavor")
+    watchosX86("watchosX86$flavor")
+    watchosSimulatorArm64("watchosSimulatorArm64$flavor")
+
+    macosX64("macosX64$flavor")
+    macosArm64("macosArm64$flavor")
+
+    if (setupSourceSets) {
+        sourceSets {
+            setupMainAndTestSourceSets(darwinRelatedSourceSetRefs, flavor)
+        }
+    }
+}
+
+private fun NamedDomainObjectContainer<KotlinSourceSet>.setupMainAndTestSourceSets(
+    baseRefs: List<SourceSetRef>,
+    flavor: String,
+) {
     val commonMain by getting {}
     val commonTest by getting {}
 
-    val nativeMain by creating {
+    setupSourceSetsTree(baseRefs.withAppendedNames("${flavor}Main"))
+    setupSourceSetsTree(baseRefs.withAppendedNames("${flavor}Test"))
+
+    getByName("native${flavor}Main") {
         dependsOn(commonMain)
     }
-    val nativeTest by creating {
+    getByName("native${flavor}Test") {
         dependsOn(commonTest)
     }
+}
 
-    val nativeDarwinMain by creating {
-        dependsOn(nativeMain)
-    }
-    val nativeDarwinTest by creating {
-        dependsOn(nativeTest)
-    }
+private fun NamedDomainObjectContainer<KotlinSourceSet>.setupSourceSetsTree(sourceSetRefs: List<SourceSetRef>) {
+    fun SourceSetRef.getOrCreateSourceSet() = findByName(name) ?: create(name)
 
-    val iosMain by getting {
-        dependsOn(nativeDarwinMain)
-    }
-    val iosTest by getting {
-        dependsOn(nativeDarwinTest)
-    }
-
-    val iosSimulatorArm64Main by getting {
-        dependsOn(iosMain)
-    }
-    val iosSimulatorArm64Test by getting {
-        dependsOn(iosTest)
-    }
-
-    val watchosX86Main by getting {
-        dependsOn(nativeDarwinMain)
-    }
-    val watchosX86Test by getting {
-        dependsOn(nativeDarwinTest)
-    }
-    val watchosArm32Main by getting {
-        dependsOn(nativeDarwinMain)
-    }
-    val watchosArm32Test by getting {
-        dependsOn(nativeDarwinTest)
-    }
-    val watchosArm64Main by getting {
-        dependsOn(nativeDarwinMain)
-    }
-    val watchosArm64Test by getting {
-        dependsOn(nativeDarwinTest)
-    }
-
-    val watchosSimulatorArm64Main by getting {
-        dependsOn(nativeDarwinMain)
-    }
-    val watchosSimulatorArm64Test by getting {
-        dependsOn(nativeDarwinTest)
-    }
-
-    val tvosMain by getting {
-        dependsOn(nativeDarwinMain)
-    }
-    val tvosTest by getting {
-        dependsOn(nativeDarwinTest)
-    }
-
-    val tvosSimulatorArm64Main by getting {
-        dependsOn(tvosMain)
-    }
-    val tvosSimulatorArm64Test by getting {
-        dependsOn(tvosTest)
+    sourceSetRefs.forEach { ref ->
+        val ss = ref.getOrCreateSourceSet()
+        ref.parents.forEach {
+            ss.dependsOn(it.getOrCreateSourceSet())
+        }
     }
 }
+
+private val allSourceSetRefs = buildSourceSetRefs(
+    parentsToChildren = mapOf(
+        "native" to listOf(
+            "desktop",
+            "unix",
+            "nonDarwin",
+        ),
+        "desktop" to listOf(
+            "linuxX64",
+            "mingwX64",
+            "macosX64",
+            "macosArm64",
+        ),
+        "unix" to listOf(
+            "darwin",
+            "linuxX64",
+        ),
+        "nonDarwin" to listOf(
+            "linuxX64",
+            "mingwX64",
+        ),
+        "darwin" to listOf(
+            "ios",
+            "iosSimulatorArm64",
+            "tvos",
+            "tvosSimulatorArm64",
+            "watchosX86",
+            // no watchosX64, so no watchos shortcut
+            "watchosArm32",
+            "watchosArm64",
+            "watchosSimulatorArm64",
+            "macosX64",
+            "macosArm64",
+        ),
+    ),
+)
+
+private val windowsPrefix = "mingw"
+private val linuxPrefix = "linux"
+
+/**
+ * The Darwin source set, and all its ancestors and descendants
+ */
+private val darwinRelatedSourceSetRefs = allSourceSetRefs.filter { it.isDarwinOrDarwinDescendant } +
+    allSourceSetRefs.first { it.isDarwin }.ancestors
+
+private val SourceSetRef.isDarwin: Boolean
+    get() = name == "darwin"
+
+private val SourceSetRef.isDarwinOrDarwinDescendant: Boolean
+    get() = isDarwin || parents.any { it.isDarwinOrDarwinDescendant }
+
+private val SourceSetRef.ancestors: Set<SourceSetRef>
+    get() = parents.toSet() + parents.flatMap { it.ancestors }
+
+private val SourceSetRef.isWindows
+    get() = name.startsWith(windowsPrefix)

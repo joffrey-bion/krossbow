@@ -48,7 +48,9 @@ ktor1-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kt
 ktor1-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor1" }
 ktor1-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor1" }
 ktor2-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor2" }
+ktor2-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor2" }
 ktor2-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor2" }
+ktor2-client-curl = { module = "io.ktor:ktor-client-curl", version.ref = "ktor2" }
 ktor2-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor2" }
 ktor2-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor2" }
 ktor2-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor2" }
