@@ -22,8 +22,10 @@ This module brings the following extension functions on `StompSession`:
 - [`withBinaryConversions(format: BinaryFormat, mediaType: String)`](../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-binary-conversions.html)
 - [`withTextConversions(format: StringFormat, mediaType: String)`](../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-text-conversions.html)
 
-!!! tip If you're using JSON, dedicated [withJsonConversions](../../kdoc/krossbow-stomp-kxserialization-json/org.hildan.krossbow.stomp.conversions.kxserialization.json/with-json-conversions.html)
-helpers for JSON serialization is provided in the `krossbow-stomp-serialization-json` module.
+!!! tip "JSON convenience"
+    If you're using JSON, a dedicated
+    [withJsonConversions](../../kdoc/krossbow-stomp-kxserialization-json/org.hildan.krossbow.stomp.conversions.kxserialization.json/with-json-conversions.html)
+    helper for JSON serialization is provided in the `krossbow-stomp-serialization-json` module.
 
 These helpers turn your `StompSession` into a `StompSessionWithKxSerialization`.
 This new session type has additional methods that use Kotlinx Serialization's serializers to serialize/deserialize your
@@ -72,22 +74,26 @@ val jsonStompSession = session.withJsonConversions(json)
 
 ## Dependency
 
-You will need to declare the following Gradle dependency to add these capabilities
-(you don't need the core module anymore as it is transitively brought by this one):
+### General case
+
+Krossbow's base Kotlinx Serialization module is format-agnostic, so you need to add both the
+`krossbow-stomp-kxserialization` dependency and the Kotlinx Serialization dependency for the format you want to use.
+For instance in the case of protobuf, that would be `kotlinx-serialization-protobuf`:
 
 ```kotlin
 implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.tag }}")
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:{{ versions.kotlinxSerialization }}")
 ```
 
-### Extra configuration
+## JSON format
 
-Krossbow is format-agnostic, so you also need to add a Kotlinx Serialization dependency for the format you want to use.
-In the case of JSON, that would be `kotlinx-serialization-json`:
+Since JSON is so common, Krossbow provides an all-in-one module with additional helpers for JSON:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.tag }}")
-implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:{{ versions.kotlinxSerialization }}")
+implementation("org.hildan.krossbow:krossbow-stomp-kxserialization-json:{{ git.tag }}")
 ```
+
+This module brings `kotlinx-serialization-json` transitively, so you don't have to add it yourself.
 
 Note that Kotlinx Serialization also requires a compiler plugin to generate serializers for your `@Serializable` classes.
 See the [Kotlinx Serialization doc](https://github.com/Kotlin/kotlinx.serialization#dependency-on-the-json-library)

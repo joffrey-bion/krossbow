@@ -2,7 +2,8 @@ Krossbow is a Kotlin multiplatform [STOMP 1.2](https://stomp.github.io/index.htm
 
 It is built on a web socket client abstraction, and provides a bunch of adapters for popular web socket clients
 (OkHttp, Ktor, Spring, SockJS...).
-It also provides out-of-the-box a built-in web socket implementation (without third-party dependencies) for most platforms (see below).
+It also provides out-of-the-box a built-in web socket implementation (without third-party dependencies) for most
+platforms (see below).
 
 Krossbow can also be used as a multiplatform web socket client without STOMP protocol.
 
