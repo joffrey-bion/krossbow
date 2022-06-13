@@ -3,7 +3,7 @@ plugins {
     `kotlin-maven-central-publish`
 }
 
-description = "A Kotlin multiplatform STOMP client with JVM, Browser, and NodeJS support"
+description = "A Kotlin multiplatform STOMP client based on a generic web socket API"
 
 kotlin {
     jvm()
@@ -14,7 +14,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.krossbowWebsocketCore)
-                implementation(projects.krossbowWebsocketBuiltin)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.okio)
                 implementation(libs.uuid)

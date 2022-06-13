@@ -1,0 +1,5 @@
+public final class org/hildan/krossbow/stomp/StompClientKt {
+	public static final fun StompClient (Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/stomp/StompClient;
+	public static synthetic fun StompClient$default (Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/StompClient;
+}
+

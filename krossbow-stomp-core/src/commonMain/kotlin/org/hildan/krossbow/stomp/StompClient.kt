@@ -5,7 +5,6 @@ import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
-import org.hildan.krossbow.websocket.default
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration
@@ -26,7 +25,7 @@ class StompClient(
     private val config: StompConfig,
 ) {
     constructor(
-        webSocketClient: WebSocketClient = WebSocketClient.default(),
+        webSocketClient: WebSocketClient,
         configure: StompConfig.() -> Unit = {},
     ) : this(
         webSocketClient = webSocketClient,
