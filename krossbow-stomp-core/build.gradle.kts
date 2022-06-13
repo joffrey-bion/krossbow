@@ -14,6 +14,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.krossbowWebsocketCore)
+                implementation(projects.krossbowWebsocketBuiltin)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.okio)
                 implementation(libs.uuid)

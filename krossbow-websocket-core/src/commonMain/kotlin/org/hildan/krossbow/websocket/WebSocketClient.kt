@@ -3,11 +3,6 @@ package org.hildan.krossbow.websocket
 import kotlinx.coroutines.flow.*
 
 /**
- * Gets the default [WebSocketClient] implementation for the current platform.
- */
-expect fun WebSocketClient.Companion.default(): WebSocketClient
-
-/**
  * A web socket client.
  *
  * The client is used to connect to the server and create a [WebSocketConnection].
