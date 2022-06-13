@@ -38,6 +38,9 @@ kotlin {
 
         val jvmJavaTest by getting {
             dependsOn(jvmTest)
+            dependencies {
+                implementation(projects.krossbowWebsocketBuiltin)
+            }
         }
 
         val jvmOkhttpTest by getting {
@@ -96,6 +99,7 @@ kotlin {
         val jsOtherTest by getting {
             dependsOn(jsTest)
             dependencies {
+                implementation(projects.krossbowWebsocketBuiltin)
                 implementation(npm("isomorphic-ws", libs.versions.npm.isomorphic.ws.get()))
                 implementation(npm("ws", libs.versions.npm.ws.get()))
             }
@@ -105,6 +109,7 @@ kotlin {
 
         val nativeDarwinTest by getting {
             dependencies {
+                implementation(projects.krossbowWebsocketBuiltin)
                 implementation(libs.ktor2.client.darwin)
             }
         }

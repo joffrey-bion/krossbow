@@ -30,6 +30,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
+                api(projects.krossbowWebsocketBuiltin)
                 implementation(npm("sockjs-client", libs.versions.npm.sockjs.client.get()))
             }
         }
