@@ -1,20 +1,20 @@
 If you want to use your own text conversion, you can implement `TextMessageConverter` without
 any additional module, and use `withTextConversions` to wrap your `StompSession` into a
-`StompSessionWithClassToTextConversions`.
+`TypedStompSession`.
 
 !!! warning "Limited JS support" 
-    Reflection-based conversions are very likely to behave poorly on the JS platform.
+    Reflection-based conversions may behave poorly on the JS platform.
     It is usually safer to [rely on Kotlinx Serialization](./kx-serialization.md) for multiplatform conversions.
 
 ```kotlin
 val myConverter = object : TextMessageConverter {
     override val mimeType: String = "application/json;charset=utf-8"
 
-    override fun <T : Any> convertToString(body: T, bodyType: KClass<T>): String {
+    override fun <T> convertToString(value: T, type: KTypeRef<T>): String {
         TODO("your own object -> text conversion")
     }
 
-    override fun <T : Any> convertFromString(body: String, bodyType: KClass<T>): T {
+    override fun <T> convertFromString(text: String, type: KTypeRef<T>): T {
         TODO("your own text -> object conversion")
     }
 }

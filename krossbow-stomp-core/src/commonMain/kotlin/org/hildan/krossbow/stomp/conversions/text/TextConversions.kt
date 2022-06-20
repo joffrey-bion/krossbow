@@ -43,7 +43,7 @@ interface TextMessageConverter {
     fun <T> convertFromString(text: String, type: KTypeRef<T>): T
 }
 
-internal class SingleConverterStompSession(
+private class SingleConverterStompSession(
     private val session: StompSession,
     private val converter: TextMessageConverter,
 ) : StompSession by session, TypedStompSession {
