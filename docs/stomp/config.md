@@ -4,7 +4,7 @@ The `StompClient` can be configured at construction time using a convenient lamb
 
 ```kotlin
 val stompClient = StompClient {
-    connectionTimeout = 3000
+    connectionTimeout = 3.seconds
     gracefulDisconnect = false
 }
 ```
@@ -13,7 +13,7 @@ You can also create the configuration separately and then pass it when construct
 
 ```kotlin
 val stompConfig = StompConfig().apply {
-    connectionTimeout = 3000
+    connectionTimeout = 3.seconds
     gracefulDisconnect = false
 }
 
@@ -21,6 +21,9 @@ val stompClient = StompClient(config = stompConfig)
 ```
 
 ## Configuration options
+
+You can find out about all configuration properties in the
+[StompConfig KDoc](../kdoc/krossbow-stomp-core/org.hildan.krossbow.stomp.config/-stomp-config/index.html).
 
 `autoReceipt` (default: false) { #autoReceipt }
 :   Whether to automatically attach a `receipt` header to the sent frames in order to track receipts.
