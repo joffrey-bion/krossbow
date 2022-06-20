@@ -1,5 +1,23 @@
 # Change Log
 
+## [4.0.0](https://github.com/joffrey-bion/krossbow/tree/4.0.0) (2022-06-20)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.8.0...4.0.0)
+
+**Breaking changes:**
+
+- Reorganize modules to support all targets in pure Kotlin modules [\#234](https://github.com/joffrey-bion/krossbow/issues/234)
+
+**Removals:**
+
+- Remove deprecated type alias `WebSocketSession` [\#240](https://github.com/joffrey-bion/krossbow/issues/240)
+- Remove deprecated StompSessionWithClassConversions and related code [\#239](https://github.com/joffrey-bion/krossbow/issues/239)
+- Remove `compileOnly\(kotlinx\-serialization\-json\)` dependency from `krossbow\-stomp\-kxserialization` [\#237](https://github.com/joffrey-bion/krossbow/issues/237)
+
+**Upgraded dependencies:**
+
+- Upgrade Kotlinx Coroutines to version 1.6.3 [\#219](https://github.com/joffrey-bion/krossbow/issues/219)
+- Upgrade Kotlin to version 1.7.0 [\#233](https://github.com/joffrey-bion/krossbow/issues/233)
+
 ## [3.8.0](https://github.com/joffrey-bion/krossbow/tree/3.8.0) (2022-06-11)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.7.0...3.8.0)
 
@@ -276,7 +294,7 @@
 ## [2.0.0](https://github.com/joffrey-bion/krossbow/tree/2.0.0) (2021-05-28)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.4.0...2.0.0)
 
-**Closed issues:**
+**Breaking changes:**
 
 - Align StompSession.use with Closeable.use [\#106](https://github.com/joffrey-bion/krossbow/issues/106)
 
