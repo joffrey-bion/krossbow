@@ -9,6 +9,7 @@ You should pick only one of the `krossbow-stomp-*` artifacts, depending on wheth
 | Artifact                                       | Description                                                                                                                                                                                                              |
 |------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | <pre>krossbow-stomp-core</pre>                 | The basic multiplatform STOMP client. It implements the STOMP 1.2 protocol on top of the web socket abstraction defined by the `krossbow-websocket-core` module.                                                         |
+| <pre>krossbow-stomp-default</pre>              | A superset of `krossbow-stomp-core` adding a `StompClient` constructor without web socket client argument, defaulting to the builtin implementations provided by `krossbow-websocket-builtin` (brought transitively)     |
 | <pre>krossbow-stomp-jackson</pre>              | A superset of `krossbow-stomp-core` adding JSON conversion features using Jackson (JVM only)                                                                                                                             |
 | <pre>krossbow-stomp-kxserialization</pre>      | A superset of `krossbow-stomp-core` adding conversion features using Kotlinx Serialization library (multiplatform). You can leverage the multi-format capabilities of Kotlinx Serialization (JSON, protobuf, CBOR, ...). |
 | <pre>krossbow-stomp-kxserialization-json</pre> | A superset of `krossbow-stomp-kxserialization` adding JSON helpers and the JSON format dependency.                                                                                                                       |
@@ -24,21 +25,23 @@ implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.tag }}
     If you're just interested in the web socket client without STOMP protocol, don't declare a STOMP artifact, but 
     instead choose either:
 
-      * the [built-in Core web socket implementation](./websocket/core.md) (without third-party dependencies)
+      * the [built-in web socket implementation](./websocket/builtin.md) (without third-party dependencies)
       * a third party web socket implementation (see below)
 
-## Third party web socket adapters
+## Web Socket artifacts
 
-The STOMP artifacts come with the built-in web socket client for each platform, so no additional dependency is required.
-However, if you want a different web socket implementation, you can pick from the other web socket adapters and add the relevant artifact:
+The STOMP artifacts depend on a web socket API that needs an implementation.
+Krossbow provides implementations for the built-in web socket API of most platforms, and also adapters for 3rd-part
+web socket implementations:
 
 | Artifact                                  | Description                                                                                                                                                                      |
 |-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <pre>krossbow-websocket-builtin</pre>     | A multiplatform `WebSocketClient` implementation that adapts the built-in client for each supported platform without transitive dependency.                                      |
 | <pre>krossbow-websocket-ktor</pre>        | A multiplatform `WebSocketClient` implementation based on Ktor {{ versions.ktor }}'s `HttpClient`.                                                                               |
 | <pre>krossbow-websocket-ktor-legacy</pre> | A multiplatform `WebSocketClient` implementation based on Ktor {{ versions.ktorLegacy }}'s `HttpClient`.                                                                         |
-| <pre>krossbow-websocket-okhttp</pre>      | a JVM implementation of the web socket API using OkHttp's                                                                                                                        |
-| <pre>krossbow-websocket-sockjs</pre>      | a multiplatform `WebSocketClient` implementation for use with SockJS servers. It uses Spring's SockJSClient on JVM, and npm `sockjs-client` for JavaScript (NodeJS and browser). |
-| <pre>krossbow-websocket-spring</pre>      | a JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides both a normal WebSocket client and a SockJS one.                                          |
+| <pre>krossbow-websocket-okhttp</pre>      | A JVM implementation of the web socket API using OkHttp's client.                                                                                                                |
+| <pre>krossbow-websocket-sockjs</pre>      | A multiplatform `WebSocketClient` implementation for use with SockJS servers. It uses Spring's SockJSClient on JVM, and npm `sockjs-client` for JavaScript (NodeJS and browser). |
+| <pre>krossbow-websocket-spring</pre>      | A JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides both a normal WebSocket client and a SockJS one.                                          |
 
 !!! warning "Peer dependencies"
     Some Krossbow modules are not opinionated and require some extra third-party peer dependencies.

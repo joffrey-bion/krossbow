@@ -1,12 +1,11 @@
-## Gradle dependency
-
-For the basic usage of STOMP without body conversions, you only need the following Gradle dependency:
+To quickly get started and use the built-in web socket clients, add the following Gradle dependency to your
+`build.gradle(.kts)`:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-stomp-core:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-stomp-default:{{ git.tag }}")
 ```
 
-You need to replace it if you want to use serialization/deserialization features ([see below](#using-body-conversions)).
+You can find more info about more advanced configuration [below](#gradle-setup).
 
 ## Basic usage (without body conversions)
 
@@ -69,3 +68,47 @@ Check out the following sections to see how to automatically convert your object
  * [using Jackson](./conversions/jackson.md) (JVM-only)
  * [using Moshi](./conversions/moshi.md) (JVM-only)
  * [using custom conversions](./conversions/custom.md)
+
+## Gradle setup
+
+### Using the built-in web socket clients
+
+For the basic usage of STOMP with the built-in web socket clients, you only need the following Gradle dependency:
+
+```kotlin
+implementation("org.hildan.krossbow:krossbow-stomp-default:{{ git.tag }}")
+```
+
+This provides a [StompClient()](../kdoc/krossbow-stomp-default/org.hildan.krossbow.stomp/-stomp-client.html)
+constructor that will automatically use the built-in web socket client for the current platform.
+
+If you want to use STOMP body conversions to serialize/deserialize objects directly into/from STOMP frames, add the
+relevant conversion module.
+For instance, to use Kotlinx Serialization:
+
+```kotlin
+implementation("org.hildan.krossbow:krossbow-stomp-default:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.tag }}")
+```
+
+### Using third-party web socket clients
+
+If you want to use another web socket client, declare both the core STOMP artifact and the specific web socket artifact.
+For example, if you want to use Krossbow with Ktor web socket client:
+
+```kotlin
+implementation("org.hildan.krossbow:krossbow-stomp-core:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-ktor:{{ git.tag }}")
+```
+
+This way you can call the [StompClient](../kdoc/krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-client/index.html)
+constructor with the web socket client of your choice (e.g. `StompClient(KtorWebSocketClient())`).
+
+If you want to use STOMP body conversions to serialize/deserialize objects directly into/from STOMP frames, replace the
+`krossbow-stomp-core` module with the relevant conversion module.
+For instance, to use Kotlinx Serialization:
+
+```kotlin
+implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-ktor:{{ git.tag }}")
+```

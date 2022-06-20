@@ -1,6 +1,8 @@
 # Krossbow with Spring
 
-Krossbow allows you to use [Spring's `WebSocketClient`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/socket/client/WebSocketClient.html) as transport for STOMP.
+Krossbow allows you to use
+[Spring's `WebSocketClient`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/socket/client/WebSocketClient.html)
+as transport for STOMP.
 
 The `krossbow-websocket-spring` module provides the `SpringWebSocketClientAdapter`, which adapts any of Spring's 
 `WebSocketClient` to Krossbow's web socket interface.

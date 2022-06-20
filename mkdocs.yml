@@ -62,7 +62,7 @@ markdown_extensions:
 nav:
   - 'Overview': index.md
   - 'STOMP':
-    - 'Basic usage': stomp/basics.md
+    - 'Getting started': stomp/getting-started.md
     - 'Configuration': stomp/config.md
     - 'Body conversions':
       - 'Kotlinx Serialization': stomp/conversions/kx-serialization.md
@@ -71,11 +71,12 @@ nav:
       - 'Custom conversions': stomp/conversions/custom.md
     - 'Advanced features': stomp/advanced-features.md
   - 'Web socket clients':
-    - 'Core (built-in)': websocket/core.md
+    - 'Built-in': websocket/builtin.md
     - 'Ktor': websocket/ktor.md
     - 'OkHttp': websocket/okhttp.md
     - 'Spring': websocket/spring.md
     - 'SockJS': websocket/sockjs.md
+    - 'Implement your own': websocket/custom.md
   - 'Artifacts summary': artifacts.md
   - 'Migration guides': migration-guides.md
   - 'API Docs 🡕': kdoc/index.html

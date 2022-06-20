@@ -9,7 +9,7 @@ Krossbow can also be used as a multiplatform web socket client without STOMP pro
 
 ## Features
 
-All of the [STOMP 1.2](https://stomp.github.io/index.html) specification is implemented:
+All the [STOMP 1.2](https://stomp.github.io/index.html) specification is implemented:
 
 - All STOMP frames, including `ACK`/`NACK` and transactions
 - Text and binary bodies
@@ -20,7 +20,7 @@ All of the [STOMP 1.2](https://stomp.github.io/index.html) specification is impl
 Additional features:
 
 - Auto-receipts (automatically adds `receipt` headers to ensure no frame is lost)
-- [Built-in body conversions](stomp/basics.md#using-body-conversions) (Kotlinx Serialization or Jackson)
+- [Built-in body conversions](stomp/getting-started.md#using-body-conversions) (Kotlinx Serialization or Jackson)
 - Possibility to hook [custom body converters](stomp/conversions/custom.md) (for textual or binary bodies)
 - Automatic content length header for sent frames
 
@@ -28,16 +28,10 @@ Additional features:
 
 ## Supported targets
 
-Krossbow supports the following targets:
+Krossbow supports most Kotlin targets in its STOMP and web socket API modules:
+JVM, JS (browser and nodeJS), iOS, watchOS, tvOS, macOSX64, linuxX64, mingwX64. 
 
-* :white_check_mark: JVM
-* :white_check_mark: JS (browser & NodeJS, with both IR and legacy compiler backends)
-* :warning: Android (using JVM artifacts)
-* :white_check_mark: iOS, watchOS, tvOS
-* :x: Native Desktop
-
-The desktop Native targets are currently unsupported, due to a lack of native web socket implementations.
-Contributions are of course welcome!
+However, each web socket client implementation has its own subset of supported targets (see below).
 
 !!! info "Android not tested on CI"
     Android 5.0+ (API level 21+) is supported by using JVM artifacts (e.g. OkHttp).
@@ -50,22 +44,20 @@ Contributions are of course welcome!
 
 Krossbow can use built-in web socket implementations without third-party dependencies on some platforms.
 It also provides adapters for third-party implementations which have different platform support.
-Here is a summary of the supported platform by module:
+Here is a summary of the supported platforms by module:
 
-| Web Socket Module                      |        Browser         |         NodeJS         |             JVM8+ (blocking)              |   JVM11+ (async)   | iOS / tvOS / watchOS | Transitive dependencies                                                                                                                                                                                         |
-|----------------------------------------|:----------------------:|:----------------------:|:-----------------------------------------:|:------------------:|:--------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Core<br>(built-in)](./websocket/core) |   :white_check_mark:   |                        |                                           | :white_check_mark: |  :white_check_mark:  | None                                                                                                                                                                                                            |
-| [Ktor 2](./websocket/ktor)             |   :white_check_mark:   |   :white_check_mark:   |           :white_check_mark: \*           | :white_check_mark: |  :white_check_mark:  | [Ktor](https://ktor.io/clients/websockets.html), and the relevant [Ktor engine(s)](https://ktor.io/clients/http-client/engines.html)                                                                            |
-| [Ktor (legacy)](./websocket/ktor)      |   :white_check_mark:   |   :white_check_mark:   |           :white_check_mark: \*           | :white_check_mark: |                      | [Ktor](https://ktor.io/clients/websockets.html), and the relevant [Ktor engine(s)](https://ktor.io/clients/http-client/engines.html)                                                                            |
-| [OkHttp](./websocket/okhttp)           |                        |                        |            :white_check_mark:             |                    |                      | [OkHttp](https://square.github.io/okhttp/)                                                                                                                                                                      |
-| [SockJS](./websocket/sockjs)           | :large_orange_diamond: | :large_orange_diamond: |          :large_orange_diamond:           |                    |                      | [sockjs-client](https://github.com/sockjs/sockjs-client) (on JS), [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) (on JVM) |
-| [Spring](./websocket/spring)           |                        |                        | :white_check_mark: :large_orange_diamond: |                    |                      | [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html)                                                                            |
+| Module                          |        Browser         |         NodeJS         |                    JVM                    | iOS / tvOS / watchOS | macOS / Linux / Windows | Transitive dependencies                                                                                                                                                                                         |
+|---------------------------------|:----------------------:|:----------------------:|:-----------------------------------------:|:--------------------:|:-----------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Built-in](./websocket/builtin) |   :white_check_mark:   |                        |     :white_check_mark: (JDK&nbsp;11+)     |  :white_check_mark:  |                         | None                                                                                                                                                                                                            |
+| [Ktor 2](./websocket/ktor)      |   :white_check_mark:   |   :white_check_mark:   |            :white_check_mark:             |  :white_check_mark:  |   :white_check_mark:    | [Ktor](https://ktor.io/clients/websockets.html), and the relevant [Ktor engine(s)](https://ktor.io/clients/http-client/engines.html)                                                                            |
+| [Ktor 1.x](./websocket/ktor)    |   :white_check_mark:   |   :white_check_mark:   |            :white_check_mark:             |                      |                         | [Ktor](https://ktor.io/clients/websockets.html), and the relevant [Ktor engine(s)](https://ktor.io/clients/http-client/engines.html)                                                                            |
+| [OkHttp](./websocket/okhttp)    |                        |                        |            :white_check_mark:             |                      |                         | [OkHttp](https://square.github.io/okhttp/)                                                                                                                                                                      |
+| [SockJS](./websocket/sockjs)    | :large_orange_diamond: | :large_orange_diamond: |          :large_orange_diamond:           |                      |                         | [sockjs-client](https://github.com/sockjs/sockjs-client) (on JS), [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html) (on JVM) |
+| [Spring](./websocket/spring)    |                        |                        | :white_check_mark: :large_orange_diamond: |                      |                         | [Spring websocket](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html)                                                                            |
 
 :white_check_mark: supported with actual web socket transport (RFC6455)
 
 :large_orange_diamond: supported using [SockJS](https://github.com/sockjs/sockjs-client) protocol (requires a SockJS server)
-
-\* backed by blocking I/O when using the OkHttp engine, but can be fully non-blocking with the CIO engine
 
 ## Contribute
 

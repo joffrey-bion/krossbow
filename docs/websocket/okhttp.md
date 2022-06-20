@@ -16,7 +16,7 @@ you need to specify it when creating your `StompClient`:
 val client = StompClient(OkHttpWebSocketClient())
 ```
 
-You can customize the actual `OkHttpClient` used behind the scenes by passing it to `OkHttpWebSocketClient`:
+You can customize the actual `OkHttpClient` used behind the scenes by passing it to `OkHttpWebSocketClient()`:
 
 ```kotlin
 // This allows to configure the underlying OkHttpClient as you please

@@ -8,6 +8,30 @@ If you were using Krossbow with `krossbow-stomp-kxserialization`, the `withJsonC
 module called `krossbow-stomp-kxserialization-json`.
 This new module now transitively brings `kotlinx-serialization-json` so you don't need to depend on that one explicitly.
 
+### Built-in web socket clients and default `StompClient` constructor moved to their own module
+
+Up to (and including) version 3.x of Krossbow, the built-in web socket clients for the supported platforms were part
+of the `krossbow-websocket-core` module.
+This module provided a `WebSocketClient.Companion.default()` factory function to provide the built-in web socket
+implementation of the current platform.
+Likewise, the `krossbow-stomp-core` module provided a `StompClient` constructor that used the "default" 
+built-in web socket implementation for the current platform.
+
+This approach limited the targets supported by those 2 core modules, even though all of their functionality was 
+target-agnostic.
+In order to support all Kotlin platforms in pure Kotlin modules, the built-in websocket implementations and no-arg 
+`StompClient` constructor had to be moved to separate modules.
+
+Breaking dependency changes, in short:
+
+* if you used the `StompClient()` constructor without WS client argument (using the default value), simply declare a 
+  dependency on `krossbow-stomp-default` instead of `krossbow-stomp-core`, or in addition to another STOMP artifact.
+* if you used `WebSocketClient.default()` from `krossbow-websocket-core`, or any of the built-in clients directly,
+  simply change your dependency to `krossbow-websocket-builtin` instead
+
+If you used other web socket implementations than the built-in ones, you don't have to change anything to your 
+dependencies.
+
 ## From 2.x to 3.x
 
 ### Use Durations instead of millis
