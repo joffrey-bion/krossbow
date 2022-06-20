@@ -26,6 +26,7 @@ kotlin {
             dependencies {
                 implementation(libs.ktor1.client.java)
                 implementation(libs.ktor1.client.okhttp)
+                implementation(libs.slf4j.simple) // avoid warning with java client
             }
         }
     }
