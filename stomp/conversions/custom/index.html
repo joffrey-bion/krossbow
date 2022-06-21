@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/stomp/conversions/custom/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.6">
     
     
       
@@ -273,8 +273,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../basics/" class="md-nav__link">
-        Basic usage
+      <a href="../../getting-started/" class="md-nav__link">
+        Getting started
       </a>
     </li>
   
@@ -448,8 +448,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../websocket/core/" class="md-nav__link">
-        Core (built-in)
+      <a href="../../../websocket/builtin/" class="md-nav__link">
+        Built-in
       </a>
     </li>
   
@@ -506,6 +506,20 @@
     <li class="md-nav__item">
       <a href="../../../websocket/sockjs/" class="md-nav__link">
         SockJS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../websocket/custom/" class="md-nav__link">
+        Implement your own
       </a>
     </li>
   
@@ -631,20 +645,20 @@
 
 <p>If you want to use your own text conversion, you can implement <code>TextMessageConverter</code> without
 any additional module, and use <code>withTextConversions</code> to wrap your <code>StompSession</code> into a
-<code>StompSessionWithClassToTextConversions</code>.</p>
+<code>TypedStompSession</code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Limited JS support</p>
-<p>Reflection-based conversions are very likely to behave poorly on the JS platform.
+<p>Reflection-based conversions may behave poorly on the JS platform.
 It is usually safer to <a href="../kx-serialization/">rely on Kotlinx Serialization</a> for multiplatform conversions.</p>
 </div>
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">myConverter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">TextMessageConverter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mimeType</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;application/json;charset=utf-8&quot;</span><span class="w"></span>
 
-<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Any</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">convertToString</span><span class="p">(</span><span class="n">body</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">bodyType</span><span class="p">:</span><span class="w"> </span><span class="n">KClass</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">):</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">convertToString</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="n">KTypeRef</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">):</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="n">TODO</span><span class="p">(</span><span class="s">&quot;your own object -&gt; text conversion&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Any</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">convertFromString</span><span class="p">(</span><span class="n">body</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">bodyType</span><span class="p">:</span><span class="w"> </span><span class="n">KClass</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">):</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">convertFromString</span><span class="p">(</span><span class="n">text</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="n">KTypeRef</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">):</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="n">TODO</span><span class="p">(</span><span class="s">&quot;your own text -&gt; object conversion&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="w">    </span><span class="p">}</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
@@ -742,7 +756,7 @@ It is usually safer to <a href="../kx-serialization/">rely on Kotlinx Serializat
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.expand"], "search": "../../../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.f758a944.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.a877e258.min.js"></script>
       
     
   </body>

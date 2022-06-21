@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/websocket/ktor/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.6">
     
     
       
@@ -276,8 +276,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../stomp/basics/" class="md-nav__link">
-        Basic usage
+      <a href="../../stomp/getting-started/" class="md-nav__link">
+        Getting started
       </a>
     </li>
   
@@ -443,8 +443,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../core/" class="md-nav__link">
-        Core (built-in)
+      <a href="../builtin/" class="md-nav__link">
+        Built-in
       </a>
     </li>
   
@@ -549,6 +549,20 @@
     <li class="md-nav__item">
       <a href="../sockjs/" class="md-nav__link">
         SockJS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom/" class="md-nav__link">
+        Implement your own
       </a>
     </li>
   
@@ -720,18 +734,18 @@ you need to specify it when creating your <code>StompClient</code>:</p>
 </code></pre></div>
 <h2 id="dependency-information">Dependency information<a class="headerlink" href="#dependency-information" title="Permanent link">&para;</a></h2>
 <p>You will need to declare the following Gradle dependency to use the <code>KtorWebSocketClient</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:3.8.0&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.0&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>Ktor uses <a href="https://ktor.io/clients/http-client/engines.html">pluggable engines</a> to perform the platform-specific
 network operations (just like Krossbow uses different web socket implementations).
 You need to pick an engine that supports web sockets in order to use Ktor's <code>HttpClient</code> with web sockets.
 Follow Ktor's documentation to find out more about how to use engines.</p>
 <p>For instance, if you want to use Ktor's CIO engine with Krossbow, you need to declare the following:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:3.8.0&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.0&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.ktor:ktor-client-cio:2.0.2&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>If you want to use the older version 1.6.x of Ktor, use <code>krossbow-websocket-ktor-legacy</code> instead:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor-legacy:3.8.0&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor-legacy:4.0.0&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.ktor:ktor-client-cio:1.6.8&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 
@@ -749,7 +763,7 @@ Follow Ktor's documentation to find out more about how to use engines.</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../core/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Core (built-in)" rel="prev">
+        <a href="../builtin/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Built-in" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -758,7 +772,7 @@ Follow Ktor's documentation to find out more about how to use engines.</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Core (built-in)
+              Built-in
             </div>
           </div>
         </a>
@@ -818,7 +832,7 @@ Follow Ktor's documentation to find out more about how to use engines.</p>
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand"], "search": "../../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.f758a944.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a877e258.min.js"></script>
       
     
   </body>

@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/">
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.6">
     
     
       
@@ -340,8 +340,8 @@
   
   
     <li class="md-nav__item">
-      <a href="stomp/basics/" class="md-nav__link">
-        Basic usage
+      <a href="stomp/getting-started/" class="md-nav__link">
+        Getting started
       </a>
     </li>
   
@@ -505,8 +505,8 @@
   
   
     <li class="md-nav__item">
-      <a href="websocket/core/" class="md-nav__link">
-        Core (built-in)
+      <a href="websocket/builtin/" class="md-nav__link">
+        Built-in
       </a>
     </li>
   
@@ -563,6 +563,20 @@
     <li class="md-nav__item">
       <a href="websocket/sockjs/" class="md-nav__link">
         SockJS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="websocket/custom/" class="md-nav__link">
+        Implement your own
       </a>
     </li>
   
@@ -735,7 +749,7 @@ It also provides out-of-the-box a built-in web socket implementation (without th
 platforms (see below).</p>
 <p>Krossbow can also be used as a multiplatform web socket client without STOMP protocol.</p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
-<p>All of the <a href="https://stomp.github.io/index.html">STOMP 1.2</a> specification is implemented:</p>
+<p>All the <a href="https://stomp.github.io/index.html">STOMP 1.2</a> specification is implemented:</p>
 <ul>
 <li>All STOMP frames, including <code>ACK</code>/<code>NACK</code> and transactions</li>
 <li>Text and binary bodies</li>
@@ -746,7 +760,7 @@ platforms (see below).</p>
 <p>Additional features:</p>
 <ul>
 <li>Auto-receipts (automatically adds <code>receipt</code> headers to ensure no frame is lost)</li>
-<li><a href="stomp/basics/#using-body-conversions">Built-in body conversions</a> (Kotlinx Serialization or Jackson)</li>
+<li><a href="stomp/getting-started/#using-body-conversions">Built-in body conversions</a> (Kotlinx Serialization or Jackson)</li>
 <li>Possibility to hook <a href="stomp/conversions/custom/">custom body converters</a> (for textual or binary bodies)</li>
 <li>Automatic content length header for sent frames</li>
 </ul>
@@ -754,16 +768,9 @@ platforms (see below).</p>
 <p class="admonition-title">If you find a bug or a feature that's missing compared to the specification, please <a href="https://github.com/joffrey-bion/krossbow/issues">open an issue</a>.</p>
 </div>
 <h2 id="supported-targets">Supported targets<a class="headerlink" href="#supported-targets" title="Permanent link">&para;</a></h2>
-<p>Krossbow supports the following targets:</p>
-<ul>
-<li><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> JVM</li>
-<li><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> JS (browser &amp; NodeJS, with both IR and legacy compiler backends)</li>
-<li><img alt="⚠️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/26a0.png" title=":warning:" /> Android (using JVM artifacts)</li>
-<li><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> iOS, watchOS, tvOS</li>
-<li><img alt="❌" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/274c.png" title=":x:" /> Native Desktop</li>
-</ul>
-<p>The desktop Native targets are currently unsupported, due to a lack of native web socket implementations.
-Contributions are of course welcome!</p>
+<p>Krossbow supports most Kotlin targets in its STOMP and web socket API modules:
+JVM, JS (browser and nodeJS), iOS, watchOS, tvOS, macOSX64, linuxX64, mingwX64. </p>
+<p>However, each web socket client implementation has its own subset of supported targets (see below).</p>
 <div class="admonition info">
 <p class="admonition-title">Android not tested on CI</p>
 <p>Android 5.0+ (API level 21+) is supported by using JVM artifacts (e.g. OkHttp).
@@ -775,46 +782,46 @@ proper CI or special packaging for the Android target.</p>
 <h3 id="web-socket-clients-target-support">Web socket clients target support<a class="headerlink" href="#web-socket-clients-target-support" title="Permanent link">&para;</a></h3>
 <p>Krossbow can use built-in web socket implementations without third-party dependencies on some platforms.
 It also provides adapters for third-party implementations which have different platform support.
-Here is a summary of the supported platform by module:</p>
+Here is a summary of the supported platforms by module:</p>
 <table>
 <thead>
 <tr>
-<th>Web Socket Module</th>
+<th>Module</th>
 <th align="center">Browser</th>
 <th align="center">NodeJS</th>
-<th align="center">JVM8+ (blocking)</th>
-<th align="center">JVM11+ (async)</th>
+<th align="center">JVM</th>
 <th align="center">iOS / tvOS / watchOS</th>
-<th>Transitive dependencies</th>
+<th align="center">macOS / Linux / Windows</th>
+<th align="left">Transitive dependencies</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="./websocket/core">Core<br>(built-in)</a></td>
+<td><a href="./websocket/builtin">Built-in</a></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"></td>
+<td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> (JDK&nbsp;11+)</td>
+<td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"></td>
-<td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
-<td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
-<td>None</td>
+<td align="left">None</td>
 </tr>
 <tr>
 <td><a href="./websocket/ktor">Ktor 2</a></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
-<td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> *</td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
-<td><a href="https://ktor.io/clients/websockets.html">Ktor</a>, and the relevant <a href="https://ktor.io/clients/http-client/engines.html">Ktor engine(s)</a></td>
+<td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
+<td align="left"><a href="https://ktor.io/clients/websockets.html">Ktor</a>, and the relevant <a href="https://ktor.io/clients/http-client/engines.html">Ktor engine(s)</a></td>
 </tr>
 <tr>
-<td><a href="./websocket/ktor">Ktor (legacy)</a></td>
+<td><a href="./websocket/ktor">Ktor 1.x</a></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
-<td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> *</td>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"></td>
-<td><a href="https://ktor.io/clients/websockets.html">Ktor</a>, and the relevant <a href="https://ktor.io/clients/http-client/engines.html">Ktor engine(s)</a></td>
+<td align="center"></td>
+<td align="left"><a href="https://ktor.io/clients/websockets.html">Ktor</a>, and the relevant <a href="https://ktor.io/clients/http-client/engines.html">Ktor engine(s)</a></td>
 </tr>
 <tr>
 <td><a href="./websocket/okhttp">OkHttp</a></td>
@@ -823,7 +830,7 @@ Here is a summary of the supported platform by module:</p>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /></td>
 <td align="center"></td>
 <td align="center"></td>
-<td><a href="https://square.github.io/okhttp/">OkHttp</a></td>
+<td align="left"><a href="https://square.github.io/okhttp/">OkHttp</a></td>
 </tr>
 <tr>
 <td><a href="./websocket/sockjs">SockJS</a></td>
@@ -832,7 +839,7 @@ Here is a summary of the supported platform by module:</p>
 <td align="center"><img alt="🔶" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/1f536.png" title=":large_orange_diamond:" /></td>
 <td align="center"></td>
 <td align="center"></td>
-<td><a href="https://github.com/sockjs/sockjs-client">sockjs-client</a> (on JS), <a href="https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html">Spring websocket</a> (on JVM)</td>
+<td align="left"><a href="https://github.com/sockjs/sockjs-client">sockjs-client</a> (on JS), <a href="https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html">Spring websocket</a> (on JVM)</td>
 </tr>
 <tr>
 <td><a href="./websocket/spring">Spring</a></td>
@@ -841,13 +848,12 @@ Here is a summary of the supported platform by module:</p>
 <td align="center"><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> <img alt="🔶" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/1f536.png" title=":large_orange_diamond:" /></td>
 <td align="center"></td>
 <td align="center"></td>
-<td><a href="https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html">Spring websocket</a></td>
+<td align="left"><a href="https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html">Spring websocket</a></td>
 </tr>
 </tbody>
 </table>
 <p><img alt="✅" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2705.png" title=":white_check_mark:" /> supported with actual web socket transport (RFC6455)</p>
 <p><img alt="🔶" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/1f536.png" title=":large_orange_diamond:" /> supported using <a href="https://github.com/sockjs/sockjs-client">SockJS</a> protocol (requires a SockJS server)</p>
-<p>* backed by blocking I/O when using the OkHttp engine, but can be fully non-blocking with the CIO engine</p>
 <h2 id="contribute">Contribute<a class="headerlink" href="#contribute" title="Permanent link">&para;</a></h2>
 <p>Don't hesitate to <a href="https://github.com/joffrey-bion/krossbow/issues">open GitHub issues</a>, even to ask questions or discuss a new feature.
 Pull-requests are welcome, but please open an issue first so that we can discuss the initial design or fix, which may avoid unnecessary work.</p>
@@ -867,13 +873,13 @@ Pull-requests are welcome, but please open an issue first so that we can discuss
       
       
         
-        <a href="stomp/basics/" class="md-footer__link md-footer__link--next" aria-label="Next: Basic usage" rel="next">
+        <a href="stomp/getting-started/" class="md-footer__link md-footer__link--next" aria-label="Next: Getting started" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Basic usage
+              Getting started
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -920,7 +926,7 @@ Pull-requests are welcome, but please open an issue first so that we can discuss
     <script id="__config" type="application/json">{"base": ".", "features": ["navigation.expand"], "search": "assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.f758a944.min.js"></script>
+      <script src="assets/javascripts/bundle.a877e258.min.js"></script>
       
     
   </body>

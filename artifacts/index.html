@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/artifacts/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.6">
     
     
       
@@ -276,8 +276,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../stomp/basics/" class="md-nav__link">
-        Basic usage
+      <a href="../stomp/getting-started/" class="md-nav__link">
+        Getting started
       </a>
     </li>
   
@@ -441,8 +441,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../websocket/core/" class="md-nav__link">
-        Core (built-in)
+      <a href="../websocket/builtin/" class="md-nav__link">
+        Built-in
       </a>
     </li>
   
@@ -505,6 +505,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../websocket/custom/" class="md-nav__link">
+        Implement your own
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -556,8 +570,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#third-party-web-socket-adapters" class="md-nav__link">
-    Third party web socket adapters
+  <a href="#web-socket-artifacts" class="md-nav__link">
+    Web Socket artifacts
   </a>
   
 </li>
@@ -662,8 +676,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#third-party-web-socket-adapters" class="md-nav__link">
-    Third party web socket adapters
+  <a href="#web-socket-artifacts" class="md-nav__link">
+    Web Socket artifacts
   </a>
   
 </li>
@@ -705,6 +719,10 @@
 <td>The basic multiplatform STOMP client. It implements the STOMP 1.2 protocol on top of the web socket abstraction defined by the <code>krossbow-websocket-core</code> module.</td>
 </tr>
 <tr>
+<td><pre>krossbow-stomp-default</pre></td>
+<td>A superset of <code>krossbow-stomp-core</code> adding a <code>StompClient</code> constructor without web socket client argument, defaulting to the builtin implementations provided by <code>krossbow-websocket-builtin</code> (brought transitively)</td>
+</tr>
+<tr>
 <td><pre>krossbow-stomp-jackson</pre></td>
 <td>A superset of <code>krossbow-stomp-core</code> adding JSON conversion features using Jackson (JVM only)</td>
 </tr>
@@ -712,24 +730,29 @@
 <td><pre>krossbow-stomp-kxserialization</pre></td>
 <td>A superset of <code>krossbow-stomp-core</code> adding conversion features using Kotlinx Serialization library (multiplatform). You can leverage the multi-format capabilities of Kotlinx Serialization (JSON, protobuf, CBOR, ...).</td>
 </tr>
+<tr>
+<td><pre>krossbow-stomp-kxserialization-json</pre></td>
+<td>A superset of <code>krossbow-stomp-kxserialization</code> adding JSON helpers and the JSON format dependency.</td>
+</tr>
 </tbody>
 </table>
 <p>Then add the dependency of your choice to your Gradle build.
 For instance, if you intend to use Krossbow with Kotlinx Serialization:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:3.8.0&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:4.0.0&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Don't need STOMP?</p>
 <p>If you're just interested in the web socket client without STOMP protocol, don't declare a STOMP artifact, but 
 instead choose either:</p>
 <ul>
-<li>the <a href="../websocket/core/">built-in Core web socket implementation</a> (without third-party dependencies)</li>
+<li>the <a href="../websocket/builtin/">built-in web socket implementation</a> (without third-party dependencies)</li>
 <li>a third party web socket implementation (see below)</li>
 </ul>
 </div>
-<h2 id="third-party-web-socket-adapters">Third party web socket adapters<a class="headerlink" href="#third-party-web-socket-adapters" title="Permanent link">&para;</a></h2>
-<p>The STOMP artifacts come with the built-in web socket client for each platform, so no additional dependency is required.
-However, if you want a different web socket implementation, you can pick from the other web socket adapters and add the relevant artifact:</p>
+<h2 id="web-socket-artifacts">Web Socket artifacts<a class="headerlink" href="#web-socket-artifacts" title="Permanent link">&para;</a></h2>
+<p>The STOMP artifacts depend on a web socket API that needs an implementation.
+Krossbow provides implementations for the built-in web socket API of most platforms, and also adapters for 3rd-part
+web socket implementations:</p>
 <table>
 <thead>
 <tr>
@@ -738,6 +761,10 @@ However, if you want a different web socket implementation, you can pick from th
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><pre>krossbow-websocket-builtin</pre></td>
+<td>A multiplatform <code>WebSocketClient</code> implementation that adapts the built-in client for each supported platform without transitive dependency.</td>
+</tr>
 <tr>
 <td><pre>krossbow-websocket-ktor</pre></td>
 <td>A multiplatform <code>WebSocketClient</code> implementation based on Ktor 2.0.2's <code>HttpClient</code>.</td>
@@ -748,15 +775,15 @@ However, if you want a different web socket implementation, you can pick from th
 </tr>
 <tr>
 <td><pre>krossbow-websocket-okhttp</pre></td>
-<td>a JVM implementation of the web socket API using OkHttp's</td>
+<td>A JVM implementation of the web socket API using OkHttp's client.</td>
 </tr>
 <tr>
 <td><pre>krossbow-websocket-sockjs</pre></td>
-<td>a multiplatform <code>WebSocketClient</code> implementation for use with SockJS servers. It uses Spring's SockJSClient on JVM, and npm <code>sockjs-client</code> for JavaScript (NodeJS and browser).</td>
+<td>A multiplatform <code>WebSocketClient</code> implementation for use with SockJS servers. It uses Spring's SockJSClient on JVM, and npm <code>sockjs-client</code> for JavaScript (NodeJS and browser).</td>
 </tr>
 <tr>
 <td><pre>krossbow-websocket-spring</pre></td>
-<td>a JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides both a normal WebSocket client and a SockJS one.</td>
+<td>A JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides both a normal WebSocket client and a SockJS one.</td>
 </tr>
 </tbody>
 </table>
@@ -780,7 +807,7 @@ Make sure to read the usage section corresponding to the module of your choice f
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../websocket/sockjs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: SockJS" rel="prev">
+        <a href="../websocket/custom/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Implement your own" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -789,7 +816,7 @@ Make sure to read the usage section corresponding to the module of your choice f
               <span class="md-footer__direction">
                 Previous
               </span>
-              SockJS
+              Implement your own
             </div>
           </div>
         </a>
@@ -849,7 +876,7 @@ Make sure to read the usage section corresponding to the module of your choice f
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.expand"], "search": "../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.f758a944.min.js"></script>
+      <script src="../assets/javascripts/bundle.a877e258.min.js"></script>
       
     
   </body>

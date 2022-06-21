@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/migration-guides/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.6">
     
     
       
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#from-2x-to-3x" class="md-skip">
+        <a href="#from-3x-to-4x" class="md-skip">
           Skip to content
         </a>
       
@@ -276,8 +276,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../stomp/basics/" class="md-nav__link">
-        Basic usage
+      <a href="../stomp/getting-started/" class="md-nav__link">
+        Getting started
       </a>
     </li>
   
@@ -441,8 +441,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../websocket/core/" class="md-nav__link">
-        Core (built-in)
+      <a href="../websocket/builtin/" class="md-nav__link">
+        Built-in
       </a>
     </li>
   
@@ -499,6 +499,20 @@
     <li class="md-nav__item">
       <a href="../websocket/sockjs/" class="md-nav__link">
         SockJS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../websocket/custom/" class="md-nav__link">
+        Implement your own
       </a>
     </li>
   
@@ -562,6 +576,33 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#from-3x-to-4x" class="md-nav__link">
+    From 3.x to 4.x
+  </a>
+  
+    <nav class="md-nav" aria-label="From 3.x to 4.x">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withjsonconversions-moved-to-its-own-module" class="md-nav__link">
+    withJsonConversions moved to its own module
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#built-in-web-socket-clients-and-default-stompclient-constructor-moved-to-their-own-module" class="md-nav__link">
+    Built-in web socket clients and default StompClient constructor moved to their own module
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#from-2x-to-3x" class="md-nav__link">
@@ -695,6 +736,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#from-3x-to-4x" class="md-nav__link">
+    From 3.x to 4.x
+  </a>
+  
+    <nav class="md-nav" aria-label="From 3.x to 4.x">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withjsonconversions-moved-to-its-own-module" class="md-nav__link">
+    withJsonConversions moved to its own module
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#built-in-web-socket-clients-and-default-stompclient-constructor-moved-to-their-own-module" class="md-nav__link">
+    Built-in web socket clients and default StompClient constructor moved to their own module
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#from-2x-to-3x" class="md-nav__link">
     From 2.x to 3.x
   </a>
@@ -769,6 +837,31 @@
   <h1>Migration guides</h1>
 
 <p>Here are some details about how to migrate from one major version to another.</p>
+<h2 id="from-3x-to-4x">From 3.x to 4.x<a class="headerlink" href="#from-3x-to-4x" title="Permanent link">&para;</a></h2>
+<h3 id="withjsonconversions-moved-to-its-own-module">withJsonConversions moved to its own module<a class="headerlink" href="#withjsonconversions-moved-to-its-own-module" title="Permanent link">&para;</a></h3>
+<p>If you were using Krossbow with <code>krossbow-stomp-kxserialization</code>, the <code>withJsonConversions</code> helper has moved to a new
+module called <code>krossbow-stomp-kxserialization-json</code>.
+This new module now transitively brings <code>kotlinx-serialization-json</code> so you don't need to depend on that one explicitly.</p>
+<h3 id="built-in-web-socket-clients-and-default-stompclient-constructor-moved-to-their-own-module">Built-in web socket clients and default <code>StompClient</code> constructor moved to their own module<a class="headerlink" href="#built-in-web-socket-clients-and-default-stompclient-constructor-moved-to-their-own-module" title="Permanent link">&para;</a></h3>
+<p>Up to (and including) version 3.x of Krossbow, the built-in web socket clients for the supported platforms were part
+of the <code>krossbow-websocket-core</code> module.
+This module provided a <code>WebSocketClient.Companion.default()</code> factory function to provide the built-in web socket
+implementation of the current platform.
+Likewise, the <code>krossbow-stomp-core</code> module provided a <code>StompClient</code> constructor that used the "default" 
+built-in web socket implementation for the current platform.</p>
+<p>This approach limited the targets supported by those 2 core modules, even though all of their functionality was 
+target-agnostic.
+In order to support all Kotlin platforms in pure Kotlin modules, the built-in websocket implementations and no-arg 
+<code>StompClient</code> constructor had to be moved to separate modules.</p>
+<p>Breaking dependency changes, in short:</p>
+<ul>
+<li>if you used the <code>StompClient()</code> constructor without WS client argument (using the default value), simply declare a 
+  dependency on <code>krossbow-stomp-default</code> instead of <code>krossbow-stomp-core</code>, or in addition to another STOMP artifact.</li>
+<li>if you used <code>WebSocketClient.default()</code> from <code>krossbow-websocket-core</code>, or any of the built-in clients directly,
+  simply change your dependency to <code>krossbow-websocket-builtin</code> instead</li>
+</ul>
+<p>If you used other web socket implementations than the built-in ones, you don't have to change anything to your 
+dependencies.</p>
 <h2 id="from-2x-to-3x">From 2.x to 3.x<a class="headerlink" href="#from-2x-to-3x" title="Permanent link">&para;</a></h2>
 <h3 id="use-durations-instead-of-millis">Use Durations instead of millis<a class="headerlink" href="#use-durations-instead-of-millis" title="Permanent link">&para;</a></h3>
 <p><code>StompConfiguration</code> no longer uses amounts of milliseconds, but uses the <code>kotlin.time.Duration</code> API.
@@ -914,7 +1007,7 @@ If you want the same behaviour as before, add the Tyrus dependency to your <code
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.expand"], "search": "../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.f758a944.min.js"></script>
+      <script src="../assets/javascripts/bundle.a877e258.min.js"></script>
       
     
   </body>

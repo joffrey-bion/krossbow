@@ -31,8 +31,9 @@ org.hildan.krossbow.stomp.conversions.text
 org.hildan.krossbow.stomp.frame
 org.hildan.krossbow.stomp.headers
 org.hildan.krossbow.stomp.instrumentation
+module:krossbow-stomp-default
+org.hildan.krossbow.stomp
 module:krossbow-stomp-jackson
-org.hildan.krossbow.stomp.conversions
 org.hildan.krossbow.stomp.conversions.jackson
 module:krossbow-stomp-kxserialization
 org.hildan.krossbow.stomp.conversions.kxserialization
@@ -40,11 +41,13 @@ module:krossbow-stomp-kxserialization-json
 org.hildan.krossbow.stomp.conversions.kxserialization.json
 module:krossbow-stomp-moshi
 org.hildan.krossbow.stomp.conversions.moshi
-module:krossbow-websocket-core
+module:krossbow-websocket-builtin
 org.hildan.krossbow.websocket
 org.hildan.krossbow.websocket.darwin
 org.hildan.krossbow.websocket.jdk
 org.hildan.krossbow.websocket.js
+module:krossbow-websocket-core
+org.hildan.krossbow.websocket
 org.hildan.krossbow.websocket.reconnection
 module:krossbow-websocket-ktor
 org.hildan.krossbow.websocket.ktor
