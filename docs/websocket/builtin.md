@@ -10,7 +10,7 @@ factory method, which returns the built-in implementation of the current platfor
 ## JVM
 
 On the JVM target, the
-[Jdk11WebSocketClient](https://joffrey-bion.github.io/krossbow/kdoc/krossbow-websocket-core/org.hildan.krossbow.websocket.jdk/-jdk11-web-socket-client/index.html)
+[Jdk11WebSocketClient](../kdoc/krossbow-websocket-builtin/org.hildan.krossbow.websocket.jdk/-jdk11-web-socket-client/index.html)
 adapts the built-in
 [HttpClient](https://docs.oracle.com/en/java/javase/17/docs/api/java.net.http/java/net/http/HttpClient.html)
 provided in the JRE since Java 11, and its
@@ -19,7 +19,7 @@ provided in the JRE since Java 11, and its
 ## JavaScript
 
 On the JS target, the 
-[BrowserWebSocketClient](https://joffrey-bion.github.io/krossbow/kdoc/krossbow-websocket-core/org.hildan.krossbow.websocket.js/-browser-web-socket-client/index.html)
+[BrowserWebSocketClient](../kdoc/krossbow-websocket-builtin/org.hildan.krossbow.websocket.js/-browser-web-socket-client/index.html)
 adapts the browser's built-in
 [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) directly.
 
@@ -28,7 +28,7 @@ Also, the `JsWebSocketClientAdapter` allows to adapt anything that looks like th
 ## Darwin (macOS, iOS, tvOS, watchOS)
 
 On all Darwin targets, the 
-[DarwinWebSocketClient](../kdoc/krossbow-websocket-core/org.hildan.krossbow.websocket.darwin/-darwin-web-socket-client/index.html)
+[DarwinWebSocketClient](../kdoc/krossbow-websocket-builtin/org.hildan.krossbow.websocket.darwin/-darwin-web-socket-client/index.html)
 adapts the Foundation framework's
 [NSURLSessionWebSocketTask](https://developer.apple.com/documentation/foundation/nsurlsessionwebsockettask).
 
