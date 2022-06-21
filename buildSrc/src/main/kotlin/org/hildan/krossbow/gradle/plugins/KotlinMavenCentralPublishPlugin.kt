@@ -2,6 +2,7 @@ package org.hildan.krossbow.gradle.plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPom
 import org.gradle.api.publish.maven.MavenPublication
@@ -32,18 +33,27 @@ import java.net.URL
 class KotlinMavenCentralPublishPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
-        // KotlinPluginWrapper is the Kotlin JVM plugin
-        val hasKotlinJvmPlugin = project.plugins.withType<KotlinPluginWrapper>().isNotEmpty()
-
-        // Publications are not automatically configured with Kotlin JVM plugin, but they are with MPP.
-        // We align here so both MPP and JVM projects have publications with sources jar setup.
-        if (hasKotlinJvmPlugin) {
-            project.apply<KotlinJvmPublishPlugin>()
-        }
 
         project.apply<DokkaPlugin>()
         project.apply<MavenPublishPlugin>()
         project.apply<SigningPlugin>()
+
+        // Publications are not automatically configured with Kotlin JVM plugin, but they are with MPP.
+        // We align here so both MPP and JVM projects have publications with sources jar setup.
+        project.pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
+            // sourcesJar is not added by default by the Kotlin JVM plugin
+            project.configure<JavaPluginExtension>() {
+                withSourcesJar()
+            }
+
+            project.configure<PublishingExtension> {
+                publications {
+                    create<MavenPublication>("maven") {
+                        from(project.components["java"]) // java components have the sourcesJar AND the Kotlin artifacts
+                    }
+                }
+            }
+        }
 
         project.configureDokkaSourceLinks()
 
