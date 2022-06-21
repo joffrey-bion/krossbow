@@ -1,5 +1,12 @@
 # Change Log
 
+## [4.0.1](https://github.com/joffrey-bion/krossbow/tree/4.0.1) (2022-06-21)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.0...4.0.1)
+
+**Upgraded dependencies:**
+
+- Upgrade spring\-websocket to version 5.3.21 [\#243](https://github.com/joffrey-bion/krossbow/issues/243)
+
 ## [4.0.0](https://github.com/joffrey-bion/krossbow/tree/4.0.0) (2022-06-20)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.8.0...4.0.0)
 
