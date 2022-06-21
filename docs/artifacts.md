@@ -23,15 +23,12 @@ implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.tag }}
 
 !!! tip "Don't need STOMP?"
     If you're just interested in the web socket client without STOMP protocol, don't declare a STOMP artifact, but 
-    instead choose either:
-
-      * the [built-in web socket implementation](./websocket/builtin.md) (without third-party dependencies)
-      * a third party web socket implementation (see below)
+    instead choose one of the web socket artifacts below.
 
 ## Web Socket artifacts
 
 The STOMP artifacts depend on a web socket API that needs an implementation.
-Krossbow provides implementations for the built-in web socket API of most platforms, and also adapters for 3rd-part
+Krossbow provides implementations for the built-in web socket API of most platforms, and also adapters for 3rd-party
 web socket implementations:
 
 | Artifact                                  | Description                                                                                                                                                                      |
