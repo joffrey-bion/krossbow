@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
     `kotlin-maven-central-publish`
@@ -9,6 +11,13 @@ kotlin {
     jvm()
     jsWithBigTimeouts()
     nativeTargets()
+
+    // On Linux and macOS, we can cross-compile the Windows test executable, but the linker needs mingw64's libcurl.
+    // That's why its DLL archive is checked-in and referenced here. It has been taken from a local msys64 installation.
+    // Note that, this way, even Windows hosts don't need to install msys2 and libcurl.
+    targets.named<KotlinNativeTarget>("mingwX64") {
+        binaries["debugTest"].linkerOpts("-L${projectDir.resolve("cygwin-lib")}", "-v")
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -48,11 +57,6 @@ kotlin {
             }
         }
     }
-}
-
-tasks.named("linkDebugTestMingwX64") {
-    // we don't run Windows tests on other hosts because mingw64's libcurl will be missing
-    enabled = System.getProperty("os.name").startsWith("Win", ignoreCase = true)
 }
 
 dokkaExternalDocLink(
