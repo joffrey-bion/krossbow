@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
-import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
 
 plugins {
     kotlin("multiplatform")
@@ -181,14 +180,21 @@ dockerCompose {
     buildBeforeUp.set(false)
 }
 
+private abstract class SerialExecution : BuildService<BuildServiceParameters.None>
+
+private val serialExecution = gradle.sharedServices.registerIfAbsent("serialExecution", SerialExecution::class.java) {
+    maxParallelUsages.set(1)
+}
+
 // ensure autobahn test server is launched for websocket tests
 tasks.withType<AbstractTestTask> {
+    usesService(serialExecution)
     dockerCompose.isRequiredBy(this)
 }
 
 // provide autobahn test server coordinates to the tests (can vary if DOCKER_HOST is set - like on CI macOS)
 tasks.withType<org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest> {
-    // autobahn doesn't support parallel tests (/getCaseStatus fails with immediate Close frame)
+    // Autobahn doesn't support parallel tests (/getCaseStatus fails with immediate Close frame)
     // https://github.com/crossbario/autobahn-testsuite/issues/119
     maxParallelForks = 1
 
