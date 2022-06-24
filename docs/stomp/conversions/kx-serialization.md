@@ -85,7 +85,7 @@ implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.tag }}
 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:{{ versions.kotlinxSerialization }}")
 ```
 
-## JSON format
+### JSON format
 
 Since JSON is so common, Krossbow provides an all-in-one module with additional helpers for JSON:
 
