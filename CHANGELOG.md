@@ -1,5 +1,16 @@
 # Change Log
 
+## [4.0.2](https://github.com/joffrey-bion/krossbow/tree/4.0.2) (2022-06-24)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.1...4.0.2)
+
+**Fixed bugs:**
+
+- NoClassDefFoundError: WebSocketHandshakeException [\#246](https://github.com/joffrey-bion/krossbow/issues/246)
+
+**Upgraded dependencies:**
+
+- Upgrade Dokka to version 1.7.0 [\#244](https://github.com/joffrey-bion/krossbow/issues/244)
+
 ## [4.0.1](https://github.com/joffrey-bion/krossbow/tree/4.0.1) (2022-06-21)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.0...4.0.1)
 
