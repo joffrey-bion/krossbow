@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/stomp/getting-started/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.6">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.8">
     
     
       
@@ -23,7 +23,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.4a0965b7.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.1d29e8d0.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
@@ -760,7 +760,7 @@
 
 <p>To quickly get started and use the built-in web socket clients, add the following Gradle dependency to your
 <code>build.gradle(.kts)</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-default:4.0.1&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-default:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>You can find more info about more advanced configuration <a href="#gradle-setup">below</a>.</p>
 <h2 id="basic-usage-without-body-conversions">Basic usage (without body conversions)<a class="headerlink" href="#basic-usage-without-body-conversions" title="Permanent link">&para;</a></h2>
@@ -819,29 +819,29 @@ convert the frame bodies back and forth into Kotlin objects.</p>
 <h2 id="gradle-setup">Gradle setup<a class="headerlink" href="#gradle-setup" title="Permanent link">&para;</a></h2>
 <h3 id="using-the-built-in-web-socket-clients">Using the built-in web socket clients<a class="headerlink" href="#using-the-built-in-web-socket-clients" title="Permanent link">&para;</a></h3>
 <p>For the basic usage of STOMP with the built-in web socket clients, you only need the following Gradle dependency:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-default:4.0.1&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-default:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>This provides a <a href="../../kdoc/krossbow-stomp-default/org.hildan.krossbow.stomp/-stomp-client.html">StompClient()</a>
 constructor that will automatically use the built-in web socket client for the current platform.</p>
 <p>If you want to use STOMP body conversions to serialize/deserialize objects directly into/from STOMP frames, add the
 relevant conversion module.
 For instance, to use Kotlinx Serialization:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-default:4.0.1&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:4.0.1&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-default:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <h3 id="using-third-party-web-socket-clients">Using third-party web socket clients<a class="headerlink" href="#using-third-party-web-socket-clients" title="Permanent link">&para;</a></h3>
 <p>If you want to use another web socket client, declare both the core STOMP artifact and the specific web socket artifact.
 For example, if you want to use Krossbow with Ktor web socket client:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-core:4.0.1&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.1&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-core:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>This way you can call the <a href="../../kdoc/krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-client/">StompClient</a>
 constructor with the web socket client of your choice (e.g. <code>StompClient(KtorWebSocketClient())</code>).</p>
 <p>If you want to use STOMP body conversions to serialize/deserialize objects directly into/from STOMP frames, replace the
 <code>krossbow-stomp-core</code> module with the relevant conversion module.
 For instance, to use Kotlinx Serialization:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:4.0.1&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.1&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 
               
@@ -924,10 +924,10 @@ For instance, to use Kotlinx Serialization:</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand"], "search": "../../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand"], "search": "../../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a877e258.min.js"></script>
+      <script src="../../assets/javascripts/bundle.0238f547.min.js"></script>
       
     
   </body>
