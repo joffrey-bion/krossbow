@@ -45,7 +45,7 @@ data class ReconnectConfig(
      * The predicate will not be called if [maxAttempts] is reached. If you want to control the maximum attempts via
      * the predicate, set [maxAttempts] to a bigger value (such as [Int.MAX_VALUE]).
      */
-    val shouldReconnect: suspend (exception: Exception, attempt: Int) -> Boolean = { _, _ -> true },
+    val shouldReconnect: suspend (exception: Throwable, attempt: Int) -> Boolean = { _, _ -> true },
     /**
      * A callback called each time the web socket is successfully reconnected.
      *
