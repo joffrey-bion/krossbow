@@ -150,7 +150,7 @@ private class WebSocketConnectionProxy(
 class WebSocketReconnectionException(
     url: String,
     val nAttemptedReconnections: Int,
-    cause: Exception,
+    override val cause: Throwable,
     message: String = "Could not reconnect to web socket at $url after $nAttemptedReconnections attempts. Giving up. " +
         "The exception during the last attempt was $cause",
 ) : WebSocketConnectionException(
