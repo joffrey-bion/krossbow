@@ -1,6 +1,8 @@
 package org.hildan.krossbow.websocket.reconnection
 
 import org.hildan.krossbow.websocket.WebSocketConnection
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -53,6 +55,14 @@ data class ReconnectConfig(
      * It is *not* the new underlying connection, which is an implementation detail.
      */
     val afterReconnect: suspend (WebSocketConnection) -> Unit = {},
+    /**
+     * The coroutine context used by the wrapping coroutine that collects frames from the underlying connection and
+     * reconnects in case of error.
+     *
+     * This is done via a separate coroutine and not a simple cold `channelFlow` because the `incomingFrames` flow
+     * has to be hot and re-collectible in order to honor the [WebSocketConnection] interface.
+     */
+    val reconnectCoroutineContext: CoroutineContext = EmptyCoroutineContext,
 ) {
     init {
         require(maxAttempts >= 0) { "Max number of attempts must not be negative, got $maxAttempts" }
@@ -73,6 +83,15 @@ class ReconnectConfigBuilder internal constructor() {
     private var shouldReconnect: suspend (Throwable, Int) -> Boolean = { _, _ -> true }
 
     private var afterReconnect: suspend (WebSocketConnection) -> Unit = {}
+
+    /**
+     * The coroutine context used by the wrapping coroutine that collects frames from the underlying connection and
+     * reconnects in case of error.
+     *
+     * This is done via a separate coroutine and not a simple cold `channelFlow` because the `incomingFrames` flow
+     * has to be hot and re-collectible in order to honor the [WebSocketConnection] interface.
+     */
+    var reconnectCoroutineContext: CoroutineContext = EmptyCoroutineContext
 
     /**
      * Registers a [predicate] to decide whether the web socket should be reconnected when the given `exception` occur.
@@ -103,6 +122,12 @@ class ReconnectConfigBuilder internal constructor() {
         afterReconnect = body
     }
 
-    internal fun build() = ReconnectConfig(maxAttempts, delayStrategy, shouldReconnect, afterReconnect)
+    internal fun build() = ReconnectConfig(
+        maxAttempts = maxAttempts,
+        delayStrategy = delayStrategy,
+        shouldReconnect = shouldReconnect,
+        afterReconnect = afterReconnect,
+        reconnectCoroutineContext = reconnectCoroutineContext,
+    )
 }
 

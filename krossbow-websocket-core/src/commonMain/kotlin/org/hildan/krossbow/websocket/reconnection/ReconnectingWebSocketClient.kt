@@ -67,18 +67,20 @@ private class ReconnectingWebSocketClient(
 
     override suspend fun connect(url: String): WebSocketConnection {
         val firstConnection = baseClient.connect(url)
-        return WebSocketConnectionProxy(baseClient, reconnectConfig, firstConnection)
+        return ReconnectingWebSocketConnection(baseClient, reconnectConfig, firstConnection)
     }
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-private class WebSocketConnectionProxy(
+private class ReconnectingWebSocketConnection(
     private val baseClient: WebSocketClient,
     private val reconnectConfig: ReconnectConfig,
     private var currentConnection: WebSocketConnection,
 ) : WebSocketConnection {
 
-    private val scope = CoroutineScope(CoroutineName("krossbow-reconnection-watcher"))
+    private val scope = CoroutineScope(
+        context = CoroutineName("krossbow-reconnection-watcher") + reconnectConfig.reconnectCoroutineContext
+    )
 
     override val url: String
         get() = currentConnection.url
@@ -89,6 +91,7 @@ private class WebSocketConnectionProxy(
     override val incomingFrames: Flow<WebSocketFrame> = _frames.receiveAsFlow()
 
     init {
+        println("Context:\n${scope.coroutineContext}")
         scope.launch {
             while (isActive) {
                 try {
