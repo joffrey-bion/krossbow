@@ -1,4 +1,4 @@
-package org.hildan.krossbow.utils
+package org.hildan.krossbow.stomp.utils
 
 import com.benasher44.uuid.uuid4
 

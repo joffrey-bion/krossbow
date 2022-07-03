@@ -12,7 +12,7 @@ import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.*
 import org.hildan.krossbow.stomp.heartbeats.HeartBeater
 import org.hildan.krossbow.stomp.heartbeats.NO_HEART_BEATS
-import org.hildan.krossbow.utils.generateUuid
+import org.hildan.krossbow.stomp.utils.generateUuid
 import org.hildan.krossbow.websocket.WebSocketException
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext

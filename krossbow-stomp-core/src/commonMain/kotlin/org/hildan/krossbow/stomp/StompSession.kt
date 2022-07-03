@@ -7,7 +7,7 @@ import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
-import org.hildan.krossbow.utils.generateUuid
+import org.hildan.krossbow.stomp.utils.generateUuid
 
 /**
  * A coroutine-based STOMP session. This interface defines interactions with a STOMP server.
