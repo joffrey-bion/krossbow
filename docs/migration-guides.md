@@ -19,15 +19,19 @@ built-in web socket implementation for the current platform.
 
 This approach limited the targets supported by those 2 core modules, even though all of their functionality was 
 target-agnostic.
-In order to support all Kotlin platforms in pure Kotlin modules, the built-in websocket implementations and no-arg 
-`StompClient` constructor had to be moved to separate modules.
+In order to support all Kotlin platforms in pure Kotlin modules, the built-in websocket implementations had to be moved 
+to a separate module, and the constructor without web socket client was moved to a separate module (and later removed
+completely for simplicity).
 
 Breaking dependency changes, in short:
 
-* if you used the `StompClient()` constructor without WS client argument (using the default value), simply declare a 
-  dependency on `krossbow-stomp-default` instead of `krossbow-stomp-core`, or in addition to another STOMP artifact.
 * if you used `WebSocketClient.default()` from `krossbow-websocket-core`, or any of the built-in clients directly,
-  simply change your dependency to `krossbow-websocket-builtin` instead
+  simply change your dependency to `krossbow-websocket-builtin` instead.
+* if you used the `StompClient()` constructor without WS client argument (using the default value), add an explicit 
+  dependency on `krossbow-websocket-builtin` and pass the built-in client explicitly to the constructor:
+  `StompClient(WebSocketClient.default())`.
+
+Note: the `WebSocketClient.default()` function was since renamed `WebSocketClient.builtIn()` in newer versions.
 
 If you used other web socket implementations than the built-in ones, you don't have to change anything to your 
 dependencies.

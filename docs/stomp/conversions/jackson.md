@@ -10,7 +10,7 @@ into a `TypedStompSession`.
 This new session type has additional methods that use Jackson to convert your objects into JSON and back:
 
 ```kotlin
-StompClient().connect(url).withJackson().use { session ->
+StompClient(WebSocketClient.builtIn()).connect(url).withJackson().use { session ->
     session.convertAndSend("/some/destination", Person("Bob", 42)) 
 
     val messages: Flow<MyMessage> = session.subscribe<MyMessage>("/some/topic/destination")
@@ -32,14 +32,14 @@ val customObjectMapper: ObjectMapper = jacksonObjectMapper()
         .disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
         .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS)
 
-val client = StompClient().connect(url)
+val client = StompClient(WebSocketClient.builtIn()).connect(url)
 val session = client.withJacksonConversions(customObjectMapper)
 ```
 
 ## Dependency
 
-You will need to declare the following Gradle dependency to add these capabilities
-(you don't need the core module anymore as it is transitively brought by this one):
+To use Jackson conversions, add `krossbow-stomp-jackson` to your Gradle dependencies
+(`krossbow-stomp-core` is unnecessary because it's transitively brought by this one):
 
 ```kotlin
 implementation("org.hildan.krossbow:krossbow-stomp-jackson:{{ git.tag }}")

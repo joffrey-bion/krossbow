@@ -42,7 +42,7 @@ data class Person(val name: String, val age: Int)
 @Serializable
 data class MyMessage(val timestamp: Long, val author: String, val content: String)
 
-val session = StompClient().connect(url)
+val session = StompClient(WebSocketClient.builtIn()).connect(url)
 val jsonStompSession = session.withJsonConversions() // adds convenience methods for kotlinx.serialization's conversions
 
 jsonStompSession.use { s ->
@@ -68,7 +68,7 @@ val json = Json {
     ignoreUnknownKeys = true
 }
 
-val session = StompClient().connect(url)
+val session = StompClient(WebSocketClient.builtIn()).connect(url)
 val jsonStompSession = session.withJsonConversions(json)
 ```
 
@@ -94,6 +94,11 @@ implementation("org.hildan.krossbow:krossbow-stomp-kxserialization-json:{{ git.t
 ```
 
 This module brings `kotlinx-serialization-json` transitively, so you don't have to add it yourself.
+
+### Additional notes
+
+With this setup, `krossbow-stomp-core` is unnecessary because it's transitively brought by the
+`krossbow-stomp-kxserialization` modules.
 
 Note that Kotlinx Serialization also requires a compiler plugin to generate serializers for your `@Serializable` classes.
 See the [Kotlinx Serialization doc](https://github.com/Kotlin/kotlinx.serialization#dependency-on-the-json-library)

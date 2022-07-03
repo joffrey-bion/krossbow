@@ -34,15 +34,8 @@ adapts the Foundation framework's
 
 ## Dependency information
 
-To use the built-in web socket client for pure web socket interactions, add the following to your `build.gradle`:
+To use the built-in web socket clients, add the following to your `build.gradle`:
 
 ```kotlin
 implementation("org.hildan.krossbow:krossbow-websocket-builtin:{{ git.tag }}")
-```
-
-If you're using STOMP with this default built-in client, you actually only need `krossbow-stomp-default`, which
-transitively brings `krossbow-websocket-builtin`:
-
-```kotlin
-implementation("org.hildan.krossbow:krossbow-stomp-default:{{ git.tag }}")
 ```

@@ -19,7 +19,7 @@ val myConverter = object : TextMessageConverter {
     }
 }
 
-StompClient().connect(url).withTextConversions(myConverter).use { session ->
+StompClient(WebSocketClient.builtIn()).connect(url).withTextConversions(myConverter).use { session ->
     session.convertAndSend("/some/destination", MyPojo("Custom", 42)) 
 
     val messages = session.subscribe<MyMessage>("/some/topic/destination")

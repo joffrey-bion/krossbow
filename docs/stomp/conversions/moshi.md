@@ -13,7 +13,7 @@ This new session type has additional methods that use Moshi to convert your obje
 val moshi = Moshi.Builder()
     .addLast(KotlinJsonAdapterFactory())
     .build()
-StompClient().connect(url).withMoshi(moshi).use { session ->
+StompClient(WebSocketClient.builtIn()).connect(url).withMoshi(moshi).use { session ->
     session.convertAndSend("/some/destination", Person("Bob", 42)) 
 
     val messages: Flow<MyMessage> = session.subscribe<MyMessage>("/some/topic/destination")
@@ -25,8 +25,8 @@ StompClient().connect(url).withMoshi(moshi).use { session ->
 
 ## Dependency
 
-You will need to declare the following Gradle dependency to add these capabilities
-(you don't need the core module anymore as it is transitively brought by this one):
+To use Moshi conversions, add `krossbow-stomp-jackson` to your Gradle dependencies
+(`krossbow-stomp-core` is unnecessary because it's transitively brought by this one):
 
 ```kotlin
 implementation("org.hildan.krossbow:krossbow-stomp-moshi:{{ git.tag }}")

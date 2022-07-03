@@ -3,7 +3,7 @@
 The `StompClient` can be configured at construction time using a convenient lambda block:
 
 ```kotlin
-val stompClient = StompClient {
+val stompClient = StompClient(WebSocketClient.builtIn()) {
     connectionTimeout = 3.seconds
     gracefulDisconnect = false
 }
@@ -17,7 +17,7 @@ val stompConfig = StompConfig().apply {
     gracefulDisconnect = false
 }
 
-val stompClient = StompClient(config = stompConfig)
+val stompClient = StompClient(WebSocketClient.builtIn(), stompConfig)
 ```
 
 ## Configuration options
