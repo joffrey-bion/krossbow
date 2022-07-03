@@ -22,7 +22,6 @@ include("krossbow-websocket-spring")
 include("krossbow-websocket-test")
 include("autobahn-tests")
 
-enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 gradleEnterprise {
