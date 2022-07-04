@@ -4,7 +4,7 @@ The `krossbow-websocket-builtin` module defines implementations of the `WebSocke
 clients that already exist in each platform (without 3rd-party dependencies).
 
 For convenience in `common` source sets, this module also provides the
-[builtIn()](../kdoc/krossbow-websocket-builtin/org.hildan.krossbow.websocket.builtin/builtIn.html)
+[builtIn()](../kdoc/krossbow-websocket-builtin/org.hildan.krossbow.websocket.builtin/built-in.html)
 factory method, which returns the built-in implementation of the current platform.
 
 ## JVM
