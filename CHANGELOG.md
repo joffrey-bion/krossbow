@@ -1,5 +1,21 @@
 # Change Log
 
+## [4.0.3](https://github.com/joffrey-bion/krossbow/tree/4.0.3) (2022-07-04)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.2...4.0.3)
+
+**Deprecations:**
+
+- Deprecate `WebSocketClient.default\(\)` in favor of `builtIn\(\)` [\#250](https://github.com/joffrey-bion/krossbow/issues/250)
+
+**Fixed bugs:**
+
+- `NoSuchMethodError` when using the `StompClient\(\)` factory function without WS client [\#251](https://github.com/joffrey-bion/krossbow/issues/251)
+
+**Implemented enhancements:**
+
+- `Exception`\-\>`Throwable` parameter for `ReconnectConfig.shouldReconnect` [\#249](https://github.com/joffrey-bion/krossbow/issues/249)
+- Make cause non\-nullable for `WebSocketReconnectionException` [\#248](https://github.com/joffrey-bion/krossbow/issues/248)
+
 ## [4.0.2](https://github.com/joffrey-bion/krossbow/tree/4.0.2) (2022-06-24)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.1...4.0.2)
 
