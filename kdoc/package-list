@@ -43,6 +43,7 @@ module:krossbow-stomp-moshi
 org.hildan.krossbow.stomp.conversions.moshi
 module:krossbow-websocket-builtin
 org.hildan.krossbow.websocket
+org.hildan.krossbow.websocket.builtin
 org.hildan.krossbow.websocket.darwin
 org.hildan.krossbow.websocket.jdk
 org.hildan.krossbow.websocket.js

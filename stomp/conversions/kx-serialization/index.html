@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/stomp/conversions/kx-serialization/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.8">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
     
     
       
@@ -410,6 +410,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#additional-notes" class="md-nav__link">
+    Additional notes
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -755,6 +762,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#additional-notes" class="md-nav__link">
+    Additional notes
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -813,7 +827,7 @@ objects using the format of your choice (JSON, protobuf, etc.).</p>
 <span class="nd">@Serializable</span><span class="w"></span>
 <span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">MyMessage</span><span class="p">(</span><span class="kd">val</span><span class="w"> </span><span class="nv">timestamp</span><span class="p">:</span><span class="w"> </span><span class="kt">Long</span><span class="p">,</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">author</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">content</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span><span class="w"></span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">().</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">(</span><span class="n">WebSocketClient</span><span class="p">.</span><span class="na">builtIn</span><span class="p">()).</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"></span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">jsonStompSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">withJsonConversions</span><span class="p">()</span><span class="w"> </span><span class="c1">// adds convenience methods for kotlinx.serialization&#39;s conversions</span><span class="w"></span>
 
 <span class="n">jsonStompSession</span><span class="p">.</span><span class="na">use</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
@@ -835,7 +849,7 @@ objects using the format of your choice (JSON, protobuf, etc.).</p>
 <span class="w">    </span><span class="n">ignoreUnknownKeys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">().</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">(</span><span class="n">WebSocketClient</span><span class="p">.</span><span class="na">builtIn</span><span class="p">()).</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"></span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">jsonStompSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">withJsonConversions</span><span class="p">(</span><span class="n">json</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <h2 id="dependency">Dependency<a class="headerlink" href="#dependency" title="Permanent link">&para;</a></h2>
@@ -843,14 +857,17 @@ objects using the format of your choice (JSON, protobuf, etc.).</p>
 <p>Krossbow's base Kotlinx Serialization module is format-agnostic, so you need to add both the
 <code>krossbow-stomp-kxserialization</code> dependency and the Kotlinx Serialization dependency for the format you want to use.
 For instance in the case of protobuf, that would be <code>kotlinx-serialization-protobuf</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization:4.0.3&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.3.3&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <h3 id="json-format">JSON format<a class="headerlink" href="#json-format" title="Permanent link">&para;</a></h3>
 <p>Since JSON is so common, Krossbow provides an all-in-one module with additional helpers for JSON:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization-json:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-kxserialization-json:4.0.3&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>This module brings <code>kotlinx-serialization-json</code> transitively, so you don't have to add it yourself.</p>
+<h3 id="additional-notes">Additional notes<a class="headerlink" href="#additional-notes" title="Permanent link">&para;</a></h3>
+<p>With this setup, <code>krossbow-stomp-core</code> is unnecessary because it's transitively brought by the
+<code>krossbow-stomp-kxserialization</code> modules.</p>
 <p>Note that Kotlinx Serialization also requires a compiler plugin to generate serializers for your <code>@Serializable</code> classes.
 See the <a href="https://github.com/Kotlin/kotlinx.serialization#dependency-on-the-json-library">Kotlinx Serialization doc</a>
 for more information about this.</p>
@@ -938,7 +955,7 @@ for more information about this.</p>
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.expand"], "search": "../../../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.0238f547.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.6c7ad80a.min.js"></script>
       
     
   </body>

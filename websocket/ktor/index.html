@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://joffrey-bion.github.io/krossbow/websocket/ktor/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.8">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
     
     
       
@@ -734,18 +734,18 @@ you need to specify it when creating your <code>StompClient</code>:</p>
 </code></pre></div>
 <h2 id="dependency-information">Dependency information<a class="headerlink" href="#dependency-information" title="Permanent link">&para;</a></h2>
 <p>You will need to declare the following Gradle dependency to use the <code>KtorWebSocketClient</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.3&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>Ktor uses <a href="https://ktor.io/clients/http-client/engines.html">pluggable engines</a> to perform the platform-specific
 network operations (just like Krossbow uses different web socket implementations).
 You need to pick an engine that supports web sockets in order to use Ktor's <code>HttpClient</code> with web sockets.
 Follow Ktor's documentation to find out more about how to use engines.</p>
 <p>For instance, if you want to use Ktor's CIO engine with Krossbow, you need to declare the following:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:4.0.3&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.ktor:ktor-client-cio:2.0.2&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 <p>If you want to use the older version 1.6.x of Ktor, use <code>krossbow-websocket-ktor-legacy</code> instead:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor-legacy:4.0.2&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor-legacy:4.0.3&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.ktor:ktor-client-cio:1.6.8&quot;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 
@@ -832,7 +832,7 @@ Follow Ktor's documentation to find out more about how to use engines.</p>
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand"], "search": "../../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.0238f547.min.js"></script>
+      <script src="../../assets/javascripts/bundle.6c7ad80a.min.js"></script>
       
     
   </body>
