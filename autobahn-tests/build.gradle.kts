@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
-import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
 
 plugins {
     kotlin("multiplatform")
@@ -21,12 +20,10 @@ kotlin {
     jsWithBigTimeouts("jsKtor1")
     jsWithBigTimeouts("jsKtor2")
 
-    val hostOS = System.getProperty("os.name")
-    val isWindowsOS = hostOS.startsWith("win", ignoreCase = true)
-
-    // we don't run Windows tests on other hosts because mingw64's libcurl will be missing
-    nativeTargets("Ktor2", includeWindows = isWindowsOS)
+    nativeTargets("Ktor2")
     darwinTargets("Builtin")
+
+    setupMingwLibcurlFor(targetName = "mingwX64Ktor2", project)
 
     sourceSets {
         val commonTest by getting {
@@ -132,20 +129,10 @@ kotlin {
                 implementation(libs.ktor2.client.cio)
             }
         }
-        // we don't run Windows tests on other hosts because mingw64's libcurl will be missing
-        if (isWindowsOS) {
-            val mingwX64Test by creating {
-                dependsOn(nativeTest)
-                dependencies {
-                    implementation(libs.ktor2.client.curl)
-                }
-            }
-            val mingwX64Ktor2Test by getting {
-                dependsOn(mingwX64Test)
-                dependencies {
-                    implementation(projects.krossbowWebsocketKtor)
-                    implementation(libs.ktor2.client.curl)
-                }
+        val mingwX64Test by creating {
+            dependsOn(nativeTest)
+            dependencies {
+                implementation(libs.ktor2.client.curl)
             }
         }
 
@@ -163,6 +150,13 @@ kotlin {
             dependsOn(darwinTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
+            }
+        }
+        val mingwX64Ktor2Test by getting {
+            dependsOn(mingwX64Test)
+            dependencies {
+                implementation(projects.krossbowWebsocketKtor)
+                implementation(libs.ktor2.client.curl)
             }
         }
 

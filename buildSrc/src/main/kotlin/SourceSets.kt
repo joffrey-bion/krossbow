@@ -41,17 +41,14 @@ fun KotlinJsTargetDsl.browserWithBigTimeout() {
     }
 }
 
-fun KotlinTargetContainerWithNativeShortcuts.nativeTargets(flavor: String = "", includeWindows: Boolean = true) {
+fun KotlinTargetContainerWithNativeShortcuts.nativeTargets(flavor: String = "") {
     darwinTargets(flavor, setupSourceSets = false)
 
     linuxX64("linuxX64$flavor")
-    if (includeWindows) {
-        mingwX64("mingwX64$flavor")
-    }
+    mingwX64("mingwX64$flavor")
 
     sourceSets {
-        val allSourceSetsMaybeWithoutWindows = allSourceSetRefs.filter { includeWindows || !it.isWindows }
-        setupMainAndTestSourceSets(allSourceSetsMaybeWithoutWindows, flavor)
+        setupMainAndTestSourceSets(allSourceSetRefs, flavor)
     }
 }
 
