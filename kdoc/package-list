@@ -31,8 +31,6 @@ org.hildan.krossbow.stomp.conversions.text
 org.hildan.krossbow.stomp.frame
 org.hildan.krossbow.stomp.headers
 org.hildan.krossbow.stomp.instrumentation
-module:krossbow-stomp-default
-org.hildan.krossbow.stomp
 module:krossbow-stomp-jackson
 org.hildan.krossbow.stomp.conversions.jackson
 module:krossbow-stomp-kxserialization
