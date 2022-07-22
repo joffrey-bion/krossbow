@@ -1,5 +1,13 @@
 # Change Log
 
+## [4.1.0](https://github.com/joffrey-bion/krossbow/tree/4.1.0) (2022-07-22)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.3...4.1.0)
+
+**Upgraded dependencies:**
+
+- Upgrade Ktor to version 2.0.3 [\#256](https://github.com/joffrey-bion/krossbow/issues/256)
+- Upgrade Kotlin to version 1.7.10 [\#253](https://github.com/joffrey-bion/krossbow/issues/253)
+
 ## [4.0.3](https://github.com/joffrey-bion/krossbow/tree/4.0.3) (2022-07-04)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.2...4.0.3)
 
