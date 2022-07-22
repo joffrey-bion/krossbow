@@ -1,17 +1,19 @@
+@file:OptIn(InternalKrossbowApi::class)
+
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.sync.Mutex
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
-import org.hildan.krossbow.stomp.frame.FrameBody
-import org.hildan.krossbow.stomp.frame.StompCommand
-import org.hildan.krossbow.stomp.frame.StompEvent
-import org.hildan.krossbow.stomp.frame.StompFrame
+import org.hildan.krossbow.stomp.frame.*
 import org.hildan.krossbow.stomp.headers.*
 import org.hildan.krossbow.stomp.heartbeats.HeartBeater
 import org.hildan.krossbow.stomp.heartbeats.NO_HEART_BEATS
+import org.hildan.krossbow.stomp.utils.ConcurrentMap
 import org.hildan.krossbow.stomp.utils.generateUuid
 import org.hildan.krossbow.websocket.WebSocketException
 import kotlin.coroutines.CoroutineContext
@@ -26,11 +28,7 @@ internal class BaseStompSession(
     coroutineContext: CoroutineContext = EmptyCoroutineContext,
 ) : StompSession {
 
-    private val scope = CoroutineScope(coroutineContext + Job() + CoroutineName("stomp-session"))
-
-    // extra buffer required, so we can wait for the receipt frame from within the onSubscribe
-    // of some other shared flow subscription (e.g. in startSubscription())
-    private val sharedStompEvents = MutableSharedFlow<StompEvent>(extraBufferCapacity = 32)
+    private val scope = CoroutineScope(coroutineContext + CoroutineName("stomp-session"))
 
     private val heartBeater = if (heartBeat != NO_HEART_BEATS) {
         HeartBeater(
@@ -41,13 +39,13 @@ internal class BaseStompSession(
                 // In this case, we don't want the heart beater to crash
                 try {
                     stompSocket.sendHeartBeat()
-                } catch(e : WebSocketException) {
-                    shutdown("STOMP session failed: heart beat couldn't be sent", cause = e)
+                } catch (e: WebSocketException) {
+                    shutdown("STOMP session terminated: heart beat couldn't be sent", cause = e)
                 }
             },
             onMissingHeartBeat = {
                 val cause = MissingHeartBeatException(heartBeat.expectedPeriod)
-                sharedStompEvents.emit(StompEvent.Error(cause))
+                shutdown("STOMP session terminated: no heart beat received in time", cause = cause)
                 stompSocket.close(cause)
             },
         )
@@ -55,66 +53,52 @@ internal class BaseStompSession(
         null
     }
 
+    private val subscriptionsById = ConcurrentMap<String, Channel<StompFrame.Message>>()
+    private val receipts = ConcurrentMap<String, CompletableDeferred<StompFrame.Receipt>>()
+
     private val heartBeaterJob = heartBeater?.startIn(scope)
 
     init {
         scope.launch {
             stompSocket.incomingEvents
-                .onEach { heartBeater?.notifyMsgReceived() }
-                .materializeErrorsAndCompletion()
+                .catch { shutdown("STOMP session terminated due to upstream error", cause = it) }
                 .collect {
-                    sharedStompEvents.emit(it)
+                    heartBeater?.notifyMsgReceived()
+                    when (it) {
+                        is StompEvent.HeartBeat -> Unit // ignore, already notified
+                        is StompFrame -> processStompFrame(it)
+                    }
                 }
+            shutdown("STOMP session disconnected")
         }
+    }
 
-        scope.launch {
-            sharedStompEvents.collect {
-                when (it) {
-                    is StompEvent.Close -> shutdown("STOMP session disconnected")
-                    is StompEvent.Error -> shutdown("STOMP session cancelled due to upstream error", cause = it.cause)
-                    else -> Unit
-                }
-            }
+    private suspend fun processStompFrame(frame: StompFrame) {
+        when (frame) {
+            is StompFrame.Message -> processSubscriptionMessage(frame)
+            is StompFrame.Receipt -> confirmReceipt(frame)
+            is StompFrame.Error -> shutdown("STOMP session terminated: ERROR frame received", StompErrorFrameReceived(frame))
+            else -> shutdown("STOMP session terminated: unexpected ${frame.command} frame received")
         }
+    }
+
+    private suspend fun processSubscriptionMessage(frame: StompFrame.Message) {
+        subscriptionsById.get(frame.headers.subscription)?.send(frame)
+    }
+
+    private suspend fun confirmReceipt(frame: StompFrame.Receipt) {
+        receipts.get(frame.headers.receiptId)?.complete(frame)
+            ?: error("Missing deferred receipt for receipt ID ${frame.headers.receiptId}")
     }
 
     private suspend fun shutdown(message: String, cause: Throwable? = null) {
         // cancel heartbeats immediately to limit the chances of sending a heartbeat to a closed socket
         heartBeaterJob?.cancel()
-        // let other subscribers handle the error/closure before cancelling the scope
-        awaitSubscriptionsCompletion()
+
+        subscriptionsById.values().forEach { sub -> sub.close(cause = cause) }
+        receipts.values().forEach { r -> r.completeExceptionally(cause ?: CancellationException(message)) }
+
         scope.cancel(message, cause = cause)
-    }
-
-    private suspend fun awaitSubscriptionsCompletion() {
-        withTimeoutOrNull(config.subscriptionCompletionTimeout) {
-            sharedStompEvents.subscriptionCount.takeWhile { it > 0 }.collect()
-        }
-    }
-
-    @OptIn(FlowPreview::class) // for produceIn(scope)
-    private suspend fun startSubscription(headers: StompSubscribeHeaders): ReceiveChannel<StompFrame.Message> {
-        val subscriptionStarted = CompletableDeferred<Unit>()
-
-        val subscriptionChannel = sharedStompEvents
-            .onSubscription {
-                try {
-                    // ensures we are already listening for frames before sending SUBSCRIBE, so we don't miss messages
-                    prepareHeadersAndSendFrame(StompFrame.Subscribe(headers))
-                    subscriptionStarted.complete(Unit)
-                } catch (e: Exception) {
-                    subscriptionStarted.completeExceptionally(e)
-                }
-            }
-            .dematerializeErrorsAndCompletion()
-            .filterIsInstance<StompFrame.Message>()
-            .filter { it.headers.subscription == headers.id }
-            .produceIn(scope)
-
-        // Ensures we actually subscribe now, to conform to the semantics of subscribe().
-        // produceIn() on its own cannot guarantee that the producer coroutine has started when it returns
-        subscriptionStarted.await()
-        return subscriptionChannel
     }
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
@@ -146,15 +130,12 @@ internal class BaseStompSession(
     }
 
     private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
+        val deferredReceipt = CompletableDeferred<StompFrame.Receipt>()
+        receipts.put(receiptId, deferredReceipt)
+        stompSocket.sendStompFrame(frame)
         withTimeoutOrNull(frame.receiptTimeout) {
-            sharedStompEvents
-                .onSubscription {
-                    sendStompFrame(frame)
-                }
-                .dematerializeErrorsAndCompletion()
-                .filterIsInstance<StompFrame.Receipt>()
-                .firstOrNull { it.headers.receiptId == receiptId }
-                    ?: error("Frames flow closed unexpectedly while waiting for RECEIPT frame with id='$receiptId'")
+            deferredReceipt.await()
+            receipts.remove(receiptId)
         } ?: throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
     }
 
@@ -164,9 +145,10 @@ internal class BaseStompSession(
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> {
         val headersWithId = headers.withId()
 
-        return startSubscription(headersWithId)
-            .consumeAsFlow()
-            .onCompletion {
+        val subscriptionChannel = Channel<StompFrame.Message>(BUFFERED)
+        subscriptionsById.put(headersWithId.id, subscriptionChannel)
+        prepareHeadersAndSendFrame(StompFrame.Subscribe(headersWithId))
+        return subscriptionChannel.consumeAsFlow().onCompletion {
                 when (it) {
                     // If the consumer was cancelled or an exception occurred downstream, the STOMP session keeps going
                     // so we want to unsubscribe this failed subscription.
@@ -190,6 +172,8 @@ internal class BaseStompSession(
 
     private suspend fun unsubscribe(subscriptionId: String) {
         sendStompFrame(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
+        subscriptionsById.get(subscriptionId)?.close()
+        subscriptionsById.remove(subscriptionId)
     }
 
     override suspend fun ack(ackId: String, transactionId: String?) {
@@ -222,7 +206,7 @@ internal class BaseStompSession(
             sendDisconnectFrameAndWaitForReceipt()
         }
         stompSocket.close()
-        sharedStompEvents.emit(StompEvent.Close)
+        shutdown("STOMP session disconnected")
     }
 
     private suspend fun sendDisconnectFrameAndWaitForReceipt() {
@@ -247,11 +231,3 @@ private fun StompSubscribeHeaders.withId(): StompSubscribeHeaders {
     rawHeadersCopy[HeaderNames.ID] = generateUuid()
     return StompSubscribeHeaders(rawHeadersCopy.asStompHeaders())
 }
-
-private fun Flow<StompEvent>.materializeErrorsAndCompletion(): Flow<StompEvent> =
-    catch { emit(StompEvent.Error(cause = it)) }
-        .onCompletion { if (it == null) emit(StompEvent.Close) }
-
-private fun Flow<StompEvent>.dematerializeErrorsAndCompletion(): Flow<StompEvent> =
-    takeWhile { it !is StompEvent.Close }
-        .onEach { if (it is StompEvent.Error) throw it.cause }

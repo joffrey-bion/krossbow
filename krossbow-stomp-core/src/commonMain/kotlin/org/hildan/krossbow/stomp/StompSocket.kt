@@ -1,3 +1,5 @@
+@file:OptIn(InternalKrossbowApi::class)
+
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.flow.*

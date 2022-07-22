@@ -91,6 +91,10 @@ class StompConfig {
      * The original error will be provided as cause of the cancellation in this case.
      * They may miss previously buffered messages.
      */
+    @Deprecated(
+        "The internal implementation of the session no longer requires an explicit timeout, and this property has no " +
+            "effect anymore. Subscribers can take as much time as they need and will eventually reach the completion/error."
+    )
     var subscriptionCompletionTimeout: Duration = 1.seconds
 
     /**

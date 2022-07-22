@@ -6,20 +6,27 @@ import org.hildan.krossbow.stomp.charsets.extractCharset
 import org.hildan.krossbow.stomp.headers.*
 
 /**
+ * The target of this annotation should only be used internally in Krossbow's own code.
+ * It is public for technical reasons only.
+ */
+@RequiresOptIn("This is an internal Krossbow API and shouldn't be used directly in user code")
+annotation class InternalKrossbowApi
+
+/**
  * This is an internal parent class to gather [StompFrame]s and other internal events under the same common type.
  *
  * [StompFrame] directly extend it to avoid the overhead of wrapping every frame in a [StompEvent] internally.
  */
+@InternalKrossbowApi
 sealed class StompEvent {
     internal object HeartBeat : StompEvent()
-    internal object Close : StompEvent()
-    internal data class Error(val cause: Throwable) : StompEvent()
 }
 
 /**
  * Represents a STOMP frame. The structure of STOMP frames is
  * [defined by the specification](https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames).
  */
+@OptIn(InternalKrossbowApi::class)
 sealed class StompFrame(
     /** The command of this STOMP frame, which is the first word of the frame. */
     val command: StompCommand,
