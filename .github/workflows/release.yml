@@ -26,7 +26,9 @@ jobs:
       # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
       # (and it's necessary to run Autobahn tests)
       - name: Install docker and docker-compose (missing on MacOS)
-        uses: ./.github/actions/setup-docker-macos
+        uses: docker-practice/actions-setup-docker@master
+        with:
+          docker_buildx: false
 
       - name: Test build before release
         uses: burrunan/gradle-cache-action@v1
