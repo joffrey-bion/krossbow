@@ -59,10 +59,8 @@ fun KotlinTargetContainerWithNativeShortcuts.darwinTargets(flavor: String = "", 
     tvos("tvos$flavor")
     tvosSimulatorArm64("tvosSimulatorArm64$flavor")
 
-    // watchos() shortcut cannot be used because okio is missing watchosX64()
-    watchosArm32("watchosArm32$flavor")
-    watchosArm64("watchosArm64$flavor")
-    watchosX86("watchosX86$flavor")
+    watchos("watchos$flavor")
+    watchosX86("watchosX86$flavor") // not included in the watchos() shortcut
     watchosSimulatorArm64("watchosSimulatorArm64$flavor")
 
     macosX64("macosX64$flavor")
@@ -130,10 +128,8 @@ private val allSourceSetRefs = buildSourceSetRefs(
             "iosSimulatorArm64",
             "tvos",
             "tvosSimulatorArm64",
-            "watchosX86",
-            // no watchosX64, so no watchos shortcut
-            "watchosArm32",
-            "watchosArm64",
+            "watchos",
+            "watchosX86", // not included in the watchos shortcut
             "watchosSimulatorArm64",
             "macosX64",
             "macosArm64",
