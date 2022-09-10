@@ -36,7 +36,7 @@ private fun KotlinNativeTarget.linkDebugLibcurlImportLibrary(project: Project) {
 private const val MissingLibcurlError = "libcurl.dll not found in PATH, nor under MINGW_HOME nor MSYS_HOME env " +
     "variables. It is necessary for Ktor tests using the Curl engine."
 
-fun KotlinNativeTest.ensureLibcurlOnPath() {
+private fun KotlinNativeTest.ensureLibcurlOnPath() {
     val currentPath = System.getenv("PATH")
     if (hasLibcurlDll(currentPath)) {
         return // good, libcurl.dll is already on the PATH
