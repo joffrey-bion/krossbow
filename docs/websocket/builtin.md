@@ -16,6 +16,10 @@ adapts the built-in
 provided in the JRE since Java 11, and its
 [WebSocket](https://docs.oracle.com/en/java/javase/17/docs/api/java.net.http/java/net/http/WebSocket.html) interface.
 
+!!! warning "Android not supported"
+    This adapter requires Java 11's `HttpClient` which is not available on Android.
+    If you need to support Android, please use the [OkHttp](./okhttp.md) or [Ktor](./ktor.md) adapter instead.
+
 ## JavaScript
 
 On the JS target, the 
