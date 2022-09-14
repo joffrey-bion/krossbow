@@ -8,7 +8,7 @@ If you were using Krossbow with `krossbow-stomp-kxserialization`, the `withJsonC
 module called `krossbow-stomp-kxserialization-json`.
 This new module now transitively brings `kotlinx-serialization-json` so you don't need to depend on that one explicitly.
 
-### Built-in web socket clients and default `StompClient` constructor moved to their own module
+### Built-in web socket clients moved to their own module and default `StompClient` constructor removed
 
 Up to (and including) version 3.x of Krossbow, the built-in web socket clients for the supported platforms were part
 of the `krossbow-websocket-core` module.

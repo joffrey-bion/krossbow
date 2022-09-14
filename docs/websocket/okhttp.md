@@ -9,8 +9,7 @@ Krossbow's web socket interface.
 
 ## Usage with StompClient
 
-To use the `OkHttpWebSocketClient` instead of the platform default,
-you need to specify it when creating your `StompClient`:
+To use the `OkHttpWebSocketClient` pass an instance of it when creating your `StompClient`:
 
 ```kotlin
 val client = StompClient(OkHttpWebSocketClient())

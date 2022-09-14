@@ -13,8 +13,7 @@ The `krossbow-websocket-ktor` module provides the `KtorWebSocketClient`, which a
 
 ## Usage with StompClient
 
-To use the `KtorWebSocketClient` instead of the platform default,
-you need to specify it when creating your `StompClient`:
+To use the `KtorWebSocketClient` pass an instance of it when creating your `StompClient`:
 
 ```kotlin
 val client = StompClient(KtorWebSocketClient())
