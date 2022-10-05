@@ -14,6 +14,8 @@ import org.gradle.plugins.signing.SigningPlugin
 import org.hildan.krossbow.gradle.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.dokka.gradle.*
+import ru.vyarus.gradle.plugin.github.GithubInfoExtension
+import ru.vyarus.gradle.plugin.github.GithubInfoPlugin
 import java.io.File
 import java.net.URL
 
@@ -37,6 +39,7 @@ class KotlinMavenCentralPublishPlugin : Plugin<Project> {
         project.apply<DokkaPlugin>()
         project.apply<MavenPublishPlugin>()
         project.apply<SigningPlugin>()
+        project.apply<GithubInfoPlugin>()
 
         // Publications are not automatically configured with Kotlin JVM plugin, but they are with MPP.
         // We align here so both MPP and JVM projects have publications with sources jar setup.
@@ -53,6 +56,13 @@ class KotlinMavenCentralPublishPlugin : Plugin<Project> {
                     }
                 }
             }
+        }
+
+        project.configure<GithubInfoExtension> {
+            user = "joffrey-bion"
+            site = "https://joffrey-bion.github.io/krossbow"
+            license = "MIT"
+            licenseUrl = rawFileUrl("LICENSE", "main")
         }
 
         project.configureDokkaSourceLinks()
@@ -78,7 +88,8 @@ class KotlinMavenCentralPublishPlugin : Plugin<Project> {
 }
 
 private fun Project.configureDokkaSourceLinks(repoMainBranch: String = "main") {
-    val repoBlobBaseUrl = URL("${github.repoUrl}/blob/$repoMainBranch/") // trailing slash is important in URLs!
+    val repoUrl = extensions.getByType<GithubInfoExtension>().repositoryUrl
+    val repoBlobBaseUrl = URL("$repoUrl/blob/$repoMainBranch/") // trailing slash is important in URLs!
 
     tasks.withType<AbstractDokkaLeafTask>().configureEach {
         dokkaSourceSets {
@@ -101,13 +112,6 @@ private fun File.toSlashSeparatedString(): String = toPath().joinToString("/")
 private fun MavenPublication.configurePomForMavenCentral(project: Project) = pom {
     name.set(project.name)
     description.set(project.description)
-    url.set("https://joffrey-bion.github.io/krossbow")
-    licenses {
-        license {
-            name.set("The MIT License")
-            url.set("https://opensource.org/licenses/MIT")
-        }
-    }
     developers {
         developer {
             id.set("joffrey-bion")
@@ -115,13 +119,6 @@ private fun MavenPublication.configurePomForMavenCentral(project: Project) = pom
             email.set("joffrey.bion@gmail.com")
         }
     }
-    githubScm(project.github)
-}
-
-private fun MavenPom.githubScm(github: GitHubInfo) = scm {
-    connection.set("scm:git:${github.repoUrl}.git")
-    developerConnection.set("scm:git:git@github.com:${github.repoSlug}.git")
-    url.set(github.repoUrl)
 }
 
 private fun Project.signAllPublications() {

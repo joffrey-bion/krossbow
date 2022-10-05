@@ -12,6 +12,7 @@ dependencies {
 
     implementation(kotlin("gradle-plugin", "1.7.10"))
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.7.10")
+    implementation("ru.vyarus:gradle-github-info-plugin:1.3.0")
 }
 
 gradlePlugin {
