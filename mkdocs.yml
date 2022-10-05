@@ -93,7 +93,7 @@ extra:
     ktor: 2.1.2
     ktorLegacy: 1.6.8
     kotlinxSerialization: 1.4.0
-    moshi: 1.13.0
+    moshi: 1.14.0
     tyrus: 1.17
     jetty: 9.4.49.v20220914
 
