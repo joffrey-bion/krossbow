@@ -15,7 +15,7 @@ okio = "3.2.0"
 slf4j = "1.7.36"
 ### available = "1.8.0-beta4"
 ### available = "2.0.0-alpha7"
-spring = "5.3.21"
+spring = "5.3.23"
 tyrus = "1.17"
 uuid = "0.5.0"
 
