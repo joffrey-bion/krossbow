@@ -89,7 +89,7 @@ extra:
       link: https://twitter.com/joffreybion
       name: "Joffrey on Twitter"
   versions:
-    jackson: 2.13.3
+    jackson: 2.13.4
     ktor: 2.0.2
     ktorLegacy: 1.6.8
     kotlinxSerialization: 1.3.3

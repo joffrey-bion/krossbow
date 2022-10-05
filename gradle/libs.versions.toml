@@ -1,5 +1,5 @@
 [versions]
-jackson = "2.13.3"
+jackson = "2.13.4"
 jetty-websocket = "9.4.46.v20220331"
 kotlinx-atomicfu = "0.17.3"
 kotlinx-coroutines = "1.6.3"
