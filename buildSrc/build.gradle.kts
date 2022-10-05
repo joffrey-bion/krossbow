@@ -11,10 +11,7 @@ dependencies {
     implementation(gradleKotlinDsl())
 
     implementation(kotlin("gradle-plugin", "1.7.10"))
-    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.7.0") {
-        // workaround while waiting for https://github.com/Kotlin/dokka/pull/2543
-        exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
-    }
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.7.10")
 }
 
 gradlePlugin {
