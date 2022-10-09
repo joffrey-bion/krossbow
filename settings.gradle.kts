@@ -1,7 +1,10 @@
 import com.gradle.scan.plugin.BuildScanExtension
+import de.fayard.refreshVersions.core.DependencySelection
+import de.fayard.refreshVersions.core.StabilityLevel
 
 plugins {
     id("com.gradle.enterprise") version "3.10.1"
+    id("de.fayard.refreshVersions") version "0.50.2"
 }
 
 rootProject.name = "krossbow"
@@ -55,3 +58,17 @@ fun BuildScanExtension.addGithubActionsData() {
         value("Branch", ref.removePrefix("refs/heads/"))
     }
 }
+
+refreshVersions {
+    rejectVersionIf {
+        candidate.stabilityLevel != StabilityLevel.Stable || isTyrus() || isKtorLegacyUpgrade() || isOkHttpAlpha()
+    }
+    this.extraArtifactVersionKeyRules("")
+}
+
+fun DependencySelection.isKtorLegacyUpgrade() =
+    "ktor" in moduleId.name && current.value.startsWith("1.") && !candidate.value.startsWith("1.")
+
+fun DependencySelection.isTyrus() = moduleId.name == "tyrus-standalone-client-jdk"
+
+fun DependencySelection.isOkHttpAlpha() = moduleId.name == "okhttp" && "-alpha" in candidate.value
