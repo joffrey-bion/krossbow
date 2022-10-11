@@ -25,9 +25,8 @@ jobs:
           java-version: ${{ matrix.jdk-version }}
 
       - name: Generate KDocs
-        uses: burrunan/gradle-cache-action@v1
+        uses: gradle/gradle-build-action@v2
         with:
-          job-id: jdk${{ matrix.jdk-version }}
           arguments: dokkaHtmlMultiModule
 
       - name: Setup Python

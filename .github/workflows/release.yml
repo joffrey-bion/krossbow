@@ -31,21 +31,16 @@ jobs:
           docker_buildx: false
 
       - name: Test build before release
-        uses: burrunan/gradle-cache-action@v1
+        uses: gradle/gradle-build-action@v2
         with:
-          job-id: jdk${{ matrix.jdk-version }}
           arguments: build
 
       - name: Generate Change Log
-        uses: burrunan/gradle-cache-action@v1
+        uses: gradle/gradle-build-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          job-id: jdk${{ matrix.jdk-version }}
-          # We already deal with caches in a previous gradle-cache-action
-          execution-only-caches: true
-          arguments: generateChangelog
-          properties: version=${{ github.event.inputs.version }}
+          arguments: generateChangelog -Pversion=${{ github.event.inputs.version }}
 
       - name: Commit and Push Change Log
         id: changelog-commit
