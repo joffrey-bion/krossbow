@@ -21,7 +21,7 @@ jobs:
       - name: Set up JDK ${{ matrix.jdk-version }}
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: ${{ matrix.jdk-version }}
 
       - name: Generate KDocs

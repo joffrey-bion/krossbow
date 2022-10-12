@@ -18,7 +18,7 @@ jobs:
       - name: Set up JDK ${{ matrix.jdk-version }}
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: ${{ matrix.jdk-version }}
 
       # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
