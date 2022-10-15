@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    `kotlin-maven-central-publish`
+    id("krossbow.kotlin-publishing-conventions")
 }
 
 description = "A Kotlin multiplatform STOMP client based on a generic web socket API"

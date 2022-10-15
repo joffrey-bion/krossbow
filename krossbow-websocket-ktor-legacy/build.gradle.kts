@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    `kotlin-maven-central-publish`
+    id("krossbow.kotlin-publishing-conventions")
 }
 
 description = "Multiplatform implementation of Krossbow's WebSocket API using Ktor's web sockets."

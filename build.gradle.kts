@@ -10,6 +10,7 @@ plugins {
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.10.0"
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
     id("com.louiscad.complete-kotlin") version "1.1.0" // for autocomplete of Apple libraries on non-macOS systems
+    id("krossbow.githubinfo-conventions")
 }
 
 allprojects {
@@ -25,6 +26,7 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaMultiModuleTask>().configureEach 
 }
 
 changelog {
+    githubUser = github.user
     futureVersionTag = project.version.toString()
     customTagByIssueNumber = mapOf(6 to "0.1.1", 10 to "0.1.2", 15 to "0.4.0")
 }

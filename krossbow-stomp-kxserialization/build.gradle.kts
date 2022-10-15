@@ -1,7 +1,7 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    `kotlin-maven-central-publish`
+    id("krossbow.kotlin-publishing-conventions")
 }
 
 description = "An extension of Krossbow STOMP client using Kotlinx Serialization for message conversions"

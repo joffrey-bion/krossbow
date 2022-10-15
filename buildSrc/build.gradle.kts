@@ -17,9 +17,9 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("kotlin-maven-central-publish") {
-            id = "kotlin-maven-central-publish"
-            implementationClass = "org.hildan.krossbow.gradle.plugins.KotlinMavenCentralPublishPlugin"
+        register("kotlin-publish") {
+            id = "kotlin-publish"
+            implementationClass = "org.hildan.krossbow.gradle.plugins.KotlinPublishPlugin"
         }
     }
 }
