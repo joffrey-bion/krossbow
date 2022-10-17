@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>InvalidStompCommandException</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../styles/style.css" rel="Stylesheet">
 <link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -41,15 +50,13 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="krossbow-stomp-core::org.hildan.krossbow.stomp.frame/InvalidStompCommandException///PointingToDeclaration//-1714576161">
-  <div class="breadcrumbs"><a href="../../index.html">krossbow-stomp-core</a><span class="delimiter">/</span><a href="../index.html">org.hildan.krossbow.stomp.frame</a><span class="delimiter">/</span><a href="index.html">InvalidStompCommandException</a></div>
+  <div class="breadcrumbs"><a href="../../index.html">krossbow-stomp-core</a><span class="delimiter">/</span><a href="../index.html">org.hildan.krossbow.stomp.frame</a><span class="delimiter">/</span><span class="current">InvalidStompCommandException</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Invalid</span><wbr><span>Stomp</span><wbr><span>Command</span><wbr><span><span>Exception</span></span></h1>
-    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">InvalidStompCommandException</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>invalidText<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-exception/index.html">Exception</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Exception thrown when some text could not be parsed as a <a href="../-stomp-command/index.html">StompCommand</a>.</p></div>    </div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">InvalidStompCommandException</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>invalidText<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-exception/index.html">Exception</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/joffrey-bion/krossbow/blob/HEAD/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/frame/StompCommand.kt#L36">source</a>)</span></span></div><p class="paragraph">Exception thrown when some text could not be parsed as a <a href="../-stomp-command/index.html">StompCommand</a>.</p></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Sources">Sources</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
     <div class="tabs-section-body">
       <h2 class="tabbedcontent">Constructors</h2>
       <div class="table" data-togglable="Constructors"><a data-name="-227798423%2FConstructors%2F-1714576161" anchor-label="InvalidStompCommandException" id="-227798423%2FConstructors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
@@ -62,9 +69,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-invalid-stomp-command-exception.html"><span class="token function">InvalidStompCommandException</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">invalidText<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-invalid-stomp-command-exception.html"><span class="token function">InvalidStompCommandException</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">invalidText<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
               </div>
             </div>
           </div>
@@ -81,9 +86,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-654012527%2FProperties%2F-1714576161" anchor-label="cause" id="-654012527%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../../org.hildan.krossbow.stomp.headers/-invalid-escape-exception/index.html#-654012527%2FProperties%2F-1714576161">cause</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-654012527%2FProperties%2F-1714576161" anchor-label="cause" id="-654012527%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../../org.hildan.krossbow.stomp.headers/-invalid-escape-exception/index.html#-654012527%2FProperties%2F-1714576161">cause</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token operator">?</span></div></div></div>
               </div>
             </div>
           </div>
@@ -98,9 +101,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="507745757%2FProperties%2F-1714576161" anchor-label="invalidText" id="507745757%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="invalid-text.html">invalidText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="507745757%2FProperties%2F-1714576161" anchor-label="invalidText" id="507745757%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="invalid-text.html">invalidText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
               </div>
             </div>
           </div>
@@ -115,24 +116,9 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="1824300659%2FProperties%2F-1714576161" anchor-label="message" id="1824300659%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../../org.hildan.krossbow.stomp.headers/-invalid-escape-exception/index.html#1824300659%2FProperties%2F-1714576161">message</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="1824300659%2FProperties%2F-1714576161" anchor-label="message" id="1824300659%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../../org.hildan.krossbow.stomp.headers/-invalid-escape-exception/index.html#1824300659%2FProperties%2F-1714576161">message</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <h2 class="">Sources</h2>
-      <div class="table" data-togglable="Sources"><a data-name="2011590246%2FSource%2F-1714576161" anchor-label="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/frame/StompCommand.kt#L36" id="2011590246%2FSource%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/frame/StompCommand.kt#L36">common source</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2011590246%2FSource%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div></div>
           </div>
         </div>
       </div>

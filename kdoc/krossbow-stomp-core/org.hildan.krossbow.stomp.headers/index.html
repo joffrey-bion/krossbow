@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>org.hildan.krossbow.stomp.headers</title>
 <link href="../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../styles/style.css" rel="Stylesheet">
 <link href="../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -41,9 +50,9 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="krossbow-stomp-core::org.hildan.krossbow.stomp.headers////PointingToDeclaration//-1714576161">
-  <div class="breadcrumbs"><a href="../index.html">krossbow-stomp-core</a><span class="delimiter">/</span><a href="index.html">org.hildan.krossbow.stomp.headers</a></div>
+  <div class="breadcrumbs"><a href="../index.html">krossbow-stomp-core</a><span class="delimiter">/</span><span class="current">org.hildan.krossbow.stomp.headers</span></div>
   <div class="cover ">
-    <h1 class="cover"><span><span>Package</span></span> <span>org.</span><wbr><span>hildan.</span><wbr><span>krossbow.</span><wbr><span>stomp.</span><wbr><span>headers</span></h1>
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button></div>
@@ -59,9 +68,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-ack-mode/index.html">AckMode</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-ack-mode/index.html">AckMode</a><span class="token operator">&gt; </span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Represents possible values for the <a href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header"><code class="lang-kotlin">ack</code> header</a>.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-ack-mode/index.html">AckMode</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-ack-mode/index.html">AckMode</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Represents possible values for the <a href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header"><code class="lang-kotlin">ack</code> header</a>.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -76,9 +83,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-header-names/index.html">HeaderNames</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">All STOMP header names constants.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-header-names/index.html">HeaderNames</a></div><div class="brief "><p class="paragraph">All STOMP header names constants.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -93,9 +98,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-invalid-ack-header-exception/index.html">InvalidAckHeaderException</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>invalidText<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-exception/index.html">Exception</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-invalid-ack-header-exception/index.html">InvalidAckHeaderException</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>invalidText<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-exception/index.html">Exception</a></div></div></div>
               </div>
             </div>
           </div>
@@ -110,9 +113,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-invalid-escape-exception/index.html">InvalidEscapeException</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>invalidSequence<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Invalid header escape sequence '"</span></span></span><span class="token punctuation">)</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/index.html">IllegalArgumentException</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-invalid-escape-exception/index.html">InvalidEscapeException</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>invalidSequence<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Invalid header escape sequence '"</span></span></span><span class="token punctuation">)</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/index.html">IllegalArgumentException</a></div></div></div>
               </div>
             </div>
           </div>
@@ -127,9 +128,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-abort-headers/index.html">StompAbortHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-abort-headers/index.html">StompAbortHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -144,9 +143,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-ack-headers/index.html">StompAckHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-ack-headers/index.html">StompAckHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -161,9 +158,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-begin-headers/index.html">StompBeginHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-begin-headers/index.html">StompBeginHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -178,9 +173,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-commit-headers/index.html">StompCommitHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-commit-headers/index.html">StompCommitHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -195,9 +188,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-connected-headers/index.html">StompConnectedHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-connected-headers/index.html">StompConnectedHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -212,9 +203,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-connect-headers/index.html">StompConnectHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-connect-headers/index.html">StompConnectHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -229,9 +218,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-disconnect-headers/index.html">StompDisconnectHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-disconnect-headers/index.html">StompDisconnectHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -246,9 +233,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-error-headers/index.html">StompErrorHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-error-headers/index.html">StompErrorHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -263,9 +248,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-stomp-headers/index.html">StompHeaders</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt; </span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Represents the headers of a STOMP frame.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-stomp-headers/index.html">StompHeaders</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Represents the headers of a STOMP frame.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -280,9 +263,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-message-headers/index.html">StompMessageHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-message-headers/index.html">StompMessageHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -297,9 +278,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-nack-headers/index.html">StompNackHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-nack-headers/index.html">StompNackHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -314,9 +293,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-receipt-headers/index.html">StompReceiptHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-receipt-headers/index.html">StompReceiptHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -331,9 +308,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-send-headers/index.html">StompSendHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-send-headers/index.html">StompSendHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -348,9 +323,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>
@@ -365,9 +338,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-unsubscribe-headers/index.html">StompUnsubscribeHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-stomp-unsubscribe-headers/index.html">StompUnsubscribeHeaders</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawHeaders<span class="token operator">: </span><a href="-stomp-headers/index.html">StompHeaders</a></span></span><span class="token punctuation">)</span> : <a href="-stomp-headers/index.html">StompHeaders</a></div></div></div>
               </div>
             </div>
           </div>

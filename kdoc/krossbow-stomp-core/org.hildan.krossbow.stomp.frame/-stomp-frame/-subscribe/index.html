@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>Subscribe</title>
 <link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -41,15 +50,13 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="krossbow-stomp-core::org.hildan.krossbow.stomp.frame/StompFrame.Subscribe///PointingToDeclaration//-1714576161">
-  <div class="breadcrumbs"><a href="../../../index.html">krossbow-stomp-core</a><span class="delimiter">/</span><a href="../../index.html">org.hildan.krossbow.stomp.frame</a><span class="delimiter">/</span><a href="../index.html">StompFrame</a><span class="delimiter">/</span><a href="index.html">Subscribe</a></div>
+  <div class="breadcrumbs"><a href="../../../index.html">krossbow-stomp-core</a><span class="delimiter">/</span><a href="../../index.html">org.hildan.krossbow.stomp.frame</a><span class="delimiter">/</span><a href="../index.html">StompFrame</a><span class="delimiter">/</span><span class="current">Subscribe</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Subscribe</span></span></h1>
-    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">Subscribe</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>headers<span class="token operator">: </span><a href="../../../org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a></span></span><span class="token punctuation">)</span> : <a href="../index.html">StompFrame</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">A SUBSCRIBE frame is a client frame used to register to listen to a given destination.</p><p class="paragraph">Any messages received on the subscribed destination will henceforth be delivered as MESSAGE frames from the server to the client. The <code class="lang-kotlin">ack</code> header controls the message acknowledgment mode.</p></div>    </div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">Subscribe</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>headers<span class="token operator">: </span><a href="../../../org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a></span></span><span class="token punctuation">)</span> : <a href="../index.html">StompFrame</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/joffrey-bion/krossbow/blob/HEAD/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/frame/StompFrame.kt#L77">source</a>)</span></span></div><p class="paragraph">A SUBSCRIBE frame is a client frame used to register to listen to a given destination.</p><p class="paragraph">Any messages received on the subscribed destination will henceforth be delivered as MESSAGE frames from the server to the client. The <code class="lang-kotlin">ack</code> header controls the message acknowledgment mode.</p></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Sources">Sources</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
     <div class="tabs-section-body">
       <h2 class="tabbedcontent">Constructors</h2>
       <div class="table" data-togglable="Constructors"><a data-name="-1857113973%2FConstructors%2F-1714576161" anchor-label="Subscribe" id="-1857113973%2FConstructors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
@@ -62,9 +69,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-subscribe.html"><span class="token function">Subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-subscribe.html"><span class="token function">Subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a></span></span><span class="token punctuation">)</span></div></div></div>
               </div>
             </div>
           </div>
@@ -81,9 +86,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="109764053%2FProperties%2F-1714576161" anchor-label="body" id="109764053%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../body.html">body</a><span class="token operator">: </span><a href="../../-frame-body/index.html">FrameBody</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="109764053%2FProperties%2F-1714576161" anchor-label="body" id="109764053%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">The body of this STOMP frame.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="109764053%2FProperties%2F-1714576161" anchor-label="body" id="109764053%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../body.html">body</a><span class="token operator">: </span><a href="../../-frame-body/index.html">FrameBody</a><span class="token operator">?</span><span class="token operator"> = </span>null</div><div class="brief "><a data-name="109764053%2FProperties%2F-1714576161" anchor-label="body" id="109764053%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">The body of this STOMP frame.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -98,9 +101,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="1965114390%2FProperties%2F-1714576161" anchor-label="bodyAsText" id="1965114390%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../body-as-text.html">bodyAsText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1965114390%2FProperties%2F-1714576161" anchor-label="bodyAsText" id="1965114390%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">The body of this frame as text.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="1965114390%2FProperties%2F-1714576161" anchor-label="bodyAsText" id="1965114390%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../body-as-text.html">bodyAsText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><a data-name="1965114390%2FProperties%2F-1714576161" anchor-label="bodyAsText" id="1965114390%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">The body of this frame as text.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -115,9 +116,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-300016872%2FProperties%2F-1714576161" anchor-label="command" id="-300016872%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../command.html">command</a><span class="token operator">: </span><a href="../../-stomp-command/index.html">StompCommand</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-300016872%2FProperties%2F-1714576161" anchor-label="command" id="-300016872%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">The command of this STOMP frame, which is the first word of the frame.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-300016872%2FProperties%2F-1714576161" anchor-label="command" id="-300016872%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../command.html">command</a><span class="token operator">: </span><a href="../../-stomp-command/index.html">StompCommand</a></div><div class="brief "><a data-name="-300016872%2FProperties%2F-1714576161" anchor-label="command" id="-300016872%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">The command of this STOMP frame, which is the first word of the frame.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -132,24 +131,9 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="902592833%2FProperties%2F-1714576161" anchor-label="headers" id="902592833%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="headers.html">headers</a><span class="token operator">: </span><a href="../../../org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="902592833%2FProperties%2F-1714576161" anchor-label="headers" id="902592833%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">The headers of this STOMP frame.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="902592833%2FProperties%2F-1714576161" anchor-label="headers" id="902592833%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="headers.html">headers</a><span class="token operator">: </span><a href="../../../org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a></div><div class="brief "><a data-name="902592833%2FProperties%2F-1714576161" anchor-label="headers" id="902592833%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">The headers of this STOMP frame.</p></div></div></div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <h2 class="">Sources</h2>
-      <div class="table" data-togglable="Sources"><a data-name="713031500%2FSource%2F-1714576161" anchor-label="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/frame/StompFrame.kt#L77" id="713031500%2FSource%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/frame/StompFrame.kt#L77">common source</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="713031500%2FSource%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div></div>
           </div>
         </div>
       </div>

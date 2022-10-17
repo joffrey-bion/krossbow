@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>withAutoReconnect</title>
 <link href="../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../styles/style.css" rel="Stylesheet">
 <link href="../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -38,46 +47,11 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="krossbow-websocket-core::org.hildan.krossbow.websocket.reconnection//withAutoReconnect/org.hildan.krossbow.websocket.WebSocketClient#org.hildan.krossbow.websocket.reconnection.ReconnectConfig/PointingToDeclaration//-845055019">
-  <div class="breadcrumbs"><a href="../index.html">krossbow-websocket-core</a><span class="delimiter">/</span><a href="index.html">org.hildan.krossbow.websocket.reconnection</a><span class="delimiter">/</span><a href="with-auto-reconnect.html">withAutoReconnect</a></div>
+  <div class="breadcrumbs"><a href="../index.html">krossbow-websocket-core</a><span class="delimiter">/</span><a href="index.html">org.hildan.krossbow.websocket.reconnection</a><span class="delimiter">/</span><span class="current">withAutoReconnect</span></div>
   <div class="cover ">
     <h1 class="cover"><span>with</span><wbr><span>Auto</span><wbr><span><span>Reconnect</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="token punctuation">.</span><a href="with-auto-reconnect.html"><span class="token function">withAutoReconnect</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">config<span class="token operator">: </span><a href="-reconnect-config/index.html">ReconnectConfig</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="token punctuation">.</span><a href="with-auto-reconnect.html"><span class="token function">withAutoReconnect</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configure<span class="token operator">: </span><span class="token keyword"></span><a href="-reconnect-config-builder/index.html">ReconnectConfigBuilder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="token punctuation">.</span><a href="with-auto-reconnect.html"><span class="token function">withAutoReconnect</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">maxAttempts<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>DEFAULT_MAX_ATTEMPTS<span class="token punctuation">, </span></span><span class="parameter ">delayStrategy<span class="token operator">: </span><a href="-retry-delay-strategy/index.html">RetryDelayStrategy</a><span class="token operator"> = </span>DEFAULT_DELAY_STRATEGY</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Returns a new <a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a> that automatically reconnects on web socket errors using this client.</p><p class="paragraph">The <a href="../org.hildan.krossbow.websocket/-web-socket-connection/index.html">WebSocketConnection</a> returned by <a href="../org.hildan.krossbow.websocket/-web-socket-client/connect.html">connect</a> is an abstraction over this client's connections, so that the same connection instance can be used across reconnections, which happen transparently under the hood.</p><p class="paragraph">When chaining multiple <a href="with-auto-reconnect.html">withAutoReconnect</a> calls, the last reconnect configuration takes precedence.</p><p class="paragraph">Note: limitations on Kotlin/Native multithreaded coroutines prevent the reconnection wrapper from working properly. Please use the new memory model if you want the reconnection feature on Kotlin/Native.</p></div></div>
-  <h2 class="">Sources</h2>
-  <div class="table" data-togglable="Sources"><a data-name="-1851084175%2FSource%2F-845055019" anchor-label="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient.kt#L11" id="-1851084175%2FSource%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-    <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
-      <div class="main-subrow keyValue ">
-        <div class=""><span class="inline-flex">
-            <div><a href="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient.kt#L11">common source</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1851084175%2FSource%2F-845055019"></span>
-              <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-            </span></span></div>
-        <div></div>
-      </div>
-    </div>
-<a data-name="-1851084175%2FSource%2F-845055019" anchor-label="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient.kt#L28" id="-1851084175%2FSource%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-    <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
-      <div class="main-subrow keyValue ">
-        <div class=""><span class="inline-flex">
-            <div><a href="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient.kt#L28">common source</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1851084175%2FSource%2F-845055019"></span>
-              <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-            </span></span></div>
-        <div></div>
-      </div>
-    </div>
-<a data-name="-1851084175%2FSource%2F-845055019" anchor-label="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient.kt#L43" id="-1851084175%2FSource%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-    <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
-      <div class="main-subrow keyValue ">
-        <div class=""><span class="inline-flex">
-            <div><a href="https://github.com/joffrey-bion/krossbow/blob/main/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient.kt#L43">common source</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1851084175%2FSource%2F-845055019"></span>
-              <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-            </span></span></div>
-        <div></div>
-      </div>
-    </div>
-  </div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="token punctuation">.</span><a href="with-auto-reconnect.html"><span class="token function">withAutoReconnect</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">config<span class="token operator">: </span><a href="-reconnect-config/index.html">ReconnectConfig</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/joffrey-bion/krossbow/blob/HEAD/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient.kt#L11">source</a>)</span></span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="token punctuation">.</span><a href="with-auto-reconnect.html"><span class="token function">withAutoReconnect</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configure<span class="token operator">: </span><span class="token keyword"></span><a href="-reconnect-config-builder/index.html">ReconnectConfigBuilder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/joffrey-bion/krossbow/blob/HEAD/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient.kt#L28">source</a>)</span></span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="token punctuation">.</span><a href="with-auto-reconnect.html"><span class="token function">withAutoReconnect</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">maxAttempts<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>DEFAULT_MAX_ATTEMPTS<span class="token punctuation">, </span></span><span class="parameter ">delayStrategy<span class="token operator">: </span><a href="-retry-delay-strategy/index.html">RetryDelayStrategy</a><span class="token operator"> = </span>DEFAULT_DELAY_STRATEGY</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/joffrey-bion/krossbow/blob/HEAD/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/reconnection/ReconnectingWebSocketClient.kt#L43">source</a>)</span></span></div><p class="paragraph">Returns a new <a href="../org.hildan.krossbow.websocket/-web-socket-client/index.html">WebSocketClient</a> that automatically reconnects on web socket errors using this client.</p><p class="paragraph">The <a href="../org.hildan.krossbow.websocket/-web-socket-connection/index.html">WebSocketConnection</a> returned by <a href="../org.hildan.krossbow.websocket/-web-socket-client/connect.html">connect</a> is an abstraction over this client's connections, so that the same connection instance can be used across reconnections, which happen transparently under the hood.</p><p class="paragraph">When chaining multiple <a href="with-auto-reconnect.html">withAutoReconnect</a> calls, the last reconnect configuration takes precedence.</p><p class="paragraph">Note: limitations on Kotlin/Native multithreaded coroutines prevent the reconnection wrapper from working properly. Please use the new memory model if you want the reconnection feature on Kotlin/Native.</p></div></div>
 </div>
       <div class="footer">
         <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
