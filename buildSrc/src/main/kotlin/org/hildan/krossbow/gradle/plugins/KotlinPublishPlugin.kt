@@ -54,8 +54,9 @@ class KotlinPublishPlugin : Plugin<Project> {
             publications.configureEach {
                 if (this is MavenPublication) {
                     pom {
-                        name.set(project.name)
-                        description.set(project.description)
+                        // using providers because the name and description can be set after application of the plugin
+                        name.set(project.provider { project.name})
+                        description.set(project.provider { project.description })
                     }
                 }
             }
