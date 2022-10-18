@@ -1,5 +1,33 @@
 # Change Log
 
+## [4.2.0](https://github.com/joffrey-bion/krossbow/tree/4.2.0) (2022-10-18)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4.1.0...4.2.0)
+
+**Closed issues:**
+
+- Cannot connect to CoilMQ: "Failed to connect at web socket level" [\#261](https://github.com/joffrey-bion/krossbow/issues/261)
+
+**Implemented enhancements:**
+
+- Add support for `watchosX64` target [\#228](https://github.com/joffrey-bion/krossbow/issues/228)
+
+**Upgraded dependencies:**
+
+- Upgrade Kotlin to version 1.7.20 [\#274](https://github.com/joffrey-bion/krossbow/issues/274)
+- Upgrade okhttp to version 4.10.0 [\#272](https://github.com/joffrey-bion/krossbow/issues/272)
+- Upgrade Jackson to version 2.13.4 [\#264](https://github.com/joffrey-bion/krossbow/issues/264)
+- Upgrade Spring to version 5.3.23 [\#271](https://github.com/joffrey-bion/krossbow/issues/271)
+- Upgrade Moshi to version 1.14.0 [\#270](https://github.com/joffrey-bion/krossbow/issues/270)
+- Upgrade Ktor to version 2.1.2 [\#269](https://github.com/joffrey-bion/krossbow/issues/269)
+- Upgrade kotlinx\-serialization to version 1.4.0 [\#268](https://github.com/joffrey-bion/krossbow/issues/268)
+- Upgrade kotlinx\-atomicfu to version 0.18.4 [\#267](https://github.com/joffrey-bion/krossbow/issues/267)
+- Upgrade jetty\-websocket to version 9.4.49.v20220914 [\#266](https://github.com/joffrey-bion/krossbow/issues/266)
+- Upgrade Kotlinx Coroutines to version 1.6.4 [\#265](https://github.com/joffrey-bion/krossbow/issues/265)
+- Upgrade uuid to version 0.5.0 [\#263](https://github.com/joffrey-bion/krossbow/issues/263)
+- Upgrade Dokka to version 1.7.10 [\#262](https://github.com/joffrey-bion/krossbow/issues/262)
+- Upgrade Ktor to version 2.1.1 [\#260](https://github.com/joffrey-bion/krossbow/issues/260)
+- Upgrade Okio to version 3.2.0 [\#224](https://github.com/joffrey-bion/krossbow/issues/224)
+
 ## [4.1.0](https://github.com/joffrey-bion/krossbow/tree/4.1.0) (2022-07-22)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.3...4.1.0)
 
