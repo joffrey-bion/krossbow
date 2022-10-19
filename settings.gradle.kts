@@ -63,7 +63,6 @@ refreshVersions {
     rejectVersionIf {
         candidate.stabilityLevel != StabilityLevel.Stable || isTyrus() || isKtorLegacyUpgrade() || isOkHttpAlpha()
     }
-    this.extraArtifactVersionKeyRules("")
 }
 
 fun DependencySelection.isKtorLegacyUpgrade() =
