@@ -25,7 +25,7 @@ StompClient(WebSocketClient.builtIn()).connect(url).withMoshi(moshi).use { sessi
 
 ## Dependency
 
-To use Moshi conversions, add `krossbow-stomp-jackson` to your Gradle dependencies
+To use Moshi conversions, add `krossbow-stomp-moshi` to your Gradle dependencies
 (`krossbow-stomp-core` is unnecessary because it's transitively brought by this one):
 
 ```kotlin
