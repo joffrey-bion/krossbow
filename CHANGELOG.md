@@ -1,5 +1,13 @@
 # Change Log
 
+## [4.3.0](https://github.com/joffrey-bion/krossbow/tree/4.3.0) (2022-10-24)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4.2.0...4.3.0)
+
+**Upgraded dependencies:**
+
+- Upgrade transitive jackson\-databind to version 2.13.4.2 via Jackson BOM 2.13.4.20221013 [\#277](https://github.com/joffrey-bion/krossbow/issues/277)
+- Upgrade kotlinx\-serialization to version 1.4.1 [\#276](https://github.com/joffrey-bion/krossbow/issues/276)
+
 ## [4.2.0](https://github.com/joffrey-bion/krossbow/tree/4.2.0) (2022-10-18)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.1.0...4.2.0)
 
