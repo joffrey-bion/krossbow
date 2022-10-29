@@ -1,5 +1,13 @@
 # Change Log
 
+## [4.4.0](https://github.com/joffrey-bion/krossbow/tree/4.4.0) (2022-10-29)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4.3.0...4.4.0)
+
+**Upgraded dependencies:**
+
+- Upgrade kotlinx\-atomicfu to version 0.18.5 [\#279](https://github.com/joffrey-bion/krossbow/issues/279)
+- Upgrade Ktor to version 2.1.3 [\#278](https://github.com/joffrey-bion/krossbow/issues/278)
+
 ## [4.3.0](https://github.com/joffrey-bion/krossbow/tree/4.3.0) (2022-10-24)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.2.0...4.3.0)
 
