@@ -4,7 +4,7 @@
 
 jackson = "2.13.4.20221013"
 jetty-websocket = "9.4.49.v20220914"
-kotlinx-atomicfu = "0.18.4"
+kotlinx-atomicfu = "0.18.5"
 kotlinx-coroutines = "1.6.4"
 kotlinx-serialization = "1.4.1"
 ktor1 = "1.6.8"
