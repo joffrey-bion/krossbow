@@ -21,7 +21,7 @@ npm-sockjs-client = "1.6.1"
 
 # test-only
 npm-isomorphic-fetch = "3.0.0"
-npm-isomorphic-ws = "4.0.1"
+npm-isomorphic-ws = "5.0.0"
 npm-ws = "8.5.0"
 
 [libraries]
