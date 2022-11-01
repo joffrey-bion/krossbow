@@ -53,7 +53,7 @@ jobs:
           git add CHANGELOG.md
           git commit -m "Version ${{ github.event.inputs.version }}"
           git push
-          echo "::set-output name=sha::$(git rev-parse HEAD)"
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Create Release and Tag
         uses: actions/create-release@v1
