@@ -56,10 +56,9 @@ jobs:
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Create Release and Tag
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }} # using personal token to trigger publish workflow
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.inputs.version }}
-          release_name: ${{ github.event.inputs.version }}
-          commitish: ${{ steps.changelog-commit.outputs.sha }}
+          token: ${{ secrets.GH_PAT }} # using personal token to trigger publish workflow
+          tag_name: ${{ inputs.version }}
+          target_commitish: ${{ steps.changelog-commit.outputs.sha }}
+          body_path: build/reports/changelog/latest-release-body.md
