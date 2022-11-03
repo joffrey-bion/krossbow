@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("krossbow.kotlin-publishing-conventions")
+    id("krossbow-publish")
 }
 
 description = "A Krossbow adapter for Spring's default WebSocket client and SockJS client"

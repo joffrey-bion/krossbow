@@ -1,7 +1,7 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id("krossbow.kotlin-publishing-conventions")
+    id("krossbow-publish")
 }
 
 description = "An extension of Krossbow STOMP client using Kotlinx Serialization's JSON format for message conversions"

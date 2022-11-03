@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("krossbow.kotlin-publishing-conventions")
+    id("krossbow-publish")
 }
 
 description = "An extension of Krossbow STOMP client using Moshi for message conversions"

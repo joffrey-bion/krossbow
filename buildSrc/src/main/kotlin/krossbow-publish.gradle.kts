@@ -1,11 +1,11 @@
 plugins {
+    id("org.hildan.kotlin-publish")
     id("org.jetbrains.dokka")
-    id("krossbow.githubinfo-conventions")
-    id("kotlin-publish")
+    id("krossbow-githubinfo")
     signing
 }
 
-configure<PublishingExtension> {
+publishing {
     // configureEach reacts on new publications being registered and configures them too
     publications.configureEach {
         if (this is MavenPublication) {
@@ -22,7 +22,7 @@ configure<PublishingExtension> {
     }
 }
 
-configure<SigningExtension> {
+signing {
     val signingKey: String? by project
     val signingPassword: String? by project
     useInMemoryPgpKeys(signingKey, signingPassword)

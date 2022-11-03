@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    id("krossbow.kotlin-publishing-conventions")
+    id("krossbow-publish")
 }
 
 description = "Multiplatform SockJS implementation of Krossbow's WebSocket API."

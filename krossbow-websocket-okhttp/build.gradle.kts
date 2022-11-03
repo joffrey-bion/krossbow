@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("krossbow.kotlin-publishing-conventions")
+    id("krossbow-publish")
 }
 
 description = "A Krossbow adapter for OkHttp's WebSocket client"

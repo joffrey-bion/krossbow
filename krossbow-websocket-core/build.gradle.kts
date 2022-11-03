@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    id("krossbow.kotlin-publishing-conventions")
+    id("krossbow-publish")
 }
 
 description = "WebSocket client API used by the Krossbow STOMP client"
