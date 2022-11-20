@@ -33,9 +33,16 @@ jobs:
         if: runner.os == 'macos'
         run: |
           brew install docker docker-compose
-          # using mount-type 9p to allow the containers launched via docker-compose to chown
+          
+          # Using mount-type 9p to allow the containers launched via docker-compose to chown
           # https://github.com/abiosoft/colima/issues/54#issuecomment-1250217077
           colima start --mount-type 9p
+          
+          # Loosen permissions for directories mounted in containers to workaround permission issues that remain
+          # when using the 9p filesystem (https://github.com/joffrey-bion/krossbow/issues/282)
+          chmod 777 autobahn-tests/test-server/config
+          mkdir -p autobahn-tests/build/autobahn/reports
+          chmod 777 autobahn-tests/build/autobahn/reports
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
