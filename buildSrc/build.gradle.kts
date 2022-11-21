@@ -11,7 +11,7 @@ dependencies {
     implementation(gradleApi())
     implementation(gradleKotlinDsl())
 
-    implementation(kotlin("gradle-plugin", "1.7.20"))
+    implementation(kotlin("gradle-plugin", "1.7.21"))
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.7.20")
 
     implementation("org.hildan.gradle:gradle-kotlin-publish-plugin:0.1.0")
