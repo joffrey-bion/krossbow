@@ -8,6 +8,13 @@ on:
 
 jobs:
   upgrade-gradle-wrapper:
-    uses: joffrey-bion/.github/.github/workflows/upgrade-gradle-wrapper.yml@main
-    secrets:
-      GH_PAT: ${{ secrets.GH_PAT }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update Gradle Wrapper
+        uses: gradle-update/update-gradle-wrapper-action@v1
+        with:
+          repo-token: ${{ secrets.GH_PAT }}
