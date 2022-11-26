@@ -1,5 +1,20 @@
 # Change Log
 
+## [4.5.0](https://github.com/joffrey-bion/krossbow/tree/4.5.0) (2022-11-26)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4.4.0...4.5.0)
+
+**Closed issues:**
+
+- \[internal\] CI build fails on macOS runners \- chown operation not permitted [\#282](https://github.com/joffrey-bion/krossbow/issues/282)
+
+**Merged pull requests:**
+
+- Fix memory crash on iOS with old memory model [\#211](https://github.com/joffrey-bion/krossbow/pull/211) ([@remy-bardou-lifeonair](https://github.com/remy-bardou-lifeonair))
+
+**Upgraded dependencies:**
+
+- Upgrade Kotlin to version 1.7.21 [\#283](https://github.com/joffrey-bion/krossbow/issues/283)
+
 ## [4.4.0](https://github.com/joffrey-bion/krossbow/tree/4.4.0) (2022-10-29)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.3.0...4.4.0)
 
