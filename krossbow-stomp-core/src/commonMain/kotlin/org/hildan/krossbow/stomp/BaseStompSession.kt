@@ -1,7 +1,7 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
@@ -26,7 +26,7 @@ internal class BaseStompSession(
     coroutineContext: CoroutineContext = EmptyCoroutineContext,
 ) : StompSession {
 
-    private val scope = CoroutineScope(coroutineContext + Job() + CoroutineName("stomp-session"))
+    private val scope = CoroutineScope(coroutineContext + CoroutineName("stomp-session"))
 
     // extra buffer required, so we can wait for the receipt frame from within the onSubscribe
     // of some other shared flow subscription (e.g. in startSubscription())
@@ -57,6 +57,9 @@ internal class BaseStompSession(
 
     private val heartBeaterJob = heartBeater?.startIn(scope)
 
+    // FIXME make it thread-safe
+    private val subscriptionsById = mutableMapOf<String, Channel<StompFrame.Message>>()
+
     init {
         scope.launch {
             stompSocket.incomingEvents
@@ -70,6 +73,7 @@ internal class BaseStompSession(
         scope.launch {
             sharedStompEvents.collect {
                 when (it) {
+                    is StompFrame.Message -> subscriptionsById[it.headers.subscription]?.send(it)
                     is StompEvent.Close -> shutdown("STOMP session disconnected")
                     is StompEvent.Error -> shutdown("STOMP session cancelled due to upstream error", cause = it.cause)
                     else -> Unit
@@ -78,43 +82,11 @@ internal class BaseStompSession(
         }
     }
 
-    private suspend fun shutdown(message: String, cause: Throwable? = null) {
+    private fun shutdown(message: String, cause: Throwable? = null) {
         // cancel heartbeats immediately to limit the chances of sending a heartbeat to a closed socket
         heartBeaterJob?.cancel()
-        // let other subscribers handle the error/closure before cancelling the scope
-        awaitSubscriptionsCompletion()
+        subscriptionsById.values.forEach { it.close(cause) }
         scope.cancel(message, cause = cause)
-    }
-
-    private suspend fun awaitSubscriptionsCompletion() {
-        withTimeoutOrNull(config.subscriptionCompletionTimeout) {
-            sharedStompEvents.subscriptionCount.takeWhile { it > 0 }.collect()
-        }
-    }
-
-    @OptIn(FlowPreview::class) // for produceIn(scope)
-    private suspend fun startSubscription(headers: StompSubscribeHeaders): ReceiveChannel<StompFrame.Message> {
-        val subscriptionStarted = CompletableDeferred<Unit>()
-
-        val subscriptionChannel = sharedStompEvents
-            .onSubscription {
-                try {
-                    // ensures we are already listening for frames before sending SUBSCRIBE, so we don't miss messages
-                    prepareHeadersAndSendFrame(StompFrame.Subscribe(headers))
-                    subscriptionStarted.complete(Unit)
-                } catch (e: Exception) {
-                    subscriptionStarted.completeExceptionally(e)
-                }
-            }
-            .dematerializeErrorsAndCompletion()
-            .filterIsInstance<StompFrame.Message>()
-            .filter { it.headers.subscription == headers.id }
-            .produceIn(scope)
-
-        // Ensures we actually subscribe now, to conform to the semantics of subscribe().
-        // produceIn() on its own cannot guarantee that the producer coroutine has started when it returns
-        subscriptionStarted.await()
-        return subscriptionChannel
     }
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
@@ -163,10 +135,13 @@ internal class BaseStompSession(
 
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> {
         val headersWithId = headers.withId()
+        val subscriptionId = headersWithId.id
 
-        return startSubscription(headersWithId)
-            .consumeAsFlow()
-            .onCompletion {
+        val messages = Channel<StompFrame.Message>(Channel.BUFFERED)
+        subscriptionsById[subscriptionId] = messages
+        prepareHeadersAndSendFrame(StompFrame.Subscribe(headersWithId))
+
+        return messages.consumeAsFlow().onCompletion {
                 when (it) {
                     // If the consumer was cancelled or an exception occurred downstream, the STOMP session keeps going
                     // so we want to unsubscribe this failed subscription.
@@ -174,7 +149,8 @@ internal class BaseStompSession(
                     // covered here.
                     is CancellationException -> {
                         if (scope.isActive) {
-                            unsubscribe(headersWithId.id)
+                            unsubscribe(subscriptionId)
+                            subscriptionsById.remove(subscriptionId)
                         } else {
                             // The whole session is cancelled, the web socket must be already closed
                         }

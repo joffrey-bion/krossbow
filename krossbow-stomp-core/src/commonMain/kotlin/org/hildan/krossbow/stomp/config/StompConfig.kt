@@ -91,6 +91,8 @@ class StompConfig {
      * The original error will be provided as cause of the cancellation in this case.
      * They may miss previously buffered messages.
      */
+    @Deprecated("The internal implementation of Krossbow doesn't require to wait for subscriptions completion " +
+        "anymore, so this configuration is obsolete and will be ignored")
     var subscriptionCompletionTimeout: Duration = 1.seconds
 
     /**
