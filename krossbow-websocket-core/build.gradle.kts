@@ -15,6 +15,7 @@ kotlin {
             dependencies {
                 api(libs.kotlinx.coroutines.core)
                 implementation(libs.okio)
+                implementation(libs.kotlinx.atomicfu)
             }
         }
         val commonTest by getting {

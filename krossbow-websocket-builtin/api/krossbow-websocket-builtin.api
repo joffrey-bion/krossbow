@@ -13,3 +13,12 @@ public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClient : org/
 	public fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClientConfig : org/hildan/krossbow/websocket/loader/WebSocketClientConfig {
+	public fun <init> ()V
+}
+
+public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClientFactory : org/hildan/krossbow/websocket/loader/WebSocketClientFactory {
+	public fun <init> ()V
+	public fun create (Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/websocket/WebSocketClient;
+}
+
