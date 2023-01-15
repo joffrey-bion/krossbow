@@ -16,7 +16,7 @@ jobs:
       matrix:
         # Windows hosts don't support linux containers yet (https://github.com/actions/virtual-environments/issues/1143)
         os: [ ubuntu-latest, macos-latest ]
-        jdk-version: [ 17 ]
+        jdk-version: [ 11, 17 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
