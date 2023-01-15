@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest # For darwin tests
     strategy:
       matrix:
-        jdk-version: [ 17 ]
+        jdk-version: [ 11 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
