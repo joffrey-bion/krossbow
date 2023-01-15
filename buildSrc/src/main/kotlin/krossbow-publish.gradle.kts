@@ -2,6 +2,7 @@ plugins {
     id("org.hildan.kotlin-publish")
     id("org.jetbrains.dokka")
     id("krossbow-githubinfo")
+    id("org.jetbrains.kotlinx.binary-compatibility-validator")
     signing
 }
 
