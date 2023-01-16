@@ -16,7 +16,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.krossbowWebsocketCore)
-                api(libs.ktor2.client.websockets)
+                api(libs.ktor.client.websockets)
                 api(libs.kotlinx.atomicfu)
             }
         }
@@ -28,25 +28,25 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                implementation(libs.ktor2.client.java)
-                implementation(libs.ktor2.client.okhttp)
+                implementation(libs.ktor.client.java)
+                implementation(libs.ktor.client.okhttp)
                 implementation(libs.slf4j.simple)
             }
         }
 
         val linuxX64Test by getting {
             dependencies {
-                implementation(libs.ktor2.client.cio)
+                implementation(libs.ktor.client.cio)
             }
         }
         val mingwX64Test by getting {
             dependencies {
-                implementation(libs.ktor2.client.curl)
+                implementation(libs.ktor.client.curl)
             }
         }
         val darwinTest by getting {
             dependencies {
-                implementation(libs.ktor2.client.darwin)
+                implementation(libs.ktor.client.darwin)
             }
         }
     }

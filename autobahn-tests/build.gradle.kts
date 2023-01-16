@@ -12,18 +12,16 @@ apply<org.jetbrains.kotlin.gradle.targets.js.npm.NpmResolverPlugin>()
 
 kotlin {
     jvm("jvmBuiltin")
-    jvm("jvmKtor1")
-    jvm("jvmKtor2")
+    jvm("jvmKtor")
     jvm("jvmOkhttp")
     jvm("jvmSpring")
     jsWithBigTimeouts("jsBuiltin")
-    jsWithBigTimeouts("jsKtor1")
-    jsWithBigTimeouts("jsKtor2")
+    jsWithBigTimeouts("jsKtor")
 
-    nativeTargets("Ktor2")
+    nativeTargets("Ktor")
     darwinTargets("Builtin")
 
-    setupMingwLibcurlFor(targetName = "mingwX64Ktor2", project)
+    setupMingwLibcurlFor(targetName = "mingwX64Ktor", project)
 
     sourceSets {
         val commonTest by getting {
@@ -61,20 +59,12 @@ kotlin {
                 implementation(libs.slf4j.simple) // for jetty client logs
             }
         }
-        val jvmKtor1Test by getting {
-            dependsOn(jvmTest)
-            dependencies {
-                implementation(projects.krossbowWebsocketKtorLegacy)
-                implementation(libs.ktor1.client.java)
-                implementation(libs.ktor1.client.okhttp)
-            }
-        }
-        val jvmKtor2Test by getting {
+        val jvmKtorTest by getting {
             dependsOn(jvmTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
-                implementation(libs.ktor2.client.java)
-                implementation(libs.ktor2.client.okhttp)
+                implementation(libs.ktor.client.java)
+                implementation(libs.ktor.client.okhttp)
                 implementation(libs.slf4j.simple)
             }
         }
@@ -94,18 +84,11 @@ kotlin {
                 implementation(npm("ws", libs.versions.npm.ws.get()))
             }
         }
-        val jsKtor1Test by getting {
-            dependsOn(jsTest)
-            dependencies {
-                implementation(projects.krossbowWebsocketKtorLegacy)
-                implementation(libs.ktor1.client.js)
-            }
-        }
-        val jsKtor2Test by getting {
+        val jsKtorTest by getting {
             dependsOn(jsTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
-                implementation(libs.ktor2.client.js)
+                implementation(libs.ktor.client.js)
             }
         }
 
@@ -114,49 +97,49 @@ kotlin {
         val nativeTest by creating {
             dependsOn(commonTest)
             dependencies {
-                implementation(libs.ktor2.client.core)
+                implementation(libs.ktor.client.core)
             }
         }
         val darwinTest by creating {
             dependsOn(nativeTest)
             dependencies {
-                implementation(libs.ktor2.client.darwin)
+                implementation(libs.ktor.client.darwin)
             }
         }
         val linuxX64Test by creating {
             dependsOn(nativeTest)
             dependencies {
-                implementation(libs.ktor2.client.cio)
+                implementation(libs.ktor.client.cio)
             }
         }
         val mingwX64Test by creating {
             dependsOn(nativeTest)
             dependencies {
-                implementation(libs.ktor2.client.curl)
+                implementation(libs.ktor.client.curl)
             }
         }
 
-        val unixKtor2Test by getting {
+        val unixKtorTest by getting {
             dependsOn(nativeTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
-                implementation(libs.ktor2.client.cio)
+                implementation(libs.ktor.client.cio)
             }
         }
-        val linuxX64Ktor2Test by getting {
+        val linuxX64KtorTest by getting {
             dependsOn(linuxX64Test)
         }
-        val darwinKtor2Test by getting {
+        val darwinKtorTest by getting {
             dependsOn(darwinTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
             }
         }
-        val mingwX64Ktor2Test by getting {
+        val mingwX64KtorTest by getting {
             dependsOn(mingwX64Test)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
-                implementation(libs.ktor2.client.curl)
+                implementation(libs.ktor.client.curl)
             }
         }
 
