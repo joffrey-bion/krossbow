@@ -2,7 +2,7 @@
 
 [versions]
 
-jackson = "2.13.4.20221013"
+jackson = "2.14.1"
 jetty-websocket = "9.4.49.v20220914"
 kotlinx-atomicfu = "0.19.0"
 kotlinx-coroutines = "1.6.4"
