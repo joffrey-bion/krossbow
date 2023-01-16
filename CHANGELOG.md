@@ -1,5 +1,27 @@
 # Change Log
 
+## [5.0.0](https://github.com/joffrey-bion/krossbow/tree/5.0.0) (2023-01-16)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/4.5.0...5.0.0)
+
+**Fixed bugs:**
+
+- Compilation of gradle Java 11 project failed [\#288](https://github.com/joffrey-bion/krossbow/issues/288)
+- \[android\] Failed to connect at STOMP protocol level to host [\#275](https://github.com/joffrey-bion/krossbow/issues/275)
+
+**Removals:**
+
+- Drop support for Ktor 1.x \(legacy\) because incompatible with Kotlin 1.8 [\#296](https://github.com/joffrey-bion/krossbow/issues/296)
+
+**Upgraded dependencies:**
+
+- Upgrade jetty\-websocket to version 9.4.50.v20221201 [\#297](https://github.com/joffrey-bion/krossbow/issues/297)
+- Upgrade uuid to version 0.6.0 [\#295](https://github.com/joffrey-bion/krossbow/issues/295)
+- Upgrade okio to version 3.3.0 \(depends on Kotlin 1.8\) [\#294](https://github.com/joffrey-bion/krossbow/issues/294)
+- Upgrade Jackson to version 2.14.1 [\#292](https://github.com/joffrey-bion/krossbow/issues/292)
+- Upgrade kotlinx\-atomicfu to version 0.19.0 [\#293](https://github.com/joffrey-bion/krossbow/issues/293)
+- Upgrade Kotlin to version 1.8.0 [\#289](https://github.com/joffrey-bion/krossbow/issues/289)
+- Upgrade Ktor to version 2.2.2 [\#291](https://github.com/joffrey-bion/krossbow/issues/291)
+
 ## [4.5.0](https://github.com/joffrey-bion/krossbow/tree/4.5.0) (2022-11-26)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.4.0...4.5.0)
 
@@ -210,7 +232,6 @@
 - Upgrade kotlinx\-atomicfu to version 0.17.1 [\#199](https://github.com/joffrey-bion/krossbow/issues/199)
 - Upgrade sockjs\-client to version 1.6.0 [\#198](https://github.com/joffrey-bion/krossbow/issues/198)
 - Upgrade jackson\-core to version 2.13.2 [\#197](https://github.com/joffrey-bion/krossbow/issues/197)
-- Upgrade slf4j to version 1.7.36 [\#196](https://github.com/joffrey-bion/krossbow/issues/196)
 - Upgrade uuid to version 0.4.0 [\#195](https://github.com/joffrey-bion/krossbow/issues/195)
 - Upgrade Ktor to version 1.6.8 [\#194](https://github.com/joffrey-bion/krossbow/issues/194)
 
