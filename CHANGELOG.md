@@ -6,7 +6,6 @@
 **Fixed bugs:**
 
 - Compilation of gradle Java 11 project failed [\#288](https://github.com/joffrey-bion/krossbow/issues/288)
-- \[android\] Failed to connect at STOMP protocol level to host [\#275](https://github.com/joffrey-bion/krossbow/issues/275)
 
 **Removals:**
 
