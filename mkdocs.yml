@@ -94,6 +94,6 @@ extra:
     kotlinxSerialization: 1.4.0
     moshi: 1.14.0
     tyrus: 1.17
-    jetty: 9.4.49.v20220914
+    jetty: 9.4.50.v20221201
 
 copyright: Copyright &copy; 2019 - 2023 Joffrey Bion
