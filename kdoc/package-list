@@ -50,8 +50,6 @@ org.hildan.krossbow.websocket
 org.hildan.krossbow.websocket.reconnection
 module:krossbow-websocket-ktor
 org.hildan.krossbow.websocket.ktor
-module:krossbow-websocket-ktor-legacy
-org.hildan.krossbow.websocket.ktor
 module:krossbow-websocket-okhttp
 org.hildan.krossbow.websocket.okhttp
 module:krossbow-websocket-sockjs
