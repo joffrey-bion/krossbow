@@ -38,8 +38,6 @@ kotlin {
         attributes.attribute(websocketEngineAttribute, "builtin-darwin")
     }
 
-    setupMingwLibcurlFor(targetName = "mingwX64Ktor", project)
-
     sourceSets {
         val commonTest by getting {
             dependencies {
@@ -115,7 +113,7 @@ kotlin {
         val mingwX64KtorTest by getting {
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
-                implementation(libs.ktor.client.curl)
+                implementation(libs.ktor.client.winhttp)
             }
         }
 

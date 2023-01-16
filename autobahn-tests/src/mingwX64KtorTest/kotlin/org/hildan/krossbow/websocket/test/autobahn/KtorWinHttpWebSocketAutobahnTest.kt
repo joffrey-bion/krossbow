@@ -1,15 +1,15 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
 import io.ktor.client.*
-import io.ktor.client.engine.curl.*
+import io.ktor.client.engine.winhttp.*
 import io.ktor.client.plugins.websocket.*
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
 import kotlin.experimental.*
 
 @OptIn(ExperimentalNativeApi::class)
-class KtorCurlWebSocketAutobahnTest : AutobahnClientTestSuite(
-    agentUnderTest = "krossbow-ktor-curl-client-${Platform.osFamily.name.lowercase()}",
+class KtorWinHttpWebSocketAutobahnTest : AutobahnClientTestSuite(
+    agentUnderTest = "krossbow-ktor-winhttp-client-${Platform.osFamily.name.lowercase()}",
     exclusions = listOf(
         CaseExclusion(
             caseIdPrefixes = listOf("2.10", "2.11"),
@@ -18,5 +18,5 @@ class KtorCurlWebSocketAutobahnTest : AutobahnClientTestSuite(
         ),
     ),
 ) {
-    override fun provideClient(): WebSocketClient = KtorWebSocketClient(HttpClient(Curl) { install(WebSockets) })
+    override fun provideClient(): WebSocketClient = KtorWebSocketClient(HttpClient(WinHttp) { install(WebSockets) })
 }

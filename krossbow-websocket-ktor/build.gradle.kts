@@ -8,7 +8,6 @@ description = "Multiplatform implementation of Krossbow's WebSocket API using Kt
 
 kotlin {
     jsWithBigTimeouts()
-    setupMingwLibcurlFor(targetName = "mingwX64", project)
 
     sourceSets {
         val commonMain by getting {
@@ -39,7 +38,7 @@ kotlin {
         }
         val mingwX64Test by getting {
             dependencies {
-                implementation(libs.ktor.client.curl)
+                implementation(libs.ktor.client.winhttp)
             }
         }
         val darwinTest by getting {

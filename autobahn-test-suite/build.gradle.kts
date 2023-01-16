@@ -53,7 +53,7 @@ kotlin {
         val mingwX64Main by getting {
             dependsOn(nativeMain)
             dependencies {
-                implementation(libs.ktor.client.curl)
+                implementation(libs.ktor.client.winhttp)
             }
         }
     }
