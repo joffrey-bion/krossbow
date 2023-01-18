@@ -1,15 +1,11 @@
 plugins {
-    kotlin("multiplatform")
+    id("krossbow-multiplatform-all")
     id("krossbow-publish")
 }
 
 description = "Multiplatform implementation of Krossbow's WebSocket API using Ktor's web sockets."
 
 kotlin {
-    jvm()
-    jsWithBigTimeouts()
-    nativeTargets()
-
     setupMingwLibcurlFor(targetName = "mingwX64", project)
 
     sourceSets {
