@@ -1,5 +1,20 @@
 Here are some details about how to migrate from one major version to another.
 
+## From 4.x to 5.x
+
+### End of Ktor 1.x support
+
+`krossbow-websocket-ktor-legacy` artifact was removed.
+This means Krossbow no longer works with Ktor 1.x.
+If you were using this module, please [migrate to Ktor 2](https://ktor.io/docs/migrating-2.html), and use the 
+non-legacy [krossbow-websocket-ktor](./websocket/ktor.md) module.
+
+### Kotlin 1.8
+
+This update of Krossbow brings Kotlin 1.8, which might bring some incompatible changes to the Kotlin stdlib.
+Please check the [compatibility guide](https://kotlinlang.org/docs/compatibility-guide-18.html) if you were using an 
+older version of Kotlin.
+
 ## From 3.x to 4.x
 
 ### withJsonConversions moved to its own module
