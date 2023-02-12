@@ -4,6 +4,7 @@ import org.gradle.kotlin.dsl.getting
 import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 
 fun KotlinMultiplatformExtension.jsTargets() {
@@ -52,19 +53,25 @@ fun KotlinTargetContainerWithNativeShortcuts.nativeTargets(flavor: String = "") 
     }
 }
 
-fun KotlinTargetContainerWithNativeShortcuts.darwinTargets(flavor: String = "", setupSourceSets: Boolean = true) {
-    ios("ios$flavor")
+fun KotlinTargetContainerWithNativeShortcuts.darwinTargets(
+    flavor: String = "",
+    setupSourceSets: Boolean = true,
+) {
+    iosArm64("iosArm64$flavor")
+    iosX64("iosX64$flavor")
     iosSimulatorArm64("iosSimulatorArm64$flavor")
 
-    tvos("tvos$flavor")
+    tvosArm64("tvosArm64$flavor")
+    tvosX64("tvosX64$flavor")
     tvosSimulatorArm64("tvosSimulatorArm64$flavor")
 
-    watchos("watchos$flavor")
-    watchosX86("watchosX86$flavor") // not included in the watchos() shortcut
+    watchosArm64("watchosArm64$flavor")
+    watchosX64("watchosX64$flavor")
+    watchosX86("watchosX86$flavor")
     watchosSimulatorArm64("watchosSimulatorArm64$flavor")
 
-    macosX64("macosX64$flavor")
     macosArm64("macosArm64$flavor")
+    macosX64("macosX64$flavor")
 
     if (setupSourceSets) {
         sourceSets {
@@ -124,15 +131,18 @@ private val allSourceSetRefs = buildSourceSetRefs(
             "mingwX64",
         ),
         "darwin" to listOf(
-            "ios",
+            "iosArm64",
+            "iosX64",
             "iosSimulatorArm64",
-            "tvos",
+            "tvosArm64",
+            "tvosX64",
             "tvosSimulatorArm64",
-            "watchos",
-            "watchosX86", // not included in the watchos shortcut
+            "watchosArm64",
+            "watchosX64",
+            "watchosX86",
             "watchosSimulatorArm64",
-            "macosX64",
             "macosArm64",
+            "macosX64",
         ),
     ),
 )
