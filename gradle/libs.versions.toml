@@ -14,7 +14,7 @@ okio = "3.3.0"
 slf4j = "2.0.6"
 spring = "5.3.23"
 tyrus = "1.17"
-uuid = "0.6.0"
+uuid = "0.7.0"
 
 npm-sockjs-client = "1.6.1"
 
