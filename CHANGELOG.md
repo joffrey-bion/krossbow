@@ -1,5 +1,22 @@
 # Change Log
 
+## [5.1.0](https://github.com/joffrey-bion/krossbow/tree/5.1.0) (2023-03-05)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.0.0...5.1.0)
+
+**Merged pull requests:**
+
+- Update Gradle Wrapper from 7.6 to 8.0.1 [\#300](https://github.com/joffrey-bion/krossbow/pull/300) ([@joffrey-bion](https://github.com/joffrey-bion))
+- Update Gradle Wrapper from 7.6 to 8.0 [\#299](https://github.com/joffrey-bion/krossbow/pull/299) ([@joffrey-bion](https://github.com/joffrey-bion))
+
+**Upgraded dependencies:**
+
+- Upgrade uuid to version 0.7.0 [\#307](https://github.com/joffrey-bion/krossbow/issues/307)
+- Upgrade Ktor to version 2.2.4 [\#306](https://github.com/joffrey-bion/krossbow/issues/306)
+- Upgrade kotlinx\-serialization to version 1.5.0 [\#305](https://github.com/joffrey-bion/krossbow/issues/305)
+- Upgrade jetty\-websocket to version 9.4.51.v20230217 [\#304](https://github.com/joffrey-bion/krossbow/issues/304)
+- Upgrade jackson to version 2.14.2 [\#303](https://github.com/joffrey-bion/krossbow/issues/303)
+- Upgrade Kotlin to version 1.8.10 [\#302](https://github.com/joffrey-bion/krossbow/issues/302)
+
 ## [5.0.0](https://github.com/joffrey-bion/krossbow/tree/5.0.0) (2023-01-16)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.5.0...5.0.0)
 
@@ -23,10 +40,6 @@
 
 ## [4.5.0](https://github.com/joffrey-bion/krossbow/tree/4.5.0) (2022-11-26)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.4.0...4.5.0)
-
-**Closed issues:**
-
-- \[internal\] CI build fails on macOS runners \- chown operation not permitted [\#282](https://github.com/joffrey-bion/krossbow/issues/282)
 
 **Merged pull requests:**
 
@@ -54,10 +67,6 @@
 
 ## [4.2.0](https://github.com/joffrey-bion/krossbow/tree/4.2.0) (2022-10-18)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.1.0...4.2.0)
-
-**Closed issues:**
-
-- Cannot connect to CoilMQ: "Failed to connect at web socket level" [\#261](https://github.com/joffrey-bion/krossbow/issues/261)
 
 **Implemented enhancements:**
 
@@ -454,7 +463,6 @@
 **Closed issues:**
 
 - Remove dependency on kotlinx\-io's charsets [\#99](https://github.com/joffrey-bion/krossbow/issues/99)
-- Migrate from kotlinx\-io to okio [\#97](https://github.com/joffrey-bion/krossbow/issues/97)
 
 **Deprecations:**
 
@@ -463,6 +471,7 @@
 **Implemented enhancements:**
 
 - Feature \- WebSocket Reconnecting Strategy [\#94](https://github.com/joffrey-bion/krossbow/issues/94)
+- Migrate from kotlinx\-io to okio [\#97](https://github.com/joffrey-bion/krossbow/issues/97)
 
 **Merged pull requests:**
 
