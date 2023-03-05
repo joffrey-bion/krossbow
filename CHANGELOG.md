@@ -3,11 +3,6 @@
 ## [5.1.0](https://github.com/joffrey-bion/krossbow/tree/5.1.0) (2023-03-05)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.0.0...5.1.0)
 
-**Merged pull requests:**
-
-- Update Gradle Wrapper from 7.6 to 8.0.1 [\#300](https://github.com/joffrey-bion/krossbow/pull/300) ([@joffrey-bion](https://github.com/joffrey-bion))
-- Update Gradle Wrapper from 7.6 to 8.0 [\#299](https://github.com/joffrey-bion/krossbow/pull/299) ([@joffrey-bion](https://github.com/joffrey-bion))
-
 **Upgraded dependencies:**
 
 - Upgrade uuid to version 0.7.0 [\#307](https://github.com/joffrey-bion/krossbow/issues/307)
