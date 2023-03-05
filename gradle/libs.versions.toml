@@ -3,7 +3,7 @@
 [versions]
 
 jackson = "2.14.2"
-jetty-websocket = "9.4.50.v20221201"
+jetty-websocket = "9.4.51.v20230217"
 kotlinx-atomicfu = "0.19.0"
 kotlinx-coroutines = "1.6.4"
 kotlinx-serialization = "1.4.1"
