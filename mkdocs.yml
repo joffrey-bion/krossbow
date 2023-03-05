@@ -91,7 +91,7 @@ extra:
   versions:
     jackson: 2.14.2
     ktor: 2.2.2
-    kotlinxSerialization: 1.4.1
+    kotlinxSerialization: 1.5.0
     moshi: 1.14.0
     tyrus: 1.17
     jetty: 9.4.51.v20230217
