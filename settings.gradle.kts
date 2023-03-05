@@ -60,12 +60,9 @@ fun BuildScanExtension.addGithubActionsData() {
 
 refreshVersions {
     rejectVersionIf {
-        candidate.stabilityLevel != StabilityLevel.Stable || isTyrus() || isKtorLegacyUpgrade() || isOkHttpAlpha()
+        candidate.stabilityLevel != StabilityLevel.Stable || isTyrus() || isOkHttpAlpha()
     }
 }
-
-fun DependencySelection.isKtorLegacyUpgrade() =
-    "ktor" in moduleId.name && current.value.startsWith("1.") && !candidate.value.startsWith("1.")
 
 fun DependencySelection.isTyrus() = moduleId.name == "tyrus-standalone-client-jdk"
 
