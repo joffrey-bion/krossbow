@@ -14,11 +14,15 @@ fun KotlinMultiplatformExtension.jsTargets() {
     }
 }
 
-fun KotlinMultiplatformExtension.jsWithBigTimeouts(name: String = "js") {
+fun KotlinMultiplatformExtension.jsWithBigTimeouts(
+    name: String = "js",
+    configure: KotlinJsTargetDsl.() -> Unit = {},
+) {
     js(name, BOTH) {
         useCommonJs()
         nodejsWithBigTimeout()
         browserWithBigTimeout()
+        configure()
     }
 }
 
@@ -42,11 +46,14 @@ fun KotlinJsTargetDsl.browserWithBigTimeout() {
     }
 }
 
-fun KotlinTargetContainerWithNativeShortcuts.nativeTargets(flavor: String = "") {
-    darwinTargets(flavor, setupSourceSets = false)
+fun KotlinTargetContainerWithNativeShortcuts.nativeTargets(
+    flavor: String = "",
+    configure: KotlinNativeTarget.() -> Unit = {},
+) {
+    darwinTargets(flavor, setupSourceSets = false, configure)
 
-    linuxX64("linuxX64$flavor")
-    mingwX64("mingwX64$flavor")
+    linuxX64("linuxX64$flavor", configure)
+    mingwX64("mingwX64$flavor", configure)
 
     sourceSets {
         setupMainAndTestSourceSets(allSourceSetRefs, flavor)
@@ -56,22 +63,23 @@ fun KotlinTargetContainerWithNativeShortcuts.nativeTargets(flavor: String = "") 
 fun KotlinTargetContainerWithNativeShortcuts.darwinTargets(
     flavor: String = "",
     setupSourceSets: Boolean = true,
+    configure: KotlinNativeTarget.() -> Unit = {},
 ) {
-    iosArm64("iosArm64$flavor")
-    iosX64("iosX64$flavor")
-    iosSimulatorArm64("iosSimulatorArm64$flavor")
+    iosArm64("iosArm64$flavor", configure)
+    iosX64("iosX64$flavor", configure)
+    iosSimulatorArm64("iosSimulatorArm64$flavor", configure)
 
-    tvosArm64("tvosArm64$flavor")
-    tvosX64("tvosX64$flavor")
-    tvosSimulatorArm64("tvosSimulatorArm64$flavor")
+    tvosArm64("tvosArm64$flavor", configure)
+    tvosX64("tvosX64$flavor", configure)
+    tvosSimulatorArm64("tvosSimulatorArm64$flavor", configure)
 
-    watchosArm64("watchosArm64$flavor")
-    watchosX64("watchosX64$flavor")
-    watchosX86("watchosX86$flavor")
-    watchosSimulatorArm64("watchosSimulatorArm64$flavor")
+    watchosArm64("watchosArm64$flavor", configure)
+    watchosX64("watchosX64$flavor", configure)
+    watchosX86("watchosX86$flavor", configure)
+    watchosSimulatorArm64("watchosSimulatorArm64$flavor", configure)
 
-    macosArm64("macosArm64$flavor")
-    macosX64("macosX64$flavor")
+    macosArm64("macosArm64$flavor", configure)
+    macosX64("macosX64$flavor", configure)
 
     if (setupSourceSets) {
         sourceSets {

@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 
 plugins {
@@ -10,16 +11,39 @@ description = "A non-published project to run Autobahn Test Suite on all impleme
 
 apply<org.jetbrains.kotlin.gradle.targets.js.npm.NpmResolverPlugin>()
 
-kotlin {
-    jvm("jvmBuiltin")
-    jvm("jvmKtor")
-    jvm("jvmOkhttp")
-    jvm("jvmSpring")
-    jsWithBigTimeouts("jsBuiltin")
-    jsWithBigTimeouts("jsKtor")
+val websocketEngineAttribute = Attribute.of("websocket-engine", String::class.java)
 
-    nativeTargets("Ktor")
-    darwinTargets("Builtin")
+fun KotlinTarget.setWebSocketEngineAttribute(engine: String) {
+    attributes {
+        attribute(websocketEngineAttribute, engine)
+    }
+}
+
+kotlin {
+    jvm("jvmBuiltin") {
+        setWebSocketEngineAttribute("builtin-jvm")
+    }
+    jvm("jvmKtor") {
+        setWebSocketEngineAttribute("ktor")
+    }
+    jvm("jvmOkhttp") {
+        setWebSocketEngineAttribute("okhttp")
+    }
+    jvm("jvmSpring") {
+        setWebSocketEngineAttribute("spring")
+    }
+    jsWithBigTimeouts("jsBuiltin") {
+        setWebSocketEngineAttribute("builtin-js")
+    }
+    jsWithBigTimeouts("jsKtor") {
+        setWebSocketEngineAttribute("ktor")
+    }
+    nativeTargets("Ktor") {
+        setWebSocketEngineAttribute("ktor")
+    }
+    darwinTargets("Builtin") {
+        setWebSocketEngineAttribute("builtin-darwin")
+    }
 
     setupMingwLibcurlFor(targetName = "mingwX64Ktor", project)
 
@@ -148,6 +172,27 @@ kotlin {
             dependencies {
                 implementation(projects.krossbowWebsocketBuiltin)
             }
+        }
+    }
+}
+
+// workaround for KT-55751 / KT-56450, required in Gradle 8
+// https://youtrack.jetbrains.com/issue/KT-55751/MPP-Gradle-Consumable-configurations-must-have-unique-attributes
+// https://youtrack.jetbrains.com/issue/KT-56450/Custom-attributes-declared-for-target-arent-included-in-metadata-variant
+configurations.configureEach {
+    if (name.startsWith("metadata")) {
+        return@configureEach
+    }
+    if (name.endsWith("ApiElements") || name.endsWith("RuntimeElements")) {
+        val targetName = name.removeSuffix("ApiElements")
+            .removeSuffix("RuntimeElements")
+            .removeSuffix("CInterop")
+            .replace("Ir", "Legacy")
+        val target = kotlin.targets.getByName(targetName)
+        val engine = target.attributes.getAttribute(websocketEngineAttribute)
+            ?: error("engine attribute not found in target $targetName (for configuration $name)")
+        attributes {
+            attribute(websocketEngineAttribute, engine)
         }
     }
 }
