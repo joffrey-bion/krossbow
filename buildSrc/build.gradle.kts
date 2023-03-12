@@ -15,6 +15,6 @@ dependencies {
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.8.10")
     implementation("org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:0.13.0")
 
-    implementation("org.hildan.gradle:gradle-kotlin-publish-plugin:0.1.0")
+    implementation("org.hildan.gradle:gradle-kotlin-publish-plugin:1.1.0")
     implementation("ru.vyarus:gradle-github-info-plugin:1.4.0")
 }
