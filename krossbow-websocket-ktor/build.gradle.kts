@@ -6,6 +6,7 @@ plugins {
 description = "Multiplatform implementation of Krossbow's WebSocket API using Ktor's web sockets."
 
 kotlin {
+    jsWithBigTimeouts()
     setupMingwLibcurlFor(targetName = "mingwX64", project)
 
     sourceSets {
