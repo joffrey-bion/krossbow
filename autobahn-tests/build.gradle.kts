@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 
 plugins {
@@ -13,36 +12,30 @@ apply<org.jetbrains.kotlin.gradle.targets.js.npm.NpmResolverPlugin>()
 
 val websocketEngineAttribute = Attribute.of("websocket-engine", String::class.java)
 
-fun KotlinTarget.setWebSocketEngineAttribute(engine: String) {
-    attributes {
-        attribute(websocketEngineAttribute, engine)
-    }
-}
-
 kotlin {
     jvm("jvmBuiltin") {
-        setWebSocketEngineAttribute("builtin-jvm")
+        attributes.attribute(websocketEngineAttribute, "builtin-jvm")
     }
     jvm("jvmKtor") {
-        setWebSocketEngineAttribute("ktor")
+        attributes.attribute(websocketEngineAttribute, "ktor")
     }
     jvm("jvmOkhttp") {
-        setWebSocketEngineAttribute("okhttp")
+        attributes.attribute(websocketEngineAttribute, "okhttp")
     }
     jvm("jvmSpring") {
-        setWebSocketEngineAttribute("spring")
+        attributes.attribute(websocketEngineAttribute, "spring")
     }
     jsWithBigTimeouts("jsBuiltin") {
-        setWebSocketEngineAttribute("builtin-js")
+        attributes.attribute(websocketEngineAttribute, "builtin-js")
     }
     jsWithBigTimeouts("jsKtor") {
-        setWebSocketEngineAttribute("ktor")
+        attributes.attribute(websocketEngineAttribute, "ktor")
     }
     nativeTargets("Ktor") {
-        setWebSocketEngineAttribute("ktor")
+        attributes.attribute(websocketEngineAttribute, "ktor")
     }
     darwinTargets("Builtin") {
-        setWebSocketEngineAttribute("builtin-darwin")
+        attributes.attribute(websocketEngineAttribute, "builtin-darwin")
     }
 
     setupMingwLibcurlFor(targetName = "mingwX64Ktor", project)
