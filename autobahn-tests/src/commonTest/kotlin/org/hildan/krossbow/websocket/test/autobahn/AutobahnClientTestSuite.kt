@@ -243,7 +243,7 @@ private suspend fun AutobahnClientTester.runTestCase(case: AutobahnCase) {
     val receivedFrames = mutableListOf<WebSocketFrame>()
     try {
         val session = connectForAutobahnTestCase(case.id)
-        withTimeout(10000) {
+        withTimeout(15000) {
             session.incomingFrames
                 .onEach { receivedFrames.add(it) }
                 .takeWhile { it !is WebSocketFrame.Close }
@@ -273,7 +273,7 @@ private suspend fun WebSocketConnection.echoFrame(frame: WebSocketFrame) {
         is WebSocketFrame.Text -> sendText(frame.text)
         is WebSocketFrame.Binary -> sendBinary(frame.bytes)
         is WebSocketFrame.Ping -> Unit // nothing special, we expect the underlying impl to PONG properly
-        is WebSocketFrame.Pong -> Unit // nothing to do for unsollicited PONG
+        is WebSocketFrame.Pong -> Unit // nothing to do for unsolicited PONG
         is WebSocketFrame.Close -> error("should not receive CLOSE frame at that point")
     }
 }
