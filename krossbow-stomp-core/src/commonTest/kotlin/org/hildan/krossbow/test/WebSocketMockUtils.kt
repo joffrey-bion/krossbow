@@ -13,6 +13,7 @@ import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.test.WebSocketConnectionMock
 import org.hildan.krossbow.websocket.test.webSocketClientMock
+import kotlin.coroutines.*
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -24,7 +25,7 @@ suspend fun connectWithMocks(
     val stompClient = StompClient(webSocketClientMock { wsSession }) {
         configure()
         // to use the test dispatcher
-        defaultSessionCoroutineContext = coroutineContext
+        defaultSessionCoroutineContext = coroutineContext[ContinuationInterceptor] ?: EmptyCoroutineContext
     }
     val session = async { stompClient.connect("dummy URL") }
     wsSession.awaitConnectFrameAndSimulateCompletion()

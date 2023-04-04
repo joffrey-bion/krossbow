@@ -26,7 +26,7 @@ internal class BaseStompSession(
     coroutineContext: CoroutineContext = EmptyCoroutineContext,
 ) : StompSession {
 
-    private val scope = CoroutineScope(coroutineContext + Job() + CoroutineName("stomp-session"))
+    private val scope = CoroutineScope(CoroutineName("stomp-session") + coroutineContext)
 
     // extra buffer required, so we can wait for the receipt frame from within the onSubscribe
     // of some other shared flow subscription (e.g. in startSubscription())
