@@ -11,7 +11,7 @@ dependencies {
     implementation(gradleApi())
     implementation(gradleKotlinDsl())
 
-    implementation(kotlin("gradle-plugin", "1.8.10"))
+    implementation(kotlin("gradle-plugin", "1.8.20"))
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.8.10")
     implementation("org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:0.13.0")
 
