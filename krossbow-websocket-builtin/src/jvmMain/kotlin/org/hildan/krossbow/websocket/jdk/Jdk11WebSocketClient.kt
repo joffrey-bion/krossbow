@@ -45,7 +45,7 @@ private class Jdk11WebSocketListener(
     private val listener: WebSocketListenerFlowAdapter
 ) : WebSocket.Listener {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO + CoroutineName("krossbow-jdk11-ws-listener-adapter"))
 
     override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*> = scope.future {
         listener.onTextMessage(data, last)
