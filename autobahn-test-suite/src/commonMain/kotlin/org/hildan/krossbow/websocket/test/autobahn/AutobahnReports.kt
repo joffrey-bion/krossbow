@@ -4,9 +4,12 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 
-// Using an expect/actual to be able to use Ktor 1 or 2 depending on the source set
-// to avoid conflicts when testing one or the other.
-expect class HttpGetter {
+/**
+ * Abstract network client, just for HTTP GET.
+ *
+ * We don't want to use Ktor in general because it would add unwanted dependencies to the tests of other engines.
+ */
+expect class HttpGetter() {
     suspend fun get(url: String): String
 }
 
