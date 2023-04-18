@@ -176,9 +176,10 @@ configurations.configureEach {
     if (name.startsWith("metadata")) {
         return@configureEach
     }
-    if (name.endsWith("ApiElements") || name.endsWith("RuntimeElements")) {
+    if (name.endsWith("ApiElements") || name.endsWith("RuntimeElements") || name.endsWith("SourcesElements")) {
         val targetName = name.removeSuffix("ApiElements")
             .removeSuffix("RuntimeElements")
+            .removeSuffix("SourcesElements")
             .removeSuffix("CInterop")
             .replace("Ir", "Legacy")
         val target = kotlin.targets.getByName(targetName)
