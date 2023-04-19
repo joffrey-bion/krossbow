@@ -8,7 +8,7 @@ description = "Multiplatform implementation of Krossbow's WebSocket API adapting
 
 kotlin {
     jvm()
-    js(BOTH) {
+    js {
         browserWithBigTimeout()
     }
     darwinTargets()

@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 
 fun KotlinMultiplatformExtension.jsTargets() {
-    js(BOTH) {
+    js {
         browser()
         nodejs()
     }
@@ -18,7 +18,7 @@ fun KotlinMultiplatformExtension.jsWithBigTimeouts(
     name: String = "js",
     configure: KotlinJsTargetDsl.() -> Unit = {},
 ) {
-    js(name, BOTH) {
+    js(name) {
         useCommonJs()
         nodejsWithBigTimeout()
         browserWithBigTimeout()
