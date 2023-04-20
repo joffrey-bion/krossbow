@@ -84,11 +84,8 @@ kotlin {
             }
         }
 
-        val jsTest by creating {
-            dependsOn(commonTest)
-        }
         val jsBuiltinTest by getting {
-            dependsOn(jsTest)
+            dependsOn(commonTest)
             dependencies {
                 implementation(projects.krossbowWebsocketBuiltin)
                 implementation(npm("isomorphic-ws", libs.versions.npm.isomorphic.ws.get()))
@@ -96,58 +93,26 @@ kotlin {
             }
         }
         val jsKtorTest by getting {
-            dependsOn(jsTest)
+            dependsOn(commonTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
                 implementation(libs.ktor.client.js)
             }
         }
 
-        // Those common native source sets are for the HTTP getter actual implementations.
-        // This is used during tests to access Autobahn reports via HTTP.
-//        val nativeTest by creating {
-//            dependsOn(commonTest)
-//            dependencies {
-//                implementation(libs.ktor.client.core)
-//            }
-//        }
-//        val darwinTest by creating {
-//            dependsOn(nativeTest)
-//            dependencies {
-//                implementation(libs.ktor.client.darwin)
-//            }
-//        }
-//        val linuxX64Test by creating {
-//            dependsOn(nativeTest)
-//            dependencies {
-//                implementation(libs.ktor.client.cio)
-//            }
-//        }
-//        val mingwX64Test by creating {
-//            dependsOn(nativeTest)
-//            dependencies {
-//                implementation(libs.ktor.client.curl)
-//            }
-//        }
-
         val unixKtorTest by getting {
-//            dependsOn(nativeTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
                 implementation(libs.ktor.client.cio)
             }
         }
-//        val linuxX64KtorTest by getting {
-//            dependsOn(linuxX64Test)
-//        }
         val darwinKtorTest by getting {
-//            dependsOn(darwinTest)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
+                implementation(libs.ktor.client.darwin)
             }
         }
         val mingwX64KtorTest by getting {
-//            dependsOn(mingwX64Test)
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
                 implementation(libs.ktor.client.curl)
@@ -155,7 +120,6 @@ kotlin {
         }
 
         val darwinBuiltinTest by getting {
-//            dependsOn(darwinTest)
             dependencies {
                 implementation(projects.krossbowWebsocketBuiltin)
             }
