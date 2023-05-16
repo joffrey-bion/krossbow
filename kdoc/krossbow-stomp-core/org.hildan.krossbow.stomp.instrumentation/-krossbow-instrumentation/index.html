@@ -49,102 +49,104 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="krossbow-stomp-core::org.hildan.krossbow.stomp.instrumentation/KrossbowInstrumentation///PointingToDeclaration//-1714576161">
+<div class="main-content" data-page-type="classlike" id="content" pageids="krossbow-stomp-core::org.hildan.krossbow.stomp.instrumentation/KrossbowInstrumentation///PointingToDeclaration//-1714576161">
   <div class="breadcrumbs"><a href="../../index.html">krossbow-stomp-core</a><span class="delimiter">/</span><a href="../index.html">org.hildan.krossbow.stomp.instrumentation</a><span class="delimiter">/</span><span class="current">KrossbowInstrumentation</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Krossbow</span><wbr><span><span>Instrumentation</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">KrossbowInstrumentation</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/null/krossbow/blob/HEAD/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation.kt#L6">source</a>)</span></span></div><p class="paragraph">An interface to hook some pieces of code in different places of internal Krossbow execution. This is primarily meant for monitoring, logging or debugging.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">KrossbowInstrumentation</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/null/krossbow/blob/HEAD/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation.kt#L10">source</a>)</span></span></div><p class="paragraph">An interface to hook some pieces of code in different places of internal Krossbow execution. This is primarily meant for monitoring, logging or debugging.</p></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
     <div class="tabs-section-body">
-      <h2 class="">Functions</h2>
-      <div class="table" data-togglable="Functions"><a data-name="51163756%2FFunctions%2F-1714576161" anchor-label="onFrameDecoded" id="51163756%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="on-frame-decoded.html"><span>on</span><wbr><span>Frame</span><wbr><span><span>Decoded</span></span></a></div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="51163756%2FFunctions%2F-1714576161" anchor-label="onFrameDecoded" id="51163756%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-frame-decoded.html"><span>on</span><wbr><span>Frame</span><wbr><span><span>Decoded</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="51163756%2FFunctions%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-frame-decoded.html"><span class="token function">onFrameDecoded</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">originalFrame<span class="token operator">: </span><a href="../../../krossbow-websocket-builtin/org.hildan.krossbow.websocket/-web-socket-frame/index.html">WebSocketFrame</a><span class="token punctuation">, </span></span><span class="parameter ">decodedFrame<span class="token operator">: </span><a href="../../org.hildan.krossbow.stomp.frame/-stomp-frame/index.html">StompFrame</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called right after successfully decoding a websocket frame into a STOMP frame. This callback is called even for STOMP ERROR frames (before failure).</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-frame-decoded.html"><span class="token function">onFrameDecoded</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">originalFrame<span class="token operator">: </span><a href="../../../krossbow-websocket-builtin/org.hildan.krossbow.websocket/-web-socket-frame/index.html">WebSocketFrame</a><span class="token punctuation">, </span></span><span class="parameter ">decodedFrame<span class="token operator">: </span><a href="../../org.hildan.krossbow.stomp.frame/-stomp-frame/index.html">StompFrame</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called right after successfully decoding a websocket frame into a STOMP frame. This callback is called even for STOMP ERROR frames (before failure).</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1654288883%2FFunctions%2F-1714576161" anchor-label="onStompFrameSent" id="1654288883%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="on-stomp-frame-sent.html"><span>on</span><wbr><span>Stomp</span><wbr><span>Frame</span><wbr><span><span>Sent</span></span></a></div>
+          <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-stomp-frame-sent.html"><span>on</span><wbr><span>Stomp</span><wbr><span>Frame</span><wbr><span><span>Sent</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1654288883%2FFunctions%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-stomp-frame-sent.html"><span class="token function">onStompFrameSent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">frame<span class="token operator">: </span><a href="../../org.hildan.krossbow.stomp.frame/-stomp-frame/index.html">StompFrame</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called right after successfully sending a STOMP <a href="on-stomp-frame-sent.html">frame</a> to the server.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-stomp-frame-sent.html"><span class="token function">onStompFrameSent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">frame<span class="token operator">: </span><a href="../../org.hildan.krossbow.stomp.frame/-stomp-frame/index.html">StompFrame</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called right after successfully sending a STOMP <a href="on-stomp-frame-sent.html">frame</a> to the server.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1629031578%2FFunctions%2F-1714576161" anchor-label="onWebSocketClientError" id="-1629031578%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="on-web-socket-client-error.html"><span>on</span><wbr><span>Web</span><wbr><span>Socket</span><wbr><span>Client</span><wbr><span><span>Error</span></span></a></div>
+          <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-web-socket-client-error.html"><span>on</span><wbr><span>Web</span><wbr><span>Socket</span><wbr><span>Client</span><wbr><span><span>Error</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1629031578%2FFunctions%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-web-socket-client-error.html"><span class="token function">onWebSocketClientError</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">exception<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called if some exception is thrown by the websocket client.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-web-socket-client-error.html"><span class="token function">onWebSocketClientError</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">exception<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called if some exception is thrown by the websocket client.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="570672894%2FFunctions%2F-1714576161" anchor-label="onWebSocketClosed" id="570672894%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="on-web-socket-closed.html"><span>on</span><wbr><span>Web</span><wbr><span>Socket</span><wbr><span><span>Closed</span></span></a></div>
+          <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-web-socket-closed.html"><span>on</span><wbr><span>Web</span><wbr><span>Socket</span><wbr><span><span>Closed</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="570672894%2FFunctions%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-web-socket-closed.html"><span class="token function">onWebSocketClosed</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">cause<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called after the websocket is closed.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-web-socket-closed.html"><span class="token function">onWebSocketClosed</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">cause<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called after the websocket is closed.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-693528851%2FFunctions%2F-1714576161" anchor-label="onWebSocketFrameReceived" id="-693528851%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="on-web-socket-frame-received.html"><span>on</span><wbr><span>Web</span><wbr><span>Socket</span><wbr><span>Frame</span><wbr><span><span>Received</span></span></a></div>
+          <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-web-socket-frame-received.html"><span>on</span><wbr><span>Web</span><wbr><span>Socket</span><wbr><span>Frame</span><wbr><span><span>Received</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-693528851%2FFunctions%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-web-socket-frame-received.html"><span class="token function">onWebSocketFrameReceived</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">frame<span class="token operator">: </span><a href="../../../krossbow-websocket-builtin/org.hildan.krossbow.websocket/-web-socket-frame/index.html">WebSocketFrame</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called upon reception of every websocket frame.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-web-socket-frame-received.html"><span class="token function">onWebSocketFrameReceived</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">frame<span class="token operator">: </span><a href="../../../krossbow-websocket-builtin/org.hildan.krossbow.websocket/-web-socket-frame/index.html">WebSocketFrame</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called upon reception of every websocket frame.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1874951507%2FFunctions%2F-1714576161" anchor-label="plus" id="-1874951507%2FFunctions%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="plus.html"><span><span>plus</span></span></a></div>
+          <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="plus.html"><span><span>plus</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1874951507%2FFunctions%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="plus.html"><span class="token function">plus</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">instrumentation<span class="token operator">: </span><a href="index.html">KrossbowInstrumentation</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">KrossbowInstrumentation</a></div><div class="brief "><p class="paragraph">Returns a new instrumentation chain that runs this instrumentation and the given <a href="plus.html">instrumentation</a> in each callback.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="plus.html"><span class="token function">plus</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">instrumentation<span class="token operator">: </span><a href="index.html">KrossbowInstrumentation</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">KrossbowInstrumentation</a></div><div class="brief "><p class="paragraph">Returns a new instrumentation chain that runs this instrumentation and the given <a href="plus.html">instrumentation</a> in each callback.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -158,6 +160,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

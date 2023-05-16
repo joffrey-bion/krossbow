@@ -49,59 +49,63 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="krossbow-stomp-core::org.hildan.krossbow.stomp.config/HeartBeatTolerance///PointingToDeclaration//-1714576161">
+<div class="main-content" data-page-type="classlike" id="content" pageids="krossbow-stomp-core::org.hildan.krossbow.stomp.config/HeartBeatTolerance///PointingToDeclaration//-1714576161">
   <div class="breadcrumbs"><a href="../../index.html">krossbow-stomp-core</a><span class="delimiter">/</span><a href="../index.html">org.hildan.krossbow.stomp.config</a><span class="delimiter">/</span><span class="current">HeartBeatTolerance</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Heart</span><wbr><span>Beat</span><wbr><span><span>Tolerance</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">HeartBeatTolerance</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>outgoingMargin<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a><span class="token operator"> = </span>Duration.ZERO<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>incomingMargin<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a><span class="token operator"> = </span>500.milliseconds</span></span><span class="token punctuation">)</span><span class="clearfix"><span class="floating-right">(<a href="https://github.com/null/krossbow/blob/HEAD/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/config/StompConfig.kt#L144">source</a>)</span></span></div><p class="paragraph">Defines tolerance for heart beats.</p><p class="paragraph">If both the client and server really stick to the heart beats periods negotiated and given by the CONNECTED frame, network latencies will make them miss their marks. That's why we need some sort of tolerance.</p><p class="paragraph">In case the server is too strict about its expectations, we can send heart beats a little earlier than we're supposed to (see <a href="outgoing-margin.html">outgoingMargin</a>).</p><p class="paragraph">In case the server really sticks to its own period without such margin, we need to allow a little delay to make up for network latencies before we fail and close the connection (see <a href="incoming-margin.html">incomingMargin</a>).</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">HeartBeatTolerance</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>outgoingMargin<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a><span class="token operator"> = </span>Duration.ZERO<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>incomingMargin<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a><span class="token operator"> = </span>500.milliseconds</span></span><span class="token punctuation">)</span><span class="clearfix"><span class="floating-right">(<a href="https://github.com/null/krossbow/blob/HEAD/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/config/StompConfig.kt#L156">source</a>)</span></span></div><p class="paragraph">Defines tolerance for heart beats.</p><p class="paragraph">If both the client and server really stick to the heart beats periods negotiated and given by the CONNECTED frame, network latencies will make them miss their marks. That's why we need some sort of tolerance.</p><p class="paragraph">In case the server is too strict about its expectations, we can send heart beats a little earlier than we're supposed to (see <a href="outgoing-margin.html">outgoingMargin</a>).</p><p class="paragraph">In case the server really sticks to its own period without such margin, we need to allow a little delay to make up for network latencies before we fail and close the connection (see <a href="incoming-margin.html">incomingMargin</a>).</p></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
     <div class="tabs-section-body">
-      <h2 class="tabbedcontent">Constructors</h2>
-      <div class="table" data-togglable="Constructors"><a data-name="315845711%2FConstructors%2F-1714576161" anchor-label="HeartBeatTolerance" id="315845711%2FConstructors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue TabbedContent">
-            <div class=""><span class="inline-flex">
-                <div><a href="-heart-beat-tolerance.html"><span>Heart</span><wbr><span>Beat</span><wbr><span><span>Tolerance</span></span></a></div>
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="315845711%2FConstructors%2F-1714576161" anchor-label="HeartBeatTolerance" id="315845711%2FConstructors%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-heart-beat-tolerance.html"><span>Heart</span><wbr><span>Beat</span><wbr><span><span>Tolerance</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="315845711%2FConstructors%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-heart-beat-tolerance.html"><span class="token function">HeartBeatTolerance</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">outgoingMargin<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a><span class="token operator"> = </span>Duration.ZERO<span class="token punctuation">, </span></span><span class="parameter ">incomingMargin<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a><span class="token operator"> = </span>500.milliseconds</span></span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">outgoingMargin<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a><span class="token operator"> = </span>Duration.ZERO<span class="token punctuation">, </span></span><span class="parameter ">incomingMargin<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a><span class="token operator"> = </span>500.milliseconds</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <h2 class="">Properties</h2>
-      <div class="table" data-togglable="Properties"><a data-name="-1571098099%2FProperties%2F-1714576161" anchor-label="incomingMargin" id="-1571098099%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="incoming-margin.html"><span>incoming</span><wbr><span><span>Margin</span></span></a></div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-1571098099%2FProperties%2F-1714576161" anchor-label="incomingMargin" id="-1571098099%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="incoming-margin.html"><span>incoming</span><wbr><span><span>Margin</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1571098099%2FProperties%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="-1571098099%2FProperties%2F-1714576161" anchor-label="incomingMargin" id="-1571098099%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="incoming-margin.html">incomingMargin</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a></div><div class="brief "><a data-name="-1571098099%2FProperties%2F-1714576161" anchor-label="incomingMargin" id="-1571098099%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">How much more to wait before failing when we don't receive a heart beat from the server in the expected time.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="incoming-margin.html">incomingMargin</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a></div><div class="brief "><p class="paragraph">How much more to wait before failing when we don't receive a heart beat from the server in the expected time.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="2071973383%2FProperties%2F-1714576161" anchor-label="outgoingMargin" id="2071973383%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="outgoing-margin.html"><span>outgoing</span><wbr><span><span>Margin</span></span></a></div>
+          <div class="table-row" data-filterable-current=":krossbow-stomp-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="outgoing-margin.html"><span>outgoing</span><wbr><span><span>Margin</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2071973383%2FProperties%2F-1714576161"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><a data-name="2071973383%2FProperties%2F-1714576161" anchor-label="outgoingMargin" id="2071973383%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="outgoing-margin.html">outgoingMargin</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a></div><div class="brief "><a data-name="2071973383%2FProperties%2F-1714576161" anchor-label="outgoingMargin" id="2071973383%2FProperties%2F-1714576161" data-filterable-set=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"></a><p class="paragraph">How much time in advance heart beats should be sent. This is to avoid issues when servers are not very tolerant on heart beats reception.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="outgoing-margin.html">outgoingMargin</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a></div><div class="brief "><p class="paragraph">How much time in advance heart beats should be sent. This is to avoid issues when servers are not very tolerant on heart beats reception.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -115,6 +119,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 
