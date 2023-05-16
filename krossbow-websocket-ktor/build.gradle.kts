@@ -1,6 +1,7 @@
 plugins {
     id("krossbow-multiplatform-all")
     id("krossbow-publish")
+    kotlin("plugin.atomicfu")
 }
 
 description = "Multiplatform implementation of Krossbow's WebSocket API using Ktor's web sockets."

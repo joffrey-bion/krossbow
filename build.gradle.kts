@@ -3,6 +3,7 @@ plugins {
     kotlin("jvm") apply false
     kotlin("js") apply false
     kotlin("multiplatform") apply false
+    kotlin("plugin.atomicfu") version kotlinVersion apply false
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jetbrains.dokka")
