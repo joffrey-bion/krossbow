@@ -39,7 +39,7 @@ private class KtorWebSocketConnectionAdapter(
     override val url: String
         get() = wsSession.call.request.url.toString()
 
-    @OptIn(ExperimentalCoroutinesApi::class) // for isClosedForSend
+    @OptIn(DelicateCoroutinesApi::class) // for isClosedForSend
     override val canSend: Boolean
         get() = !wsSession.outgoing.isClosedForSend
 

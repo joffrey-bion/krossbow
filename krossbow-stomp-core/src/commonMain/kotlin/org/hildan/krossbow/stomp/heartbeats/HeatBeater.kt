@@ -2,7 +2,7 @@ package org.hildan.krossbow.stomp.heartbeats
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.selects.*
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.HeartBeatTolerance
 import kotlin.time.Duration
@@ -45,7 +45,7 @@ private class Ticker(
         while (isActive) {
             select<Unit> {
                 resetEvents.onReceive { }
-                onTimeout(period.inWholeMilliseconds, onTick)
+                onTimeout(period, onTick)
             }
         }
     }
