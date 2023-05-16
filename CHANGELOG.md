@@ -1,5 +1,34 @@
 # Change Log
 
+## [5.2.0](https://github.com/joffrey-bion/krossbow/tree/5.2.0) (2023-05-16)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.1.0...5.2.0)
+
+**Implemented enhancements:**
+
+- Allow to override coroutine name and job in stomp session context [\#308](https://github.com/joffrey-bion/krossbow/issues/308)
+
+**Merged pull requests:**
+
+- Upgrade Ktor to version 2.3.0 [\#314](https://github.com/joffrey-bion/krossbow/pull/314) ([@joffrey-bion](https://github.com/joffrey-bion))
+
+**Removals:**
+
+- IR\-only: stop publishing JS artifacts compiled with the legacy compiler [\#290](https://github.com/joffrey-bion/krossbow/issues/290)
+- Remove support for legacy non\-hierarchical projects \(`enableCompatibilityMetadataVariant`\) [\#313](https://github.com/joffrey-bion/krossbow/issues/313)
+
+**Upgraded dependencies:**
+
+- Upgrade slf4j to version 2.0.7 [\#330](https://github.com/joffrey-bion/krossbow/issues/330)
+- Upgrade OkHttp to version 4.11.0 [\#329](https://github.com/joffrey-bion/krossbow/issues/329)
+- Upgrade Moshi to version 1.15.0 [\#328](https://github.com/joffrey-bion/krossbow/issues/328)
+- Upgrade jackson to version 2.15.0 [\#327](https://github.com/joffrey-bion/krossbow/issues/327)
+- Upgrade kotlinx\-serialization to version 1.5.1 [\#326](https://github.com/joffrey-bion/krossbow/issues/326)
+- Upgrade kotlinx\-coroutines to version 1.7.1 [\#325](https://github.com/joffrey-bion/krossbow/issues/325)
+- Upgrade kotlinx\-atomicfu to version 0.20.2 [\#317](https://github.com/joffrey-bion/krossbow/issues/317)
+- Upgrade Kotlin to version 1.8.21 [\#316](https://github.com/joffrey-bion/krossbow/issues/316)
+- Upgrade Ktor to version 2.3.0 [\#312](https://github.com/joffrey-bion/krossbow/issues/312)
+- Upgrade Kotlin to version 1.8.20 [\#309](https://github.com/joffrey-bion/krossbow/issues/309)
+
 ## [5.1.0](https://github.com/joffrey-bion/krossbow/tree/5.1.0) (2023-03-05)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.0.0...5.1.0)
 
@@ -35,10 +64,6 @@
 
 ## [4.5.0](https://github.com/joffrey-bion/krossbow/tree/4.5.0) (2022-11-26)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.4.0...4.5.0)
-
-**Merged pull requests:**
-
-- Fix memory crash on iOS with old memory model [\#211](https://github.com/joffrey-bion/krossbow/pull/211) ([@remy-bardou-lifeonair](https://github.com/remy-bardou-lifeonair))
 
 **Upgraded dependencies:**
 
