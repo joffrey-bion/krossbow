@@ -61,8 +61,6 @@ jobs:
       - name: Commit and Push Change Log
         id: changelog-commit
         run: |
-          git config user.name '${{ github.actor }}'
-          git config user.email '${{ github.actor }}@users.noreply.github.com'
           git add CHANGELOG.md
           git commit -m "Version ${{ inputs.version }}"
           git push
@@ -75,3 +73,22 @@ jobs:
           tag_name: ${{ inputs.version }}
           target_commitish: ${{ steps.changelog-commit.outputs.sha }}
           body_path: build/reports/changelog/latest-release-body.md
+
+      # The publishToSonatype task and the repository release need to be in the same Gradle call
+      # so that the closeAndRelease task knows which staging repository was created by publishToSonatype
+      - name: Build and publish to OSS Sonatype and then Maven Central
+        uses: gradle/gradle-build-action@v2
+        env:
+          # GPG keys for signing plugin (sign maven artifacts)
+          # see https://docs.gradle.org/current/userguide/signing_plugin.html#sec:in-memory-keys
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SECRET_ASCII_ARMORED }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSWORD }}
+          # Credentials implicitly read by the gradle-nexus-publish-plugin
+          # https://github.com/gradle-nexus/publish-plugin#publishing-to-maven-central-via-sonatype-ossrh
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.OSSRH_USER_TOKEN }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.OSSRH_KEY }}
+        with:
+          arguments: |
+            publishToSonatype
+            closeAndReleaseSonatypeStagingRepository
+            -Pversion=${{ inputs.version }}
