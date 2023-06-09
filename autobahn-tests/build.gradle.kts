@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id("com.avast.gradle.docker-compose") version "0.16.4"
+    id("com.avast.gradle.docker-compose") version "0.16.12"
 }
 
 description = "A non-published project to run Autobahn Test Suite on all implementations."
