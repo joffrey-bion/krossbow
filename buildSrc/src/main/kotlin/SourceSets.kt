@@ -75,7 +75,6 @@ fun KotlinTargetContainerWithNativeShortcuts.darwinTargets(
 
     watchosArm64("watchosArm64$flavor", configure)
     watchosX64("watchosX64$flavor", configure)
-    watchosX86("watchosX86$flavor", configure)
     watchosSimulatorArm64("watchosSimulatorArm64$flavor", configure)
 
     macosArm64("macosArm64$flavor", configure)
@@ -147,16 +146,12 @@ private val allSourceSetRefs = buildSourceSetRefs(
             "tvosSimulatorArm64",
             "watchosArm64",
             "watchosX64",
-            "watchosX86",
             "watchosSimulatorArm64",
             "macosArm64",
             "macosX64",
         ),
     ),
 )
-
-private val windowsPrefix = "mingw"
-private val linuxPrefix = "linux"
 
 /**
  * The Darwin source set, and all its ancestors and descendants
@@ -172,6 +167,3 @@ private val SourceSetRef.isDarwinOrDarwinDescendant: Boolean
 
 private val SourceSetRef.ancestors: Set<SourceSetRef>
     get() = parents.toSet() + parents.flatMap { it.ancestors }
-
-private val SourceSetRef.isWindows
-    get() = name.startsWith(windowsPrefix)
