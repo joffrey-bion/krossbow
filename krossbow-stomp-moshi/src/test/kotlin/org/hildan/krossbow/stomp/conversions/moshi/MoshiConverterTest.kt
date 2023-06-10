@@ -2,9 +2,11 @@ package org.hildan.krossbow.stomp.conversions.moshi
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
+import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.conversions.*
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -19,52 +21,53 @@ class MoshiConverterTest {
 
     data class Person(val name: String, val age: Int)
 
-    @Test
-    fun convertAndSend_convertsToJsonString() = runBlocking {
-        val session = MockStompSession()
-        val jsonSession = session.withMoshi()
+    private suspend fun assertSentBodyTextEquals(expectedBody: String, sendMessage: suspend (StompSession) -> Unit) =
+        assertSentBodyEquals(FrameBody.Text(expectedBody), sendMessage)
 
-        launch { jsonSession.convertAndSend("/test", "My message") }
-        val frame = session.waitForSentFrameAndSimulateCompletion()
-        assertTrue(frame is StompFrame.Send)
-        assertEquals("\"My message\"", frame.bodyAsText)
+    private suspend fun assertSentBodyEquals(expectedBody: FrameBody?, sendMessage: suspend (StompSession) -> Unit) =
+        coroutineScope {
+            val session = MockStompSession()
+
+            launch { sendMessage(session) }
+
+            val frame = session.waitForSentFrameAndSimulateCompletion()
+            assertIs<StompFrame.Send>(frame)
+            assertEquals(expectedBody, frame.body)
+        }
+
+    @Test
+    fun convertAndSend_convertsToJsonString() = runTest {
+        val expectedJson = "\"My message\""
+        assertSentBodyTextEquals(expectedJson) { jsonSession ->
+            jsonSession.withMoshi().convertAndSend("/test", "My message")
+        }
     }
 
     @Test
-    fun convertAndSend_convertsToJsonObject() = runBlocking {
-        val session = MockStompSession()
-        val jsonSession = session.withMoshi(moshiKotlinReflect)
-
-        launch { jsonSession.convertAndSend("/test", Person("Bob", 42)) }
-        val frame = session.waitForSentFrameAndSimulateCompletion()
-        assertTrue(frame is StompFrame.Send)
-        assertEquals("""{"name":"Bob","age":42}""", frame.bodyAsText)
+    fun convertAndSend_convertsToJsonObject() = runTest {
+        val expectedJson = """{"name":"Bob","age":42}"""
+        assertSentBodyTextEquals(expectedJson) { jsonSession ->
+            jsonSession.withMoshi(moshiKotlinReflect).convertAndSend("/test", Person("Bob", 42))
+        }
     }
 
     @Test
-    fun convertAndSend_convertsToJsonArray() = runBlocking {
-        val session = MockStompSession()
-        val jsonSession = session.withMoshi(moshiKotlinReflect)
-
-        launch { jsonSession.convertAndSend("/test", listOf(Person("Bob", 42))) }
-        val frame = session.waitForSentFrameAndSimulateCompletion()
-        assertTrue(frame is StompFrame.Send)
-        assertEquals("""[{"name":"Bob","age":42}]""", frame.bodyAsText)
+    fun convertAndSend_convertsToJsonArray() = runTest {
+        val expectedJson = """[{"name":"Bob","age":42}]"""
+        assertSentBodyTextEquals(expectedJson) { jsonSession ->
+            jsonSession.withMoshi(moshiKotlinReflect).convertAndSend("/test", listOf(Person("Bob", 42)))
+        }
     }
 
     @Test
-    fun convertAndSend_convertsNull() = runBlocking {
-        val session = MockStompSession()
-        val jsonSession = session.withMoshi()
-
-        launch { jsonSession.convertAndSend<Any?>("/test", null) }
-        val frame = session.waitForSentFrameAndSimulateCompletion()
-        assertTrue(frame is StompFrame.Send)
-        assertNull(frame.body)
+    fun convertAndSend_convertsNull() = runTest {
+        assertSentBodyEquals(expectedBody = null) { jsonSession ->
+            jsonSession.withMoshi().convertAndSend<Any?>("/test", null)
+        }
     }
 
     @Test
-    fun subscribe_convertsJsonString() = runBlocking {
+    fun subscribe_convertsJsonString() = runTest {
         val session = MockStompSession()
         val jsonSession = session.withMoshi()
 
@@ -77,7 +80,7 @@ class MoshiConverterTest {
     }
 
     @Test
-    fun subscribe_convertsJsonObject() = runBlocking {
+    fun subscribe_convertsJsonObject() = runTest {
         val session = MockStompSession()
         val jsonSession = session.withMoshi(moshiKotlinReflect)
 
@@ -90,7 +93,7 @@ class MoshiConverterTest {
     }
 
     @Test
-    fun subscribe_failsOnNullBody(): Unit = runBlocking {
+    fun subscribe_failsOnNullBody(): Unit = runTest {
         val session = MockStompSession()
         val jsonSession = session.withMoshi()
 
