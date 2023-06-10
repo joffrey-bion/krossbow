@@ -12,6 +12,7 @@ dependencies {
     api(libs.jackson.module.kotlin)
 
     testImplementation(kotlin("test"))
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 val jacksonMinorVersion = libs.versions.jackson.get().split(".").take(2).joinToString(".")
