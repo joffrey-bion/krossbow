@@ -34,9 +34,14 @@ class Jdk11WebSocketClient(
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here
         } catch (e: WebSocketHandshakeException) {
-            throw WebSocketConnectionException(url, httpStatusCode = e.response.statusCode(), cause = e)
+            throw WebSocketConnectionException(
+                url = url,
+                httpStatusCode = e.response.statusCode(),
+                additionalInfo = (e.response.body() as? String)?.takeIf { it.isNotBlank() },
+                cause = e
+            )
         } catch (e: Exception) {
-            throw WebSocketConnectionException(url, httpStatusCode = null, cause = e)
+            throw WebSocketConnectionException(url, httpStatusCode = null, additionalInfo = null, cause = e)
         }
     }
 }

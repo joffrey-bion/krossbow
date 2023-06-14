@@ -71,6 +71,7 @@ private class KrossbowToOkHttpListenerAdapter(
             val exception = WebSocketConnectionException(
                 url = webSocket.request().url.toString(),
                 httpStatusCode =  response?.code,
+                additionalInfo = response?.body?.string()?.takeIf { it.isNotBlank() },
                 cause = t,
             )
             completeConnection {

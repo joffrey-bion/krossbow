@@ -73,6 +73,7 @@ open class JsWebSocketClientAdapter(
                             // See the end of the section about feedback here:
                             // https://websockets.spec.whatwg.org//#feedback-from-the-protocol
                             httpStatusCode = null,
+                            additionalInfo = "error details hidden for security reasons",
                             message = errorEvent.message,
                         ))
                     } else {

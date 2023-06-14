@@ -26,8 +26,8 @@ class KtorWebSocketClient(
         } catch (e: ResponseException) {
             throw WebSocketConnectionException(url, httpStatusCode = e.response.status.value, cause = e)
         } catch (e: Exception) {
-            val statusCode = extractHandshakeStatusCode(e)
-            throw WebSocketConnectionException(url, httpStatusCode = statusCode, cause = e)
+            val (statusCode, additionalInfo) = extractHandshakeFailureDetails(e)
+            throw WebSocketConnectionException(url, httpStatusCode = statusCode, additionalInfo = additionalInfo, cause = e)
         }
     }
 }

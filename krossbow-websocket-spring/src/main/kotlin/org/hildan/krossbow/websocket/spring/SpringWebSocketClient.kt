@@ -57,6 +57,7 @@ open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClien
             throw WebSocketConnectionException(
                 url = url,
                 httpStatusCode = null,
+                additionalInfo = e.toString(),
                 cause = e,
             )
         }

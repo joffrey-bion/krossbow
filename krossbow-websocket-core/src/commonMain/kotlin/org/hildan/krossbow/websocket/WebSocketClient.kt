@@ -135,11 +135,21 @@ open class WebSocketConnectionException(
     val url: String,
     /** The status code in the HTTP response from the handshake request, if available. */
     val httpStatusCode: Int? = null,
-    message: String = "Couldn't connect to web socket at $url" + statusInfo(httpStatusCode),
+    val additionalInfo: String? = null,
+    message: String = defaultMessage(url, httpStatusCode, additionalInfo),
     cause: Throwable? = null,
 ) : WebSocketException(message, cause)
 
-private fun statusInfo(httpStatusCode: Int?): String = if (httpStatusCode == null) "" else " (HTTP $httpStatusCode)"
+private fun defaultMessage(url: String, httpStatusCode: Int?, additionalInfo: String?): String {
+    val details = details(httpStatusCode, additionalInfo)
+    return "Couldn't connect to web socket at $url ($details)"
+}
+
+private fun details(httpStatusCode: Int?, additionalInfo: String?): String = when {
+    httpStatusCode == null -> additionalInfo ?: "no additional details"
+    additionalInfo == null -> "HTTP $httpStatusCode"
+    else -> "HTTP $httpStatusCode: $additionalInfo"
+}
 
 /**
  * An exception thrown when the server closed the connection unexpectedly during the handshake.
