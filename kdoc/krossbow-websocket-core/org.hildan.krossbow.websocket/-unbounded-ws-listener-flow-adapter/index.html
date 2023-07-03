@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">UnboundedWsListenerFlowAdapter</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/null/krossbow/blob/HEAD/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/WebSocketListenerFlowAdapter.kt#L127">source</a>)</span></span></div><p class="paragraph">An adapter similar to <a href="../-web-socket-listener-flow-adapter/index.html">WebSocketListenerFlowAdapter</a>, but with an unlimited buffer and non-suspending callback functions. This is useful for bridging implementations that do not support backpressure (like the browser WebSocket API).</p><p class="paragraph">This implementation does not support partial messages.</p></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
@@ -71,6 +71,25 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="723050245%2FProperties%2F-845055019" anchor-label="incomingFrames" id="723050245%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="incoming-frames.html"><span>incoming</span><wbr><span><span>Frames</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="723050245%2FProperties%2F-845055019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="incoming-frames.html">incomingFrames</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-web-socket-frame/index.html">WebSocketFrame</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The channel of incoming web socket frames. This channel is closed when the web socket connection is closed</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -165,25 +184,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-text-message.html"><span class="token function">onTextMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">text<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.channels/ChannelResult///PointingToDeclaration/">ChannelResult</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sends a <a href="../-web-socket-frame/-text/index.html">WebSocketFrame.Text</a> frame to the <a href="incoming-frames.html">incomingFrames</a> flow.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="723050245%2FProperties%2F-845055019" anchor-label="incomingFrames" id="723050245%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="incoming-frames.html"><span>incoming</span><wbr><span><span>Frames</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="723050245%2FProperties%2F-845055019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="incoming-frames.html">incomingFrames</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-web-socket-frame/index.html">WebSocketFrame</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The channel of incoming web socket frames. This channel is closed when the web socket connection is closed</p></div></div></div>
                 </div>
               </div>
             </div>
