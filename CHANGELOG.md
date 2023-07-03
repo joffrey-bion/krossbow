@@ -1,15 +1,29 @@
 # Change Log
 
+## [5.3.0](https://github.com/joffrey-bion/krossbow/tree/5.3.0) (2023-07-03)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.2.0...5.3.0)
+
+**Implemented enhancements:**
+
+- Provide additional info in `WebSocketConnectionException` [\#337](https://github.com/joffrey-bion/krossbow/issues/337)
+
+**Removals:**
+
+- Remove support for deprecated `watchosX86` target [\#336](https://github.com/joffrey-bion/krossbow/issues/336)
+
+**Upgraded dependencies:**
+
+- Upgrade Kotlin to version 1.8.22 [\#335](https://github.com/joffrey-bion/krossbow/issues/335)
+- Upgrade jackson to version 2.15.2 [\#334](https://github.com/joffrey-bion/krossbow/issues/334)
+- Upgrade uuid to version 0.7.1 [\#333](https://github.com/joffrey-bion/krossbow/issues/333)
+- Upgrade Ktor to version 2.3.1 [\#332](https://github.com/joffrey-bion/krossbow/issues/332)
+
 ## [5.2.0](https://github.com/joffrey-bion/krossbow/tree/5.2.0) (2023-05-16)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.1.0...5.2.0)
 
 **Implemented enhancements:**
 
 - Allow to override coroutine name and job in stomp session context [\#308](https://github.com/joffrey-bion/krossbow/issues/308)
-
-**Merged pull requests:**
-
-- Upgrade Ktor to version 2.3.0 [\#314](https://github.com/joffrey-bion/krossbow/pull/314) ([@joffrey-bion](https://github.com/joffrey-bion))
 
 **Removals:**
 
@@ -626,7 +640,7 @@
 
 **Merged pull requests:**
 
-- Add custom headers support to CONNECT frame [\#65](https://github.com/joffrey-bion/krossbow/pull/65) ([@Mostrapotski](https://github.com/Mostrapotski))
+- Add custom headers support to CONNECT frame [\#65](https://github.com/joffrey-bion/krossbow/pull/65) ([@ghost](https://github.com/ghost))
 
 ## [0.30.1](https://github.com/joffrey-bion/krossbow/tree/0.30.1) (2020-08-31)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.30.0...0.30.1)
