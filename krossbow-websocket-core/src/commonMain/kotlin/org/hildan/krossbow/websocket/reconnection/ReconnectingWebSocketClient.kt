@@ -65,9 +65,9 @@ private class ReconnectingWebSocketClient(
     private val reconnectConfig: ReconnectConfig,
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketConnection {
-        val firstConnection = baseClient.connect(url)
-        return WebSocketConnectionProxy(baseClient, reconnectConfig, firstConnection)
+    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection {
+        val firstConnection = baseClient.connect(url, headers)
+        return WebSocketConnectionProxy(baseClient, reconnectConfig, headers, firstConnection)
     }
 }
 
@@ -75,6 +75,7 @@ private class ReconnectingWebSocketClient(
 private class WebSocketConnectionProxy(
     private val baseClient: WebSocketClient,
     private val reconnectConfig: ReconnectConfig,
+    private val httpHeaders: Map<String, String>,
     private var currentConnection: WebSocketConnection,
 ) : WebSocketConnection {
 
@@ -121,7 +122,7 @@ private class WebSocketConnectionProxy(
             }
             try {
                 delay(reconnectConfig.delayStrategy.computeDelay(attempt))
-                return baseClient.connect(currentConnection.url).also {
+                return baseClient.connect(currentConnection.url, httpHeaders).also {
                     reconnectConfig.afterReconnect(this)
                 }
             } catch (e: CancellationException) {

@@ -3,6 +3,7 @@ package org.hildan.krossbow.websocket.okhttp
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import okhttp3.*
+import okhttp3.Headers.Companion.toHeaders
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
 import org.hildan.krossbow.websocket.WebSocketConnectionException
@@ -19,8 +20,8 @@ class OkHttpWebSocketClient(
     private val client: OkHttpClient = OkHttpClient(),
 ) : KrossbowWebSocketClient {
 
-    override suspend fun connect(url: String): KrossbowWebSocketSession {
-        val request = Request.Builder().url(url).build()
+    override suspend fun connect(url: String, headers: Map<String, String>): KrossbowWebSocketSession {
+        val request = Request.Builder().url(url).headers(headers.toHeaders()).build()
         val channelListener = WebSocketListenerFlowAdapter()
 
         return suspendCancellableCoroutine { continuation ->

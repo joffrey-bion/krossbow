@@ -12,6 +12,7 @@ public final class org/hildan/krossbow/websocket/spring/SpringSockJSWebSocketCli
 
 public class org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter : org/hildan/krossbow/websocket/WebSocketClient {
 	public fun <init> (Lorg/springframework/web/socket/client/WebSocketClient;)V
-	public fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun connect (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public synthetic fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 

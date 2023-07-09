@@ -21,24 +21,52 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /**
- * Default WebSocket found in the browser. Not supported in NodeJS environment.
+ * Default WebSocket found in the browser. Not supported in Node.js environment.
  */
-object BrowserWebSocketClient : JsWebSocketClientAdapter({ url -> WebSocket(url) })
+object BrowserWebSocketClient : JsWebSocketClient {
+    override fun newWebSocket(url: String, headers: Map<String, String>): WebSocket {
+        require(headers.isEmpty()) {
+            "custom HTTP headers are not supported in the browser, see https://github.com/whatwg/websockets/issues/16"
+        }
+        return WebSocket(url)
+    }
+}
 
-/**
- * A [WebSocketClient] adapting JavaScript [WebSocket] objects to [WebSocketConnection]s.
- */
+@Deprecated("This class is kept for backwards compatibility but will be removed in the future. " +
+        "Prefer subclassing JsWebSocketClient, but note that it's not stable for inheritance by 3rd parties.")
 open class JsWebSocketClientAdapter(
     /**
      * A function to create [WebSocket] connections from a given URL.
      */
-    private val newWebSocket: (String) -> WebSocket
-) : WebSocketClient {
+    private val newWebSocket: (String) -> WebSocket,
+) : WebSocketClient by object : JsWebSocketClient {
+    override fun newWebSocket(url: String, headers: Map<String, String>): WebSocket {
+        require(headers.isEmpty()) {
+            "custom HTTP headers are not supported by this JS client"
+        }
+        return newWebSocket(url)
+    }
+}
 
-    override suspend fun connect(url: String): WebSocketConnection {
+/**
+ * A [WebSocketClient] adapting JavaScript [WebSocket] objects to [WebSocketConnection]s.
+ *
+ * This interface is not stable for inheritance by third parties, compatibility is not guaranteed.
+ */
+interface JsWebSocketClient : WebSocketClient {
+
+    /**
+     * Creates a [WebSocket] connection to the given [url], using the provided [headers] in the handshake.
+     *
+     * This function may throw an exception if [headers] is not empty and the underlying implementation doesn't support
+     * custom headers in the handshake.
+     */
+    fun newWebSocket(url: String, headers: Map<String, String>): WebSocket
+
+    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection {
         return suspendCancellableCoroutine { cont ->
             try {
-                val ws = newWebSocket(url)
+                val ws = newWebSocket(url, headers)
                 ws.binaryType = BinaryType.ARRAYBUFFER // to receive arraybuffer instead of blob
                 var pendingConnect = true
                 // We use unlimited buffer size because we have no means for backpressure anyway
@@ -72,6 +100,7 @@ open class JsWebSocketClientAdapter(
                             // It is by design (for security reasons) that browsers don't give access to the status code.
                             // See the end of the section about feedback here:
                             // https://websockets.spec.whatwg.org//#feedback-from-the-protocol
+                            // TODO check whether this can be provided in nodejs environments
                             httpStatusCode = null,
                             additionalInfo = "error details hidden for security reasons",
                             message = errorEvent.message,
@@ -100,7 +129,7 @@ open class JsWebSocketClientAdapter(
 }
 
 /**
- * A adapter wrapping a JavaScript [WebSocket] object as a [WebSocketConnection].
+ * An adapter wrapping a JavaScript [WebSocket] object as a [WebSocketConnection].
  */
 private class JsWebSocketConnection(
     private val ws: WebSocket,

@@ -15,9 +15,16 @@ interface WebSocketClient {
     /**
      * Opens a web socket connection and suspends until the connection is OPEN.
      *
+     * @param headers custom headers to send during the web socket handshake. Support for custom handshake headers is
+     * optional. Implementations that don't support them must throw an [IllegalArgumentException] if [headers] is not
+     * empty.
+     *
      * @throws WebSocketConnectionException if an error occurs during the connection.
      */
-    suspend fun connect(url: String): WebSocketConnection
+    suspend fun connect(url: String, headers: Map<String, String> = emptyMap()): WebSocketConnection
+
+    @Deprecated("for binary compatibility with versions <= 5.4.0", level = DeprecationLevel.HIDDEN)
+    suspend fun connect(url: String): WebSocketConnection = connect(url, emptyMap())
 
     companion object
 }

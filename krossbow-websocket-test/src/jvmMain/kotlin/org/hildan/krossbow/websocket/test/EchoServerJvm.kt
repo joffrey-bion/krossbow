@@ -16,6 +16,22 @@ internal actual suspend fun runAlongEchoWSServer(block: suspend (server: TestSer
     server.stop()
 }
 
+private val StandardHandshakeRequestHeaders = setOf(
+    "Accept",
+    "Accept-Charset",
+    "Accept-Encoding",
+    "Connection",
+    "Content-Length",
+    "Host",
+    "Origin",
+    "Sec-WebSocket-Key",
+    "Sec-WebSocket-Protocol",
+    "Sec-WebSocket-Extensions",
+    "Sec-WebSocket-Version",
+    "Upgrade",
+    "User-Agent",
+)
+
 internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(port)) {
 
     @Volatile
@@ -23,6 +39,11 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAd
 
     override fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
         openedSocket.complete(conn ?: error("onOpen got a null WebSocket"))
+        val headerNames = handshake?.iterateHttpFields()?.asSequence()?.toSet() ?: emptySet()
+        val customHeaders = (headerNames - StandardHandshakeRequestHeaders).sorted()
+        if (customHeaders.isNotEmpty()) {
+            conn.send("custom-headers:${customHeaders.joinToString { "$it=${handshake?.getFieldValue(it)}" }}")
+        }
     }
 
     override fun onMessage(conn: WebSocket?, message: String?) {

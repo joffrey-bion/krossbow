@@ -36,11 +36,15 @@ class DarwinWebSocketClient(
 ) : WebSocketClient {
 
     @OptIn(ExperimentalForeignApi::class)
-    override suspend fun connect(url: String): WebSocketConnectionWithPing {
+    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection {
         val socketEndpoint = NSURL.URLWithString(url)!!
 
         return suspendCancellableCoroutine { cont ->
             val incomingFrames: Channel<WebSocketFrame> = Channel(BUFFERED)
+
+            if (headers.isNotEmpty()) {
+                sessionConfig.HTTPAdditionalHeaders = sessionConfig.HTTPAdditionalHeaders?.plus(headers)
+            }
             val urlSession = NSURLSession.sessionWithConfiguration(
                 configuration = sessionConfig,
                 delegate = DarwinWebSocketListener(url, cont, incomingFrames),

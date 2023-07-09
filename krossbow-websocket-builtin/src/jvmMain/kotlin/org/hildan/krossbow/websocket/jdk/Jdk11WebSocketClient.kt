@@ -22,12 +22,17 @@ class Jdk11WebSocketClient(
     private val configureWebSocket: WebSocket.Builder.() -> Unit = {}
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketConnectionWithPingPong {
+    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
         try {
             val listener = WebSocketListenerFlowAdapter()
             val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
             val webSocket = httpClient.newWebSocketBuilder()
-                    .apply { configureWebSocket() }
+                    .apply {
+                        headers.forEach { (key, value) ->
+                            header(key, value)
+                        }
+                        configureWebSocket()
+                    }
                     .buildAsync(URI(url), jdk11WebSocketListener)
                     .await()
             return Jdk11WebSocketConnection(webSocket, url, listener.incomingFrames)

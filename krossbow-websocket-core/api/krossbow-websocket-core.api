@@ -12,10 +12,16 @@ public final class org/hildan/krossbow/websocket/UnboundedWsListenerFlowAdapter 
 
 public abstract interface class org/hildan/krossbow/websocket/WebSocketClient {
 	public static final field Companion Lorg/hildan/krossbow/websocket/WebSocketClient$Companion;
-	public abstract fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun connect (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract synthetic fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/websocket/WebSocketClient$Companion {
+}
+
+public final class org/hildan/krossbow/websocket/WebSocketClient$DefaultImpls {
+	public static synthetic fun connect (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun connect$default (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/websocket/WebSocketCloseCodes {

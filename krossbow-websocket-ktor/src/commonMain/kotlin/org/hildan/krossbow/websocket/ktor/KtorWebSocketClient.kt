@@ -15,10 +15,13 @@ class KtorWebSocketClient(
     private val httpClient: HttpClient = HttpClient { install(WebSockets) }
 ) : WebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketConnectionWithPingPong {
+    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
         try {
             val wsKtorSession = httpClient.webSocketSession {
                 this.url.takeFrom(url)
+                headers.forEach { (name, value) ->
+                    this.headers[name] = value
+                }
             }
             return KtorWebSocketConnectionAdapter(wsKtorSession)
         } catch (e: CancellationException) {

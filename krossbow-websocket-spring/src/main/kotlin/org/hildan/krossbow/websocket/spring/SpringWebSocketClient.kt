@@ -7,22 +7,17 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.hildan.krossbow.websocket.WebSocketConnectionException
+import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerFlowAdapter
-import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
-import org.springframework.web.socket.BinaryMessage
-import org.springframework.web.socket.CloseStatus
-import org.springframework.web.socket.PingMessage
-import org.springframework.web.socket.PongMessage
-import org.springframework.web.socket.TextMessage
-import org.springframework.web.socket.WebSocketHandler
-import org.springframework.web.socket.WebSocketMessage
+import org.springframework.web.socket.*
 import org.springframework.web.socket.client.jetty.JettyWebSocketClient
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport
 import org.springframework.web.socket.sockjs.client.SockJsClient
 import org.springframework.web.socket.sockjs.client.Transport
 import org.springframework.web.socket.sockjs.client.WebSocketTransport
+import java.net.URI
 import java.nio.ByteBuffer
 import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
 import org.springframework.web.socket.WebSocketSession as SpringWebSocketSession
@@ -41,10 +36,15 @@ private fun defaultWsTransports(): List<Transport> = listOf(
 
 open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClient) : KrossbowWebSocketClient {
 
-    override suspend fun connect(url: String): WebSocketConnectionWithPingPong {
+    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
         try {
             val handler = KrossbowToSpringHandlerAdapter()
-            val springSession = client.doHandshake(handler, url).completable().await()
+            val handshakeHeaders = WebSocketHttpHeaders().apply {
+                headers.forEach { (name, value) ->
+                    put(name, listOf(value))
+                }
+            }
+            val springSession = client.doHandshake(handler, handshakeHeaders, URI(url)).completable().await()
             return SpringSessionToKrossbowConnectionAdapter(springSession, handler.channelListener.incomingFrames)
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here

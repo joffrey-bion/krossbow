@@ -55,6 +55,18 @@ abstract class WebSocketClientTestSuite(val supportsStatusCodes: Boolean = true)
     @IgnoreOnNative
     @IgnoreOnJS
     @Test
+    fun testHandshakeHeaders() = runSuspendingTestWithEchoServer { server ->
+        val session = wsClient.connect(
+            url = server.localUrl,
+            headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
+        )
+        val header = session.expectTextFrame("header info frame")
+        assertEquals("custom-headers:My-Header-1=my-value-1, My-Header-2=my-value-2", header.text)
+    }
+
+    @IgnoreOnNative
+    @IgnoreOnJS
+    @Test
     fun testEchoText() = runSuspendingTestWithEchoServer { server ->
         val session = wsClient.connect(server.localUrl)
 

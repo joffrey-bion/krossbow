@@ -6,7 +6,7 @@ import org.hildan.krossbow.websocket.WebSocketConnection
 
 fun webSocketClientMock(connect: suspend () -> WebSocketConnection = { WebSocketConnectionMock() }) =
     object : WebSocketClient {
-        override suspend fun connect(url: String): WebSocketConnection = connect()
+        override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection = connect()
     }
 
 class ControlledWebSocketClientMock : WebSocketClient {
@@ -14,7 +14,7 @@ class ControlledWebSocketClientMock : WebSocketClient {
     private val connectEventChannel = Channel<Unit>()
     private val connectedEventChannel = Channel<Result<WebSocketConnection>>()
 
-    override suspend fun connect(url: String): WebSocketConnection {
+    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection {
         connectEventChannel.send(Unit)
         return connectedEventChannel.receive().getOrThrow()
     }
