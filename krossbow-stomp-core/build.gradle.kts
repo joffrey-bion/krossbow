@@ -24,7 +24,7 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                implementation("uk.org.lidalia:slf4j-test:1.1.0")
+                implementation("uk.org.lidalia:slf4j-test:1.2.0")
             }
         }
     }
