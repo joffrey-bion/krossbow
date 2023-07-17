@@ -13,5 +13,4 @@ updates:
     schedule:
       interval: "daily"
     labels:
-      - dependabot
       - dependencies
