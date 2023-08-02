@@ -7,7 +7,7 @@ plugins {
     kotlin("plugin.spring") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jetbrains.dokka")
-    id("org.hildan.github.changelog") version "1.13.1"
+    id("org.hildan.github.changelog") version "2.0.0"
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     id("com.louiscad.complete-kotlin") version "1.1.0" // for autocomplete of Apple libraries on non-macOS systems
     id("krossbow-githubinfo")
