@@ -1,5 +1,15 @@
 # Change Log
 
+## [5.4.0](https://github.com/joffrey-bion/krossbow/tree/5.4.0) (2023-08-09)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.3.0...5.4.0)
+
+**Upgraded dependencies:**
+
+- Bump ktor from 2.3.1 to 2.3.3 [\#351](https://github.com/joffrey-bion/krossbow/pull/351) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.jetbrains.kotlinx:atomicfu from 0.20.2 to 0.21.0 [\#353](https://github.com/joffrey-bion/krossbow/pull/353) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-coroutines from 1.7.1 to 1.7.3 [\#349](https://github.com/joffrey-bion/krossbow/pull/349) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.squareup.okio:okio from 3.3.0 to 3.4.0 [\#342](https://github.com/joffrey-bion/krossbow/pull/342) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [5.3.0](https://github.com/joffrey-bion/krossbow/tree/5.3.0) (2023-07-03)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.2.0...5.3.0)
 
@@ -58,10 +68,6 @@
 ## [5.0.0](https://github.com/joffrey-bion/krossbow/tree/5.0.0) (2023-01-16)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.5.0...5.0.0)
 
-**Fixed bugs:**
-
-- Compilation of gradle Java 11 project failed [\#288](https://github.com/joffrey-bion/krossbow/issues/288)
-
 **Removals:**
 
 - Drop support for Ktor 1.x \(legacy\) because incompatible with Kotlin 1.8 [\#296](https://github.com/joffrey-bion/krossbow/issues/296)
@@ -75,6 +81,10 @@
 - Upgrade kotlinx\-atomicfu to version 0.19.0 [\#293](https://github.com/joffrey-bion/krossbow/issues/293)
 - Upgrade Kotlin to version 1.8.0 [\#289](https://github.com/joffrey-bion/krossbow/issues/289)
 - Upgrade Ktor to version 2.2.2 [\#291](https://github.com/joffrey-bion/krossbow/issues/291)
+
+**Fixed bugs:**
+
+- Compilation of gradle Java 11 project failed [\#288](https://github.com/joffrey-bion/krossbow/issues/288)
 
 ## [4.5.0](https://github.com/joffrey-bion/krossbow/tree/4.5.0) (2022-11-26)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.4.0...4.5.0)
@@ -134,6 +144,11 @@
 ## [4.0.3](https://github.com/joffrey-bion/krossbow/tree/4.0.3) (2022-07-04)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.2...4.0.3)
 
+**Implemented enhancements:**
+
+- `Exception`\-\>`Throwable` parameter for `ReconnectConfig.shouldReconnect` [\#249](https://github.com/joffrey-bion/krossbow/issues/249)
+- Make cause non\-nullable for `WebSocketReconnectionException` [\#248](https://github.com/joffrey-bion/krossbow/issues/248)
+
 **Deprecations:**
 
 - Deprecate `WebSocketClient.default\(\)` in favor of `builtIn\(\)` [\#250](https://github.com/joffrey-bion/krossbow/issues/250)
@@ -142,21 +157,16 @@
 
 - `NoSuchMethodError` when using the `StompClient\(\)` factory function without WS client [\#251](https://github.com/joffrey-bion/krossbow/issues/251)
 
-**Implemented enhancements:**
-
-- `Exception`\-\>`Throwable` parameter for `ReconnectConfig.shouldReconnect` [\#249](https://github.com/joffrey-bion/krossbow/issues/249)
-- Make cause non\-nullable for `WebSocketReconnectionException` [\#248](https://github.com/joffrey-bion/krossbow/issues/248)
-
 ## [4.0.2](https://github.com/joffrey-bion/krossbow/tree/4.0.2) (2022-06-24)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.1...4.0.2)
-
-**Fixed bugs:**
-
-- NoClassDefFoundError: WebSocketHandshakeException [\#246](https://github.com/joffrey-bion/krossbow/issues/246)
 
 **Upgraded dependencies:**
 
 - Upgrade Dokka to version 1.7.0 [\#244](https://github.com/joffrey-bion/krossbow/issues/244)
+
+**Fixed bugs:**
+
+- NoClassDefFoundError: WebSocketHandshakeException [\#246](https://github.com/joffrey-bion/krossbow/issues/246)
 
 ## [4.0.1](https://github.com/joffrey-bion/krossbow/tree/4.0.1) (2022-06-21)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/4.0.0...4.0.1)
@@ -206,10 +216,6 @@
 ## [3.6.0](https://github.com/joffrey-bion/krossbow/tree/3.6.0) (2022-05-31)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.5.0...3.6.0)
 
-**Fixed bugs:**
-
-- `krossbow\-stomp\-moshi` missing in Maven Central [\#226](https://github.com/joffrey-bion/krossbow/issues/226)
-
 **Upgraded dependencies:**
 
 - Upgrade jetty\-websocket to version 9.4.46.v20220331 [\#221](https://github.com/joffrey-bion/krossbow/issues/221)
@@ -219,23 +225,22 @@
 - Upgrade kotlinx\-serialization to version 1.3.3 [\#222](https://github.com/joffrey-bion/krossbow/issues/222)
 - Upgrade Atomicfu to version 0.17.3 [\#218](https://github.com/joffrey-bion/krossbow/issues/218)
 
-## [3.5.0](https://github.com/joffrey-bion/krossbow/tree/3.5.0) (2022-05-31)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/3.4.0...3.5.0)
-
-**Deprecations:**
-
-- Deprecate `StompSessionWithClassConversions` in favor of the new `TypedStompSession` [\#215](https://github.com/joffrey-bion/krossbow/issues/215)
-
 **Fixed bugs:**
 
-- `withTransaction` ignores 2nd exception if `abort` throws [\#216](https://github.com/joffrey-bion/krossbow/issues/216)
-- Jackson deserialization doesn't work on generic types [\#212](https://github.com/joffrey-bion/krossbow/issues/212)
+- `krossbow\-stomp\-moshi` missing in Maven Central [\#226](https://github.com/joffrey-bion/krossbow/issues/226)
+
+## [3.5.0](https://github.com/joffrey-bion/krossbow/tree/3.5.0) (2022-05-31)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/3.4.0...3.5.0)
 
 **Implemented enhancements:**
 
 - Add support for JSON conversions with Moshi [\#206](https://github.com/joffrey-bion/krossbow/issues/206)
 - New `TypedStompSession` which handles full generic types [\#214](https://github.com/joffrey-bion/krossbow/issues/214)
 - Add HTTP status code to WebSocketConnectionException [\#210](https://github.com/joffrey-bion/krossbow/issues/210)
+
+**Deprecations:**
+
+- Deprecate `StompSessionWithClassConversions` in favor of the new `TypedStompSession` [\#215](https://github.com/joffrey-bion/krossbow/issues/215)
 
 **Merged pull requests:**
 
@@ -244,6 +249,11 @@
 **Upgraded dependencies:**
 
 - Upgrade sockjs\-client to version 1.6.1 [\#217](https://github.com/joffrey-bion/krossbow/issues/217)
+
+**Fixed bugs:**
+
+- `withTransaction` ignores 2nd exception if `abort` throws [\#216](https://github.com/joffrey-bion/krossbow/issues/216)
+- Jackson deserialization doesn't work on generic types [\#212](https://github.com/joffrey-bion/krossbow/issues/212)
 
 ## [3.4.0](https://github.com/joffrey-bion/krossbow/tree/3.4.0) (2022-04-22)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.3.1...3.4.0)
@@ -310,12 +320,6 @@
 - Use Duration instead of long millis in Stomp configuration [\#169](https://github.com/joffrey-bion/krossbow/issues/169)
 - Use Flow instead of Channel in WebSocketConnection API  [\#120](https://github.com/joffrey-bion/krossbow/issues/120)
 
-**Fixed bugs:**
-
-- Reconnecting web socket doesn't close normally its incomingFrames flow [\#174](https://github.com/joffrey-bion/krossbow/issues/174)
-- `StompClient.connect\(\)` might leak the WS connection if cancelled just before STOMP handshake [\#163](https://github.com/joffrey-bion/krossbow/issues/163)
-- Ktor client errors are not wrapped in Krossbow's WebSocketException [\#160](https://github.com/joffrey-bion/krossbow/issues/160)
-
 **Implemented enhancements:**
 
 - Switch iOS to new K/N memory model [\#183](https://github.com/joffrey-bion/krossbow/issues/183)
@@ -342,6 +346,12 @@
 - Upgrade atomicfu to version 0.17.0 \(uses Kotlin 1.6\) [\#168](https://github.com/joffrey-bion/krossbow/issues/168)
 - Upgrade Okio to version 3.0.0 [\#164](https://github.com/joffrey-bion/krossbow/issues/164)
 
+**Fixed bugs:**
+
+- Reconnecting web socket doesn't close normally its incomingFrames flow [\#174](https://github.com/joffrey-bion/krossbow/issues/174)
+- `StompClient.connect\(\)` might leak the WS connection if cancelled just before STOMP handshake [\#163](https://github.com/joffrey-bion/krossbow/issues/163)
+- Ktor client errors are not wrapped in Krossbow's WebSocketException [\#160](https://github.com/joffrey-bion/krossbow/issues/160)
+
 ## [2.7.0](https://github.com/joffrey-bion/krossbow/tree/2.7.0) (2021-10-11)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.6.0...2.7.0)
 
@@ -352,13 +362,13 @@
 ## [2.6.0](https://github.com/joffrey-bion/krossbow/tree/2.6.0) (2021-10-10)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.5.2...2.6.0)
 
-**Fixed bugs:**
-
-- Ktor web socket client doesn't report Close frames? [\#141](https://github.com/joffrey-bion/krossbow/issues/141)
-
 **Implemented enhancements:**
 
 - iOS support  [\#126](https://github.com/joffrey-bion/krossbow/issues/126)
+
+**Fixed bugs:**
+
+- Ktor web socket client doesn't report Close frames? [\#141](https://github.com/joffrey-bion/krossbow/issues/141)
 
 ## [2.5.2](https://github.com/joffrey-bion/krossbow/tree/2.5.2) (2021-10-08)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.5.1...2.5.2)
@@ -370,14 +380,14 @@
 ## [2.5.1](https://github.com/joffrey-bion/krossbow/tree/2.5.1) (2021-10-08)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.5.0...2.5.1)
 
-**Fixed bugs:**
-
-- Ktor adapter tries to consume incomingFrames channel twice [\#155](https://github.com/joffrey-bion/krossbow/issues/155)
-
 **Upgraded dependencies:**
 
 - Upgrade Dokka to version 1.5.30 [\#152](https://github.com/joffrey-bion/krossbow/issues/152)
 - Upgrade Kotlin to version 1.5.31 [\#151](https://github.com/joffrey-bion/krossbow/issues/151)
+
+**Fixed bugs:**
+
+- Ktor adapter tries to consume incomingFrames channel twice [\#155](https://github.com/joffrey-bion/krossbow/issues/155)
 
 ## [2.5.0](https://github.com/joffrey-bion/krossbow/tree/2.5.0) (2021-09-13)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.4.1...2.5.0)
@@ -393,10 +403,6 @@
 ## [2.4.1](https://github.com/joffrey-bion/krossbow/tree/2.4.1) (2021-09-08)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.4.0...2.4.1)
 
-**Fixed bugs:**
-
-- OkHttp's close frame is not always correctly reported [\#140](https://github.com/joffrey-bion/krossbow/issues/140)
-
 **Implemented enhancements:**
 
 - Ensure all web socket clients throw `WebSocketConnectionException` when failing to connect [\#137](https://github.com/joffrey-bion/krossbow/issues/137)
@@ -405,16 +411,20 @@
 
 - Upgrade OkHttp to version 4.9.1 [\#139](https://github.com/joffrey-bion/krossbow/issues/139)
 
+**Fixed bugs:**
+
+- OkHttp's close frame is not always correctly reported [\#140](https://github.com/joffrey-bion/krossbow/issues/140)
+
 ## [2.4.0](https://github.com/joffrey-bion/krossbow/tree/2.4.0) (2021-09-05)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.3.0...2.4.0)
-
-**Deprecations:**
-
-- Deprecate global defaultWebSocketClient\(\) in favor of WebSocketClient.default\(\) [\#132](https://github.com/joffrey-bion/krossbow/issues/132)
 
 **Implemented enhancements:**
 
 - Add adapter for Spring Jetty's implementation [\#134](https://github.com/joffrey-bion/krossbow/issues/134)
+
+**Deprecations:**
+
+- Deprecate global defaultWebSocketClient\(\) in favor of WebSocketClient.default\(\) [\#132](https://github.com/joffrey-bion/krossbow/issues/132)
 
 **Upgraded dependencies:**
 
@@ -438,14 +448,14 @@
 ## [2.2.0](https://github.com/joffrey-bion/krossbow/tree/2.2.0) (2021-07-27)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.1.0...2.2.0)
 
-**Fixed bugs:**
-
-- Send frame should suspend until delivery of the message  [\#125](https://github.com/joffrey-bion/krossbow/issues/125)
-
 **Upgraded dependencies:**
 
 - Upgrade Dokka to version 1.5.0 [\#127](https://github.com/joffrey-bion/krossbow/issues/127)
 - Upgrade Kotlin to version 1.5.21 [\#124](https://github.com/joffrey-bion/krossbow/issues/124)
+
+**Fixed bugs:**
+
+- Send frame should suspend until delivery of the message  [\#125](https://github.com/joffrey-bion/krossbow/issues/125)
 
 ## [2.1.0](https://github.com/joffrey-bion/krossbow/tree/2.1.0) (2021-06-16)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/2.0.0...2.1.0)
@@ -462,16 +472,16 @@
 
 - Align StompSession.use with Closeable.use [\#106](https://github.com/joffrey-bion/krossbow/issues/106)
 
-**Fixed bugs:**
-
-- withTransaction doesn't allow suspending calls inside [\#114](https://github.com/joffrey-bion/krossbow/issues/114)
-
 **Upgraded dependencies:**
 
 - Upgrade Ktor to version 1.6.0 \(Kotlin 1.5\) [\#119](https://github.com/joffrey-bion/krossbow/issues/119)
 - Upgrade Kotlin coroutines to version 1.5.0 [\#117](https://github.com/joffrey-bion/krossbow/issues/117)
 - Upgrade Kotlinx Serialization to version 1.2.0 [\#115](https://github.com/joffrey-bion/krossbow/issues/115)
 - Upgrade Kotlin to version 1.5 [\#109](https://github.com/joffrey-bion/krossbow/issues/109)
+
+**Fixed bugs:**
+
+- withTransaction doesn't allow suspending calls inside [\#114](https://github.com/joffrey-bion/krossbow/issues/114)
 
 ## [1.4.0](https://github.com/joffrey-bion/krossbow/tree/1.4.0) (2021-05-11)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.3.1...1.4.0)
@@ -494,18 +504,18 @@
 ## [1.3.0](https://github.com/joffrey-bion/krossbow/tree/1.3.0) (2021-04-20)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/1.2.0...1.3.0)
 
-**Closed issues:**
+**Implemented enhancements:**
 
-- Remove dependency on kotlinx\-io's charsets [\#99](https://github.com/joffrey-bion/krossbow/issues/99)
+- Feature \- WebSocket Reconnecting Strategy [\#94](https://github.com/joffrey-bion/krossbow/issues/94)
+- Migrate from kotlinx\-io to okio [\#97](https://github.com/joffrey-bion/krossbow/issues/97)
 
 **Deprecations:**
 
 - Rename WebSocketSession to WebSocketConnection [\#100](https://github.com/joffrey-bion/krossbow/issues/100)
 
-**Implemented enhancements:**
+**Closed issues:**
 
-- Feature \- WebSocket Reconnecting Strategy [\#94](https://github.com/joffrey-bion/krossbow/issues/94)
-- Migrate from kotlinx\-io to okio [\#97](https://github.com/joffrey-bion/krossbow/issues/97)
+- Remove dependency on kotlinx\-io's charsets [\#99](https://github.com/joffrey-bion/krossbow/issues/99)
 
 **Merged pull requests:**
 
@@ -593,15 +603,15 @@
 ## [0.43.0](https://github.com/joffrey-bion/krossbow/tree/0.43.0) (2020-10-10)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.42.0...0.43.0)
 
-**Fixed bugs:**
-
-- Spring websocket adapter deadlocks on close\(\) [\#72](https://github.com/joffrey-bion/krossbow/issues/72)
-- JDK11 websocket adapter doesn't let the received CLOSE frame through [\#71](https://github.com/joffrey-bion/krossbow/issues/71)
-
 **Upgraded dependencies:**
 
 - Upgrade Kotlin to version 1.4.10 [\#74](https://github.com/joffrey-bion/krossbow/issues/74)
 - Upgrade kotlinx.serialization to version 1.0 [\#73](https://github.com/joffrey-bion/krossbow/issues/73)
+
+**Fixed bugs:**
+
+- Spring websocket adapter deadlocks on close\(\) [\#72](https://github.com/joffrey-bion/krossbow/issues/72)
+- JDK11 websocket adapter doesn't let the received CLOSE frame through [\#71](https://github.com/joffrey-bion/krossbow/issues/71)
 
 ## [0.42.0](https://github.com/joffrey-bion/krossbow/tree/0.42.0) (2020-09-23)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.41.0...0.42.0)
@@ -666,13 +676,13 @@
 ## [0.21.0](https://github.com/joffrey-bion/krossbow/tree/0.21.0) (2020-06-02)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.20.3...0.21.0)
 
-**Fixed bugs:**
-
-- Jdk11WebSocketClient wraps cancellations in WebSocketConnectionException [\#58](https://github.com/joffrey-bion/krossbow/issues/58)
-
 **Implemented enhancements:**
 
 - Make the heartbeats margins configurable [\#59](https://github.com/joffrey-bion/krossbow/issues/59)
+
+**Fixed bugs:**
+
+- Jdk11WebSocketClient wraps cancellations in WebSocketConnectionException [\#58](https://github.com/joffrey-bion/krossbow/issues/58)
 
 ## [0.20.3](https://github.com/joffrey-bion/krossbow/tree/0.20.3) (2020-05-15)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.20.2...0.20.3)
@@ -703,26 +713,26 @@
 
 - Represent subscriptions with Kotlin Flows [\#53](https://github.com/joffrey-bion/krossbow/issues/53)
 
-**Fixed bugs:**
-
-- Textual content\-type on binary websocket frames is always decoded as UTF\-8 [\#51](https://github.com/joffrey-bion/krossbow/issues/51)
-
 **Implemented enhancements:**
 
 - Add base adapters to support all Kotlinx Serialization formats [\#52](https://github.com/joffrey-bion/krossbow/issues/52)
 
-## [0.12.0](https://github.com/joffrey-bion/krossbow/tree/0.12.0) (2020-04-24)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/0.11.1...0.12.0)
-
 **Fixed bugs:**
 
-- LostReceiptException thrown on external timeout [\#48](https://github.com/joffrey-bion/krossbow/issues/48)
+- Textual content\-type on binary websocket frames is always decoded as UTF\-8 [\#51](https://github.com/joffrey-bion/krossbow/issues/51)
+
+## [0.12.0](https://github.com/joffrey-bion/krossbow/tree/0.12.0) (2020-04-24)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.11.1...0.12.0)
 
 **Implemented enhancements:**
 
 - Support for STOMP frame instead of CONNECT [\#50](https://github.com/joffrey-bion/krossbow/issues/50)
 - Add support for transaction frames \(BEGIN/COMMIT/ABORT\) [\#45](https://github.com/joffrey-bion/krossbow/issues/45)
 - Add support for ACK/NACK frames [\#44](https://github.com/joffrey-bion/krossbow/issues/44)
+
+**Fixed bugs:**
+
+- LostReceiptException thrown on external timeout [\#48](https://github.com/joffrey-bion/krossbow/issues/48)
 
 ## [0.11.1](https://github.com/joffrey-bion/krossbow/tree/0.11.1) (2020-04-15)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.11.0...0.11.1)
@@ -766,15 +776,15 @@
 ## [0.10.1](https://github.com/joffrey-bion/krossbow/tree/0.10.1) (2020-03-12)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.10.0...0.10.1)
 
-**Fixed bugs:**
-
-- ClassCastException in Javascript websocket onclose [\#30](https://github.com/joffrey-bion/krossbow/issues/30)
-- JavaScript WebSocket adapter doesn't fail the connection with onclose [\#29](https://github.com/joffrey-bion/krossbow/issues/29)
-
 **Implemented enhancements:**
 
 - Extract Jackson and Kotlinx Serialization as separate artifacts [\#28](https://github.com/joffrey-bion/krossbow/issues/28)
 - Improve error handling [\#26](https://github.com/joffrey-bion/krossbow/issues/26)
+
+**Fixed bugs:**
+
+- ClassCastException in Javascript websocket onclose [\#30](https://github.com/joffrey-bion/krossbow/issues/30)
+- JavaScript WebSocket adapter doesn't fail the connection with onclose [\#29](https://github.com/joffrey-bion/krossbow/issues/29)
 
 ## [0.10.0](https://github.com/joffrey-bion/krossbow/tree/0.10.0) (2020-03-09)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.4.2...0.10.0)
@@ -803,24 +813,24 @@
 ## [0.4.0](https://github.com/joffrey-bion/krossbow/tree/0.4.0) (2019-12-04)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.3.2...0.4.0)
 
-**Fixed bugs:**
-
-- JS version not working [\#20](https://github.com/joffrey-bion/krossbow/issues/20)
-
 **Implemented enhancements:**
 
 - Allow subscriptions for arbitrary/bytes/string payload [\#15](https://github.com/joffrey-bion/krossbow/issues/15)
 
-## [0.3.2](https://github.com/joffrey-bion/krossbow/tree/0.3.2) (2019-07-12)
-[View commits](https://github.com/joffrey-bion/krossbow/compare/0.3.1...0.3.2)
-
 **Fixed bugs:**
 
-- Artifacts not uploaded to Maven Central [\#19](https://github.com/joffrey-bion/krossbow/issues/19)
+- JS version not working [\#20](https://github.com/joffrey-bion/krossbow/issues/20)
+
+## [0.3.2](https://github.com/joffrey-bion/krossbow/tree/0.3.2) (2019-07-12)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/0.3.1...0.3.2)
 
 **Implemented enhancements:**
 
 - Allow null payloads for Unit type subscriptions [\#18](https://github.com/joffrey-bion/krossbow/issues/18)
+
+**Fixed bugs:**
+
+- Artifacts not uploaded to Maven Central [\#19](https://github.com/joffrey-bion/krossbow/issues/19)
 
 ## [0.3.1](https://github.com/joffrey-bion/krossbow/tree/0.3.1) (2019-07-07)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.3.0...0.3.1)
@@ -839,14 +849,14 @@
 ## [0.2.1](https://github.com/joffrey-bion/krossbow/tree/0.2.1) (2019-07-06)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.2.0...0.2.1)
 
-**Fixed bugs:**
-
-- autoReceipt and receiptTimeLimit are not editable [\#13](https://github.com/joffrey-bion/krossbow/issues/13)
-
 **Implemented enhancements:**
 
 - Publish artifacts to Maven Central [\#12](https://github.com/joffrey-bion/krossbow/issues/12)
 - Allow null payloads in send\(\) [\#8](https://github.com/joffrey-bion/krossbow/issues/8)
+
+**Fixed bugs:**
+
+- autoReceipt and receiptTimeLimit are not editable [\#13](https://github.com/joffrey-bion/krossbow/issues/13)
 
 ## [0.2.0](https://github.com/joffrey-bion/krossbow/tree/0.2.0) (2019-07-05)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/0.1.2...0.2.0)
