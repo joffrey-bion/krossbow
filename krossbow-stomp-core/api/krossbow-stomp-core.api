@@ -223,6 +223,7 @@ public final class org/hildan/krossbow/stomp/frame/StompCommand : java/lang/Enum
 	public static final field STOMP Lorg/hildan/krossbow/stomp/frame/StompCommand;
 	public static final field SUBSCRIBE Lorg/hildan/krossbow/stomp/frame/StompCommand;
 	public static final field UNSUBSCRIBE Lorg/hildan/krossbow/stomp/frame/StompCommand;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lorg/hildan/krossbow/stomp/frame/StompCommand;
 	public static fun values ()[Lorg/hildan/krossbow/stomp/frame/StompCommand;
 }
@@ -437,6 +438,7 @@ public final class org/hildan/krossbow/stomp/headers/AckMode : java/lang/Enum {
 	public static final field CLIENT Lorg/hildan/krossbow/stomp/headers/AckMode;
 	public static final field CLIENT_INDIVIDUAL Lorg/hildan/krossbow/stomp/headers/AckMode;
 	public static final field Companion Lorg/hildan/krossbow/stomp/headers/AckMode$Companion;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getHeaderValue ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lorg/hildan/krossbow/stomp/headers/AckMode;
 	public static fun values ()[Lorg/hildan/krossbow/stomp/headers/AckMode;

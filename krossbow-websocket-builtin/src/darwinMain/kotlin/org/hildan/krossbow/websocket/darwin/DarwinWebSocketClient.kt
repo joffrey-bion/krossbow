@@ -35,6 +35,7 @@ class DarwinWebSocketClient(
     private val maximumMessageSize: Long? = null,
 ) : WebSocketClient {
 
+    @OptIn(ExperimentalForeignApi::class)
     override suspend fun connect(url: String): WebSocketConnectionWithPing {
         val socketEndpoint = NSURL.URLWithString(url)!!
 
@@ -176,6 +177,7 @@ private class DarwinWebSocketConnection(
         }
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     override suspend fun close(code: Int, reason: String?) {
         webSocket.cancelWithCloseCode(code.convert(), reason?.encodeToNSData())
     }
@@ -243,10 +245,12 @@ private fun String.encodeToNSData(): NSData? = (this as NSString).dataUsingEncod
 
 private fun NSData.decodeToString(): String = toByteArray().decodeToString()
 
+@OptIn(ExperimentalForeignApi::class)
 private fun ByteArray.toNSData(): NSData = memScoped {
     NSData.create(bytes = allocArrayOf(this@toNSData), length = this@toNSData.size.convert())
 }
 
+@OptIn(ExperimentalForeignApi::class)
 private fun NSData.toByteArray(): ByteArray {
     // length=0 breaks memcpy for some reason (ArrayIndexOutOfBoundsException)
     // and it doesn't hurt to skip memcpy anyway if the array is empty
