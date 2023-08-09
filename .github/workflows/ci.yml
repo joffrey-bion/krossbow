@@ -29,10 +29,10 @@ jobs:
 
       # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
       # (and it's necessary to run Autobahn tests)
-      - name: Setup docker and docker-compose (missing on MacOS)
+      - name: Setup docker (missing on MacOS)
         if: runner.os == 'macos'
         run: |
-          brew install docker docker-compose
+          brew install docker
           
           # Using mount-type 9p to allow the containers launched via docker-compose to chown
           # https://github.com/abiosoft/colima/issues/54#issuecomment-1250217077
