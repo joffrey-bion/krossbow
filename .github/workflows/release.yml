@@ -1,4 +1,4 @@
-name: Manual release
+name: release
 
 on:
   workflow_dispatch:
@@ -40,55 +40,11 @@ jobs:
           mkdir -p autobahn-tests/build/autobahn/reports
           chmod 777 autobahn-tests/build/autobahn/reports
 
-      # We don't just 'build' here because we want to test KDoc generation and publication mechanism too
-      - name: Test local publish before release
-        uses: gradle/gradle-build-action@v2
-        env:
-          # GPG keys for signing plugin (sign maven artifacts)
-          # see https://docs.gradle.org/current/userguide/signing_plugin.html#sec:in-memory-keys
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SECRET_ASCII_ARMORED }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSWORD }}
+      - name: Release
+        uses: joffrey-bion/gradle-library-release-action@v1
         with:
-          arguments: publishToMavenLocal
-
-      - name: Generate Change Log
-        uses: gradle/gradle-build-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          arguments: generateChangelog -Pversion=${{ inputs.version }}
-
-      - name: Commit and Push Change Log
-        id: changelog-commit
-        run: |
-          git add CHANGELOG.md
-          git commit -m "Version ${{ inputs.version }}"
-          git push
-          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Create Release and Tag
-        uses: softprops/action-gh-release@v1
-        with:
-          token: ${{ secrets.GH_PAT }} # using personal token to trigger publish workflow
-          tag_name: ${{ inputs.version }}
-          target_commitish: ${{ steps.changelog-commit.outputs.sha }}
-          body_path: build/reports/changelog/latest-release-body.md
-
-      # The publishToSonatype task and the repository release need to be in the same Gradle call
-      # so that the closeAndRelease task knows which staging repository was created by publishToSonatype
-      - name: Build and publish to OSS Sonatype and then Maven Central
-        uses: gradle/gradle-build-action@v2
-        env:
-          # GPG keys for signing plugin (sign maven artifacts)
-          # see https://docs.gradle.org/current/userguide/signing_plugin.html#sec:in-memory-keys
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SECRET_ASCII_ARMORED }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSWORD }}
-          # Credentials implicitly read by the gradle-nexus-publish-plugin
-          # https://github.com/gradle-nexus/publish-plugin#publishing-to-maven-central-via-sonatype-ossrh
-          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.OSSRH_USER_TOKEN }}
-          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.OSSRH_KEY }}
-        with:
-          arguments: |
-            publishToSonatype
-            closeAndReleaseSonatypeStagingRepository
-            -Pversion=${{ inputs.version }}
+          version: ${{ inputs.version }}
+          gpg-signing-key: ${{ secrets.GPG_SECRET_ASCII_ARMORED }}
+          gpg-signing-password: ${{ secrets.GPG_PASSWORD }}
+          sonatype-username: ${{ secrets.OSSRH_USER_TOKEN }}
+          sonatype-password: ${{ secrets.OSSRH_KEY }}
