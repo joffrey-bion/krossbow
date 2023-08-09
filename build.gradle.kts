@@ -1,7 +1,6 @@
 plugins {
     val kotlinVersion = "1.8.22" // also update in buildSrc/build.gradle.kts
     kotlin("jvm") apply false
-    kotlin("js") apply false
     kotlin("multiplatform") apply false
     kotlin("plugin.atomicfu") version kotlinVersion apply false
     kotlin("plugin.spring") version kotlinVersion apply false
