@@ -11,10 +11,10 @@ dependencies {
     implementation(gradleApi())
     implementation(gradleKotlinDsl())
 
-    implementation(kotlin("gradle-plugin", "1.8.22"))
-    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.8.20")
-    implementation("org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:0.13.2")
+    implementation(kotlin("gradle-plugin", libs.versions.kotlin.get()))
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:${libs.versions.dokka.get()}")
+    implementation("org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:${libs.versions.binary.compatibility.validator.plugin.get()}")
 
-    implementation("org.hildan.gradle:gradle-kotlin-publish-plugin:1.2.0")
-    implementation("ru.vyarus:gradle-github-info-plugin:1.5.0")
+    implementation("org.hildan.gradle:gradle-kotlin-publish-plugin:${libs.versions.hildan.kotlin.publish.plugin.get()}")
+    implementation("ru.vyarus:gradle-github-info-plugin:${libs.versions.vyarus.github.info.plugin.get()}")
 }

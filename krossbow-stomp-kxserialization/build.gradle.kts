@@ -1,6 +1,6 @@
 plugins {
     id("krossbow-multiplatform-all")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.serialization)
     id("krossbow-publish")
 }
 

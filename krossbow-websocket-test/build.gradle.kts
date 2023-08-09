@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 description = "Test utilities for Krossbow WebSocket adapter implementations."
@@ -25,7 +25,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 // for the test server
-                implementation("com.pusher:java-websocket:1.4.1")
+                implementation(libs.java.websocket)
 
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
