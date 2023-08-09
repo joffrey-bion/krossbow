@@ -30,6 +30,10 @@ jobs:
         run: |
           brew install docker docker-compose
           
+          # Link the Docker Compose v2 plugin so it's understood by the docker CLI
+          mkdir -p ~/.docker/cli-plugins
+          ln -sfn /usr/local/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
+          
           # Using mount-type 9p to allow the containers launched via docker-compose to chown
           # https://github.com/abiosoft/colima/issues/54#issuecomment-1250217077
           colima start --mount-type 9p

@@ -153,9 +153,6 @@ configurations.configureEach {
 dockerCompose {
     useComposeFiles.set(listOf(file("$projectDir/test-server/docker-compose.yml").toString()))
     buildBeforeUp.set(false)
-
-    // Can't use v2 right now, see https://github.com/avast/gradle-docker-compose-plugin/issues/414
-    useDockerComposeV2.set(false)
 }
 
 // ensure autobahn test server is launched for websocket tests
