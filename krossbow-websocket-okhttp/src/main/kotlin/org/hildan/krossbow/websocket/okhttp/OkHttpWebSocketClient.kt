@@ -8,6 +8,7 @@ import okio.ByteString.Companion.toByteString
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerFlowAdapter
+import java.net.SocketException
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -68,10 +69,17 @@ private class KrossbowToOkHttpListenerAdapter(
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         if (isConnecting) {
+            val responseBody = try {
+                response?.body?.string()?.takeIf { it.isNotBlank() }
+            } catch (e: SocketException) {
+                // we can't always read the body when the connection failed
+                t.addSuppressed(e)
+                null
+            }
             val exception = WebSocketConnectionException(
                 url = webSocket.request().url.toString(),
                 httpStatusCode =  response?.code,
-                additionalInfo = response?.body?.string()?.takeIf { it.isNotBlank() },
+                additionalInfo = responseBody,
                 cause = t,
             )
             completeConnection {
