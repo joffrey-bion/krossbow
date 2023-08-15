@@ -1,0 +1,84 @@
+name: Bug report
+description: File a bug report
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      placeholder: Incorrect behaviour, error message, stacktrace...
+      description: Please describe what you see and what you expected to happen instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction and additional details
+      placeholder: Snippet of code, contextual information...
+      description: Please provide information that could help reproduce the problem.
+    validations:
+      required: false
+  - type: input
+    id: krossbow-version
+    attributes:
+      label: Krossbow version
+    validations:
+      required: true
+  - type: dropdown
+    id: krossbow-modules
+    attributes:
+      label: Krossbow modules
+      description: |
+        Select the Krossbow modules that you're using in your project. You don't have to specify all transitive 
+        dependencies (the ones that you're declaring in your project are enough), but it's ok if you do.
+        If a module you're using is not in the list, please check `Other` and specify it in the "additional details"
+        section.
+      multiple: true
+      options:
+        - krossbow-stomp-core
+        - krossbow-stomp-jackson
+        - krossbow-stomp-kxserialization
+        - krossbow-stomp-kxserialization-json
+        - krossbow-stomp-moshi
+        - krossbow-websocket-builtin
+        - krossbow-websocket-core
+        - krossbow-websocket-ktor
+        - krossbow-websocket-okhttp
+        - krossbow-websocket-sockjs
+        - krossbow-websocket-spring
+        - Other (please specify in "additional details")
+    validations:
+      required: true
+  - type: input
+    id: kotlin-version
+    attributes:
+      label: Kotlin version
+    validations:
+      required: true
+  - type: dropdown
+    id: kotlin-platforms
+    attributes:
+      label: Kotlin target platforms
+      description: |
+        Select the Kotlin target platform(s) where you noticed the bug. If a target you're using is not in the list,
+        please check `Other` and specify it in the "additional details" section.
+      multiple: true
+      options:
+        - All targets / irrelevant
+        - Android
+        - JVM (non-Android)
+        - JS (browser)
+        - JS (node)
+        - Native - iOS
+        - Native - watchOS
+        - Native - tvOS
+        - Native - macOS
+        - Native - Linux
+        - Native - Windows (minGW)
+        - Native - Android NDK
+        - Other (please specify in "additional details")
+    validations:
+      required: true

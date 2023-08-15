@@ -1,0 +1,16 @@
+name: Documentation
+description: Report a problem with the documentation
+labels: [ "documentation" ]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to open an issue!
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem description
+      description: |
+        Please describe the problem as concisely as possible.
+        If it's a clear typo, don't hesitate to open a PR to fix it instead of opening an issue.
+    validations:
+      required: true

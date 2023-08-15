@@ -1,0 +1,12 @@
+name: Dependency upgrade
+description: Upgrade a dependency
+title: Upgrade ARTIFACT_NAME to version VERSION
+labels: ["dependencies"]
+body:
+- type: textarea
+  id: additional-info
+  attributes:
+    label: Additional information
+    description: If this version upgrade is necessary for a specific reason, please describe why.
+  validations:
+    required: false

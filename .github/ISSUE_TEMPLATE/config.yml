@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Ask a question
+    about: For general usage questions, please use GitHub Discussions
+    url: https://github.com/joffrey-bion/krossbow/discussions
