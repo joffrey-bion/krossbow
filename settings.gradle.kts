@@ -4,7 +4,7 @@ import de.fayard.refreshVersions.core.StabilityLevel
 
 plugins {
     id("com.gradle.enterprise") version "3.14.1"
-    id("de.fayard.refreshVersions") version "0.51.0"
+    id("de.fayard.refreshVersions") version "0.60.0"
 }
 
 rootProject.name = "krossbow"
