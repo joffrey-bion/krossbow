@@ -26,11 +26,6 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting {
-            dependencies {
-                api(libs.kotlinx.coroutines.jdk8)
-            }
-        }
         val jsTest by getting {
             dependencies {
                 implementation(npm("isomorphic-ws", libs.versions.npm.isomorphic.ws.get()))

@@ -8,8 +8,6 @@ description = "A Krossbow adapter for Spring's default WebSocket client and Sock
 dependencies {
     api(projects.krossbowWebsocketCore)
 
-    implementation(libs.kotlinx.coroutines.jdk8)
-
     // For Spring's WebSocket clients
     api(libs.spring.websocket)
 
