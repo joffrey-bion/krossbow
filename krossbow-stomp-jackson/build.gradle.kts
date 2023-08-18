@@ -15,5 +15,4 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
-val jacksonMinorVersion = libs.versions.jackson.get().split(".").take(2).joinToString(".")
-dokkaExternalDocLink("https://fasterxml.github.io/jackson-databind/javadoc/$jacksonMinorVersion/")
+dokkaExternalDocLink("https://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind/${libs.versions.jackson.get()}/")
