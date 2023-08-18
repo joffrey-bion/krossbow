@@ -22,3 +22,5 @@ kotlin {
         }
     }
 }
+
+dokkaExternalDocLink("https://kotlinlang.org/api/kotlinx.coroutines/")
