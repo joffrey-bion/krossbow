@@ -1,5 +1,23 @@
 # Change Log
 
+## [5.5.0](https://github.com/joffrey-bion/krossbow/tree/5.5.0) (2023-08-21)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.4.0...5.5.0)
+
+**Implemented enhancements:**
+
+- Support for custom headers in the web socket handshake [\#360](https://github.com/joffrey-bion/krossbow/issues/360)
+
+**Upgraded dependencies:**
+
+- Bump org.jetbrains.kotlinx:atomicfu from 0.21.0 to 0.22.0 [\#362](https://github.com/joffrey-bion/krossbow/pull/362) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Upgrade uuid to version 0.8.0 [\#361](https://github.com/joffrey-bion/krossbow/issues/361)
+- Upgrade Okio to version 3.5.0 [\#358](https://github.com/joffrey-bion/krossbow/issues/358)
+- Upgrade Kotlin to version 1.9.0 [\#357](https://github.com/joffrey-bion/krossbow/issues/357)
+
+**Fixed bugs:**
+
+- OkHttp fails to report handshake failures when it can't read the response body [\#359](https://github.com/joffrey-bion/krossbow/issues/359)
+
 ## [5.4.0](https://github.com/joffrey-bion/krossbow/tree/5.4.0) (2023-08-09)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.3.0...5.4.0)
 
@@ -9,6 +27,10 @@
 - Bump org.jetbrains.kotlinx:atomicfu from 0.20.2 to 0.21.0 [\#353](https://github.com/joffrey-bion/krossbow/pull/353) ([@dependabot[bot]](https://github.com/apps/dependabot))
 - Bump kotlinx\-coroutines from 1.7.1 to 1.7.3 [\#349](https://github.com/joffrey-bion/krossbow/pull/349) ([@dependabot[bot]](https://github.com/apps/dependabot))
 - Bump com.squareup.okio:okio from 3.3.0 to 3.4.0 [\#342](https://github.com/joffrey-bion/krossbow/pull/342) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+**Fixed bugs:**
+
+- Cannot Assemble XCFramework with Krossbow Dependencies in a Multiplatform Project [\#356](https://github.com/joffrey-bion/krossbow/issues/356)
 
 ## [5.3.0](https://github.com/joffrey-bion/krossbow/tree/5.3.0) (2023-07-03)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.2.0...5.3.0)
