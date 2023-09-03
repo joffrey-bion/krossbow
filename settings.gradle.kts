@@ -60,6 +60,9 @@ fun BuildScanExtension.addGithubActionsData() {
 }
 
 refreshVersions {
+    // workaround for https://github.com/Splitties/refreshVersions/issues/640
+    versionsPropertiesFile = file("build/tmp/refreshVersions/versions.properties").apply { parentFile.mkdirs() }
+
     rejectVersionIf {
         candidate.stabilityLevel != StabilityLevel.Stable || isTyrus() || isOkHttpAlpha()
     }
