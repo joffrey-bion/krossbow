@@ -7,43 +7,30 @@ It is a popular choice for Kotlin multiplatform libraries especially because of 
 The `krossbow-stomp-kxserialization` module is an extension of `krossbow-stomp-core` that provides new APIs to 
 send and receive properly typed classes, and automatically convert STOMP frame bodies by leveraging Kotlinx Serialization.
 
-## A note on JSON format
+## Usage with the JSON format
 
-Since Kotlinx Serialization supports multiple formats with different dependencies, you have to add your own dependency
-to bring the format of your choice.
+Since Kotlinx Serialization supports multiple formats with different dependencies, you normally have to add your own
+dependency to bring the format of your choice.
 
 However, since JSON is so popular, Krossbow comes with the `krossbow-stomp-kxserialization-json` module, which adds 
-dedicated helpers for JSON and the necessary transitive dependency on the JSON format.
+dedicated helpers for JSON *and* the necessary transitive dependency on the JSON format (see dependencies section below).
 
-## Basic usage
-
-This module brings the following extension functions on `StompSession`:
-
-- [`withBinaryConversions(format: BinaryFormat, mediaType: String)`](../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-binary-conversions.html)
-- [`withTextConversions(format: StringFormat, mediaType: String)`](../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-text-conversions.html)
-
-!!! tip "JSON convenience"
-    If you're using JSON, a dedicated
-    [withJsonConversions](../../kdoc/krossbow-stomp-kxserialization-json/org.hildan.krossbow.stomp.conversions.kxserialization.json/with-json-conversions.html)
-    helper for JSON serialization is provided in the `krossbow-stomp-serialization-json` module.
-
-These helpers turn your `StompSession` into a `StompSessionWithKxSerialization`.
-This new session type has additional methods that use Kotlinx Serialization's serializers to serialize/deserialize your
-objects using the format of your choice (JSON, protobuf, etc.).
-
-You can for instance use `convertAndSend` and `subscribe` overloads with serializers like this:
+This module brings the [withJsonConversions](../../kdoc/krossbow-stomp-kxserialization-json/org.hildan.krossbow.stomp.conversions.kxserialization.json/with-json-conversions.html)
+helper to convert your `StompSession` into a `StompSessionWithKxSerialization`:
 
 ```kotlin
-import org.hildan.krossbow.stomp.*
-import org.hildan.krossbow.stomp.conversions.kxserialization.*
+val session = StompClient(WebSocketClient.builtIn()).connect(url)
+val jsonStompSession = session.withJsonConversions()
+```
 
+This new session type has the additional `convertAndSend` method and `subscribe` overloads that use Kotlinx
+Serialization's serializers to convert your payloads using the format of your choice (in this case, JSON):
+
+```kotlin
 @Serializable
 data class Person(val name: String, val age: Int)
 @Serializable
 data class MyMessage(val timestamp: Long, val author: String, val content: String)
-
-val session = StompClient(WebSocketClient.builtIn()).connect(url)
-val jsonStompSession = session.withJsonConversions() // adds convenience methods for kotlinx.serialization's conversions
 
 jsonStompSession.use { s ->
     s.convertAndSend("/some/destination", Person("Bob", 42), Person.serializer()) 
@@ -57,7 +44,7 @@ jsonStompSession.use { s ->
 }
 ```
 
-## Custom `Json` instance
+### Custom `Json` instance
 
 The `withJsonConversions()` method takes an optional `Json` parameter, so you can configure it as you please:
 
@@ -71,6 +58,27 @@ val json = Json {
 val session = StompClient(WebSocketClient.builtIn()).connect(url)
 val jsonStompSession = session.withJsonConversions(json)
 ```
+
+## Usage with other formats
+
+For other formats than JSON, use the more general `krossbow-stomp-kxserialization` module, and add a dependency on the
+Kotlinx Serialization format of your choice (see dependencies section below).
+
+This module brings the following extension functions on `StompSession`:
+
+- [`withBinaryConversions(format: BinaryFormat, mediaType: String)`](../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-binary-conversions.html)
+- [`withTextConversions(format: StringFormat, mediaType: String)`](../../kdoc/krossbow-stomp-kxserialization/org.hildan.krossbow.stomp.conversions.kxserialization/with-text-conversions.html)
+
+These helpers are equivalent to `withJsonConversions`, but more general, and also turn your `StompSession` into a
+`StompSessionWithKxSerialization`.
+You should provide the media type that you want to set as `content-type` header in the messages you send:
+
+```kotlin
+val session = StompClient(WebSocketClient.builtIn()).connect(url)
+val jsonStompSession = session.withBinaryConversions(Protobuf.Default, "application/x-protobuf")
+```
+
+You can then use `convertAndSend` and `subscribe` the same way as in the JSON section above.
 
 ## Dependency
 
