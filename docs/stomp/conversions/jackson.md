@@ -33,7 +33,7 @@ val customObjectMapper: ObjectMapper = jacksonObjectMapper()
         .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS)
 
 val client = StompClient(WebSocketClient.builtIn()).connect(url)
-val session = client.withJacksonConversions(customObjectMapper)
+val session = client.withJackson(customObjectMapper)
 ```
 
 ## Dependency
