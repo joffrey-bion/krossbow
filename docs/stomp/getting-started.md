@@ -11,7 +11,7 @@ implementation("org.hildan.krossbow:krossbow-websocket-ktor:{{ git.tag }}")
 ```
 
 Check out the [web socket client table](../index.md#web-socket-clients-target-support) to help you choose.
-We recommend the built-in client adapters if they cover the Kotlin targets you need to support, it order to limit 3rd
+We recommend the built-in client adapters if they cover the Kotlin targets you need to support, in order to limit 3rd
 party dependencies.
 Otherwise, Ktor is a good choice if you don't have special needs like SockJS.
 
