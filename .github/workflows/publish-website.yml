@@ -14,7 +14,7 @@ jobs:
         jdk-version: [ 17 ]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # to fetch all tags for proper version
 
