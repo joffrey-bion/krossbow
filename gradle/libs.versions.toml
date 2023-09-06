@@ -37,7 +37,7 @@ okio = "3.5.0"
 slf4j = "2.0.9"
 spring = "5.3.23"
 tyrus = "1.17"
-uuid = "0.8.0"
+uuid = "0.8.1"
 vyarus-github-info-plugin = "1.5.0"
 
 npm-sockjs-client = "1.6.1"
