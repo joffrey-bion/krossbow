@@ -139,9 +139,10 @@ class StompSessionHeartBeatsTests {
         }
 
         val messages = stompSession.subscribeText("/dest")
-        assertFailsWith(MissingHeartBeatException::class) {
+        val exception = assertFailsWith(MissingHeartBeatException::class) {
             messages.first()
         }
+        assertEquals(1000.milliseconds, exception.expectedPeriod)
     }
 
     @Test

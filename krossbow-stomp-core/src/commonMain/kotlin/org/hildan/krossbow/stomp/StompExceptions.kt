@@ -25,6 +25,7 @@ class LostReceiptException(
  * An exception thrown when expected heart beats are not received.
  */
 class MissingHeartBeatException(
+    /** The expected period for heartbeats received from the server, which was exceeded, causing this exception. */
     val expectedPeriod: Duration,
 ) : Exception("A server heart beat was missing (expecting data every $expectedPeriod at most)")
 

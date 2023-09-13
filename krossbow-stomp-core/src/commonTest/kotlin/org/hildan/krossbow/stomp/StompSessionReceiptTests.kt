@@ -65,12 +65,16 @@ class StompSessionReceiptTests {
             autoReceipt = true
             receiptTimeout = TEST_RECEIPT_TIMEOUT
         }
-        launch {
+        val deferredSend = async {
             wsSession.awaitSendFrameAndSimulateCompletion()
         }
-        assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
+        val exception = assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
             stompSession.sendEmptyMsg("/destination")
         }
+        val sendFrame = deferredSend.await()
+        assertEquals(sendFrame.headers.receipt, exception.receiptId)
+        assertEquals(TEST_RECEIPT_TIMEOUT, exception.configuredTimeout)
+        assertEquals(sendFrame, exception.frame)
     }
 
     @Test
@@ -167,15 +171,19 @@ class StompSessionReceiptTests {
             autoReceipt = false
             receiptTimeout = TEST_RECEIPT_TIMEOUT
         }
-        launch {
+        val deferredSend = async {
             wsSession.awaitSendFrameAndSimulateCompletion()
         }
         val headers = StompSendHeaders(destination = "/destination")
         headers.receipt = "my-receipt"
 
-        assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
+        val exception = assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
             stompSession.send(headers, null)
         }
+        val sendFrame = deferredSend.await()
+        assertEquals(sendFrame.headers.receipt, exception.receiptId)
+        assertEquals(TEST_RECEIPT_TIMEOUT, exception.configuredTimeout)
+        assertEquals(sendFrame, exception.frame)
     }
 
     @Test
@@ -213,12 +221,16 @@ class StompSessionReceiptTests {
             autoReceipt = true
             receiptTimeout = TEST_RECEIPT_TIMEOUT
         }
-        launch {
+        val deferredSub = async {
             wsSession.awaitSubscribeFrameAndSimulateCompletion()
         }
-        assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
+        val exception = assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
             stompSession.subscribe("/destination")
         }
+        val subscribeFrame = deferredSub.await()
+        assertEquals(subscribeFrame.headers.receipt, exception.receiptId)
+        assertEquals(TEST_RECEIPT_TIMEOUT, exception.configuredTimeout)
+        assertEquals(subscribeFrame, exception.frame)
     }
 
     @Test
@@ -227,11 +239,15 @@ class StompSessionReceiptTests {
             autoReceipt = false
             receiptTimeout = TEST_RECEIPT_TIMEOUT
         }
-        launch {
+        val deferredSub = async {
             wsSession.awaitSubscribeFrameAndSimulateCompletion()
         }
-        assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
+        val exception = assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
             stompSession.subscribe(StompSubscribeHeaders("/destination", receipt = "my-receipt"))
         }
+        val subscribeFrame = deferredSub.await()
+        assertEquals(subscribeFrame.headers.receipt, exception.receiptId)
+        assertEquals(TEST_RECEIPT_TIMEOUT, exception.configuredTimeout)
+        assertEquals(subscribeFrame, exception.frame)
     }
 }
