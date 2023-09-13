@@ -154,7 +154,7 @@ internal class BaseStompSession(
                 .dematerializeErrorsAndCompletion()
                 .filterIsInstance<StompFrame.Receipt>()
                 .firstOrNull { it.headers.receiptId == receiptId }
-                    ?: error("Frames flow closed unexpectedly while waiting for RECEIPT frame with id='$receiptId'")
+                ?: throw SessionDisconnectedException("The STOMP frames flow completed unexpectedly while waiting for RECEIPT frame with id='$receiptId'")
         } ?: throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
     }
 

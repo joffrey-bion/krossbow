@@ -20,6 +20,10 @@ public final class org/hildan/krossbow/stomp/MissingHeartBeatException : java/la
 	public final fun getExpectedPeriod-UwyO8pc ()J
 }
 
+public final class org/hildan/krossbow/stomp/SessionDisconnectedException : java/lang/Exception {
+	public fun <init> (Ljava/lang/String;)V
+}
+
 public final class org/hildan/krossbow/stomp/StompClient {
 	public fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;)V
 	public synthetic fun <init> (Lorg/hildan/krossbow/websocket/WebSocketClient;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V

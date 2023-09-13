@@ -21,6 +21,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 
 private val TEST_RECEIPT_TIMEOUT: Duration = 500.milliseconds
 
@@ -119,6 +120,26 @@ class StompSessionReceiptTests {
         }
         assertEquals(WebSocketCloseCodes.NORMAL_CLOSURE, exception.code)
         assertEquals("because why not", exception.reason)
+    }
+
+    @Test
+    fun send_autoReceipt_failsOnSessionDisconnected() = runTest {
+        val (wsSession, stompSession) = connectWithMocks {
+            autoReceipt = true
+            receiptTimeout = 5.minutes
+        }
+        launch {
+            wsSession.awaitSendFrameAndSimulateCompletion()
+            // we simulate a disconnection between the SEND and the RECEIPT
+            launch {
+                wsSession.awaitDisconnectFrameAndSimulateCompletion()
+                wsSession.expectClose()
+            }
+            stompSession.disconnect()
+        }
+        assertFailsWith(SessionDisconnectedException::class) {
+            stompSession.sendEmptyMsg("/destination")
+        }
     }
 
     @Test

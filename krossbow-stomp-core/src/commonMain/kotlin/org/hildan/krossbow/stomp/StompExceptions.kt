@@ -35,3 +35,8 @@ class WebSocketClosedUnexpectedly(
     val code: Int,
     val reason: String?,
 ) : Exception("the WebSocket was closed while subscriptions were still active. Code: $code Reason: $reason")
+
+/**
+ * An exception thrown when the STOMP frames flow completed while some consumer was expecting more frames.
+ */
+class SessionDisconnectedException(message: String) : Exception(message)
