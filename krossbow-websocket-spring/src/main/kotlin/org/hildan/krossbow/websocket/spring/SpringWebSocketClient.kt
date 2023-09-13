@@ -100,7 +100,6 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
     override fun supportsPartialMessages(): Boolean = true
 }
 
-@Suppress("BlockingMethodInNonBlockingContext")
 private class SpringSessionToKrossbowConnectionAdapter(
     private val session: SpringWebSocketSession,
     override val incomingFrames: Flow<WebSocketFrame>,
