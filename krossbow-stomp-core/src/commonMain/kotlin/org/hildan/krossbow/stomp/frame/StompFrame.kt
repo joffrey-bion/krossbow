@@ -11,8 +11,19 @@ import org.hildan.krossbow.stomp.headers.*
  * [StompFrame] directly extend it to avoid the overhead of wrapping every frame in a [StompEvent] internally.
  */
 sealed class StompEvent {
-    internal object HeartBeat : StompEvent()
-    internal object Close : StompEvent()
+    /**
+     * Represents data-less traffic that needs to be registered to reset heartbeat counters.
+     */
+    internal data object HeartBeat : StompEvent()
+
+    /**
+     * Materializes completion of the STOMP frames flow.
+     */
+    internal data object Close : StompEvent()
+
+    /**
+     * Materializes errors in the STOMP frames flow.
+     */
     internal data class Error(val cause: Throwable) : StompEvent()
 }
 
