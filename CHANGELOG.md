@@ -1,5 +1,20 @@
 # Change Log
 
+## [5.6.0](https://github.com/joffrey-bion/krossbow/tree/5.6.0) (2023-09-18)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.5.0...5.6.0)
+
+**Implemented enhancements:**
+
+- Define a specific `SessionDisconnectedException` to represent STOMP frames completion [\#379](https://github.com/joffrey-bion/krossbow/issues/379)
+
+**Upgraded dependencies:**
+
+- Bump org.eclipse.jetty.websocket:websocket\-client from 9.4.51.v20230217 to 9.4.52.v20230823 [\#373](https://github.com/joffrey-bion/krossbow/pull/373) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.benasher44:uuid from 0.8.0 to 0.8.1 [\#375](https://github.com/joffrey-bion/krossbow/pull/375) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ktor from 2.3.3 to 2.3.4 [\#371](https://github.com/joffrey-bion/krossbow/pull/371) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlin from 1.9.0 to 1.9.10 [\#368](https://github.com/joffrey-bion/krossbow/pull/368) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-serialization from 1.5.1 to 1.6.0 [\#367](https://github.com/joffrey-bion/krossbow/pull/367) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [5.5.0](https://github.com/joffrey-bion/krossbow/tree/5.5.0) (2023-08-21)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.4.0...5.5.0)
 
