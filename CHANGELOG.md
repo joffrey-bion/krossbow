@@ -1,5 +1,22 @@
 # Change Log
 
+## [5.7.0](https://github.com/joffrey-bion/krossbow/tree/5.7.0) (2023-09-19)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.6.0...5.7.0)
+
+**Implemented enhancements:**
+
+- `asKrossbowWebSocketClient\(\)` extension to adapt Spring clients to Krossbow WS API [\#383](https://github.com/joffrey-bion/krossbow/issues/383)
+
+**Deprecations:**
+
+- Deprecate built\-in adapted Spring client objects in favor of `asKrossbowWebSocketClient\(\)` extension [\#385](https://github.com/joffrey-bion/krossbow/issues/385)
+- Deprecate `SpringWebSocketClientAdapter` in favor of `asKrossbowWebSocketClient\(\)` extension [\#384](https://github.com/joffrey-bion/krossbow/issues/384)
+- Deprecate Spring Jetty client \(deprecated in Spring 6 for removal\) [\#382](https://github.com/joffrey-bion/krossbow/issues/382)
+
+**Upgraded dependencies:**
+
+- Upgrade Spring to version 6.0.12 \(Java 17\+ only\) [\#298](https://github.com/joffrey-bion/krossbow/issues/298)
+
 ## [5.6.0](https://github.com/joffrey-bion/krossbow/tree/5.6.0) (2023-09-18)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.5.0...5.6.0)
 
