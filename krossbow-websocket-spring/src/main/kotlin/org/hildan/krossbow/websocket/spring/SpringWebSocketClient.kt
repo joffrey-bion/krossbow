@@ -1,3 +1,5 @@
+@file:Suppress("removal") // for JettyWebSocketClient
+
 package org.hildan.krossbow.websocket.spring
 
 import kotlinx.coroutines.CancellationException
@@ -93,7 +95,7 @@ open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClien
                     put(name, listOf(value))
                 }
             }
-            val springSession = client.doHandshake(handler, handshakeHeaders, URI(url)).completable().await()
+            val springSession = client.execute(handler, handshakeHeaders, URI(url)).await()
             return SpringSessionToKrossbowConnectionAdapter(springSession, handler.channelListener.incomingFrames)
         } catch (e: CancellationException) {
             throw e // this is an upstream exception that we don't want to wrap here
@@ -123,9 +125,9 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
         runBlocking {
             when (message) {
                 is TextMessage -> channelListener.onTextMessage(message.payload, message.isLast)
-                is BinaryMessage -> channelListener.onBinaryMessage(message.payload.array(), message.isLast)
-                is PingMessage -> channelListener.onPing(message.payload.array())
-                is PongMessage -> channelListener.onPong(message.payload.array())
+                is BinaryMessage -> channelListener.onBinaryMessage(message.payload.toByteArray(), message.isLast)
+                is PingMessage -> channelListener.onPing(message.payload.toByteArray())
+                is PongMessage -> channelListener.onPong(message.payload.toByteArray())
                 else -> channelListener.onError("Unsupported Spring websocket message type: ${message.javaClass}")
             }
         }
@@ -192,3 +194,5 @@ private class SpringSessionToKrossbowConnectionAdapter(
         }
     }
 }
+
+private fun ByteBuffer.toByteArray(): ByteArray = if (hasArray()) array() else ByteArray(remaining()).also { get(it) }

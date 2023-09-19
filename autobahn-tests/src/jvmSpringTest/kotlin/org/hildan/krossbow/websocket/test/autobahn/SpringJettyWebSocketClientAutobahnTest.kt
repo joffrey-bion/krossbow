@@ -1,3 +1,5 @@
+@file:Suppress("removal")
+
 package org.hildan.krossbow.websocket.test.autobahn
 
 import org.hildan.krossbow.websocket.WebSocketClient
