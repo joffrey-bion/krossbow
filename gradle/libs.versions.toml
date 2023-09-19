@@ -24,7 +24,7 @@ dokka = "1.9.0"
 hildan-kotlin-publish-plugin = "1.2.0"
 hildan-github-changelog-plugin = "2.0.0"
 jackson = "2.15.2"
-jetty-websocket = "9.4.52.v20230823"
+jetty-websocket = "11.0.16"
 kotlin = "1.9.10"
 kotlinx-atomicfu = "0.22.0"
 kotlinx-coroutines = "1.7.3"
@@ -55,7 +55,7 @@ jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jac
 jackson-core = { module = "com.fasterxml.jackson.core:jackson-core" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 java-websocket = { module = "com.pusher:java-websocket", version.ref = "java-websocket" }
-jettyWebsocketCient = { module = "org.eclipse.jetty.websocket:websocket-client", version.ref = "jetty-websocket" }
+jettyWebsocketCient = { module = "org.eclipse.jetty.websocket:websocket-jetty-client", version.ref = "jetty-websocket" }
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "kotlinx-atomicfu" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
