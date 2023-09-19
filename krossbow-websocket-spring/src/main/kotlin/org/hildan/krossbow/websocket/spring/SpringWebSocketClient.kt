@@ -23,10 +23,55 @@ import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
 import org.springframework.web.socket.WebSocketSession as SpringWebSocketSession
 import org.springframework.web.socket.client.WebSocketClient as SpringWebSocketClient
 
+/**
+ * Adapts this Spring [WebSocketClient][SpringWebSocketClient] to the Krossbow
+ * [WebSocketClient][KrossbowWebSocketClient] interface.
+ */
+@Suppress("DEPRECATION")
+fun SpringWebSocketClient.asKrossbowWebSocketClient(): KrossbowWebSocketClient = SpringWebSocketClientAdapter(this)
+
+@Deprecated(
+    message = "The SpringDefaultWebSocketClient object is made redundant by the public adapter extension" +
+            ".asKrossbowWebSocketClient(), prefer using that instead.",
+    replaceWith = ReplaceWith(
+        expression = "StandardWebSocketClient().asKrossbowWebSocketClient()",
+        imports = [
+            "org.springframework.web.socket.client.standard.StandardWebSocketClient",
+            "org.hildan.krossbow.websocket.spring.asKrossbowWebSocketClient",
+        ],
+    )
+)
+@Suppress("DEPRECATION")
 object SpringDefaultWebSocketClient : SpringWebSocketClientAdapter(StandardWebSocketClient())
 
+@Deprecated(
+    message = "The JettyWebSocketClient is deprecated for removal in Spring itself, prefer the StandardWebSocketClient.",
+    replaceWith = ReplaceWith(
+        expression = "StandardWebSocketClient().asKrossbowWebSocketClient()",
+        imports = [
+            "org.springframework.web.socket.client.standard.StandardWebSocketClient",
+            "org.hildan.krossbow.websocket.spring.asKrossbowWebSocketClient",
+        ],
+    )
+)
+@Suppress("DEPRECATION")
 object SpringJettyWebSocketClient : SpringWebSocketClientAdapter(JettyWebSocketClient().apply { start() })
 
+@Deprecated(
+    message = "The SpringSockJSWebSocketClient object is made redundant by the public adapter extension" +
+            ".asKrossbowWebSocketClient(), prefer using that instead.",
+    replaceWith = ReplaceWith(
+        expression = "SockJsClient(listOf(WebSocketTransport(StandardWebSocketClient()), RestTemplateXhrTransport())).asKrossbowWebSocketClient()",
+        imports = [
+            "org.springframework.web.socket.client.standard.StandardWebSocketClient",
+            "org.springframework.web.socket.sockjs.client.SockJsClient",
+            "org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport",
+            "org.springframework.web.socket.sockjs.client.WebSocketTransport",
+            "org.hildan.krossbow.websocket.spring.asKrossbowWebSocketClient",
+        ],
+    )
+)
+@Suppress("DEPRECATION")
 object SpringSockJSWebSocketClient : SpringWebSocketClientAdapter(SockJsClient(defaultWsTransports()))
 
 private fun defaultWsTransports(): List<Transport> = listOf(
@@ -34,6 +79,10 @@ private fun defaultWsTransports(): List<Transport> = listOf(
     RestTemplateXhrTransport()
 )
 
+@Deprecated(
+    message = "This class is internal and will become invisible in future versions, " +
+            "prefer the adapter extension asKrossbowWebSocketClient().",
+)
 open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClient) : KrossbowWebSocketClient {
 
     override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {

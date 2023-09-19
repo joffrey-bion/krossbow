@@ -16,3 +16,7 @@ public class org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter :
 	public synthetic fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class org/hildan/krossbow/websocket/spring/SpringWebSocketClientKt {
+	public static final fun asKrossbowWebSocketClient (Lorg/springframework/web/socket/client/WebSocketClient;)Lorg/hildan/krossbow/websocket/WebSocketClient;
+}
+
