@@ -42,3 +42,35 @@ DISCONNECT frame with a `receipt` header, and then waits for a RECEIPT frame bef
 If this graceful disconnect is disabled, then calling `StompSession.disconnect()` immediately closes the web
 socket connection.
 In this case, there is no guarantee that the server received all previous messages.
+
+## Using custom headers in the web socket handshake
+
+!!! warning "Not supported in browsers"
+    The browser's `WebSocket` API does not support custom headers in the handshake (see
+    [this open issue](https://github.com/whatwg/websockets/issues/16) in the web socket standard repo).
+    Because of this, Krossbow cannot support this feature for the JS browser platform.
+    However, the JS web socket client adapter is designed in a way that allows other implementations to support it,
+    such as a Node.js implementation.
+
+Some servers or connection flows may require extra HTTP headers in the web socket handshake.
+The `StompClient.connect()` function doesn't support such headers out of the box, but this function is essentially
+just a shorthand for connecting at the web socket level, and then connecting at the STOMP level.
+
+In fact, we technically don't need to create and use a `StompClient` at all in order to use STOMP with Krossbow.
+Krossbow provides a [WebSocketConnection.stomp()](../kdoc/krossbow-stomp-core/org.hildan.krossbow.stomp/stomp.html)
+extension function that establishes a STOMP connection from an existing web socket connection.
+
+We can leverage this to customize the web socket connection at will before connecting at STOMP level. For example:
+
+```kotlin
+val webSocketClient = WebSocketClient.builtIn() // or another web socket client
+
+// connect at web socket level with custom headers
+val wsSession = webSocketClient.connect(url, headers = mapOf("Custom-Header" to "custom-value"))
+
+val config = StompConfig().apply {
+    // here you can set up whatever config you would have done in the StompClient { ... } block
+}
+// connect at STOMP level on this open web socket, using the above config
+val stompSession = wsSession.stomp(config)
+```
