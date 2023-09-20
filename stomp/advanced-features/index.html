@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.1">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.3.2">
     
     
       
@@ -30,7 +30,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.0e669242.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.30068a00.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.85d0ee34.min.css">
@@ -537,6 +537,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#using-custom-headers-in-the-web-socket-handshake" class="md-nav__link">
+    Using custom headers in the web socket handshake
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -856,6 +863,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#using-custom-headers-in-the-web-socket-handshake" class="md-nav__link">
+    Using custom headers in the web socket handshake
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -908,6 +922,33 @@ DISCONNECT frame with a <code>receipt</code> header, and then waits for a RECEIP
 <p>If this graceful disconnect is disabled, then calling <code>StompSession.disconnect()</code> immediately closes the web
 socket connection.
 In this case, there is no guarantee that the server received all previous messages.</p>
+<h2 id="using-custom-headers-in-the-web-socket-handshake">Using custom headers in the web socket handshake<a class="headerlink" href="#using-custom-headers-in-the-web-socket-handshake" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Not supported in browsers</p>
+<p>The browser's <code>WebSocket</code> API does not support custom headers in the handshake (see
+<a href="https://github.com/whatwg/websockets/issues/16">this open issue</a> in the web socket standard repo).
+Because of this, Krossbow cannot support this feature for the JS browser platform.
+However, the JS web socket client adapter is designed in a way that allows other implementations to support it,
+such as a Node.js implementation.</p>
+</div>
+<p>Some servers or connection flows may require extra HTTP headers in the web socket handshake.
+The <code>StompClient.connect()</code> function doesn't support such headers out of the box, but this function is essentially
+just a shorthand for connecting at the web socket level, and then connecting at the STOMP level.</p>
+<p>In fact, we technically don't need to create and use a <code>StompClient</code> at all in order to use STOMP with Krossbow.
+Krossbow provides a <a href="../../kdoc/krossbow-stomp-core/org.hildan.krossbow.stomp/stomp.html">WebSocketConnection.stomp()</a>
+extension function that establishes a STOMP connection from an existing web socket connection.</p>
+<p>We can leverage this to customize the web socket connection at will before connecting at STOMP level. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">webSocketClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WebSocketClient</span><span class="p">.</span><span class="na">builtIn</span><span class="p">()</span><span class="w"> </span><span class="c1">// or another web socket client</span>
+
+<span class="c1">// connect at web socket level with custom headers</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">wsSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">webSocketClient</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span><span class="s">&quot;Custom-Header&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="s">&quot;custom-value&quot;</span><span class="p">))</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="nv">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompConfig</span><span class="p">().</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// here you can set up whatever config you would have done in the StompClient { ... } block</span>
+<span class="p">}</span>
+<span class="c1">// connect at STOMP level on this open web socket, using the above config</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">stompSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wsSession</span><span class="p">.</span><span class="na">stomp</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</code></pre></div>
 
 
 
@@ -964,7 +1005,7 @@ In this case, there is no guarantee that the server received all previous messag
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand"], "search": "../../assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.78eede0e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.dff1b7c8.min.js"></script>
       
     
   </body>

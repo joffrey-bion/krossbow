@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.1">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.3.2">
     
     
       
@@ -30,7 +30,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.0e669242.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.30068a00.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.85d0ee34.min.css">
@@ -892,12 +892,12 @@ This new session type has additional methods that use Jackson to convert your ob
 <span class="w">        </span><span class="p">.</span><span class="na">enable</span><span class="p">(</span><span class="n">SerializationFeature</span><span class="p">.</span><span class="na">ORDER_MAP_ENTRIES_BY_KEYS</span><span class="p">)</span>
 
 <span class="kd">val</span><span class="w"> </span><span class="nv">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">(</span><span class="n">WebSocketClient</span><span class="p">.</span><span class="na">builtIn</span><span class="p">()).</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="na">withJacksonConversions</span><span class="p">(</span><span class="n">customObjectMapper</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="na">withJackson</span><span class="p">(</span><span class="n">customObjectMapper</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="dependency">Dependency<a class="headerlink" href="#dependency" title="Permanent link">&para;</a></h2>
 <p>To use Jackson conversions, add <code>krossbow-stomp-jackson</code> to your Gradle dependencies
 (<code>krossbow-stomp-core</code> is unnecessary because it's transitively brought by this one):</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-jackson:5.5.0&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-jackson:5.7.0&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>This dependency transitively brings Jackson 2.15.2 with the <a href="https://github.com/FasterXML/jackson-module-kotlin">Kotlin module</a>.</p>
 
@@ -956,7 +956,7 @@ This new session type has additional methods that use Jackson to convert your ob
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.expand"], "search": "../../../assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.78eede0e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.dff1b7c8.min.js"></script>
       
     
   </body>
