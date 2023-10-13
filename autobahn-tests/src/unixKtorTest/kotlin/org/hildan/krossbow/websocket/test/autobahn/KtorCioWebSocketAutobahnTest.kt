@@ -5,7 +5,9 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.websocket.*
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
+import kotlin.experimental.*
 
+@OptIn(ExperimentalNativeApi::class)
 class KtorCioWebSocketAutobahnTest : AutobahnClientTestSuite(
     agentUnderTest = "krossbow-ktor-cio-client-${Platform.osFamily.name.lowercase()}",
     exclusions = listOf(
