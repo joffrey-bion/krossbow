@@ -1,5 +1,16 @@
 # Change Log
 
+## [5.8.0](https://github.com/joffrey-bion/krossbow/tree/5.8.0) (2023-10-14)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.7.0...5.8.0)
+
+**Upgraded dependencies:**
+
+- Bump com.fasterxml.jackson:jackson\-bom from 2.15.2 to 2.15.3 [\#393](https://github.com/joffrey-bion/krossbow/pull/393) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ktor from 2.3.4 to 2.3.5 [\#389](https://github.com/joffrey-bion/krossbow/pull/389) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.0.12 to 6.0.13 [\#392](https://github.com/joffrey-bion/krossbow/pull/392) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.squareup.okio:okio from 3.5.0 to 3.6.0 [\#387](https://github.com/joffrey-bion/krossbow/pull/387) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump de.fayard.refreshVersions from 0.60.2 to 0.60.3 [\#386](https://github.com/joffrey-bion/krossbow/pull/386) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [5.7.0](https://github.com/joffrey-bion/krossbow/tree/5.7.0) (2023-09-19)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.6.0...5.7.0)
 
