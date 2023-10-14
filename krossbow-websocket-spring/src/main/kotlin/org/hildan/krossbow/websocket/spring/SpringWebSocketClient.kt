@@ -13,7 +13,6 @@ import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerFlowAdapter
 import org.springframework.web.socket.*
-import org.springframework.web.socket.client.jetty.JettyWebSocketClient
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport
 import org.springframework.web.socket.sockjs.client.SockJsClient
@@ -57,7 +56,9 @@ object SpringDefaultWebSocketClient : SpringWebSocketClientAdapter(StandardWebSo
     )
 )
 @Suppress("DEPRECATION")
-object SpringJettyWebSocketClient : SpringWebSocketClientAdapter(JettyWebSocketClient().apply { start() })
+object SpringJettyWebSocketClient : SpringWebSocketClientAdapter(
+    org.springframework.web.socket.client.jetty.JettyWebSocketClient().apply { start() },
+)
 
 @Deprecated(
     message = "The SpringSockJSWebSocketClient object is made redundant by the public adapter extension" +
