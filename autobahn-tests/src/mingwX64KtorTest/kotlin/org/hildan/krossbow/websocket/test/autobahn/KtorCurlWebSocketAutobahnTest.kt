@@ -10,6 +10,13 @@ import kotlin.experimental.*
 @OptIn(ExperimentalNativeApi::class)
 class KtorCurlWebSocketAutobahnTest : AutobahnClientTestSuite(
     agentUnderTest = "krossbow-ktor-curl-client-${Platform.osFamily.name.lowercase()}",
+    exclusions = listOf(
+        CaseExclusion(
+            caseIdPrefixes = listOf("2.10", "2.11"),
+            reason = "Autobahn ping-pong tests are stricter than the spec. The Ktor client sometimes just sends the " +
+                "last PONG, which is conform to the spec and should be accepted by the test.",
+        ),
+    ),
 ) {
     override fun provideClient(): WebSocketClient = KtorWebSocketClient(HttpClient(Curl) { install(WebSockets) })
 }
