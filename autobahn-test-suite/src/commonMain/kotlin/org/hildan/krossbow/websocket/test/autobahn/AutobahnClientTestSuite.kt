@@ -253,11 +253,13 @@ private suspend fun AutobahnClientTester.runTestCase(case: AutobahnCase) {
         }
     } catch (e: TimeoutCancellationException) { // caught separately because it's never an expected failure
         val formattedReceivedFrames = receivedFrames.formatForPrinting()
-        fail("Test case ${case.id} timed out while echoing frames. $formattedReceivedFrames", e)
+        e.printStackTrace() // the stack is not printed on Kotlin/Native if used as cause (KT-62794)
+        fail("Test case ${case.id} timed out while echoing frames. $formattedReceivedFrames")
     } catch (e: Exception) {
         if (!case.expectFailure) {
             val formattedReceivedFrames = receivedFrames.formatForPrinting()
-            throw IllegalStateException("Unexpected exception during test case ${case.id}: ${e.message}\n$formattedReceivedFrames", e)
+            e.printStackTrace() // the stack is not printed on Kotlin/Native if used as cause (KT-62794)
+            fail("Unexpected exception during test case ${case.id}: ${e.message}\n$formattedReceivedFrames")
         }
     }
 }
