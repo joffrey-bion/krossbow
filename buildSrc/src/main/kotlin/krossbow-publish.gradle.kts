@@ -33,6 +33,7 @@ signing {
 // Resolves issues with .asc task output of the sign task of native targets.
 // See: https://github.com/gradle/gradle/issues/26132
 // And: https://youtrack.jetbrains.com/issue/KT-46466
+// And: https://youtrack.jetbrains.com/issue/KT-61313
 tasks.withType<Sign>().configureEach {
     val pubName = name.removePrefix("sign").removeSuffix("Publication")
 
