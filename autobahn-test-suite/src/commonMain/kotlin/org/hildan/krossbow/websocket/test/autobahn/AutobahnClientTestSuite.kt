@@ -243,18 +243,16 @@ private suspend fun AutobahnClientTester.runTestCase(case: AutobahnCase) {
     val receivedFrames = mutableListOf<WebSocketFrame>()
     try {
         val session = connectForAutobahnTestCase(case.id)
-        withTimeout(15000) {
-            session.incomingFrames
-                .onEach { receivedFrames.add(it) }
+        withTimeoutOrNull(15000) {
+            session.incomingFrames.onEach { receivedFrames.add(it) }
                 .takeWhile { it !is WebSocketFrame.Close }
                 .collect {
                     session.echoFrame(it)
                 }
+        } ?: run {
+            val formattedReceivedFrames = receivedFrames.formatForPrinting()
+            fail("Test case ${case.id} timed out while echoing frames. $formattedReceivedFrames")
         }
-    } catch (e: TimeoutCancellationException) { // caught separately because it's never an expected failure
-        val formattedReceivedFrames = receivedFrames.formatForPrinting()
-        e.printStackTrace() // the stack is not printed on Kotlin/Native if used as cause (KT-62794)
-        fail("Test case ${case.id} timed out while echoing frames. $formattedReceivedFrames")
     } catch (e: Exception) {
         if (!case.expectFailure) {
             val formattedReceivedFrames = receivedFrames.formatForPrinting()
