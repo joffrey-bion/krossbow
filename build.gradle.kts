@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.dokka)
     alias(libs.plugins.hildan.github.changelog)
     alias(libs.plugins.nexus.publish)
     alias(libs.plugins.louiscad.complete.kotlin) // for autocomplete of Apple libraries on non-macOS systems

@@ -1,5 +1,4 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinTargetContainerWithNativeShortcuts
+import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 
@@ -44,7 +43,7 @@ fun KotlinJsTargetDsl.browserWithBigTimeout() {
     }
 }
 
-fun KotlinTargetContainerWithNativeShortcuts.nativeTargets(
+fun KotlinTargetContainerWithPresetFunctions.nativeTargets(
     flavor: String = "",
     configure: KotlinNativeTarget.() -> Unit = {},
 ) {
@@ -54,7 +53,7 @@ fun KotlinTargetContainerWithNativeShortcuts.nativeTargets(
     mingwX64("mingwX64$flavor", configure)
 }
 
-fun KotlinTargetContainerWithNativeShortcuts.appleTargets(
+fun KotlinTargetContainerWithPresetFunctions.appleTargets(
     flavor: String = "",
     configure: KotlinNativeTarget.() -> Unit = {},
 ) {
