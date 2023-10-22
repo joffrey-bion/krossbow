@@ -43,7 +43,7 @@ vyarus-github-info-plugin = "1.5.0"
 npm-sockjs-client = "1.6.1"
 
 # test-only
-java-websocket = "1.4.1"
+java-websocket = "1.5.4"
 npm-isomorphic-fetch = "3.0.0"
 npm-isomorphic-ws = "5.0.0"
 npm-ws = "8.10.0"
@@ -54,7 +54,7 @@ slf4jTest = "1.2.0"
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
 jackson-core = { module = "com.fasterxml.jackson.core:jackson-core" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
-java-websocket = { module = "com.pusher:java-websocket", version.ref = "java-websocket" }
+java-websocket = { module = "org.java-websocket:Java-WebSocket", version.ref = "java-websocket" }
 jettyWebsocketCient = { module = "org.eclipse.jetty.websocket:websocket-jetty-client", version.ref = "jetty-websocket" }
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "kotlinx-atomicfu" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }

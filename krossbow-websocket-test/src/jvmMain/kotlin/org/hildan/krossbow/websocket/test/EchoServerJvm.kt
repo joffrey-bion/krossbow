@@ -1,8 +1,8 @@
 package org.hildan.krossbow.websocket.test
 
-import com.pusher.java_websocket.WebSocket
-import com.pusher.java_websocket.handshake.ClientHandshake
-import com.pusher.java_websocket.server.WebSocketServer
+import org.java_websocket.WebSocket
+import org.java_websocket.handshake.ClientHandshake
+import org.java_websocket.server.WebSocketServer
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
@@ -36,6 +36,9 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAd
 
     @Volatile
     var openedSocket: CompletableDeferred<WebSocket> = CompletableDeferred()
+
+    override fun onStart() {
+    }
 
     override fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
         openedSocket.complete(conn ?: error("onOpen got a null WebSocket"))
