@@ -8,10 +8,6 @@ plugins {
 
 allprojects {
     group = "org.hildan.krossbow"
-
-    repositories {
-        mavenCentral()
-    }
 }
 
 tasks.withType<org.jetbrains.dokka.gradle.DokkaMultiModuleTask>().configureEach {

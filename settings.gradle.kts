@@ -8,6 +8,12 @@ plugins {
 
 rootProject.name = "krossbow"
 
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
 include("krossbow-stomp-core")
 include("krossbow-stomp-kxserialization")
 include("krossbow-stomp-kxserialization-json")
