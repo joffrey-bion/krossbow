@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform")
+    id("krossbow-multiplatform")
     alias(libs.plugins.kotlin.serialization)
     id("krossbow-publish")
 }
@@ -7,9 +7,7 @@ plugins {
 description = "An extension of Krossbow STOMP client using Kotlinx Serialization's JSON format for message conversions"
 
 kotlin {
-    jvm()
-    jsTargets()
-    nativeTargets()
+    allTargets()
 
     sourceSets {
         val commonMain by getting {

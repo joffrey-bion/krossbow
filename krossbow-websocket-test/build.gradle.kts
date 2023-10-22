@@ -1,14 +1,12 @@
 plugins {
-    kotlin("multiplatform")
+    id("krossbow-multiplatform")
     alias(libs.plugins.kotlin.serialization)
 }
 
 description = "Test utilities for Krossbow WebSocket adapter implementations."
 
 kotlin {
-    jvm()
-    jsTargets()
-    nativeTargets()
+    allTargets()
 
     sourceSets {
         val commonMain by getting {
@@ -35,6 +33,16 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-js"))
             }
+        }
+        val nativeMain by getting
+        val nonAppleNativeMain by creating {
+            dependsOn(nativeMain)
+        }
+        val linuxX64Main by getting {
+            dependsOn(nonAppleNativeMain)
+        }
+        val mingwX64Main by getting {
+            dependsOn(nonAppleNativeMain)
         }
     }
 }

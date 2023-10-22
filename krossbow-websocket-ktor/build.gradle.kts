@@ -1,5 +1,5 @@
 plugins {
-    id("krossbow-multiplatform-all")
+    id("krossbow-multiplatform")
     id("krossbow-publish")
     alias(libs.plugins.kotlin.atomicfu)
 }
@@ -7,6 +7,7 @@ plugins {
 description = "Multiplatform implementation of Krossbow's WebSocket API using Ktor's web sockets."
 
 kotlin {
+    allTargets()
     jsWithBigTimeouts()
 
     sourceSets {
@@ -41,7 +42,7 @@ kotlin {
                 implementation(libs.ktor.client.winhttp)
             }
         }
-        val darwinTest by getting {
+        val appleTest by getting {
             dependencies {
                 implementation(libs.ktor.client.darwin)
             }

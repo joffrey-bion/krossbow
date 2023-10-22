@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.*
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 
 plugins {
@@ -13,6 +14,18 @@ apply<org.jetbrains.kotlin.gradle.targets.js.npm.NpmResolverPlugin>()
 val websocketEngineAttribute = Attribute.of("websocket-engine", String::class.java)
 
 kotlin {
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    applyDefaultHierarchyTemplate {
+        group("unixKtor") {
+            withLinux()
+            group("appleKtor") {
+                withApple()
+            }
+        }
+        group("appleBuiltin") {
+            withApple()
+        }
+    }
     jvm("jvmBuiltin") {
         attributes.attribute(websocketEngineAttribute, "builtin-jvm")
     }
@@ -34,7 +47,7 @@ kotlin {
     nativeTargets("Ktor") {
         attributes.attribute(websocketEngineAttribute, "ktor")
     }
-    darwinTargets("Builtin") {
+    appleTargets("Builtin") {
         attributes.attribute(websocketEngineAttribute, "builtin-darwin")
     }
 
@@ -104,7 +117,7 @@ kotlin {
                 implementation(libs.ktor.client.cio)
             }
         }
-        val darwinKtorTest by getting {
+        val appleKtorTest by getting {
             dependencies {
                 implementation(projects.krossbowWebsocketKtor)
                 implementation(libs.ktor.client.darwin)
@@ -117,7 +130,7 @@ kotlin {
             }
         }
 
-        val darwinBuiltinTest by getting {
+        val appleBuiltinTest by getting {
             dependencies {
                 implementation(projects.krossbowWebsocketBuiltin)
             }

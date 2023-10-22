@@ -1,11 +1,12 @@
 plugins {
-    id("krossbow-multiplatform-all")
+    id("krossbow-multiplatform")
     id("krossbow-publish")
 }
 
 description = "A Kotlin multiplatform STOMP client based on a generic web socket API"
 
 kotlin {
+    allTargets()
     sourceSets {
         val commonMain by getting {
             dependencies {

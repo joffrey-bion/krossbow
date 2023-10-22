@@ -7,7 +7,10 @@ description = "Multiplatform SockJS implementation of Krossbow's WebSocket API."
 
 kotlin {
     jvm()
-    jsTargets()
+    js {
+        browser()
+        nodejs()
+    }
 
     sourceSets {
         val commonMain by getting {

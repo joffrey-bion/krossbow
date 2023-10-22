@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform")
+    id("krossbow-multiplatform")
     id("krossbow-publish")
 }
 
@@ -11,7 +11,7 @@ kotlin {
     js {
         browserWithBigTimeout()
     }
-    darwinTargets()
+    appleTargets()
 
     sourceSets {
         val commonMain by getting {

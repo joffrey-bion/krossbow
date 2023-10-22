@@ -1,9 +1,10 @@
 plugins {
-    id("krossbow-multiplatform-all")
+    id("krossbow-multiplatform")
     alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
+    allTargets()
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -38,7 +39,7 @@ kotlin {
                 implementation(libs.ktor.client.core)
             }
         }
-        val darwinMain by getting {
+        val appleMain by getting {
             dependsOn(nativeMain)
             dependencies {
                 implementation(libs.ktor.client.darwin)

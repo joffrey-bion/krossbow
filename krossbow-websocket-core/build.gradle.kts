@@ -1,11 +1,12 @@
 plugins {
-    id("krossbow-multiplatform-all")
+    id("krossbow-multiplatform")
     id("krossbow-publish")
 }
 
 description = "WebSocket client API used by the Krossbow STOMP client"
 
 kotlin {
+    allTargets()
     sourceSets {
         val commonMain by getting {
             dependencies {
