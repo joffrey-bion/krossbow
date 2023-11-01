@@ -1,5 +1,6 @@
 package org.hildan.krossbow.websocket.test
 
+import kotlinx.cinterop.*
 import kotlinx.coroutines.*
 import platform.Foundation.*
 import kotlin.coroutines.CoroutineContext
@@ -19,6 +20,7 @@ actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.
  *
  * Inspired by https://github.com/ktorio/ktor/issues/678#issuecomment-433756753
  */
+@OptIn(UnsafeNumber::class)
 fun runBlockingButRunningMainLoop(timeout: Duration, block: suspend CoroutineScope.() -> Unit) {
     val maxTimeNanos = getTimeNanos() + timeout.inWholeNanoseconds
     // runBlocking is required in order to start an event loop (cannot run anything from the main loop without it)
