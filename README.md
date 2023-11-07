@@ -1,7 +1,7 @@
 # Krossbow
 
 [![Maven central version](https://img.shields.io/maven-central/v/org.hildan.krossbow/krossbow-stomp-core.svg)](https://search.maven.org/artifact/org.hildan.krossbow/krossbow-stomp-core)
-[![Github Build](https://img.shields.io/github/actions/workflow/status/joffrey-bion/krossbow/ci.yml?branch=main&logo=github)](https://github.com/joffrey-bion/krossbow/actions?query=workflow%3A%22CI+Build%22)
+[![Github Build](https://img.shields.io/github/actions/workflow/status/joffrey-bion/krossbow/ci.yml?branch=main&logo=github)](https://github.com/joffrey-bion/krossbow/actions/workflows/ci.yml)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/joffrey-bion/krossbow/blob/main/LICENSE)
 
 See the [project's website](https://joffrey-bion.github.io/krossbow/) for documentation.
