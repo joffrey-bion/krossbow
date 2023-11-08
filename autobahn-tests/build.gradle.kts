@@ -239,4 +239,4 @@ jsTestTasks.forEach { testTask ->
 fun getAutobahnTestServerContainerInfo() = dockerCompose.servicesInfos["autobahn_server"]?.firstContainer
     ?: error("autobahn_server container not found")
 
-fun String.toCamelCase() = replace(Regex("""\-(\w)""")) { match -> match.groupValues[1].toUpperCase() }
+fun String.toCamelCase() = replace(Regex("""\-(\w)""")) { match -> match.groupValues[1].uppercase() }
