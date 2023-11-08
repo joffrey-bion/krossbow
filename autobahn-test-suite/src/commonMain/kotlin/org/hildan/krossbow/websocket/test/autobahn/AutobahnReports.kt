@@ -9,9 +9,11 @@ import kotlinx.serialization.json.*
  *
  * We don't want to use Ktor in general because it would add unwanted dependencies to the tests of other engines.
  */
-expect class HttpGetter() {
+fun interface HttpGetter {
     suspend fun get(url: String): String
 }
+
+internal expect fun HttpGetter(): HttpGetter
 
 internal class AutobahnReportsClient(private val config: AutobahnConfig) {
     private val baseUrl = "http://${config.host}:${config.webPort}"

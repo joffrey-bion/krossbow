@@ -5,10 +5,12 @@ import io.ktor.client.call.*
 import io.ktor.client.engine.*
 import io.ktor.client.request.*
 
-actual class HttpGetter {
+internal actual fun HttpGetter(): HttpGetter = KtorHttpGetter()
+
+private class KtorHttpGetter : HttpGetter {
     private val client = HttpClient(ktorEngine())
 
-    actual suspend fun get(url: String): String = client.get(url).body()
+    override suspend fun get(url: String): String = client.get(url).body()
 }
 
-expect fun ktorEngine(): HttpClientEngineFactory<*>
+internal expect fun ktorEngine(): HttpClientEngineFactory<*>
