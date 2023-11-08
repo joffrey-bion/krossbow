@@ -4,9 +4,8 @@ import kotlinx.cinterop.*
 import kotlinx.coroutines.*
 import platform.Foundation.*
 import kotlin.coroutines.CoroutineContext
-import kotlin.system.getTimeNanos
 import kotlin.test.fail
-import kotlin.time.Duration
+import kotlin.time.*
 import kotlin.time.Duration.Companion.milliseconds
 
 actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.() -> Unit) =
@@ -22,7 +21,7 @@ actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.
  */
 @OptIn(UnsafeNumber::class)
 fun runBlockingButRunningMainLoop(timeout: Duration, block: suspend CoroutineScope.() -> Unit) {
-    val maxTimeNanos = getTimeNanos() + timeout.inWholeNanoseconds
+    val maxTimeMark = TimeSource.Monotonic.markNow() + timeout
     // runBlocking is required in order to start an event loop (cannot run anything from the main loop without it)
     runBlocking {
         var blockIsDone = false
@@ -56,7 +55,7 @@ fun runBlockingButRunningMainLoop(timeout: Duration, block: suspend CoroutineSco
         // this would just block the main thread but wouldn't actually run those operations. That's why we still need
         // this "advance and check" loop when processing the remaining queued operations.
         while (!blockIsDone || NSOperationQueue.mainQueue.operationCount.toInt() > 0) {
-            if (getTimeNanos() >= maxTimeNanos) {
+            if (maxTimeMark.hasPassedNow()) {
                 testRunner.cancel("Timed out after $timeout")
                 fail("Test timed out after $timeout")
             }
