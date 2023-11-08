@@ -90,7 +90,7 @@ extra:
       name: "Joffrey on Twitter"
   versions:
     jackson: 2.15.3
-    ktor: 2.3.5
+    ktor: 2.3.6
     kotlinxSerialization: 1.6.0
     moshi: 1.15.0
     tyrus: 2.1.3
