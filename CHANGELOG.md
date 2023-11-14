@@ -1,5 +1,14 @@
 # Change Log
 
+## [5.11.0](https://github.com/joffrey-bion/krossbow/tree/5.11.0) (2023-11-14)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.10.0...5.11.0)
+
+**Upgraded dependencies:**
+
+- Bump com.benasher44:uuid from 0.8.1 to 0.8.2 [\#403](https://github.com/joffrey-bion/krossbow/pull/403) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlin from 1.9.10 to 1.9.20 [\#402](https://github.com/joffrey-bion/krossbow/issues/402)
+- Bump ktor from 2.3.5 to 2.3.6 [\#401](https://github.com/joffrey-bion/krossbow/pull/401) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [5.10.0](https://github.com/joffrey-bion/krossbow/tree/5.10.0) (2023-11-02)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.8.0...5.10.0)
 
