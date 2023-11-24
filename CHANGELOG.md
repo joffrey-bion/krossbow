@@ -1,5 +1,14 @@
 # Change Log
 
+## [5.12.0](https://github.com/joffrey-bion/krossbow/tree/5.12.0) (2023-11-24)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.11.0...5.12.0)
+
+**Upgraded dependencies:**
+
+- Bump com.fasterxml.jackson:jackson\-bom from 2.15.3 to 2.16.0 [\#405](https://github.com/joffrey-bion/krossbow/pull/405) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-serialization from 1.6.0 to 1.6.1 [\#404](https://github.com/joffrey-bion/krossbow/pull/404) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlin from 1.9.20 to 1.9.21 [\#409](https://github.com/joffrey-bion/krossbow/pull/409) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [5.11.0](https://github.com/joffrey-bion/krossbow/tree/5.11.0) (2023-11-14)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.10.0...5.11.0)
 
