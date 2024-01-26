@@ -49,7 +49,7 @@ jobs:
           chmod 777 autobahn-tests/build/autobahn/reports
 
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: build
 
