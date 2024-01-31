@@ -45,7 +45,7 @@ jobs:
           chmod 777 autobahn-tests/build/autobahn/reports
 
       - name: Release
-        uses: joffrey-bion/gradle-library-release-action@v1
+        uses: joffrey-bion/gradle-library-release-action@v2
         with:
           version: ${{ inputs.version }}
           gpg-signing-key: ${{ secrets.GPG_SECRET_ASCII_ARMORED }}
