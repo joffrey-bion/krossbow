@@ -48,10 +48,11 @@ jobs:
           mkdir -p autobahn-tests/build/autobahn/reports
           chmod 777 autobahn-tests/build/autobahn/reports
 
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: build
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Gradle build
+        run: ./gradlew build
 
       - name: Upload Autobahn reports
         uses: actions/upload-artifact@v4
