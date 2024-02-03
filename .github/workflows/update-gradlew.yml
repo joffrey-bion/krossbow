@@ -24,3 +24,4 @@ jobs:
         with:
           repo-token: ${{ secrets.GH_PAT }}
           labels: dependencies, internal
+          merge-method: REBASE
