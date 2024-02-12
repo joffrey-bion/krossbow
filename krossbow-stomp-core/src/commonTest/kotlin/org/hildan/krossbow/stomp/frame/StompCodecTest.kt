@@ -1,9 +1,8 @@
 package org.hildan.krossbow.stomp.frame
 
+import kotlinx.io.bytestring.*
 import org.hildan.krossbow.stomp.headers.*
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class StompCodecTest {
     private val nullChar = '\u0000'
@@ -157,7 +156,7 @@ class StompCodecTest {
         val headers = StompSendHeaders(destination = "test")
         val bodyText = "The body of the message."
         val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
-        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteString()))
         assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
@@ -174,7 +173,7 @@ class StompCodecTest {
         val headers = StompSendHeaders(destination = "test").apply { contentLength = 24 }
         val bodyText = "The body of the message."
         val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
-        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteString()))
         assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
@@ -191,7 +190,7 @@ class StompCodecTest {
         val headers = StompSendHeaders(destination = "test").apply { contentLength = 25 }
         val bodyText = "The body of$nullChar the message."
         val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
-        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteString()))
         assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
@@ -233,7 +232,7 @@ class StompCodecTest {
         )
         val bodyText = "The body of the message."
         val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
-        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteString()))
         assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
@@ -258,7 +257,7 @@ class StompCodecTest {
         }
         val bodyText = "The body of the message."
         val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
-        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteString()))
         assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
@@ -283,7 +282,7 @@ class StompCodecTest {
         }
         val bodyText = "The body of$nullChar the message."
         val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
-        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteString()))
         assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
@@ -308,7 +307,7 @@ class StompCodecTest {
         }
         val bodyText = "é"
         val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
-        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteString()))
         assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 
@@ -335,7 +334,7 @@ class StompCodecTest {
         }
         val bodyText = """{"test":"é"}"""
         val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
-        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteArray()))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteString()))
         assertEncodingDecoding(frameText, textFrame, binFrame)
     }
 

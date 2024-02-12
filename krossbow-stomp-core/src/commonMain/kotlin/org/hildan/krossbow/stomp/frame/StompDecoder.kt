@@ -1,6 +1,7 @@
 package org.hildan.krossbow.stomp.frame
 
 import kotlinx.io.*
+import kotlinx.io.bytestring.*
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 import org.hildan.krossbow.stomp.headers.StompHeaders
 import org.hildan.krossbow.stomp.headers.asStompHeaders
@@ -63,10 +64,10 @@ private fun Sequence<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boo
 
 private fun Source.readBodyBytes(contentLength: Int?) = when (contentLength) {
     0 -> null
-    else -> readByteArray(contentLength ?: indexOf(NULL_BYTE).toInt())
+    else -> readByteString(contentLength ?: indexOf(NULL_BYTE).toInt())
 }
 
-private fun ByteArray.toFrameBody(binary: Boolean) = when {
+private fun ByteString.toFrameBody(binary: Boolean) = when {
     isEmpty() -> null
     binary -> FrameBody.Binary(this)
     else -> FrameBody.Text(this)

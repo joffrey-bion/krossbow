@@ -2,6 +2,7 @@ package org.hildan.krossbow.stomp.conversions.kxserialization
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.io.bytestring.*
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.SerializersModule
 import org.hildan.krossbow.stomp.StompReceipt
@@ -82,10 +83,10 @@ private class StompSessionWithBinaryConversions(
 ) : BaseStompSessionWithConversions(session, format.serializersModule, mediaType) {
 
     override fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>) =
-        body?.let { FrameBody.Binary(format.encodeToByteArray(serializer, it)) }
+        body?.let { FrameBody.Binary(ByteString(format.encodeToByteArray(serializer, it))) }
 
     override fun <T : Any> deserializeOrNull(frame: StompFrame.Message, deserializer: DeserializationStrategy<T>) =
-        frame.body?.bytes?.let { format.decodeFromByteArray(deserializer, it) }
+        frame.body?.bytes?.let { format.decodeFromByteArray(deserializer, it.toByteArray()) }
 }
 
 private class StompSessionWithTextConversions(

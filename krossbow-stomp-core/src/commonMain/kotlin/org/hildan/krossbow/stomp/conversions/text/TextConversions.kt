@@ -65,7 +65,7 @@ private class SingleConverterStompSession(
     }
 
     private fun createBody(bodyText: String): FrameBody = if (sendBinaryFrames) {
-        FrameBody.Binary(bodyText.encodeToBytes(charset))
+        FrameBody.Binary(bodyText.encodeToByteString(charset))
     } else {
         FrameBody.Text(bodyText)
     }

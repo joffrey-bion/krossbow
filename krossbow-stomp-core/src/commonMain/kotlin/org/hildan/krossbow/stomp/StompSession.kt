@@ -2,6 +2,7 @@ package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.io.bytestring.*
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
@@ -194,7 +195,7 @@ data class StompReceipt(
  * If no RECEIPT frame is received from the server in the configured [time limit][StompConfig.receiptTimeout],
  * a [LostReceiptException] is thrown.
  */
-suspend fun StompSession.sendBinary(destination: String, body: ByteArray?): StompReceipt? =
+suspend fun StompSession.sendBinary(destination: String, body: ByteString?): StompReceipt? =
     send(StompSendHeaders(destination), body?.let { FrameBody.Binary(it) })
 
 /**
@@ -261,8 +262,8 @@ suspend fun StompSession.subscribeText(destination: String): Flow<String> =
  *
  * See the general [StompSession] documentation for more details about subscription flows, suspension and receipts.
  */
-suspend fun StompSession.subscribeBinary(destination: String): Flow<ByteArray> =
-    subscribe(destination).map { it.body?.bytes ?: ByteArray(0) }
+suspend fun StompSession.subscribeBinary(destination: String): Flow<ByteString> =
+    subscribe(destination).map { it.body?.bytes ?: ByteString() }
 
 /**
  * Executes the given [block] as part of a transaction.
