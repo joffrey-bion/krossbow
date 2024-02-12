@@ -1,6 +1,6 @@
 package org.hildan.krossbow.websocket
 
-import okio.utf8Size
+import kotlinx.io.bytestring.*
 
 /**
  * The maximum number of UTF-8 bytes allowed by the web socket protocol for the "reason" in close frames.
@@ -24,8 +24,9 @@ fun String.truncateToCloseFrameReasonLength(): String = truncateUtf8BytesLengthT
  * If the truncation occurs in the middle of a multibyte-character, the whole character is removed.
  */
 fun String.truncateUtf8BytesLengthTo(maxLength: Int): String {
-    if (utf8Size() <= maxLength) {
+    val utf8Bytes = encodeToByteString()
+    if (utf8Bytes.size <= maxLength) {
         return this
     }
-    return encodeToByteArray().copyOf(maxLength).decodeToString().trimEnd { it == '\uFFFD' }
+    return utf8Bytes.substring(0, maxLength).decodeToString().trimEnd { it == '\uFFFD' }
 }

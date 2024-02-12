@@ -1,20 +1,17 @@
 package org.hildan.krossbow.stomp.frame
 
-import okio.Buffer
-import okio.BufferedSink
+import kotlinx.io.*
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 
 internal fun StompFrame.encodeToBytes(): ByteArray {
     val buffer = Buffer()
     buffer.writeStompFrame(this)
-    val bytes = buffer.readByteArray()
-    buffer.close()
-    return bytes
+    return buffer.readByteArray()
 }
 
-private fun BufferedSink.writeStompFrame(stompFrame: StompFrame) {
+private fun Sink.writeStompFrame(stompFrame: StompFrame) {
     // the preamble has to be encoded in UTF-8 as per the specification
-    writeUtf8(stompFrame.preambleText)
+    writeString(stompFrame.preambleText)
     stompFrame.body?.bytes?.let { write(it) }
     writeByte(0)
 }

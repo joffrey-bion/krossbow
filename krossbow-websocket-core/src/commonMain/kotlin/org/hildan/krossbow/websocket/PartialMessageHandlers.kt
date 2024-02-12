@@ -1,6 +1,6 @@
 package org.hildan.krossbow.websocket
 
-import okio.Buffer
+import kotlinx.io.*
 
 internal class PartialBinaryMessageHandler(
     private val onMessageComplete: suspend (ByteArray) -> Unit
@@ -11,10 +11,11 @@ internal class PartialBinaryMessageHandler(
         processPartialMessage(
             msg = bytes,
             isLast = isLast,
+            // for a Buffer, exhausted() really just means "is empty right now" and never blocks
             isBufferEmpty = buffer.exhausted(),
             appendToBuffer = { buffer.write(it) },
             readAndClearBuffer = { buffer.readByteArray() },
-            onMessageComplete = { onMessageComplete(it) }
+            onMessageComplete = { onMessageComplete(it) },
         )
     }
 
@@ -35,7 +36,7 @@ internal class PartialTextMessageHandler(
             isBufferEmpty = textBuilder.isEmpty(),
             appendToBuffer = { textBuilder.append(it) },
             readAndClearBuffer = { textBuilder.toString().also { textBuilder.clear() } },
-            onMessageComplete = { onMessageComplete(it) }
+            onMessageComplete = { onMessageComplete(it) },
         )
     }
 }
