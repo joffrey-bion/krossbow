@@ -8,6 +8,9 @@ import io.ktor.websocket.*
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlinx.io.bytestring.*
+import kotlinx.io.bytestring.unsafe.*
+import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.WebSocketException
 
@@ -71,16 +74,19 @@ private class KtorWebSocketConnectionAdapter(
         wsSession.outgoing.send(Frame.Text(frameText))
     }
 
-    override suspend fun sendBinary(frameData: ByteArray) {
-        wsSession.outgoing.send(Frame.Binary(fin = true, data = frameData))
+    @OptIn(UnsafeByteStringApi::class)
+    override suspend fun sendBinary(frameData: ByteString) {
+        wsSession.outgoing.send(Frame.Binary(fin = true, data = frameData.unsafeBackingByteArray()))
     }
 
-    override suspend fun sendPing(frameData: ByteArray) {
-        wsSession.outgoing.send(Frame.Ping(frameData))
+    @OptIn(UnsafeByteStringApi::class)
+    override suspend fun sendPing(frameData: ByteString) {
+        wsSession.outgoing.send(Frame.Ping(frameData.unsafeBackingByteArray()))
     }
 
-    override suspend fun sendPong(frameData: ByteArray) {
-        wsSession.outgoing.send(Frame.Pong(frameData))
+    @OptIn(UnsafeByteStringApi::class)
+    override suspend fun sendPong(frameData: ByteString) {
+        wsSession.outgoing.send(Frame.Pong(frameData.unsafeBackingByteArray()))
     }
 
     override suspend fun close(code: Int, reason: String?) {
@@ -88,11 +94,12 @@ private class KtorWebSocketConnectionAdapter(
     }
 }
 
+@OptIn(UnsafeByteStringApi::class)
 private fun Frame.toKrossbowFrame(): WebSocketFrame = when (this) {
     is Frame.Text -> WebSocketFrame.Text(readText())
-    is Frame.Binary -> WebSocketFrame.Binary(readBytes())
-    is Frame.Ping -> WebSocketFrame.Ping(readBytes())
-    is Frame.Pong -> WebSocketFrame.Pong(readBytes())
+    is Frame.Binary -> WebSocketFrame.Binary(readBytes().asByteString())
+    is Frame.Ping -> WebSocketFrame.Ping(readBytes().asByteString())
+    is Frame.Pong -> WebSocketFrame.Pong(readBytes().asByteString())
     is Frame.Close -> toKrossbowCloseFrame()
     else -> error("Unknown frame type ${this::class.simpleName}")
 }

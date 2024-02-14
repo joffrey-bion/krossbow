@@ -1,12 +1,13 @@
 package org.hildan.krossbow.stomp.frame
 
 import kotlinx.io.*
+import kotlinx.io.bytestring.*
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 
-internal fun StompFrame.encodeToBytes(): ByteArray {
+internal fun StompFrame.encodeToByteString(): ByteString {
     val buffer = Buffer()
     buffer.writeStompFrame(this)
-    return buffer.readByteArray()
+    return buffer.readByteString()
 }
 
 private fun Sink.writeStompFrame(stompFrame: StompFrame) {

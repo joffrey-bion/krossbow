@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm")
+    id("krossbow-jvm")
     id("krossbow-publish")
 }
 
@@ -10,6 +10,8 @@ dependencies {
 
     // For Spring's WebSocket clients
     api(libs.spring.websocket)
+
+    implementation(projects.krossbowIo)
 
     testImplementation(kotlin("test"))
     testImplementation(projects.krossbowWebsocketTest)

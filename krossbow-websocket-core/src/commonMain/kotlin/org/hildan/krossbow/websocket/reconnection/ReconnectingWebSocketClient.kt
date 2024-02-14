@@ -3,6 +3,7 @@ package org.hildan.krossbow.websocket.reconnection
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import kotlinx.io.bytestring.*
 import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketConnectionException
@@ -138,7 +139,7 @@ private class WebSocketConnectionProxy(
         currentConnection.sendText(frameText)
     }
 
-    override suspend fun sendBinary(frameData: ByteArray) {
+    override suspend fun sendBinary(frameData: ByteString) {
         currentConnection.sendBinary(frameData)
     }
 

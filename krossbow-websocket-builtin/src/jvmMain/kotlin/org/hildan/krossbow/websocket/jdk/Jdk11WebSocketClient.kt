@@ -6,6 +6,10 @@ import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.io.*
+import kotlinx.io.bytestring.*
+import kotlinx.io.bytestring.unsafe.*
+import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import java.net.URI
 import java.net.http.HttpClient
@@ -58,26 +62,32 @@ private class Jdk11WebSocketListener(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO + CoroutineName("krossbow-jdk11-ws-listener-adapter"))
 
     override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*> = scope.future {
-        listener.onTextMessage(data, last)
+        listener.onTextMessage(last) {
+            // currently there is nothing better to write UTF-8
+            // https://github.com/Kotlin/kotlinx-io/issues/261
+            writeString(data.toString())
+        }
         // The call to request(1) here is to ensure that onText() is not called again before the (potentially partial)
         // message has been processed
         webSocket.request(1)
     }
 
     override fun onBinary(webSocket: WebSocket, data: ByteBuffer, last: Boolean): CompletionStage<*> = scope.future {
-        listener.onBinaryMessage(data.toByteArray(), last)
+        listener.onBinaryMessage(last) { write(data) }
         // The call to request(1) here is to ensure that onBinary() is not called again before the (potentially partial)
         // message has been processed
         webSocket.request(1)
     }
 
+    @OptIn(UnsafeByteStringApi::class)
     override fun onPing(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = scope.future {
-        listener.onPing(message.toByteArray())
+        listener.onPing(message.readByteString())
         webSocket.request(1)
     }
 
+    @OptIn(UnsafeByteStringApi::class)
     override fun onPong(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = scope.future {
-        listener.onPong(message.toByteArray())
+        listener.onPong(message.readByteString())
         webSocket.request(1)
     }
 
@@ -90,12 +100,6 @@ private class Jdk11WebSocketListener(
         listener.onError(error)
         scope.cancel()
     }
-}
-
-private fun ByteBuffer.toByteArray(): ByteArray {
-    val array = ByteArray(remaining())
-    get(array)
-    return array
 }
 
 /**
@@ -118,21 +122,21 @@ private class Jdk11WebSocketConnection(
         }
     }
 
-    override suspend fun sendBinary(frameData: ByteArray) {
+    override suspend fun sendBinary(frameData: ByteString) {
         mutex.withLock {
-            webSocket.sendBinary(ByteBuffer.wrap(frameData), true).await()
+            webSocket.sendBinary(frameData.asReadOnlyByteBuffer(), true).await()
         }
     }
 
-    override suspend fun sendPing(frameData: ByteArray) {
+    override suspend fun sendPing(frameData: ByteString) {
         mutex.withLock {
-            webSocket.sendPing(ByteBuffer.wrap(frameData)).await()
+            webSocket.sendPing(frameData.asReadOnlyByteBuffer()).await()
         }
     }
 
-    override suspend fun sendPong(frameData: ByteArray) {
+    override suspend fun sendPong(frameData: ByteString) {
         mutex.withLock {
-            webSocket.sendPong(ByteBuffer.wrap(frameData)).await()
+            webSocket.sendPong(frameData.asReadOnlyByteBuffer()).await()
         }
     }
 

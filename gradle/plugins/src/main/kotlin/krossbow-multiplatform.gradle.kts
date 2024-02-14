@@ -11,6 +11,7 @@ kotlin {
             compilerOptions {
                 freeCompilerArgs.add("-Xexpect-actual-classes")
             }
+            languageSettings.optIn("org.hildan.krossbow.io.InternalKrossbowIoApi")
         }
     }
     applyDefaultHierarchyTemplate {

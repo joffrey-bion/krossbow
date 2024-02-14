@@ -1,11 +1,10 @@
 package org.hildan.krossbow.websocket
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ChannelResult
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.flow.*
+import kotlinx.io.*
+import kotlinx.io.bytestring.*
 
 /**
  * Adapter between listener calls and a web socket "incoming" frames flow.
@@ -25,7 +24,7 @@ class WebSocketListenerFlowAdapter(
     val incomingFrames: Flow<WebSocketFrame> = frames.receiveAsFlow()
 
     private val partialTextMessageHandler = PartialTextMessageHandler {
-        frames.send(WebSocketFrame.Text(it.toString()))
+        frames.send(WebSocketFrame.Text(it))
     }
 
     private val partialBinaryMessageHandler = PartialBinaryMessageHandler {
@@ -35,46 +34,80 @@ class WebSocketListenerFlowAdapter(
     /**
      * Callback for binary messages (potentially partial frames).
      *
-     * The given [bytes] array can be reused right after this method returns.
+     * Use this overload when the data of the frame can be safely wrapped without copy into a [ByteString] for
+     * processing. If the data is provided as a reusable buffer that must be consumed/copied, use the other overload to
+     * write directly to the [Sink] buffer to avoid copying data around.
      *
      * If [isLast] is true, the web socket frame is considered complete and the full (aggregated) message is sent to
      * the [incomingFrames] flow as a [WebSocketFrame.Binary] frame.
      * Otherwise, the message is simply appended to a buffer and nothing happens in the [incomingFrames] flow.
      * More partial messages are expected in this case.
      */
-    suspend fun onBinaryMessage(bytes: ByteArray, isLast: Boolean = true) {
+    suspend fun onBinaryMessage(bytes: ByteString, isLast: Boolean = true) {
         partialBinaryMessageHandler.processMessage(bytes, isLast)
+    }
+
+    /**
+     * Callback for binary messages (potentially partial frames).
+     *
+     * Use this overload when the data of the frame is provided as a reusable buffer that must be consumed/copied, and
+     * use [writeData] to transfer bytes from the received buffer into this adapter's buffer.
+     * If the data of the frame can be safely wrapped without copy into a [ByteString] for processing, use the other
+     * overload taking a [ByteString] as parameter.
+     *
+     * If [isLast] is true, the web socket frame is considered complete and the full (aggregated) message is sent to
+     * the [incomingFrames] flow as a [WebSocketFrame.Binary] frame.
+     * Otherwise, the message is simply appended to a buffer and nothing happens in the [incomingFrames] flow.
+     * More partial messages are expected in this case.
+     */
+    suspend fun onBinaryMessage(isLast: Boolean = true, writeData: Sink.() -> Unit) {
+        partialBinaryMessageHandler.processMessage(isLast, writeData)
     }
 
     /**
      * Callback for text messages (potentially partial frames).
      *
-     * The given [text] CharSequence can be reused right after this method returns.
+     * Use this overload when the data of the frame can be converted without copy into a [String] for processing.
+     * If the data is provided as a reusable (char) buffer that must be consumed/copied, use the other overload to
+     * write directly to the [Sink] buffer to avoid copying data around.
      *
      * If [isLast] is true, the web socket frame is considered complete and the full (aggregated) message is sent to
      * the [incomingFrames] flow as a [WebSocketFrame.Text] frame.
      * Otherwise, the message is simply appended to a buffer and nothing happens in the [incomingFrames] flow.
      * More partial messages are expected in this case.
      */
-    suspend fun onTextMessage(text: CharSequence, isLast: Boolean = true) {
+    suspend fun onTextMessage(text: String, isLast: Boolean = true) {
         partialTextMessageHandler.processMessage(text, isLast)
     }
 
     /**
-     * Sends a [WebSocketFrame.Ping] frame to the [incomingFrames] flow.
+     * Callback for text messages (potentially partial frames).
      *
-     * The given [bytes] array is used as-is in the frame and thus must not be modified later.
+     * Use this overload when the data of the frame is provided as a reusable buffer that must be consumed/copied, and
+     * use [writeData] to transfer data from the received buffer into this adapter's buffer.
+     * If the data of the frame can be converted without copy into a [String] for processing, use the other overload
+     * taking a [String] as parameter.
+     *
+     * If [isLast] is true, the web socket frame is considered complete and the full (aggregated) message is sent to
+     * the [incomingFrames] flow as a [WebSocketFrame.Text] frame.
+     * Otherwise, the message is simply appended to a buffer and nothing happens in the [incomingFrames] flow.
+     * More partial messages are expected in this case.
      */
-    suspend fun onPing(bytes: ByteArray) {
+    suspend fun onTextMessage(isLast: Boolean = true, writeData: Sink.() -> Unit) {
+        partialTextMessageHandler.processMessage(isLast, writeData)
+    }
+
+    /**
+     * Sends a [WebSocketFrame.Ping] frame with the given [bytes] to the [incomingFrames] flow.
+     */
+    suspend fun onPing(bytes: ByteString) {
         frames.send(WebSocketFrame.Ping(bytes))
     }
 
     /**
-     * Sends a [WebSocketFrame.Pong] frame to the [incomingFrames] flow.
-     *
-     * The given [bytes] array is used as-is in the frame and thus must not be modified later.
+     * Sends a [WebSocketFrame.Pong] frame with the given [bytes] to the [incomingFrames] flow.
      */
-    suspend fun onPong(bytes: ByteArray) {
+    suspend fun onPong(bytes: ByteString) {
         frames.send(WebSocketFrame.Pong(bytes))
     }
 
@@ -129,17 +162,15 @@ class UnboundedWsListenerFlowAdapter {
     private val frames: Channel<WebSocketFrame> = Channel(capacity = Channel.UNLIMITED)
 
     /**
-     * The channel of incoming web socket frames.
-     * This channel is closed when the web socket connection is closed
+     * The flow of incoming web socket frames.
+     * The underlying channel is closed when the web socket connection is closed
      */
     val incomingFrames: Flow<WebSocketFrame> = frames.receiveAsFlow()
 
     /**
      * Sends a [WebSocketFrame.Binary] frame to the [incomingFrames] flow.
-     *
-     * The given [bytes] array is used as-is in the frame and thus must not be modified later.
      */
-    fun onBinaryMessage(bytes: ByteArray) = frames.trySend(WebSocketFrame.Binary(bytes))
+    fun onBinaryMessage(bytes: ByteString) = frames.trySend(WebSocketFrame.Binary(bytes))
 
     /**
      * Sends a [WebSocketFrame.Text] frame to the [incomingFrames] flow.
@@ -148,17 +179,13 @@ class UnboundedWsListenerFlowAdapter {
 
     /**
      * Sends a [WebSocketFrame.Ping] frame to the [incomingFrames] flow.
-     *
-     * The given [bytes] array is used as-is in the frame and thus must not be modified later.
      */
-    fun onPing(bytes: ByteArray) = frames.trySend(WebSocketFrame.Ping(bytes))
+    fun onPing(bytes: ByteString) = frames.trySend(WebSocketFrame.Ping(bytes))
 
     /**
      * Sends a [WebSocketFrame.Pong] frame to the [incomingFrames] flow.
-     *
-     * The given [bytes] array is used as-is in the frame and thus must not be modified later.
      */
-    fun onPong(bytes: ByteArray)= frames.trySend(WebSocketFrame.Pong(bytes))
+    fun onPong(bytes: ByteString) = frames.trySend(WebSocketFrame.Pong(bytes))
 
     /**
      * Sends a [WebSocketFrame.Close] to the [incomingFrames] flow, and completes it normally.

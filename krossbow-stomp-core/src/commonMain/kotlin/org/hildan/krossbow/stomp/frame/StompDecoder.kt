@@ -2,24 +2,16 @@ package org.hildan.krossbow.stomp.frame
 
 import kotlinx.io.*
 import kotlinx.io.bytestring.*
+import org.hildan.krossbow.io.*
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 import org.hildan.krossbow.stomp.headers.StompHeaders
 import org.hildan.krossbow.stomp.headers.asStompHeaders
 
 private const val NULL_BYTE: Byte = 0
 
-internal object StompDecoder {
+internal fun ByteString.decodeToStompFrame() = toSource().readStompFrame(isBinary = true)
 
-    fun decode(frameBytes: ByteArray): StompFrame {
-        val buf = Buffer().apply { write(frameBytes) }
-        return buf.readStompFrame(isBinary = true)
-    }
-
-    fun decode(frameText: CharSequence): StompFrame {
-        val buf = Buffer().apply { writeString(frameText.toString()) }
-        return buf.readStompFrame(isBinary = false)
-    }
-}
+internal fun String.decodeToStompFrame() = toSource().readStompFrame(isBinary = false)
 
 private fun Source.readStompFrame(isBinary: Boolean): StompFrame {
     try {

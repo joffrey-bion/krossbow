@@ -18,6 +18,8 @@ kotlin {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 api(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.io.core)
+                implementation(projects.krossbowIo)
             }
         }
         val commonTest by getting {

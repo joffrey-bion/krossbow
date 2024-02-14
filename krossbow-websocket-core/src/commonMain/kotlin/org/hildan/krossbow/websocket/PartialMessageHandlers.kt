@@ -1,23 +1,36 @@
 package org.hildan.krossbow.websocket
 
 import kotlinx.io.*
+import kotlinx.io.bytestring.*
 
-internal class PartialBinaryMessageHandler(
-    private val onMessageComplete: suspend (ByteArray) -> Unit
+internal abstract class PartialMessageHandler<T>(
+    private val onMessageComplete: suspend (T) -> Unit,
 ) {
     private val buffer = Buffer()
 
-    suspend fun processMessage(bytes: ByteArray, isLast: Boolean = true) {
-        processPartialMessage(
-            msg = bytes,
-            isLast = isLast,
-            // for a Buffer, exhausted() really just means "is empty right now" and never blocks
-            isBufferEmpty = buffer.exhausted(),
-            appendToBuffer = { buffer.write(it) },
-            readAndClearBuffer = { buffer.readByteArray() },
-            onMessageComplete = { onMessageComplete(it) },
-        )
+    suspend fun processMessage(frameData: T, isLast: Boolean = true) {
+        // for a Buffer, exhausted() really just means "is empty right now" and never blocks
+        if (buffer.exhausted() && isLast) {
+            // optimization: do not buffer single-part messages
+            onMessageComplete(frameData)
+        } else {
+            buffer.writePartialMessage(frameData = frameData)
+            if (isLast) {
+                val fullMsg = buffer.readCompleteMessage()
+                onMessageComplete(fullMsg)
+            }
+        }
     }
+
+    suspend fun processMessage(isLast: Boolean = true, writeData: Sink.() -> Unit) {
+        buffer.writeData()
+        if (isLast) {
+            onMessageComplete(buffer.readCompleteMessage())
+        }
+    }
+
+    abstract fun Sink.writePartialMessage(frameData: T)
+    abstract fun Source.readCompleteMessage(): T
 
     fun close() {
         buffer.close()
@@ -25,38 +38,19 @@ internal class PartialBinaryMessageHandler(
 }
 
 internal class PartialTextMessageHandler(
-    private val onMessageComplete: suspend (CharSequence) -> Unit
-) {
-    private val textBuilder = StringBuilder()
+    onMessageComplete: suspend (String) -> Unit,
+) : PartialMessageHandler<String>(onMessageComplete) {
 
-    suspend fun processMessage(text: CharSequence, isLast: Boolean = true) {
-        processPartialMessage(
-            msg = text,
-            isLast = isLast,
-            isBufferEmpty = textBuilder.isEmpty(),
-            appendToBuffer = { textBuilder.append(it) },
-            readAndClearBuffer = { textBuilder.toString().also { textBuilder.clear() } },
-            onMessageComplete = { onMessageComplete(it) },
-        )
-    }
+    override fun Sink.writePartialMessage(frameData: String) = writeString(frameData)
+
+    override fun Source.readCompleteMessage(): String = readString()
 }
 
-private inline fun <T> processPartialMessage(
-    msg: T,
-    isLast: Boolean,
-    isBufferEmpty: Boolean,
-    appendToBuffer: (T) -> Unit,
-    readAndClearBuffer: () -> T,
-    onMessageComplete: (T) -> Unit
-) {
-    if (isBufferEmpty && isLast) {
-        // optimization: do not buffer complete messages
-        onMessageComplete(msg)
-    } else {
-        appendToBuffer(msg)
-        if (isLast) {
-            val fullMsg = readAndClearBuffer()
-            onMessageComplete(fullMsg)
-        }
-    }
+internal class PartialBinaryMessageHandler(
+    onMessageComplete: suspend (ByteString) -> Unit,
+) : PartialMessageHandler<ByteString>(onMessageComplete) {
+
+    override fun Sink.writePartialMessage(frameData: ByteString) = write(frameData)
+
+    override fun Source.readCompleteMessage(): ByteString = readByteString()
 }

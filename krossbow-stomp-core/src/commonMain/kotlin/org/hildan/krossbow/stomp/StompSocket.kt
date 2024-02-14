@@ -3,7 +3,6 @@ package org.hildan.krossbow.stomp
 import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.frame.*
-import org.hildan.krossbow.stomp.frame.StompDecoder
 import org.hildan.krossbow.stomp.heartbeats.*
 import org.hildan.krossbow.websocket.*
 
@@ -49,7 +48,7 @@ internal class StompSocket(
 
     suspend fun sendStompFrame(frame: StompFrame) {
         if (frame.body is FrameBody.Binary) {
-            webSocketConnection.sendBinary(frame.encodeToBytes())
+            webSocketConnection.sendBinary(frame.encodeToByteString())
         } else {
             // Frames without body are also sent as text because the headers are always textual.
             // Also, some sockJS implementations don't support binary frames.
@@ -82,10 +81,11 @@ private fun WebSocketFrame.decodeToStompEvent(): StompEvent {
         return StompEvent.HeartBeat
     }
     return when (this) {
-        is WebSocketFrame.Text -> StompDecoder.decode(text)
-        is WebSocketFrame.Binary -> StompDecoder.decode(bytes)
+        is WebSocketFrame.Text -> text.decodeToStompFrame()
+        is WebSocketFrame.Binary -> bytes.decodeToStompFrame()
         is WebSocketFrame.Ping,
-        is WebSocketFrame.Pong -> StompEvent.HeartBeat // we need to count this traffic
+        is WebSocketFrame.Pong
+        -> StompEvent.HeartBeat // we need to count this traffic
         is WebSocketFrame.Close -> throw WebSocketClosedUnexpectedly(code, reason)
     }
 }

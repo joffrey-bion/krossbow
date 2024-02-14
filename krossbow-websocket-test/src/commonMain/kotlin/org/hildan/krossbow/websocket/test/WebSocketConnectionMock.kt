@@ -1,6 +1,7 @@
 package org.hildan.krossbow.websocket.test
 
 import kotlinx.coroutines.channels.Channel
+import kotlinx.io.bytestring.*
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerFlowAdapter
@@ -28,7 +29,7 @@ class WebSocketConnectionMock : WebSocketConnection {
         sentFrames.send(WebSocketFrame.Text(frameText))
     }
 
-    override suspend fun sendBinary(frameData: ByteArray) {
+    override suspend fun sendBinary(frameData: ByteString) {
         sentFrames.send(WebSocketFrame.Binary(frameData))
     }
 
@@ -62,7 +63,7 @@ class WebSocketConnectionMock : WebSocketConnection {
         listener.onTextMessage(text)
     }
 
-    suspend fun simulateBinaryFrameReceived(data: ByteArray) {
+    suspend fun simulateBinaryFrameReceived(data: ByteString) {
         listener.onBinaryMessage(data)
     }
 

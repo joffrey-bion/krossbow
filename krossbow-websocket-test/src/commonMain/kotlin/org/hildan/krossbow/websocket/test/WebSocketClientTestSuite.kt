@@ -1,5 +1,6 @@
 package org.hildan.krossbow.websocket.test
 
+import kotlinx.io.bytestring.*
 import org.hildan.krossbow.websocket.*
 import kotlin.test.*
 
@@ -86,10 +87,10 @@ abstract class WebSocketClientTestSuite(val supportsStatusCodes: Boolean = true)
     fun testEchoBinary() = runSuspendingTestWithEchoServer { server ->
         val session = wsClient.connect(server.localUrl)
 
-        val fortyTwos = ByteArray(3) { 42 }
+        val fortyTwos = ByteString(42, 42, 42)
         session.sendBinary(fortyTwos)
         val fortyTwosResponse = session.expectBinaryFrame("3 binary 42s")
-        assertEquals(fortyTwos.toList(), fortyTwosResponse.bytes.toList())
+        assertEquals(fortyTwos, fortyTwosResponse.bytes)
 
         session.close()
 

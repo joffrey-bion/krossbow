@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm")
+    id("krossbow-jvm")
     id("krossbow-publish")
 }
 
@@ -8,6 +8,7 @@ description = "A Krossbow adapter for OkHttp's WebSocket client"
 dependencies {
     api(projects.krossbowWebsocketCore)
     api(libs.okhttp)
+    implementation(projects.krossbowIo)
 
     testImplementation(kotlin("test"))
     testImplementation(projects.krossbowWebsocketTest)

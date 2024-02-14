@@ -8,6 +8,9 @@ import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.io.*
+import kotlinx.io.bytestring.*
+import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.WebSocketConnectionException
 import org.hildan.krossbow.websocket.WebSocketConnectionWithPingPong
 import org.hildan.krossbow.websocket.WebSocketFrame
@@ -126,9 +129,9 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
         runBlocking {
             when (message) {
                 is TextMessage -> channelListener.onTextMessage(message.payload, message.isLast)
-                is BinaryMessage -> channelListener.onBinaryMessage(message.payload.toByteArray(), message.isLast)
-                is PingMessage -> channelListener.onPing(message.payload.toByteArray())
-                is PongMessage -> channelListener.onPong(message.payload.toByteArray())
+                is BinaryMessage -> channelListener.onBinaryMessage(message.isLast) { write(message.payload) }
+                is PingMessage -> channelListener.onPing(message.payload.readByteString())
+                is PongMessage -> channelListener.onPong(message.payload.readByteString())
                 else -> channelListener.onError("Unsupported Spring websocket message type: ${message.javaClass}")
             }
         }
@@ -171,21 +174,21 @@ private class SpringSessionToKrossbowConnectionAdapter(
         }
     }
 
-    override suspend fun sendBinary(frameData: ByteArray) {
+    override suspend fun sendBinary(frameData: ByteString) {
         mutex.withLock {
-            session.sendMessage(BinaryMessage(frameData, true))
+            session.sendMessage(BinaryMessage(frameData.asReadOnlyByteBuffer(), true))
         }
     }
 
-    override suspend fun sendPing(frameData: ByteArray) {
+    override suspend fun sendPing(frameData: ByteString) {
         mutex.withLock {
-            session.sendMessage(PingMessage(ByteBuffer.wrap(frameData)))
+            session.sendMessage(PingMessage(frameData.asReadOnlyByteBuffer()))
         }
     }
 
-    override suspend fun sendPong(frameData: ByteArray) {
+    override suspend fun sendPong(frameData: ByteString) {
         mutex.withLock {
-            session.sendMessage(PongMessage(ByteBuffer.wrap(frameData)))
+            session.sendMessage(PongMessage(frameData.asReadOnlyByteBuffer()))
         }
     }
 
@@ -195,5 +198,3 @@ private class SpringSessionToKrossbowConnectionAdapter(
         }
     }
 }
-
-private fun ByteBuffer.toByteArray(): ByteArray = if (hasArray()) array() else ByteArray(remaining()).also { get(it) }

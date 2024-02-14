@@ -4,6 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlinx.io.bytestring.*
 import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -49,38 +50,33 @@ class WebSocketListenerFlowAdapterTest {
     fun onBinaryMessage_triggersBinaryFrame() = runTest {
         val adapter = WebSocketListenerFlowAdapter()
 
-        launch { adapter.onBinaryMessage(ByteArray(2) { 42 }) }
+        val twoFortyTwos = ByteString(42, 42)
+
+        launch { adapter.onBinaryMessage(twoFortyTwos) }
         val frameBytes = adapter.receiveBytes()
-        assertEquals(List<Byte>(2) { 42 }, frameBytes.toList())
+        assertSame(twoFortyTwos, frameBytes)
     }
 
     @Test
     fun onBinaryMessage_partialMessages() = runTest {
         val adapter = WebSocketListenerFlowAdapter()
 
-        val zeroOneTwo = listOf<Byte>(0, 1, 2)
-        val oneTwo = listOf<Byte>(1, 2)
-        val threeFourFive = listOf<Byte>(3, 4, 5)
-        val one = listOf<Byte>(1)
-        val two = listOf<Byte>(2)
-        val three = listOf<Byte>(3)
-
         launch {
-            adapter.onBinaryMessage(zeroOneTwo.toByteArray(), isLast = true)
+            adapter.onBinaryMessage(ByteString(0, 1, 2), isLast = true)
 
-            adapter.onBinaryMessage(oneTwo.toByteArray(), isLast = false)
-            adapter.onBinaryMessage(threeFourFive.toByteArray(), isLast = true)
+            adapter.onBinaryMessage(ByteString(1, 2), isLast = false)
+            adapter.onBinaryMessage(ByteString(3, 4, 5), isLast = true)
 
-            adapter.onBinaryMessage(one.toByteArray(), isLast = false)
-            adapter.onBinaryMessage(two.toByteArray(), isLast = false)
-            adapter.onBinaryMessage(three.toByteArray(), isLast = true)
+            adapter.onBinaryMessage(ByteString(1), isLast = false)
+            adapter.onBinaryMessage(ByteString(2), isLast = false)
+            adapter.onBinaryMessage(ByteString(3), isLast = true)
         }
-        assertEquals(zeroOneTwo, adapter.receiveBytes().toList())
-        assertEquals(oneTwo + threeFourFive, adapter.receiveBytes().toList())
-        assertEquals(one + two + three, adapter.receiveBytes().toList())
+        assertEquals(ByteString(0, 1, 2), adapter.receiveBytes())
+        assertEquals(ByteString(1, 2, 3, 4, 5), adapter.receiveBytes())
+        assertEquals(ByteString(1, 2, 3), adapter.receiveBytes())
     }
 
-    private suspend fun WebSocketListenerFlowAdapter.receiveBytes(): ByteArray {
+    private suspend fun WebSocketListenerFlowAdapter.receiveBytes(): ByteString {
         val frame = incomingFrames.first()
         assertTrue(frame is WebSocketFrame.Binary)
         return frame.bytes

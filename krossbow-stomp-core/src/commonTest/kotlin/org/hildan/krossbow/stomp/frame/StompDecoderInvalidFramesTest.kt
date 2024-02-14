@@ -1,5 +1,6 @@
 package org.hildan.krossbow.stomp.frame
 
+import kotlinx.io.bytestring.*
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
@@ -67,10 +68,10 @@ class StompDecoderInvalidFramesTest {
 
     private fun assertInvalidFrame(frameText: String) {
         assertFailsWith<InvalidStompFrameException> {
-            StompDecoder.decode(frameText)
+            frameText.decodeToStompFrame()
         }
         assertFailsWith<InvalidStompFrameException> {
-            StompDecoder.decode(frameText.encodeToByteArray())
+            frameText.encodeToByteString().decodeToStompFrame()
         }
     }
 }

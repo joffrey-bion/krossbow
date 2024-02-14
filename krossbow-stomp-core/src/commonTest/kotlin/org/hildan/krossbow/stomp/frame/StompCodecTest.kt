@@ -339,9 +339,9 @@ class StompCodecTest {
     }
 
     private fun assertEncodingDecoding(frameText: String, textFrame: StompFrame, binFrame: StompFrame) {
-        assertEquals(textFrame, StompDecoder.decode(frameText))
-        assertEquals(binFrame, StompDecoder.decode(frameText.encodeToByteArray()))
+        assertEquals(textFrame, frameText.decodeToStompFrame())
+        assertEquals(binFrame, frameText.encodeToByteString().decodeToStompFrame())
         assertEquals(frameText, textFrame.encodeToText())
-        assertTrue(frameText.encodeToByteArray().contentEquals(textFrame.encodeToBytes()))
+        assertEquals(frameText.encodeToByteString(), textFrame.encodeToByteString())
     }
 }

@@ -1,24 +1,14 @@
 package org.hildan.krossbow.websocket.js
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.suspendCancellableCoroutine
-import org.hildan.krossbow.websocket.UnboundedWsListenerFlowAdapter
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketConnection
-import org.hildan.krossbow.websocket.WebSocketConnectionClosedException
-import org.hildan.krossbow.websocket.WebSocketConnectionException
-import org.hildan.krossbow.websocket.WebSocketFrame
-import org.khronos.webgl.ArrayBuffer
-import org.khronos.webgl.Int8Array
-import org.khronos.webgl.get
-import org.w3c.dom.ARRAYBUFFER
-import org.w3c.dom.BinaryType
-import org.w3c.dom.CloseEvent
-import org.w3c.dom.ErrorEvent
-import org.w3c.dom.WebSocket
-import org.w3c.dom.events.Event
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+import kotlinx.io.bytestring.*
+import org.hildan.krossbow.io.*
+import org.hildan.krossbow.websocket.*
+import org.khronos.webgl.*
+import org.w3c.dom.*
+import org.w3c.dom.events.*
+import kotlin.coroutines.*
 
 /**
  * Default WebSocket found in the browser. Not supported in Node.js environment.
@@ -114,7 +104,7 @@ interface JsWebSocketClient : WebSocketClient {
                     // https://html.spec.whatwg.org/multipage/web-sockets.html#feedback-from-the-protocol
                     // Because ws.binaryType was set to ARRAYBUFFER, we should never receive Blob objects
                     when (val body = event.data) {
-                        is ArrayBuffer -> listener.onBinaryMessage(body.toByteArray())
+                        is ArrayBuffer -> listener.onBinaryMessage(body.toByteString())
                         is String -> listener.onTextMessage(body)
                         null -> listener.onTextMessage("")
                         else -> listener.onError("Unknown socket frame body type: ${body::class.js}")
@@ -146,7 +136,7 @@ private class JsWebSocketConnection(
         ws.send(frameText)
     }
 
-    override suspend fun sendBinary(frameData: ByteArray) {
+    override suspend fun sendBinary(frameData: ByteString) {
         ws.send(frameData.toArrayBuffer())
     }
 
@@ -154,10 +144,3 @@ private class JsWebSocketConnection(
         ws.close(code.toShort(), reason ?: "")
     }
 }
-
-private fun ArrayBuffer.toByteArray(): ByteArray {
-    val int8Array = Int8Array(this)
-    return ByteArray(int8Array.length) { int8Array[it] }
-}
-
-private fun ByteArray.toArrayBuffer(): ArrayBuffer = Int8Array(this.toTypedArray()).buffer

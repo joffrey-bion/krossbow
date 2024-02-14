@@ -1,5 +1,7 @@
 package org.hildan.krossbow.websocket
 
+import kotlinx.io.bytestring.*
+
 /**
  * A web socket frame.
  */
@@ -13,17 +15,17 @@ sealed class WebSocketFrame {
     /**
      * A web socket binary frame (0x2).
      */
-    class Binary(val bytes: ByteArray) : WebSocketFrame()
+    data class Binary(val bytes: ByteString) : WebSocketFrame()
 
     /**
      * A web socket ping frame (0x9).
      */
-    class Ping(val bytes: ByteArray) : WebSocketFrame()
+    data class Ping(val bytes: ByteString) : WebSocketFrame()
 
     /**
      * A web socket pong frame (0xA).
      */
-    class Pong(val bytes: ByteArray) : WebSocketFrame()
+    data class Pong(val bytes: ByteString) : WebSocketFrame()
 
     /**
      * A web socket close frame (0x8).

@@ -39,7 +39,7 @@ suspend fun WebSocketConnectionMock.simulateTextStompFrameReceived(frame: StompF
 }
 
 suspend fun WebSocketConnectionMock.simulateBinaryStompFrameReceived(frame: StompFrame) {
-    simulateBinaryFrameReceived(frame.encodeToBytes())
+    simulateBinaryFrameReceived(frame.encodeToByteString())
 }
 
 suspend fun WebSocketConnectionMock.simulateErrorFrameReceived(errorMessage: String): StompFrame.Error {
@@ -85,8 +85,8 @@ suspend fun WebSocketConnectionMock.simulateReceiptFrameReceived(receiptId: Stri
  */
 suspend fun WebSocketConnectionMock.awaitSentStompFrameAndSimulateCompletion(): StompFrame {
     return when (val wsFrame = waitForSentWsFrameAndSimulateCompletion()) {
-        is WebSocketFrame.Binary -> StompDecoder.decode(wsFrame.bytes)
-        is WebSocketFrame.Text -> StompDecoder.decode(wsFrame.text)
+        is WebSocketFrame.Binary -> wsFrame.bytes.decodeToStompFrame()
+        is WebSocketFrame.Text -> wsFrame.text.decodeToStompFrame()
         else -> error("The web socket frame is not a data frame: ${wsFrame::class.simpleName}")
     }
 }

@@ -12,6 +12,7 @@ kotlin {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 api(libs.kotlinx.io.bytestring)
+                implementation(projects.krossbowIo)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.io.core)
                 implementation(libs.uuid)

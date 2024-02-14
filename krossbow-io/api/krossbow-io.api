@@ -1,0 +1,15 @@
+public abstract interface annotation class org/hildan/krossbow/io/InternalKrossbowIoApi : java/lang/annotation/Annotation {
+}
+
+public final class org/hildan/krossbow/io/IoUtilsJvmKt {
+	public static final fun asReadOnlyByteBuffer (Lkotlinx/io/bytestring/ByteString;)Ljava/nio/ByteBuffer;
+	public static final fun readByteString (Ljava/nio/ByteBuffer;)Lkotlinx/io/bytestring/ByteString;
+}
+
+public final class org/hildan/krossbow/io/IoUtilsKt {
+	public static final fun asByteString ([B)Lkotlinx/io/bytestring/ByteString;
+	public static final fun toSource (Ljava/lang/String;)Lkotlinx/io/Source;
+	public static final fun toSource (Lkotlinx/io/bytestring/ByteString;)Lkotlinx/io/Source;
+	public static final fun unsafeBackingByteArray (Lkotlinx/io/bytestring/ByteString;)[B
+}
+

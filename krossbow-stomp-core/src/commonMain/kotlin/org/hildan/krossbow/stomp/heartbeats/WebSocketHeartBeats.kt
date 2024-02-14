@@ -1,5 +1,6 @@
 package org.hildan.krossbow.stomp.heartbeats
 
+import kotlinx.io.bytestring.*
 import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketConnection
 
@@ -18,7 +19,7 @@ internal fun WebSocketFrame.isHeartBeat(): Boolean = when (this) {
 private const val CR = '\r'.code.toByte()
 private const val LF = '\n'.code.toByte()
 
-private fun ByteArray.isEOL() = when (size) {
+private fun ByteString.isEOL() = when (size) {
     1 -> get(0) == LF
     2 -> get(0) == CR && get(1) == LF
     else -> false

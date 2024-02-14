@@ -3,19 +3,16 @@
 package org.hildan.krossbow.websocket.darwin
 
 import kotlinx.cinterop.*
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
-import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.flow.*
+import kotlinx.io.bytestring.*
+import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import platform.Foundation.*
-import platform.darwin.NSObject
-import platform.posix.memcpy
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
+import platform.darwin.*
+import kotlin.coroutines.*
 
 /**
  * Error code received in some callbacks when the connection is actually just closed normally.
@@ -158,7 +155,7 @@ private class DarwinWebSocketConnection(
         sendMessage(NSURLSessionWebSocketMessage(frameText))
     }
 
-    override suspend fun sendBinary(frameData: ByteArray) {
+    override suspend fun sendBinary(frameData: ByteString) {
         sendMessage(NSURLSessionWebSocketMessage(frameData.toNSData()))
     }
 
@@ -173,7 +170,7 @@ private class DarwinWebSocketConnection(
         }
     }
 
-    override suspend fun sendPing(frameData: ByteArray) {
+    override suspend fun sendPing(frameData: ByteString) {
         webSocket.sendPingWithPongReceiveHandler { err ->
             if (err != null) {
                 println("Error while sending websocket ping: $err")
@@ -236,7 +233,7 @@ private fun NSURLSessionWebSocketTask.forwardNextIncomingMessagesAsyncTo(incomin
 
 private fun NSURLSessionWebSocketMessage.toWebSocketFrame(): WebSocketFrame = when (type) {
     NSURLSessionWebSocketMessageTypeData -> WebSocketFrame.Binary(
-        bytes = data?.toByteArray() ?: error("Message of type NSURLSessionWebSocketMessageTypeData has null value for 'data'")
+        bytes = data?.toByteString() ?: error("Message of type NSURLSessionWebSocketMessageTypeData has null value for 'data'")
     )
     NSURLSessionWebSocketMessageTypeString -> WebSocketFrame.Text(
         text = string ?: error("Message of type NSURLSessionWebSocketMessageTypeString has null value for 'string'")
@@ -247,26 +244,8 @@ private fun NSURLSessionWebSocketMessage.toWebSocketFrame(): WebSocketFrame = wh
 @Suppress("CAST_NEVER_SUCCEEDS")
 private fun String.encodeToNSData(): NSData? = (this as NSString).dataUsingEncoding(NSUTF8StringEncoding)
 
-private fun NSData.decodeToString(): String = toByteArray().decodeToString()
-
-@OptIn(ExperimentalForeignApi::class)
-private fun ByteArray.toNSData(): NSData = memScoped {
-    NSData.create(bytes = allocArrayOf(this@toNSData), length = this@toNSData.size.convert())
-}
-
-@OptIn(ExperimentalForeignApi::class)
-private fun NSData.toByteArray(): ByteArray {
-    // length=0 breaks memcpy for some reason (ArrayIndexOutOfBoundsException)
-    // and it doesn't hurt to skip memcpy anyway if the array is empty
-    if (length.toInt() == 0) return ByteArray(0)
-
-    val data = this
-    return ByteArray(data.length.toInt()).apply {
-        usePinned { pinned ->
-            memcpy(pinned.addressOf(0), data.bytes, data.length)
-        }
-    }
-}
+@Suppress("CAST_NEVER_SUCCEEDS")
+private fun NSData.decodeToString(): String = NSString.create(this, NSUTF8StringEncoding) as String
 
 /**
  * A [WebSocketException] caused by a darwin [NSError].
