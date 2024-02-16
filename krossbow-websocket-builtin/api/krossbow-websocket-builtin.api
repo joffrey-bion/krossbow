@@ -1,7 +1,3 @@
-public final class org/hildan/krossbow/websocket/DefaultJvmClientKt {
-	public static final fun default (Lorg/hildan/krossbow/websocket/WebSocketClient$Companion;)Lorg/hildan/krossbow/websocket/WebSocketClient;
-}
-
 public final class org/hildan/krossbow/websocket/builtin/BuiltInExtensionKt {
 	public static final fun builtIn (Lorg/hildan/krossbow/websocket/WebSocketClient$Companion;)Lorg/hildan/krossbow/websocket/WebSocketClient;
 }
