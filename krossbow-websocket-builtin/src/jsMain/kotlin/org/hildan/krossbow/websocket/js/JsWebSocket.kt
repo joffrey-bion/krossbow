@@ -22,22 +22,6 @@ object BrowserWebSocketClient : JsWebSocketClient {
     }
 }
 
-@Deprecated("This class is kept for backwards compatibility but will be removed in the future. " +
-        "Prefer subclassing JsWebSocketClient, but note that it's not stable for inheritance by 3rd parties.")
-open class JsWebSocketClientAdapter(
-    /**
-     * A function to create [WebSocket] connections from a given URL.
-     */
-    private val newWebSocket: (String) -> WebSocket,
-) : WebSocketClient by object : JsWebSocketClient {
-    override fun newWebSocket(url: String, headers: Map<String, String>): WebSocket {
-        require(headers.isEmpty()) {
-            "custom HTTP headers are not supported by this JS client"
-        }
-        return newWebSocket(url)
-    }
-}
-
 /**
  * A [WebSocketClient] adapting JavaScript [WebSocket] objects to [WebSocketConnection]s.
  *
