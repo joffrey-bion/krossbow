@@ -6,6 +6,13 @@ plugins {
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
+    sourceSets {
+        all {
+            compilerOptions {
+                freeCompilerArgs.add("-Xexpect-actual-classes")
+            }
+        }
+    }
     targetHierarchy.default {
         group("native") {
             group("unix") {
