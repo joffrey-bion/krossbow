@@ -3,6 +3,5 @@ public final class org/hildan/krossbow/websocket/okhttp/OkHttpWebSocketClient : 
 	public fun <init> (Lokhttp3/OkHttpClient;)V
 	public synthetic fun <init> (Lokhttp3/OkHttpClient;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun connect (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public synthetic fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 

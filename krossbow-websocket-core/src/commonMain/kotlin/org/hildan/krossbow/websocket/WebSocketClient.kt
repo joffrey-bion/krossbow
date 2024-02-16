@@ -21,9 +21,6 @@ interface WebSocketClient {
      */
     suspend fun connect(url: String, headers: Map<String, String> = emptyMap()): WebSocketConnection
 
-    @Deprecated("for binary compatibility with versions <= 5.4.0", level = DeprecationLevel.HIDDEN)
-    suspend fun connect(url: String): WebSocketConnection = connect(url, emptyMap())
-
     companion object
 }
 
