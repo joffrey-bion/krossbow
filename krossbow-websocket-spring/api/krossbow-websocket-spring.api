@@ -1,21 +1,3 @@
-public final class org/hildan/krossbow/websocket/spring/SpringDefaultWebSocketClient : org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter {
-	public static final field INSTANCE Lorg/hildan/krossbow/websocket/spring/SpringDefaultWebSocketClient;
-}
-
-public final class org/hildan/krossbow/websocket/spring/SpringJettyWebSocketClient : org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter {
-	public static final field INSTANCE Lorg/hildan/krossbow/websocket/spring/SpringJettyWebSocketClient;
-}
-
-public final class org/hildan/krossbow/websocket/spring/SpringSockJSWebSocketClient : org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter {
-	public static final field INSTANCE Lorg/hildan/krossbow/websocket/spring/SpringSockJSWebSocketClient;
-}
-
-public class org/hildan/krossbow/websocket/spring/SpringWebSocketClientAdapter : org/hildan/krossbow/websocket/WebSocketClient {
-	public fun <init> (Lorg/springframework/web/socket/client/WebSocketClient;)V
-	public fun connect (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public synthetic fun connect (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public final class org/hildan/krossbow/websocket/spring/SpringWebSocketClientKt {
 	public static final fun asKrossbowWebSocketClient (Lorg/springframework/web/socket/client/WebSocketClient;)Lorg/hildan/krossbow/websocket/WebSocketClient;
 }

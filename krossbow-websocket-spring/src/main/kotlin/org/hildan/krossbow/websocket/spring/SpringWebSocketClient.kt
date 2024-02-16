@@ -20,14 +20,9 @@ import org.springframework.web.socket.client.WebSocketClient as SpringWebSocketC
  * Adapts this Spring [WebSocketClient][SpringWebSocketClient] to the Krossbow
  * [WebSocketClient][KrossbowWebSocketClient] interface.
  */
-@Suppress("DEPRECATION")
 fun SpringWebSocketClient.asKrossbowWebSocketClient(): KrossbowWebSocketClient = SpringWebSocketClientAdapter(this)
 
-@Deprecated(
-    message = "This class is internal and will become invisible in future versions, " +
-            "prefer the adapter extension asKrossbowWebSocketClient().",
-)
-open class SpringWebSocketClientAdapter(private val client: SpringWebSocketClient) : KrossbowWebSocketClient {
+private class SpringWebSocketClientAdapter(private val client: SpringWebSocketClient) : KrossbowWebSocketClient {
 
     override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
         try {
