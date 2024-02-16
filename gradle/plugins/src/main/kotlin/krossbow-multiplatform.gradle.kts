@@ -13,7 +13,7 @@ kotlin {
             }
         }
     }
-    targetHierarchy.default {
+    applyDefaultHierarchyTemplate {
         group("native") {
             group("unix") {
                 withLinux()
