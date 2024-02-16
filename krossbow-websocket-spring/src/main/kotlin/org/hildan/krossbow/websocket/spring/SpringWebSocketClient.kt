@@ -24,21 +24,6 @@ import org.springframework.web.socket.client.WebSocketClient as SpringWebSocketC
 fun SpringWebSocketClient.asKrossbowWebSocketClient(): KrossbowWebSocketClient = SpringWebSocketClientAdapter(this)
 
 @Deprecated(
-    message = "The JettyWebSocketClient is deprecated for removal in Spring itself, prefer the StandardWebSocketClient.",
-    replaceWith = ReplaceWith(
-        expression = "StandardWebSocketClient().asKrossbowWebSocketClient()",
-        imports = [
-            "org.springframework.web.socket.client.standard.StandardWebSocketClient",
-            "org.hildan.krossbow.websocket.spring.asKrossbowWebSocketClient",
-        ],
-    )
-)
-@Suppress("DEPRECATION")
-object SpringJettyWebSocketClient : SpringWebSocketClientAdapter(
-    org.springframework.web.socket.client.jetty.JettyWebSocketClient().apply { start() },
-)
-
-@Deprecated(
     message = "This class is internal and will become invisible in future versions, " +
             "prefer the adapter extension asKrossbowWebSocketClient().",
 )
