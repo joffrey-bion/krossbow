@@ -17,7 +17,7 @@ fun ByteString.toNSData(): NSData = unsafeBackingByteArray().toNSData()
  * Creates a new [NSData] containing the data copied from this [ByteArray].
  */
 @InternalKrossbowIoApi
-@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
+@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class, BetaInteropApi::class)
 private fun ByteArray.toNSData(): NSData = memScoped {
     NSData.create(bytes = allocArrayOf(this@toNSData), length = this@toNSData.size.convert())
 }
