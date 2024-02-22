@@ -9,7 +9,7 @@ description = "Multiplatform implementation of Krossbow's WebSocket API adapting
 kotlin {
     jvm()
     js {
-        browserWithBigTimeout()
+        browser()
     }
     appleTargets()
 
@@ -26,12 +26,6 @@ kotlin {
             dependencies {
                 implementation(projects.krossbowWebsocketTest)
                 implementation(kotlin("test"))
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-                implementation(npm("isomorphic-ws", libs.versions.npm.isomorphic.ws.get()))
-                implementation(npm("ws", libs.versions.npm.ws.get()))
             }
         }
     }

@@ -1,9 +1,8 @@
 package org.hildan.krossbow.websocket.js
 
-import IsomorphicJsWebSocketClient
-import org.hildan.krossbow.websocket.test.WebSocketClientTestSuite
+import org.hildan.krossbow.websocket.test.*
 
 class JsWebSocketClientTest : WebSocketClientTestSuite(supportsStatusCodes = false) {
 
-    override fun provideClient() = IsomorphicJsWebSocketClient
+    override fun provideClient() = BrowserWebSocketClient
 }
