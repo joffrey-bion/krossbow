@@ -1,6 +1,7 @@
 plugins {
     id("krossbow-jvm")
     id("krossbow-publish")
+    id("websocket-test-server")
 }
 
 description = "A Krossbow adapter for OkHttp's WebSocket client"

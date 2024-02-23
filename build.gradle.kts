@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.nexus.publish)
     alias(libs.plugins.louiscad.complete.kotlin) // for autocomplete of Apple libraries on non-macOS systems
     id("krossbow-githubinfo")
+
+    // workaround for https://github.com/gradle/gradle/issues/17559
+    alias(libs.plugins.kotlin.atomicfu) apply false
 }
 
 allprojects {

@@ -17,6 +17,7 @@ interface WebSocketClient {
      * optional. Implementations that don't support them must throw an [IllegalArgumentException] if [headers] is not
      * empty.
      *
+     * @throws IllegalArgumentException if the headers map is not empty but the client doesn't support custom headers
      * @throws WebSocketConnectionException if an error occurs during the connection.
      */
     suspend fun connect(url: String, headers: Map<String, String> = emptyMap()): WebSocketConnection

@@ -1,6 +1,7 @@
 plugins {
     id("krossbow-jvm")
     id("krossbow-publish")
+    id("websocket-test-server")
 }
 
 description = "A Krossbow adapter for Spring's default WebSocket client and SockJS client"

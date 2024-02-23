@@ -1,6 +1,7 @@
 plugins {
     id("krossbow-multiplatform")
     id("krossbow-publish")
+    id("websocket-test-server")
 }
 
 description = "Multiplatform implementation of Krossbow's WebSocket API adapting the platforms' built-in " +

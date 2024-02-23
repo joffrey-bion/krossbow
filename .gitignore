@@ -5,3 +5,5 @@
 build/
 
 docs/kdoc
+
+karma.config.d

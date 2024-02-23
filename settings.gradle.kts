@@ -15,6 +15,7 @@ dependencyResolutionManagement {
 }
 
 includeBuild("gradle/plugins")
+includeBuild("test-server")
 include("krossbow-io")
 include("krossbow-stomp-core")
 include("krossbow-stomp-kxserialization")

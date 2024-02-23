@@ -1,29 +1,23 @@
-package org.hildan.krossbow.websocket.test
+package org.hildan.krossbow.test.server
 
-import org.java_websocket.WebSocket
-import org.java_websocket.handshake.ClientHandshake
-import org.java_websocket.server.WebSocketServer
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withTimeout
-import java.net.InetSocketAddress
-import java.nio.ByteBuffer
-
-internal actual suspend fun runAlongEchoWSServer(block: suspend (server: TestServer) -> Unit) {
-    val server = EchoWebSocketServer()
-    server.startAndAwaitPort()
-    block(server.asTestServer())
-    server.stop()
-}
+import kotlinx.coroutines.*
+import org.java_websocket.*
+import org.java_websocket.handshake.*
+import org.java_websocket.server.*
+import java.net.*
+import java.nio.*
 
 private val StandardHandshakeRequestHeaders = setOf(
     "Accept",
     "Accept-Charset",
     "Accept-Encoding",
+    "Accept-Language", // sent by Apple client
+    "Cache-Control", // sent by browser WS
     "Connection",
     "Content-Length",
     "Host",
     "Origin",
+    "Pragma", // sent by browser WS
     "Sec-WebSocket-Key",
     "Sec-WebSocket-Protocol",
     "Sec-WebSocket-Extensions",
@@ -75,28 +69,5 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAd
             delay(10)
         }
         port
-    }
-}
-
-private fun EchoWebSocketServer.asTestServer() = object : TestServer {
-    override val port: Int
-        get() = this@asTestServer.port
-
-    private suspend fun getSocket(): WebSocket = openedSocket.await()
-
-    override suspend fun send(text: String) {
-        getSocket().send(text)
-    }
-
-    override suspend fun send(bytes: ByteArray) {
-        getSocket().send(bytes)
-    }
-
-    override suspend fun close(code: Int, message: String?) {
-        getSocket().close(code, message)
-    }
-
-    override suspend fun closeConnection(code: Int, message: String?) {
-        getSocket().closeConnection(code, message)
     }
 }
