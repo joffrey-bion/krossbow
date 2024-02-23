@@ -40,7 +40,7 @@ class DarwinWebSocketClient(
             val incomingFrames: Channel<WebSocketFrame> = Channel(BUFFERED)
 
             if (headers.isNotEmpty()) {
-                sessionConfig.HTTPAdditionalHeaders = sessionConfig.HTTPAdditionalHeaders?.plus(headers)
+                sessionConfig.HTTPAdditionalHeaders = sessionConfig.HTTPAdditionalHeaders.orEmpty() + headers
             }
             val urlSession = NSURLSession.sessionWithConfiguration(
                 configuration = sessionConfig,
