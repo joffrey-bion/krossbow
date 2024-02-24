@@ -25,9 +25,12 @@ abstract class WebSocketClientTestSuite(
     fun testConnectFailure() = runSuspendingTest {
         // Using the non-reified version because of the suspend inline function bug on JS platform
         // https://youtrack.jetbrains.com/issue/KT-37645
-        assertFailsWith(WebSocketConnectionException::class) {
+        val e = assertFailsWith(WebSocketConnectionException::class) {
             wsClient.connect("ws://garbage")
         }
+        val message = e.message
+        assertNotNull(message, "Connection exception should have a message")
+        assertContains(message, "Couldn't connect to web socket at ws://garbage")
     }
 
     @Test
@@ -50,7 +53,11 @@ abstract class WebSocketClientTestSuite(
             wsClient.connect("$baseUrl/failHandshakeWithStatusCode/$statusCodeToTest")
         }
         if (supportsStatusCodes) {
-            assertEquals(statusCodeToTest, ex.httpStatusCode)
+            assertEquals(
+                statusCodeToTest,
+                ex.httpStatusCode,
+                "missing status code $statusCodeToTest in connection exception $ex, cause:\n${ex.cause?.stackTraceToString()}",
+            )
         } else {
             assertNull(ex.httpStatusCode, "${wsClient::class} is not expected to support status codes")
         }
