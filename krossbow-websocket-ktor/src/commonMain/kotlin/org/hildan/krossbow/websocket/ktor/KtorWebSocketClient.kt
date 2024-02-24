@@ -58,6 +58,12 @@ private class KtorWebSocketConnectionAdapter(
     override val incomingFrames: Flow<WebSocketFrame> =
         wsSession.incoming.receiveAsFlow()
             .map { it.toKrossbowFrame() }
+            .onEach {
+                // We don't need our fake Close frame if there is one (in JS engine it seems there is)
+                if (it is WebSocketFrame.Close) {
+                    emittedCloseFrame.getAndSet(true)
+                }
+            }
             .onCompletion { error ->
                 // Ktor just closes the channel without sending the close frame, so we build it ourselves here.
                 // Clients could collect the flow multiple times, which calls onCompletion each time, but we only want
