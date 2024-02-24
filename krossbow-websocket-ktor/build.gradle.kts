@@ -44,6 +44,11 @@ kotlin {
                 implementation(libs.ktor.client.winhttp)
             }
         }
+        val appleMain by getting {
+            dependencies {
+                compileOnly(libs.ktor.client.darwin) // FIXME remove after investigation
+            }
+        }
         val appleTest by getting {
             dependencies {
                 implementation(libs.ktor.client.darwin)
