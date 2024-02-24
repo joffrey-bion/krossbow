@@ -1,8 +1,8 @@
 package org.hildan.krossbow.websocket.test
 
-actual fun getTestServerConfig(): TestServerConfig = when (isBrowser()) {
-    true -> getTestServerConfigBrowser()
-    false -> getTestServerConfigFromEnv()
+actual fun getTestServerConfig(): TestServerConfig = when (currentJsPlatform()) {
+    Platform.Js.Browser -> getTestServerConfigBrowser()
+    Platform.Js.NodeJs -> getTestServerConfigFromEnv()
 }
 
 // This variable is defined using the webpack DefinePlugin in karma.config.d/<somename>.js

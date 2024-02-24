@@ -18,7 +18,3 @@ actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.
             fail("Test timed out after ${timeoutMillis}ms")
         }
     }
-
-fun isBrowser() = js("typeof window !== 'undefined' && typeof window.document !== 'undefined'") as Boolean
-
-fun environment() = if (isBrowser()) "browser" else "nodejs"

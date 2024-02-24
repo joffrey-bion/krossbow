@@ -1,6 +1,6 @@
 package org.hildan.krossbow.websocket.test.autobahn
 
-import org.hildan.krossbow.websocket.test.isBrowser
+import org.hildan.krossbow.websocket.test.*
 
 actual fun getDefaultAutobahnConfig() = readJsonAutobahnConfig().toCommonConfig()
 
@@ -16,9 +16,9 @@ private external interface AutobahnConfigJson {
     val webPort: Int
 }
 
-private fun readJsonAutobahnConfig(): AutobahnConfigJson = when (isBrowser()) {
-    true -> readJsonAutobahnConfigBrowser()
-    false -> readJsonAutobahnConfigNodeJS()
+private fun readJsonAutobahnConfig(): AutobahnConfigJson = when (currentJsPlatform()) {
+    Platform.Js.Browser -> readJsonAutobahnConfigBrowser()
+    Platform.Js.NodeJs -> readJsonAutobahnConfigNodeJS()
 }
 
 private fun readJsonAutobahnConfigBrowser(): AutobahnConfigJson = js("autobahn").unsafeCast<AutobahnConfigJson>()
