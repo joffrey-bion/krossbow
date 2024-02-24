@@ -27,7 +27,7 @@ class OkHttpWebSocketClient(
         val channelListener = WebSocketListenerFlowAdapter()
 
         return suspendCancellableCoroutine { continuation ->
-            val okHttpListener = KrossbowToOkHttpListenerAdapter(continuation, channelListener)
+            val okHttpListener = KrossbowToOkHttpListenerAdapter(continuation, url, channelListener)
             val ws = client.newWebSocket(request, okHttpListener)
             continuation.invokeOnCancellation {
                 ws.cancel()
@@ -38,6 +38,7 @@ class OkHttpWebSocketClient(
 
 private class KrossbowToOkHttpListenerAdapter(
     connectionContinuation: Continuation<KrossbowWebSocketSession>,
+    private val originalConnectionUrl: String,
     private val channelListener: WebSocketListenerFlowAdapter,
 ) : WebSocketListener() {
     private var connectionContinuation: Continuation<KrossbowWebSocketSession>? = connectionContinuation
@@ -80,7 +81,7 @@ private class KrossbowToOkHttpListenerAdapter(
                 null
             }
             val exception = WebSocketConnectionException(
-                url = webSocket.request().url.toString(),
+                url = originalConnectionUrl, // webSocket.request().url returns an HTTP URL even when using 'ws://'
                 httpStatusCode =  response?.code,
                 additionalInfo = responseBody,
                 cause = t,
