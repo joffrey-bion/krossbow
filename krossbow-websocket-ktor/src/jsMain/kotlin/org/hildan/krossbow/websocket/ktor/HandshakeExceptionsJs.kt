@@ -16,6 +16,6 @@ internal actual fun extractHandshakeFailureDetails(handshakeException: Exception
     return if (statusCode == null) {
         HandshakeFailureDetails(statusCode = null, additionalInfo = actualMessage)
     } else {
-        HandshakeFailureDetails(statusCode = statusCode, additionalInfo = null)
+        HandshakeFailureDetails(statusCode = statusCode, additionalInfo = actualMessage)
     }
 }
