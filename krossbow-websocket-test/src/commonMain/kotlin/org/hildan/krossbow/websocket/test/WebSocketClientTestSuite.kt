@@ -22,7 +22,7 @@ abstract class WebSocketClientTestSuite(
     }
 
     @Test
-    fun testConnectFailure() = runSuspendingTest {
+    fun testConnectFailure_failsOnUnresolvedHost() = runSuspendingTest {
         // Using the non-reified version because of the suspend inline function bug on JS platform
         // https://youtrack.jetbrains.com/issue/KT-37645
         val e = assertFailsWith(WebSocketConnectionException::class) {
@@ -34,23 +34,33 @@ abstract class WebSocketClientTestSuite(
     }
 
     @Test
-    fun testConnectFailure_correctStatusCodeInException() = runSuspendingTest {
-        val baseUrl = testServerConfig.wsUrlWithHttpPort
-        assertCorrectStatusReported(baseUrl, 200) // not good for WS, should be 101
-        assertCorrectStatusReported(baseUrl, 301)
-        assertCorrectStatusReported(baseUrl, 302)
-        assertCorrectStatusReported(baseUrl, 401)
-        assertCorrectStatusReported(baseUrl, 403)
-        assertCorrectStatusReported(baseUrl, 404)
-        assertCorrectStatusReported(baseUrl, 500)
-        assertCorrectStatusReported(baseUrl, 503)
+    fun testConnectFailure_correctStatusCodeInException_2xx() = runSuspendingTest {
+        assertCorrectStatusesReported(200..208) // 2xx is not good for WS, should be 101
     }
 
-    private suspend fun assertCorrectStatusReported(baseUrl: String, statusCodeToTest: Int) {
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_3xx() = runSuspendingTest {
+        assertCorrectStatusesReported(300..308)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_4xx() = runSuspendingTest {
+        assertCorrectStatusesReported(400..418)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_5xx() = runSuspendingTest {
+        assertCorrectStatusesReported(500..508)
+    }
+
+    private suspend fun assertCorrectStatusesReported(statusCodesToTest: IntRange) =
+        statusCodesToTest.forEach { assertCorrectStatusReported(it) }
+
+    private suspend fun assertCorrectStatusReported(statusCodeToTest: Int) {
         // Using the non-reified version because of the suspend inline function bug on JS platform
         // https://youtrack.jetbrains.com/issue/KT-37645
         val ex = assertFailsWith(WebSocketConnectionException::class) {
-            wsClient.connect("$baseUrl/failHandshakeWithStatusCode/$statusCodeToTest")
+            wsClient.connect("${testServerConfig.wsUrlWithHttpPort}/failHandshakeWithStatusCode/$statusCodeToTest")
         }
         if (supportsStatusCodes) {
             assertEquals(
