@@ -1,12 +1,9 @@
 package org.hildan.krossbow.websocket.ktor
 
-import io.ktor.client.*
+import io.ktor.client.engine.*
 import io.ktor.client.engine.okhttp.*
-import io.ktor.client.plugins.websocket.*
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.test.WebSocketClientTestSuite
 
-class KtorOkHttpWebSocketClientTest : WebSocketClientTestSuite() {
+class KtorOkHttpWebSocketClientTest : KtorClientTestSuite() {
 
-    override fun provideClient(): WebSocketClient = KtorWebSocketClient(HttpClient(OkHttp) { install(WebSockets) })
+    override fun provideEngine(): HttpClientEngineFactory<*> = OkHttp
 }

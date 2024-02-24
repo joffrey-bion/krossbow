@@ -26,18 +26,22 @@ kotlin {
                 implementation(projects.krossbowWebsocketTest)
             }
         }
+        val cioSupportTest by creating {
+            dependsOn(commonTest)
+            dependencies {
+                implementation(libs.ktor.client.cio)
+            }
+        }
         val jvmTest by getting {
+            dependsOn(cioSupportTest)
             dependencies {
                 implementation(libs.ktor.client.java)
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.slf4j.simple)
             }
         }
-
         val linuxX64Test by getting {
-            dependencies {
-                implementation(libs.ktor.client.cio)
-            }
+            dependsOn(cioSupportTest)
         }
         val mingwX64Test by getting {
             dependencies {
@@ -50,6 +54,7 @@ kotlin {
             }
         }
         val appleTest by getting {
+            dependsOn(cioSupportTest)
             dependencies {
                 implementation(libs.ktor.client.darwin)
             }
