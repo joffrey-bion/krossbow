@@ -82,8 +82,8 @@ private class KrossbowToOkHttpListenerAdapter(
             }
             val exception = WebSocketConnectionException(
                 url = originalConnectionUrl, // webSocket.request().url returns an HTTP URL even when using 'ws://'
-                httpStatusCode =  response?.code,
-                additionalInfo = responseBody,
+                httpStatusCode =  response?.code ?: invalidStatusCodeFromErrorMessage(t.message),
+                additionalInfo = responseBody ?: t.toString(),
                 cause = t,
             )
             completeConnection {
@@ -93,6 +93,10 @@ private class KrossbowToOkHttpListenerAdapter(
             channelListener.onError(t)
         }
     }
+
+    private fun invalidStatusCodeFromErrorMessage(message: String?): Int? =
+        // for some reason, in that case, the response is null and we can't get the status code from there
+        if (message == "Received HTTP_PROXY_AUTH (407) code while not using proxy") 407 else null
 }
 
 private class OkHttpSocketToKrossbowConnectionAdapter(

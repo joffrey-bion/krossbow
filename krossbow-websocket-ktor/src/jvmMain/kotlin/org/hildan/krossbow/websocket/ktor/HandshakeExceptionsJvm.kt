@@ -15,14 +15,18 @@ internal actual fun extractHandshakeFailureDetails(handshakeException: Exception
     else -> genericFailureDetails(handshakeException)
 }
 
-private val protocolExceptionMessageRegex = Regex("""Expected HTTP 101 response but was '(\d{3}) ([^']+)'""")
+private const val okhttp407WithoutProxyMessage = "Received HTTP_PROXY_AUTH (407) code while not using proxy"
+private val okhttpInvalidStatusCodeMessageRegex = Regex("""Expected HTTP 101 response but was '(\d{3}) ([^']*)'""")
 
 private fun extractHandshakeFailureDetails(handshakeException: ProtocolException): HandshakeFailureDetails {
     val message = handshakeException.message ?: return genericFailureDetails(handshakeException)
-    val match = protocolExceptionMessageRegex.matchEntire(message)
+    if (message == okhttp407WithoutProxyMessage) {
+        return HandshakeFailureDetails(statusCode = 407, additionalInfo = message)
+    }
+    val match = okhttpInvalidStatusCodeMessageRegex.matchEntire(message)
     return HandshakeFailureDetails(
         statusCode = match?.groupValues?.get(1)?.toInt(),
-        additionalInfo = match?.groupValues?.get(2) ?: handshakeException.message?.takeIf { it.isNotBlank() },
+        additionalInfo = (match?.groupValues?.get(2) ?: handshakeException.message)?.takeIf { it.isNotBlank() },
     )
 }
 
