@@ -9,7 +9,6 @@ description = "Multiplatform implementation of Krossbow's WebSocket API using Kt
 
 kotlin {
     allTargets()
-    jsWithBigTimeouts()
 
     sourceSets {
         val commonMain by getting {
