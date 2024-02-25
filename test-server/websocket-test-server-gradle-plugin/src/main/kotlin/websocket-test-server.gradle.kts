@@ -85,7 +85,8 @@ val generateKarmaConfig by tasks.registering {
             config.set({
                 client: {
                     mocha: {
-                        timeout: 10000
+                        // some tests with multiple calls exceed 10s (e.g. tests of status codes ranges)
+                        timeout: 15000
                     }
                 }
             });

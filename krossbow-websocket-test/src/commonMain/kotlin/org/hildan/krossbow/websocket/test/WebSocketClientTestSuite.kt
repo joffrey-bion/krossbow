@@ -34,26 +34,114 @@ abstract class WebSocketClientTestSuite(
     }
 
     @Test
-    fun testConnectFailure_correctStatusCodeInException_2xx() = runSuspendingTest {
-        assertCorrectStatusesReported(200..208) // 2xx is not good for WS, should be 101
+    fun testConnectFailure_correctStatusCodeInException_200() = runSuspendingTest {
+        assertCorrectStatusReported(200) // 200 is not good for WS, should be 101
     }
 
     @Test
-    fun testConnectFailure_correctStatusCodeInException_3xx() = runSuspendingTest {
-        assertCorrectStatusesReported(300..308)
+    fun testConnectFailure_correctStatusCodeInException_201_to_208() = runSuspendingTest {
+        assertCorrectStatusesReported(201..208) // 2xx is not good for WS, should be 101
     }
 
     @Test
-    fun testConnectFailure_correctStatusCodeInException_4xx() = runSuspendingTest {
-        assertCorrectStatusesReported(400..418)
+    fun testConnectFailure_correctStatusCodeInException_301() = runSuspendingTest {
+        assertCorrectStatusReported(301)
+    }
+
+    // This range is broken down to avoid exceeding the test timeout and also helps to see issues with specific codes
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_302_to_305() = runSuspendingTest {
+        assertCorrectStatusesReported(302..305)
+    }
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_306_to_308() = runSuspendingTest {
+        assertCorrectStatusesReported(306..308)
     }
 
     @Test
-    fun testConnectFailure_correctStatusCodeInException_5xx() = runSuspendingTest {
-        assertCorrectStatusesReported(500..508)
+    fun testConnectFailure_correctStatusCodeInException_400() = runSuspendingTest {
+        assertCorrectStatusReported(400)
     }
 
-    private suspend fun assertCorrectStatusesReported(statusCodesToTest: IntRange) =
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_401() = runSuspendingTest {
+        assertCorrectStatusReported(401)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_402() = runSuspendingTest {
+        assertCorrectStatusReported(402)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_403() = runSuspendingTest {
+        assertCorrectStatusReported(403)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_404() = runSuspendingTest {
+        assertCorrectStatusReported(404)
+    }
+
+    // This range is broken down to avoid exceeding the test timeout and also helps to see issues with specific codes
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_405_to_408() = runSuspendingTest {
+        assertCorrectStatusesReported(405..408)
+    }
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_409_to_412() = runSuspendingTest {
+        assertCorrectStatusesReported(409..412)
+    }
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_413_to_415() = runSuspendingTest {
+        assertCorrectStatusesReported(413..415)
+    }
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_416_to_418() = runSuspendingTest {
+        assertCorrectStatusesReported(416..418)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_500() = runSuspendingTest {
+        assertCorrectStatusReported(500)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_501() = runSuspendingTest {
+        assertCorrectStatusReported(501)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_502() = runSuspendingTest {
+        assertCorrectStatusReported(502)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_503() = runSuspendingTest {
+        assertCorrectStatusReported(503)
+    }
+
+    // This range is broken down to avoid exceeding the test timeout and also helps to see issues with specific codes
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_504_to_506() = runSuspendingTest {
+        assertCorrectStatusesReported(504..506)
+    }
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_507_to_508() = runSuspendingTest {
+        assertCorrectStatusesReported(507..508)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_510() = runSuspendingTest {
+        assertCorrectStatusReported(510)
+    }
+
+    @Test
+    fun testConnectFailure_correctStatusCodeInException_511() = runSuspendingTest {
+        assertCorrectStatusReported(511)
+    }
+
+    private suspend fun assertCorrectStatusesReported(statusCodesToTest: Iterable<Int>) =
         statusCodesToTest.forEach { assertCorrectStatusReported(it) }
 
     private suspend fun assertCorrectStatusReported(statusCodeToTest: Int) {
