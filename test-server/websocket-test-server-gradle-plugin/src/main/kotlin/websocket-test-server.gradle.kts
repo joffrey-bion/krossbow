@@ -3,11 +3,7 @@ import org.hildan.krossbow.test.server.TestServer
 
 abstract class WSTestServerService : BuildService<BuildServiceParameters.None>, AutoCloseable {
 
-    val wsServer: TestServer
-
-    init {
-        wsServer = startTestServer()
-    }
+    val wsServer: TestServer = startTestServer()
 
     override fun close() {
         wsServer.stop()
@@ -16,8 +12,6 @@ abstract class WSTestServerService : BuildService<BuildServiceParameters.None>, 
 
 // TODO remove empty trailing lambda in Gradle 8.7
 val wsTestServerService = gradle.sharedServices.registerIfAbsent("wsTestServer", WSTestServerService::class) {}
-
-fun getTestServer() = wsTestServerService.get().wsServer
 
 // ensure the test server is launched for websocket tests
 tasks.withType<AbstractTestTask> {
@@ -28,7 +22,7 @@ tasks.withType<AbstractTestTask> {
 // This is why we need to use this instead of KotlinJvmTest.
 tasks.withType<Test> {
     doFirst {
-        val testServer = getTestServer()
+        val testServer = wsTestServerService.get().wsServer
         environment("TEST_SERVER_HOST", testServer.host)
         environment("TEST_SERVER_HTTP_PORT", testServer.httpPort)
         environment("TEST_SERVER_WS_PORT", testServer.wsPort)
@@ -37,7 +31,7 @@ tasks.withType<Test> {
 
 tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest> {
     doFirst {
-        val testServer = getTestServer()
+        val testServer = wsTestServerService.get().wsServer
         environment("TEST_SERVER_HOST", testServer.host)
         environment("TEST_SERVER_HTTP_PORT", testServer.httpPort)
         environment("TEST_SERVER_WS_PORT", testServer.wsPort)
@@ -46,7 +40,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 
 tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest> {
     doFirst {
-        val testServer = getTestServer()
+        val testServer = wsTestServerService.get().wsServer
         // SIMCTL_CHILD_ prefix to pass those variables from test process to the iOS/tvOS/watchOS emulators
         environment("SIMCTL_CHILD_TEST_SERVER_HOST", testServer.host)
         environment("SIMCTL_CHILD_TEST_SERVER_HTTP_PORT", testServer.httpPort)
@@ -60,7 +54,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimu
 tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest> {
     dependsOn(generateKarmaConfig)
     doFirst {
-        val testServer = getTestServer()
+        val testServer = wsTestServerService.get().wsServer
         environment("TEST_SERVER_HOST", testServer.host)
         environment("TEST_SERVER_HTTP_PORT", testServer.httpPort.toString())
         environment("TEST_SERVER_WS_PORT", testServer.wsPort.toString())
