@@ -9,7 +9,7 @@ internal actual fun extractHandshakeFailureDetails(handshakeException: Exception
 /**
  * Strips out the exception name because IllegalStateException is not useful info.
  *
- * We keep the original message because there is nothing more we can do:
+ * We keep the original message because there is nothing more we can do (especially no status code detection):
  *  * Same message for any invalid response status code:
  *    `Unable to upgrade websocket: The operation identifier is not valid. Error 4317 (0x800710dd)`
  *  * Message for unresolved host:
