@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 
 fun KotlinMultiplatformExtension.allTargets() {
     jvm()
@@ -14,49 +13,9 @@ fun KotlinMultiplatformExtension.allTargets() {
             }
         }
     }
-    nativeTargets()
-}
-
-fun KotlinMultiplatformExtension.jsWithBigTimeouts(
-    name: String = "js",
-    configure: KotlinJsTargetDsl.() -> Unit = {},
-) {
-    js(name) {
-        useCommonJs()
-        nodejsWithBigTimeout()
-        browserWithBigTimeout()
-        configure()
-    }
-}
-
-private fun KotlinJsTargetDsl.nodejsWithBigTimeout() {
-    nodejs {
-        testTask {
-            useMocha {
-                timeout = "10s"
-            }
-        }
-    }
-}
-
-fun KotlinJsTargetDsl.browserWithBigTimeout() {
-    browser {
-        testTask {
-            useMocha {
-                timeout = "10s"
-            }
-        }
-    }
-}
-
-fun KotlinTargetContainerWithPresetFunctions.nativeTargets(
-    flavor: String = "",
-    configure: KotlinNativeTarget.() -> Unit = {},
-) {
-    appleTargets(flavor, configure)
-
-    linuxX64("linuxX64$flavor", configure)
-    mingwX64("mingwX64$flavor", configure)
+    appleTargets()
+    linuxX64()
+    mingwX64()
 }
 
 fun KotlinTargetContainerWithPresetFunctions.appleTargets(

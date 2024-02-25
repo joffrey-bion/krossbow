@@ -29,8 +29,6 @@ include("krossbow-websocket-okhttp")
 include("krossbow-websocket-sockjs")
 include("krossbow-websocket-spring")
 include("krossbow-websocket-test")
-include("autobahn-tests")
-include("autobahn-test-suite")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

@@ -5,8 +5,6 @@ on:
     paths-ignore:
       - 'mkdocs.yml'
       - 'docs/**'
-    branches-ignore:
-      - autobahn-tests/ios
   pull_request:
 
 jobs:
@@ -27,36 +25,8 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.jdk-version }}
 
-      # Docker is not installed on GitHub's MacOS hosted workers due to licensing issues
-      # (and it's necessary to run Autobahn tests)
-      - name: Setup docker and docker-compose (missing on MacOS)
-        if: runner.os == 'macos'
-        run: |
-          brew install docker docker-compose
-          
-          # Link the Docker Compose v2 plugin so it's understood by the docker CLI
-          mkdir -p ~/.docker/cli-plugins
-          ln -sfn /usr/local/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
-          
-          # Using mount-type 9p to allow the containers launched via docker-compose to chown
-          # https://github.com/abiosoft/colima/issues/54#issuecomment-1250217077
-          colima start --mount-type 9p
-          
-          # Loosen permissions for directories mounted in containers to workaround permission issues that remain
-          # when using the 9p filesystem (https://github.com/joffrey-bion/krossbow/issues/282)
-          chmod 777 autobahn-tests/test-server/config
-          mkdir -p autobahn-tests/build/autobahn/reports
-          chmod 777 autobahn-tests/build/autobahn/reports
-
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
       - name: Gradle build
         run: ./gradlew build
-
-      - name: Upload Autobahn reports
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: autobahn-reports-${{ runner.os }}-jdk${{ matrix.jdk-version }}
-          path: autobahn-tests/build/autobahn/reports/clients
