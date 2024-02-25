@@ -27,9 +27,12 @@ fun startTestServer(): TestServer = runBlocking {
         override val httpPort: Int get() = httpPort
 
         override fun stop() {
+            println("Stopping test WS server...")
             wsServer.stop()
+            println("Stopping test HTTP server...")
             // stop with a delay>0 doesn't stop immediately if there is no current request (it waits the full delay)
             httpServer.stop(0)
+            println("Test servers stopped")
         }
     }
 }
