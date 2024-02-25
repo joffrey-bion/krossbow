@@ -11,11 +11,12 @@ internal actual fun extractHandshakeFailureDetails(handshakeException: Exception
     // we use regex instead of eval() for security reasons
     val actualMessage = jsonExceptionMessageRegex.matchEntire(json)?.groupValues?.get(1)
         ?: return HandshakeFailureDetails(statusCode = null, additionalInfo = json)
+
     val match = unexpectedServerResponseMessageRegex.matchEntire(actualMessage)
-    val statusCode = match?.groupValues?.get(1)?.toInt()
-    return if (statusCode == null) {
-        HandshakeFailureDetails(statusCode = null, additionalInfo = actualMessage)
-    } else {
-        HandshakeFailureDetails(statusCode = statusCode, additionalInfo = actualMessage)
-    }
+        ?: return HandshakeFailureDetails(statusCode = null, additionalInfo = actualMessage)
+
+    return HandshakeFailureDetails(
+        statusCode = match.groupValues[1].toInt(),
+        additionalInfo = actualMessage,
+    )
 }

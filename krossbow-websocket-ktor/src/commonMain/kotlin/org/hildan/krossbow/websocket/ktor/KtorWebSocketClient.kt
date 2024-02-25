@@ -14,7 +14,6 @@ import kotlinx.io.bytestring.unsafe.*
 import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.WebSocketException
-import io.ktor.client.plugins.websocket.WebSocketException as KtorWebSocketException
 
 class KtorWebSocketClient(
     private val httpClient: HttpClient = HttpClient { install(WebSockets) }
@@ -36,11 +35,8 @@ class KtorWebSocketClient(
             throw e // this is an upstream exception that we don't want to wrap here
         } catch (e: ResponseException) {
             throw WebSocketConnectionException(url, httpStatusCode = e.response.status.value, cause = e)
-        } catch (e: KtorWebSocketException) {
-            val (statusCode, additionalInfo) = extractKtorHandshakeFailureDetails(e)
-            throw WebSocketConnectionException(url, httpStatusCode = statusCode, additionalInfo = additionalInfo, cause = e)
         } catch (e: Exception) {
-            val (statusCode, additionalInfo) = extractHandshakeFailureDetails(e)
+            val (statusCode, additionalInfo) = extractKtorHandshakeFailureDetails(e)
             throw WebSocketConnectionException(url, httpStatusCode = statusCode, additionalInfo = additionalInfo, cause = e)
         }
     }
