@@ -44,7 +44,9 @@ private suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expe
             .catch { ex -> fail("Expected $frameType frame ($frameDescription), but the flow failed with $ex") }
             .firstOrNull() ?: fail("Expected $frameType frame ($frameDescription), but the flow was complete")
     }
-    assertNotNull(frame, "Timed out while waiting for $frameType frame ($frameDescription)")
+    if (frame == null) {
+        fail("Timed out while waiting for $frameType frame ($frameDescription)")
+    }
     assertIs<T>(frame, "Should have received $frameType frame ($frameDescription), but got $frame")
     return frame
 }
