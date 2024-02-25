@@ -8,15 +8,15 @@ actual fun getTestServerConfig(): TestServerConfig = when (currentJsPlatform()) 
 // This variable is defined using the webpack DefinePlugin in karma.config.d/<somename>.js
 // which is itself generated from Gradle in the test-server plugin
 private fun getTestServerConfigBrowser(): TestServerConfig =
-    js("testServerConfig").unsafeCast<AutobahnConfigJson>().toCommonConfig()
+    js("testServerConfig").unsafeCast<TestServerConfigJson>().toCommonConfig()
 
-private external interface AutobahnConfigJson {
+private external interface TestServerConfigJson {
     val host: String
     val wsPort: Int
     val httpPort: Int
 }
 
-private fun AutobahnConfigJson.toCommonConfig() = TestServerConfig(
+private fun TestServerConfigJson.toCommonConfig() = TestServerConfig(
     host = host,
     wsPort = wsPort,
     httpPort = httpPort,
