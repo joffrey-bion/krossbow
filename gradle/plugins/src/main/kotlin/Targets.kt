@@ -8,7 +8,7 @@ fun KotlinMultiplatformExtension.allTargets() {
         nodejs {
             testTask {
                 useMocha {
-                    timeout = "10s"
+                    timeout = "20s"
                 }
             }
         }

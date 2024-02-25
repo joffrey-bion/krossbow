@@ -11,6 +11,6 @@ expect annotation class IgnoreOnNative()
 expect annotation class IgnoreOnJS()
 
 expect fun runSuspendingTest(
-    timeoutMillis: Long = 20_000,
+    timeoutMillis: Long = 15_000,
     block: suspend CoroutineScope.() -> Unit,
 )
