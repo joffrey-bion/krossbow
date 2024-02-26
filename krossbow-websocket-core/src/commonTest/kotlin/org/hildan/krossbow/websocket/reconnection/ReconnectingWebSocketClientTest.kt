@@ -11,9 +11,7 @@ import org.hildan.krossbow.websocket.test.*
 import kotlin.test.*
 import kotlin.time.Duration.Companion.milliseconds
 
-// limitations on Kotlin/Native multithreaded coroutines prevent the reconnection wrapper from working properly
-@IgnoreOnNative
-internal class ReconnectingWebSocketClientTest {
+class ReconnectingWebSocketClientTest {
 
     @Test
     fun shouldConnectSuccessfully() = runSuspendingTest {
