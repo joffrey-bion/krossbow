@@ -73,7 +73,7 @@ private class KtorWebSocketConnectionAdapter(
                 }
             }
             .catch { th ->
-                throw WebSocketException("error in Ktor's websocket: ${th.message}", cause = th)
+                throw WebSocketException("error in Ktor's websocket: $th", cause = th)
             }
 
     private suspend fun buildCloseFrame(): WebSocketFrame.Close? = wsSession.closeReason.await()?.let { reason ->
