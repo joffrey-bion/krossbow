@@ -188,11 +188,13 @@ abstract class WebSocketClientTestSuite(
     fun testEchoText() = runSuspendingTest {
         val session = wsClient.connect(testServerConfig.wsUrl)
 
-        session.sendText("hello")
-        val helloResponse = session.expectTextFrame("hello frame")
-        assertEquals("hello", helloResponse.text)
-
-        session.close()
+        try {
+            session.sendText("hello")
+            val helloResponse = session.expectTextFrame("hello frame")
+            assertEquals("hello", helloResponse.text)
+        } finally {
+            session.close()
+        }
 
         session.expectCloseFrame("after echo text")
         session.expectNoMoreFrames("after echo text CLOSE frame")
@@ -202,12 +204,14 @@ abstract class WebSocketClientTestSuite(
     fun testEchoBinary() = runSuspendingTest {
         val session = wsClient.connect(testServerConfig.wsUrl)
 
-        val fortyTwos = ByteString(42, 42, 42)
-        session.sendBinary(fortyTwos)
-        val fortyTwosResponse = session.expectBinaryFrame("3 binary 42s")
-        assertEquals(fortyTwos, fortyTwosResponse.bytes)
-
-        session.close()
+        try {
+            val fortyTwos = ByteString(42, 42, 42)
+            session.sendBinary(fortyTwos)
+            val fortyTwosResponse = session.expectBinaryFrame("3 binary 42s")
+            assertEquals(fortyTwos, fortyTwosResponse.bytes)
+        } finally {
+            session.close()
+        }
 
         session.expectCloseFrame("after echo binary")
         session.expectNoMoreFrames("after echo binary CLOSE frame")
