@@ -12,5 +12,6 @@ dependencyResolutionManagement {
     }
 }
 
+//include("websocket-test-api")
 include("websocket-test-server")
 include("websocket-test-server-gradle-plugin")
