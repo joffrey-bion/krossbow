@@ -1,6 +1,5 @@
 package org.hildan.krossbow.io
 
-import kotlinx.io.*
 import kotlinx.io.bytestring.*
 import kotlinx.io.bytestring.unsafe.*
 
@@ -13,18 +12,6 @@ import kotlinx.io.bytestring.unsafe.*
 @RequiresOptIn("This is an internal Krossbow API for IO conversions and may be removed at any time")
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 annotation class InternalKrossbowIoApi
-
-/**
- * Creates a new [Source] containing the data copied from this [ByteString].
- */
-@InternalKrossbowIoApi
-fun ByteString.toSource(): Source = Buffer().apply { write(this@toSource) }
-
-/**
- * Creates a new [Source] containing the data copied from this [String].
- */
-@InternalKrossbowIoApi
-fun String.toSource(): Source = Buffer().apply { writeString(this@toSource) }
 
 /**
  * Returns the backing [ByteArray] of this [ByteString], without copying data.

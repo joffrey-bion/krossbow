@@ -10,7 +10,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(libs.kotlinx.io.core)
+                api(libs.kotlinx.io.bytestring)
             }
         }
     }

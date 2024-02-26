@@ -13,6 +13,9 @@ internal fun ByteString.decodeToStompFrame() = toSource().readStompFrame(isBinar
 
 internal fun String.decodeToStompFrame() = toSource().readStompFrame(isBinary = false)
 
+private fun ByteString.toSource(): Source = Buffer().apply { write(this@toSource) }
+private fun String.toSource(): Source = Buffer().apply { writeString(this@toSource) }
+
 private fun Source.readStompFrame(isBinary: Boolean): StompFrame {
     try {
         val command = readStompCommand()

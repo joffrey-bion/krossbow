@@ -13,6 +13,7 @@ dependencies {
     api(libs.spring.websocket)
 
     implementation(projects.krossbowIo)
+    implementation(libs.kotlinx.io.core)
 
     testImplementation(kotlin("test"))
     testImplementation(projects.krossbowWebsocketTest)
