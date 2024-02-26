@@ -19,7 +19,6 @@ kotlin {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 api(libs.kotlinx.coroutines.core)
-                implementation(libs.kotlinx.io.core)
                 implementation(projects.krossbowIo)
             }
         }
@@ -27,6 +26,11 @@ kotlin {
             dependencies {
                 implementation(projects.krossbowWebsocketTest)
                 implementation(kotlin("test"))
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                implementation(libs.kotlinx.io.core)
             }
         }
     }
