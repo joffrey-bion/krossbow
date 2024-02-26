@@ -3,6 +3,7 @@ package org.hildan.krossbow.websocket.test
 import kotlinx.io.bytestring.*
 import org.hildan.krossbow.websocket.*
 import kotlin.test.*
+import kotlin.time.Duration.Companion.seconds
 
 abstract class WebSocketClientTestSuite(
     val supportsStatusCodes: Boolean = true,
@@ -50,11 +51,11 @@ abstract class WebSocketClientTestSuite(
 
     // This range is broken down to avoid exceeding the test timeout and also helps to see issues with specific codes
     @Test
-    fun testConnectFailure_correctStatusCodeInException_302_to_305() = runSuspendingTest {
+    fun testConnectFailure_correctStatusCodeInException_302_to_305() = runSuspendingTest(timeout = 30.seconds) {
         assertCorrectStatusesReported(302..305)
     }
     @Test
-    fun testConnectFailure_correctStatusCodeInException_306_to_308() = runSuspendingTest {
+    fun testConnectFailure_correctStatusCodeInException_306_to_308() = runSuspendingTest(timeout = 30.seconds) {
         assertCorrectStatusesReported(306..308)
     }
 
@@ -85,19 +86,19 @@ abstract class WebSocketClientTestSuite(
 
     // This range is broken down to avoid exceeding the test timeout and also helps to see issues with specific codes
     @Test
-    fun testConnectFailure_correctStatusCodeInException_405_to_408() = runSuspendingTest {
+    fun testConnectFailure_correctStatusCodeInException_405_to_408() = runSuspendingTest(timeout = 30.seconds) {
         assertCorrectStatusesReported(405..408)
     }
     @Test
-    fun testConnectFailure_correctStatusCodeInException_409_to_412() = runSuspendingTest {
+    fun testConnectFailure_correctStatusCodeInException_409_to_412() = runSuspendingTest(timeout = 30.seconds) {
         assertCorrectStatusesReported(409..412)
     }
     @Test
-    fun testConnectFailure_correctStatusCodeInException_413_to_415() = runSuspendingTest {
+    fun testConnectFailure_correctStatusCodeInException_413_to_415() = runSuspendingTest(timeout = 30.seconds) {
         assertCorrectStatusesReported(413..415)
     }
     @Test
-    fun testConnectFailure_correctStatusCodeInException_416_to_418() = runSuspendingTest {
+    fun testConnectFailure_correctStatusCodeInException_416_to_418() = runSuspendingTest(timeout = 30.seconds) {
         assertCorrectStatusesReported(416..418)
     }
 
@@ -123,11 +124,11 @@ abstract class WebSocketClientTestSuite(
 
     // This range is broken down to avoid exceeding the test timeout and also helps to see issues with specific codes
     @Test
-    fun testConnectFailure_correctStatusCodeInException_504_to_506() = runSuspendingTest {
+    fun testConnectFailure_correctStatusCodeInException_504_to_506() = runSuspendingTest(timeout = 30.seconds) {
         assertCorrectStatusesReported(504..506)
     }
     @Test
-    fun testConnectFailure_correctStatusCodeInException_507_to_508() = runSuspendingTest {
+    fun testConnectFailure_correctStatusCodeInException_507_to_508() = runSuspendingTest(timeout = 30.seconds) {
         assertCorrectStatusesReported(507..508)
     }
 
