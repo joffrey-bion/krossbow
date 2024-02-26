@@ -7,25 +7,6 @@ import org.java_websocket.server.*
 import java.net.*
 import java.nio.*
 
-private val StandardHandshakeRequestHeaders = setOf(
-    "Accept",
-    "Accept-Charset",
-    "Accept-Encoding",
-    "Accept-Language", // sent by Apple client
-    "Cache-Control", // sent by browser WS
-    "Connection",
-    "Content-Length",
-    "Host",
-    "Origin",
-    "Pragma", // sent by browser WS
-    "Sec-WebSocket-Key",
-    "Sec-WebSocket-Protocol",
-    "Sec-WebSocket-Extensions",
-    "Sec-WebSocket-Version",
-    "Upgrade",
-    "User-Agent",
-)
-
 internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(port)) {
 
     @Volatile
@@ -34,12 +15,12 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAd
     override fun onStart() {
     }
 
-    override fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
+    override fun onOpen(conn: WebSocket?, handshake: ClientHandshake) {
         openedSocket.complete(conn ?: error("onOpen got a null WebSocket"))
-        val headerNames = handshake?.iterateHttpFields()?.asSequence()?.toSet() ?: emptySet()
-        val customHeaders = (headerNames - StandardHandshakeRequestHeaders).sorted()
-        if (customHeaders.isNotEmpty()) {
-            conn.send("custom-headers:${customHeaders.joinToString { "$it=${handshake?.getFieldValue(it)}" }}")
+
+        if (handshake.resourceDescriptor == "/echoHeaders") {
+            val headerNames = handshake.iterateHttpFields().asSequence().toList()
+            conn.send(headerNames.joinToString("\n") { "$it=${handshake.getFieldValue(it)}" })
         }
     }
 

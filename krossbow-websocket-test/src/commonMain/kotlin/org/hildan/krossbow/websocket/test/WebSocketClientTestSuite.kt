@@ -165,14 +165,20 @@ abstract class WebSocketClientTestSuite(
     fun testHandshakeHeaders() = runSuspendingTest {
         val connectWithTestHeaders = suspend {
             wsClient.connect(
-                url = testServerConfig.wsUrl,
+                url = "${testServerConfig.wsUrl}/echoHeaders",
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
         }
         if (supportsCustomHeaders) {
             val session = connectWithTestHeaders()
-            val header = session.expectTextFrame("header info frame")
-            assertEquals("custom-headers:My-Header-1=my-value-1, My-Header-2=my-value-2", header.text)
+            try {
+                val echoedHeadersFrame = session.expectTextFrame("header info frame")
+                val headers = echoedHeadersFrame.text.lines()
+                assertContains(headers, "My-Header-1=my-value-1")
+                assertContains(headers, "My-Header-2=my-value-2")
+            } finally {
+                session.close()
+            }
         } else {
             assertFailsWith<IllegalArgumentException> { connectWithTestHeaders() }
         }
