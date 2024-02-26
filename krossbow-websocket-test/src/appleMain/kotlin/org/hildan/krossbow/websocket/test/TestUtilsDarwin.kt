@@ -6,10 +6,9 @@ import platform.Foundation.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.test.fail
 import kotlin.time.*
-import kotlin.time.Duration.Companion.milliseconds
 
-actual fun runSuspendingTest(timeoutMillis: Long, block: suspend CoroutineScope.() -> Unit) =
-    runBlockingButRunningMainLoop(timeoutMillis.milliseconds) { block() }
+actual fun runSuspendingTest(timeout: Duration, block: suspend CoroutineScope.() -> Unit) =
+    runBlockingButRunningMainLoop(timeout) { block() }
 
 /**
  * Runs a new coroutine and blocks the current thread interruptibly until its completion.

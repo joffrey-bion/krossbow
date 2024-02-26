@@ -1,6 +1,8 @@
 package org.hildan.krossbow.websocket.test
 
 import kotlinx.coroutines.CoroutineScope
+import kotlin.time.*
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMultiplatform::class)
 @OptionalExpectation
@@ -11,6 +13,6 @@ expect annotation class IgnoreOnNative()
 expect annotation class IgnoreOnJS()
 
 expect fun runSuspendingTest(
-    timeoutMillis: Long = 15_000,
+    timeout: Duration = 15.seconds,
     block: suspend CoroutineScope.() -> Unit,
 )
