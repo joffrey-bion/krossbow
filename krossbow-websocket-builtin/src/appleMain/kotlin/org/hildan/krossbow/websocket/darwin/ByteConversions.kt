@@ -1,22 +1,21 @@
-package org.hildan.krossbow.io
+package org.hildan.krossbow.websocket.darwin
 
 import kotlinx.cinterop.*
 import kotlinx.io.bytestring.*
 import kotlinx.io.bytestring.unsafe.*
+import org.hildan.krossbow.io.*
 import platform.Foundation.*
 import platform.posix.*
 
 /**
  * Creates a new [NSData] containing the data copied from this [ByteString].
  */
-@InternalKrossbowIoApi
 @OptIn(UnsafeByteStringApi::class)
-fun ByteString.toNSData(): NSData = unsafeBackingByteArray().toNSData()
+internal fun ByteString.toNSData(): NSData = unsafeBackingByteArray().toNSData()
 
 /**
  * Creates a new [NSData] containing the data copied from this [ByteArray].
  */
-@InternalKrossbowIoApi
 @OptIn(ExperimentalForeignApi::class, UnsafeNumber::class, BetaInteropApi::class)
 private fun ByteArray.toNSData(): NSData = memScoped {
     NSData.create(bytes = allocArrayOf(this@toNSData), length = this@toNSData.size.convert())
@@ -25,14 +24,12 @@ private fun ByteArray.toNSData(): NSData = memScoped {
 /**
  * Creates a new [ByteString] containing the data copied from this [NSData].
  */
-@InternalKrossbowIoApi
 @OptIn(UnsafeByteStringApi::class)
-fun NSData.toByteString(): ByteString = toByteArray().asByteString()
+internal fun NSData.toByteString(): ByteString = toByteArray().asByteString()
 
 /**
  * Creates a new [ByteArray] containing the data copied from this [NSData].
  */
-@InternalKrossbowIoApi
 @OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
 private fun NSData.toByteArray(): ByteArray {
     // length=0 breaks memcpy for some reason (ArrayIndexOutOfBoundsException)

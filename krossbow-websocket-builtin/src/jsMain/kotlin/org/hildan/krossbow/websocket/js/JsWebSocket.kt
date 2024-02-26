@@ -3,7 +3,6 @@ package org.hildan.krossbow.websocket.js
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.io.bytestring.*
-import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import org.khronos.webgl.*
 import org.w3c.dom.*
