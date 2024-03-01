@@ -173,7 +173,8 @@ abstract class WebSocketClientTestSuite(
         if (supportsCustomHeaders) {
             val session = connectWithTestHeaders()
             try {
-                val echoedHeadersFrame = session.expectTextFrame("header info frame")
+                // for some reason, this can be pretty long with the Ktor/JS client in nodeJS tests on macOS
+                val echoedHeadersFrame = session.expectTextFrame("header info frame", 30.seconds)
                 val headers = echoedHeadersFrame.text.lines()
                 assertContains(headers, "My-Header-1=my-value-1")
                 assertContains(headers, "My-Header-2=my-value-2")
