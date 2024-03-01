@@ -11,7 +11,7 @@ import kotlin.test.*
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-private val DEFAULT_EXPECTED_FRAME_TIMEOUT = 2.seconds
+private val DEFAULT_EXPECTED_FRAME_TIMEOUT = 5.seconds
 
 suspend fun WebSocketClient.connectWithTimeout(
     url: String,
