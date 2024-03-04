@@ -1,3 +1,5 @@
+@file:OptIn(InternalKrossbowIoApi::class)
+
 package org.hildan.krossbow.websocket.okhttp
 
 import kotlinx.coroutines.*

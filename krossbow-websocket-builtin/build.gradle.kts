@@ -15,6 +15,9 @@ kotlin {
     appleTargets()
 
     sourceSets {
+        all {
+            languageSettings.optIn("org.hildan.krossbow.io.InternalKrossbowIoApi")
+        }
         val commonMain by getting {
             dependencies {
                 api(projects.krossbowWebsocketCore)

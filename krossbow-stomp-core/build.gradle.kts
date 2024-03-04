@@ -8,6 +8,12 @@ description = "A Kotlin multiplatform STOMP client based on a generic web socket
 kotlin {
     allTargets()
     sourceSets {
+        all {
+            compilerOptions {
+                freeCompilerArgs.add("-Xexpect-actual-classes") // for charsets
+            }
+            languageSettings.optIn("org.hildan.krossbow.io.InternalKrossbowIoApi")
+        }
         val commonMain by getting {
             dependencies {
                 api(projects.krossbowWebsocketCore)

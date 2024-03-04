@@ -1,4 +1,4 @@
-@file:Suppress("removal") // for JettyWebSocketClient
+@file:OptIn(InternalKrossbowIoApi::class)
 
 package org.hildan.krossbow.websocket.spring
 

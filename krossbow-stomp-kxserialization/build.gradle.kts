@@ -9,6 +9,9 @@ description = "An extension of Krossbow STOMP client using Kotlinx Serialization
 kotlin {
     allTargets()
     sourceSets {
+        all {
+            languageSettings.optIn("org.hildan.krossbow.io.InternalKrossbowIoApi")
+        }
         val commonMain by getting {
             dependencies {
                 api(projects.krossbowStompCore)
