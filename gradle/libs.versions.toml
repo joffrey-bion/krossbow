@@ -20,7 +20,7 @@ vyarus-github-info = { id = "ru.vyarus.github-info", version.ref = "vyarus-githu
 avast-docker-compose-plugin = "0.17.6"
 binary-compatibility-validator-plugin = "0.14.0"
 complete-kotlin-plugin = "1.1.0"
-dokka = "1.9.10"
+dokka = "1.9.20"
 hildan-kotlin-publish-plugin = "1.5.0"
 hildan-github-changelog-plugin = "2.2.0"
 jackson = "2.16.1"
