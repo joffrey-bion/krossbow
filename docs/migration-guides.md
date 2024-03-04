@@ -1,5 +1,27 @@
 Here are some details about how to migrate from one major version to another.
 
+## From 5.x to 6.x
+
+### Switch to `kotlinx-io` and the `ByteString` type
+
+The `kotlinx-io` library has been revamped, with an implementation that closely matches Okio now.
+Krossbow has now internally switched from Okio to `kotlinx-io` as a result, but this part should have no visible effect
+for the consumers of the library.
+
+However, since `kotlinx-io` is a somewhat "standard" extension library for Kotlin, Krossbow can now more legitimately
+use its `ByteString` type in public APIs that handled binary data (for both web socket and STOMP sessions).
+This type represents immutable sequences of bytes, which is more convenient API-wise than byte arrays.
+
+You will have to switch to these types if you used binary-based APIs.
+
+### Deprecations cleanup
+
+This is a major version, and therefore we allowed ourselves some cleanup by removing a bunch of deprecated APIs.
+If you see unresolved references and are not sure how to fix them, please switch back to the Krossbow version 5 and fix
+deprecation warnings by following the corresponding instructions.
+
+Please check the [changelog](https://github.com/joffrey-bion/krossbow/blob/main/CHANGELOG.md) for the list of removals.
+
 ## From 4.x to 5.x
 
 ### End of Ktor 1.x support
