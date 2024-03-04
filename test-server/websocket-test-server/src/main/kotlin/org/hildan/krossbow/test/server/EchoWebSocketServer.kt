@@ -26,6 +26,7 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAd
             val headersData = headerNames.joinToString("\n") { "$it=${handshake.getFieldValue(it)}" }
             println("Sending headers frame...")
             conn.send(headersData)
+            println("Headers frame sent!")
         } else {
             println("Not sending headers frame, resourceDescriptor=${handshake.resourceDescriptor}")
         }
