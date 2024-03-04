@@ -5,8 +5,3 @@ actual fun currentPlatform(): Platform = currentJsPlatform()
 fun currentJsPlatform(): Platform.Js = if (isBrowser()) Platform.Js.Browser else Platform.Js.NodeJs
 
 private fun isBrowser() = js("typeof window !== 'undefined' && typeof window.document !== 'undefined'") as Boolean
-
-fun environment() = when(currentJsPlatform()) {
-    Platform.Js.Browser -> "browser"
-    Platform.Js.NodeJs -> "nodejs"
-}
