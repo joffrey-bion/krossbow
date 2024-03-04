@@ -15,3 +15,7 @@ kotlin {
         }
     }
 }
+
+apiValidation {
+    nonPublicMarkers += listOf("org.hildan.krossbow.io.InternalKrossbowIoApi")
+}
