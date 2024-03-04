@@ -13,6 +13,7 @@ kotlin {
             dependencies {
                 api(projects.krossbowStompCore)
                 api(libs.kotlinx.serialization.core)
+                implementation(projects.krossbowIo)
             }
         }
     }

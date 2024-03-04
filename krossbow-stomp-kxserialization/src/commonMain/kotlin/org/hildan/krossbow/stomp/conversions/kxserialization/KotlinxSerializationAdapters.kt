@@ -2,9 +2,10 @@ package org.hildan.krossbow.stomp.conversions.kxserialization
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.io.bytestring.*
+import kotlinx.io.bytestring.unsafe.*
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.SerializersModule
+import org.hildan.krossbow.io.*
 import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.frame.FrameBody
@@ -82,11 +83,13 @@ private class StompSessionWithBinaryConversions(
     mediaType: String,
 ) : BaseStompSessionWithConversions(session, format.serializersModule, mediaType) {
 
+    @OptIn(UnsafeByteStringApi::class)
     override fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>) =
-        body?.let { FrameBody.Binary(ByteString(format.encodeToByteArray(serializer, it))) }
+        body?.let { FrameBody.Binary(format.encodeToByteArray(serializer, it).asByteString()) }
 
+    @OptIn(UnsafeByteStringApi::class)
     override fun <T : Any> deserializeOrNull(frame: StompFrame.Message, deserializer: DeserializationStrategy<T>) =
-        frame.body?.bytes?.let { format.decodeFromByteArray(deserializer, it.toByteArray()) }
+        frame.body?.bytes?.let { format.decodeFromByteArray(deserializer, it.unsafeBackingByteArray()) }
 }
 
 private class StompSessionWithTextConversions(
