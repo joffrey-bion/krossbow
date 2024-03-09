@@ -38,10 +38,10 @@ kotlin {
         val nonAppleNativeMain by creating {
             dependsOn(nativeMain)
         }
-        val linuxX64Main by getting {
+        val linuxMain by getting {
             dependsOn(nonAppleNativeMain)
         }
-        val mingwX64Main by getting {
+        val mingwMain by getting {
             dependsOn(nonAppleNativeMain)
         }
     }
