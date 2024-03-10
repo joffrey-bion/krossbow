@@ -19,22 +19,19 @@ fun KotlinMultiplatformExtension.allTargets() {
     mingwX64()
 }
 
-fun KotlinTargetContainerWithPresetFunctions.appleTargets(
-    flavor: String = "",
-    configure: KotlinNativeTarget.() -> Unit = {},
-) {
-    iosArm64("iosArm64$flavor", configure)
-    iosSimulatorArm64("iosSimulatorArm64$flavor", configure)
-    iosX64("iosX64$flavor", configure)
+fun KotlinTargetContainerWithPresetFunctions.appleTargets() {
+    iosArm64()
+    iosSimulatorArm64()
+    iosX64()
 
-    tvosArm64("tvosArm64$flavor", configure)
-    tvosSimulatorArm64("tvosSimulatorArm64$flavor", configure)
-    tvosX64("tvosX64$flavor", configure)
+    tvosArm64()
+    tvosSimulatorArm64()
+    tvosX64()
 
-    watchosArm64("watchosArm64$flavor", configure)
-    watchosSimulatorArm64("watchosSimulatorArm64$flavor", configure)
-    watchosX64("watchosX64$flavor", configure)
+    watchosArm64()
+    watchosSimulatorArm64()
+    watchosX64()
 
-    macosArm64("macosArm64$flavor", configure)
-    macosX64("macosX64$flavor", configure)
+    macosArm64()
+    macosX64()
 }
