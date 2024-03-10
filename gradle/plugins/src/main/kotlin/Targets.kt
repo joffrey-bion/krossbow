@@ -1,7 +1,17 @@
+import org.jetbrains.kotlin.gradle.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
+@OptIn(ExperimentalWasmDsl::class)
 fun KotlinMultiplatformExtension.allTargets() {
     ktorTargets()
+
+    wasmJs {
+        browser()
+        nodejs()
+    }
+    wasmWasi {
+        nodejs()
+    }
 }
 
 fun KotlinMultiplatformExtension.ktorTargets() {

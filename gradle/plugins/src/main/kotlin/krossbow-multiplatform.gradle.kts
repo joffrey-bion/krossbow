@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.*
 
 plugins {
     kotlin("multiplatform")
@@ -7,10 +7,16 @@ plugins {
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     applyDefaultHierarchyTemplate {
-        group("native") {
-            group("unix") {
-                withLinux()
-                withApple()
+        common {
+            group("native") {
+                group("unix") {
+                    withLinux()
+                    withApple()
+                }
+            }
+            group("wasm") {
+                withWasmJs()
+                withWasmWasi()
             }
         }
     }
