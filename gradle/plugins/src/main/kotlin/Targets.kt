@@ -1,7 +1,10 @@
 import org.jetbrains.kotlin.gradle.dsl.*
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 fun KotlinMultiplatformExtension.allTargets() {
+    ktorTargets()
+}
+
+fun KotlinMultiplatformExtension.ktorTargets() {
     jvm()
     js {
         browser()
