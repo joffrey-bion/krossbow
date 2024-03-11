@@ -38,7 +38,7 @@ slf4j = "2.0.12"
 spring = "6.1.4"
 tyrus = "2.1.5"
 uuid = "0.8.2"
-vyarus-github-info-plugin = "1.5.0"
+vyarus-github-info-plugin = "2.0.0"
 
 npm-sockjs-client = "1.6.1"
 
