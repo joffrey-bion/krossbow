@@ -72,7 +72,6 @@ private class ReconnectingWebSocketClient(
     }
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 private class WebSocketConnectionProxy(
     private val baseClient: WebSocketClient,
     private val reconnectConfig: ReconnectConfig,
@@ -80,7 +79,7 @@ private class WebSocketConnectionProxy(
     private var currentConnection: WebSocketConnection,
 ) : WebSocketConnection {
 
-    private val scope = CoroutineScope(CoroutineName("krossbow-reconnection-watcher"))
+    private val scope = CoroutineScope(CoroutineName("krossbow-reconnection-watcher") + reconnectConfig.coroutineContext)
 
     override val url: String
         get() = currentConnection.url

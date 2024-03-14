@@ -1,6 +1,7 @@
 package org.hildan.krossbow.websocket.reconnection
 
 import org.hildan.krossbow.websocket.WebSocketConnection
+import kotlin.coroutines.*
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -30,6 +31,10 @@ data class ReconnectConfig(
      * Defines the time to wait before each reconnection attempt.
      */
     val delayStrategy: RetryDelayStrategy = DEFAULT_DELAY_STRATEGY,
+    /**
+     * An additional coroutine context for the coroutine that handles reconnections.
+     */
+    val coroutineContext: CoroutineContext = EmptyCoroutineContext,
     /**
      * A predicate to decide whether the web socket should be reconnected when the given `exception` occur.
      * The `attempt` parameter is the index of the current reconnection attempt in a series of retries.
@@ -70,6 +75,11 @@ class ReconnectConfigBuilder internal constructor() {
      */
     var delayStrategy: RetryDelayStrategy = DEFAULT_DELAY_STRATEGY
 
+    /**
+     * An additional coroutine context for the coroutine that handles reconnections.
+     */
+    var coroutineContext: CoroutineContext = EmptyCoroutineContext
+
     private var shouldReconnect: suspend (Throwable, Int) -> Boolean = { _, _ -> true }
 
     private var afterReconnect: suspend (WebSocketConnection) -> Unit = {}
@@ -103,6 +113,6 @@ class ReconnectConfigBuilder internal constructor() {
         afterReconnect = body
     }
 
-    internal fun build() = ReconnectConfig(maxAttempts, delayStrategy, shouldReconnect, afterReconnect)
+    internal fun build() = ReconnectConfig(maxAttempts, delayStrategy, coroutineContext, shouldReconnect, afterReconnect)
 }
 
