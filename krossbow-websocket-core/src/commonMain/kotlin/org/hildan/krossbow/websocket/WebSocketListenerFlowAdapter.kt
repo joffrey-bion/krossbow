@@ -116,17 +116,25 @@ class WebSocketListenerFlowAdapter(
      *
      * This adapter cannot be used anymore after a call to this method; calling any method may throw an exception.
      */
-    @OptIn(ExperimentalCoroutinesApi::class) // for isClosedForSend
+    @OptIn(DelicateCoroutinesApi::class)
     suspend fun onClose(code: Int, reason: String?) {
         // At least with Spring's Jetty implementation, onClose may be called after onError
         // (for instance, if frame parsing fails with unknown opcode).
-        // This means that this send(Close) can fail because the channel is already failed.
+        // In such cases, we don't need to send a Close frame (and we can't) as the channel is already closed or failed.
         if (frames.isClosedForSend) {
             return
         }
-        frames.send(WebSocketFrame.Close(code, reason))
-        frames.close()
-        partialBinaryMessageHandler.close()
+        try {
+            frames.send(WebSocketFrame.Close(code, reason))
+            frames.close()
+        } catch (e: ClosedSendChannelException) {
+            // If the channel was concurrently closed (despite the isClosedForSend check, there can be a race),
+            // we don't need to send the Close frame because it has already been done or the channel is failed.
+            // Therefore, it's ok to ignore this exception.
+            return
+        } finally {
+            partialBinaryMessageHandler.close()
+        }
     }
 
     /**
