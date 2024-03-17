@@ -13,12 +13,6 @@ import kotlin.time.Duration.Companion.seconds
 
 private val DEFAULT_EXPECTED_FRAME_TIMEOUT = 5.seconds
 
-suspend fun WebSocketClient.connectWithTimeout(
-    url: String,
-    timeout: Duration = 8.seconds,
-) = withTimeoutOrNull(timeout) { connect(url) }
-    ?: fail("Timed out after $timeout while connecting to $url")
-
 suspend fun WebSocketConnection.expectTextFrame(
     frameDescription: String,
     timeout: Duration = DEFAULT_EXPECTED_FRAME_TIMEOUT,
