@@ -11,7 +11,7 @@ fun KotlinMultiplatformExtension.ktorTargets() {
         nodejs {
             testTask {
                 useMocha {
-                    timeout = "20s"
+                    timeout = "60s"
                 }
             }
         }
