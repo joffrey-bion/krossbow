@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withTimeoutOrNull
-import org.hildan.krossbow.websocket.WebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection
 import org.hildan.krossbow.websocket.WebSocketFrame
 import kotlin.test.*
@@ -30,7 +29,7 @@ suspend fun WebSocketConnection.expectCloseFrame(
 
 private suspend inline fun <reified T : WebSocketFrame> WebSocketConnection.expectFrame(
     frameDescription: String,
-    timeout: Duration = DEFAULT_EXPECTED_FRAME_TIMEOUT,
+    timeout: Duration,
 ): T {
     val frameType = T::class.simpleName
     val frame = withTimeoutOrNull(timeout) {
