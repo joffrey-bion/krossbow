@@ -11,6 +11,12 @@ package org.hildan.krossbow.websocket
 interface WebSocketClient {
 
     /**
+     * Whether this client supports sending custom headers in the handshake via the [connect] method.
+     * When this is `false`, calling [connect] with a non-empty headers map throws an [IllegalArgumentException].
+     */
+    val supportsCustomHeaders: Boolean
+
+    /**
      * Opens a web socket connection and suspends until the connection is OPEN.
      *
      * @param headers custom headers to send during the web socket handshake. Support for custom handshake headers is

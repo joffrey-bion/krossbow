@@ -32,6 +32,8 @@ class DarwinWebSocketClient(
     private val maximumMessageSize: Long? = null,
 ) : WebSocketClient {
 
+    override val supportsCustomHeaders: Boolean = true
+
     @OptIn(ExperimentalForeignApi::class)
     override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection {
         val socketEndpoint = NSURL.URLWithString(url)!!

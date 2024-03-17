@@ -3,5 +3,6 @@ public final class org/hildan/krossbow/websocket/ktor/KtorWebSocketClient : org/
 	public fun <init> (Lio/ktor/client/HttpClient;)V
 	public synthetic fun <init> (Lio/ktor/client/HttpClient;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun connect (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getSupportsCustomHeaders ()Z
 }
 

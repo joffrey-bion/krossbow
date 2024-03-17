@@ -24,6 +24,8 @@ fun SpringWebSocketClient.asKrossbowWebSocketClient(): KrossbowWebSocketClient =
 
 private class SpringWebSocketClientAdapter(private val client: SpringWebSocketClient) : KrossbowWebSocketClient {
 
+    override val supportsCustomHeaders: Boolean = true
+
     override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
         try {
             val handler = KrossbowToSpringHandlerAdapter()
