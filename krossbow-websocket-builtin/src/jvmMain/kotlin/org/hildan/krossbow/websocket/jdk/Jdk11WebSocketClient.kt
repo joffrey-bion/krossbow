@@ -26,6 +26,8 @@ class Jdk11WebSocketClient(
     private val configureWebSocket: WebSocket.Builder.() -> Unit = {}
 ) : WebSocketClient {
 
+    override val supportsCustomHeaders: Boolean = true
+
     override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
         try {
             val listener = WebSocketListenerFlowAdapter()

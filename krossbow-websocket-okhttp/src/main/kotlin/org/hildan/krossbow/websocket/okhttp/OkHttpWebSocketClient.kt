@@ -24,6 +24,8 @@ class OkHttpWebSocketClient(
     private val client: OkHttpClient = OkHttpClient(),
 ) : KrossbowWebSocketClient {
 
+    override val supportsCustomHeaders: Boolean = true
+
     override suspend fun connect(url: String, headers: Map<String, String>): KrossbowWebSocketSession {
         val request = Request.Builder().url(url).headers(headers.toHeaders()).build()
         val channelListener = WebSocketListenerFlowAdapter()

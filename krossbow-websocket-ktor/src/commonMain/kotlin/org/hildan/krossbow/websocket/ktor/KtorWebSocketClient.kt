@@ -19,9 +19,12 @@ class KtorWebSocketClient(
     private val httpClient: HttpClient = HttpClient { install(WebSockets) }
 ) : WebSocketClient {
 
+    override val supportsCustomHeaders: Boolean = !PlatformUtils.IS_BROWSER
+
     override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
-        if (headers.isNotEmpty() && PlatformUtils.IS_BROWSER) {
-            throw IllegalArgumentException("Custom headers are not supported in the browser")
+        require(headers.isEmpty() || supportsCustomHeaders) {
+            "Custom web socket handshake headers are not supported in this Ktor engine " +
+                "(${httpClient.engine::class.simpleName}) on this platform (${PlatformUtils.platform})"
         }
         try {
             val wsKtorSession = httpClient.webSocketSession {

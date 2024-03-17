@@ -14,6 +14,9 @@ import kotlin.coroutines.*
  * Default WebSocket found in the browser. Not supported in Node.js environment.
  */
 object BrowserWebSocketClient : JsWebSocketClient {
+
+    override val supportsCustomHeaders: Boolean = false
+
     override fun newWebSocket(url: String, headers: Map<String, String>): WebSocket {
         require(headers.isEmpty()) {
             "custom HTTP headers are not supported in the browser, see https://github.com/whatwg/websockets/issues/16"

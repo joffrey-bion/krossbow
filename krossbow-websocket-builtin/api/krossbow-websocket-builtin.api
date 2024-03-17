@@ -7,5 +7,6 @@ public final class org/hildan/krossbow/websocket/jdk/Jdk11WebSocketClient : org/
 	public fun <init> (Ljava/net/http/HttpClient;Lkotlin/jvm/functions/Function1;)V
 	public synthetic fun <init> (Ljava/net/http/HttpClient;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun connect (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getSupportsCustomHeaders ()Z
 }
 

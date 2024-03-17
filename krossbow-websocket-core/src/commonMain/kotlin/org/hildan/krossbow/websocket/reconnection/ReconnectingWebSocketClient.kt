@@ -66,6 +66,9 @@ private class ReconnectingWebSocketClient(
     private val reconnectConfig: ReconnectConfig,
 ) : WebSocketClient {
 
+    override val supportsCustomHeaders: Boolean
+        get() = baseClient.supportsCustomHeaders
+
     override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection {
         val firstConnection = baseClient.connect(url, headers)
         return WebSocketConnectionProxy(baseClient, reconnectConfig, headers, firstConnection)
