@@ -14,7 +14,6 @@ private val Platform.supportsStatusCodes: Boolean
 
 class KtorMppWebSocketClientTest : WebSocketClientTestSuite(
     supportsStatusCodes = currentPlatform().supportsStatusCodes,
-    supportsCustomHeaders = currentPlatform() !is Platform.Js.Browser,
 ) {
     override fun provideClient(): WebSocketClient = KtorWebSocketClient(
         HttpClient {

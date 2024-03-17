@@ -11,7 +11,6 @@ import kotlin.time.Duration.Companion.seconds
 
 abstract class WebSocketClientTestSuite(
     val supportsStatusCodes: Boolean = true,
-    val supportsCustomHeaders: Boolean = true,
 ) {
     abstract fun provideClient(): WebSocketClient
 
@@ -174,7 +173,7 @@ abstract class WebSocketClientTestSuite(
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
         }
-        if (supportsCustomHeaders) {
+        if (wsClient.supportsCustomHeaders) {
             val session = connectWithTestHeaders()
             try {
                 // for some reason, this can be pretty long with the Ktor/JS client in nodeJS tests on macOS
