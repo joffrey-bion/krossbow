@@ -82,7 +82,7 @@ private class WebSocketConnectionProxy(
     private var currentConnection: WebSocketConnection,
 ) : WebSocketConnection {
 
-    private val scope = CoroutineScope(CoroutineName("krossbow-reconnection-watcher") + reconnectConfig.coroutineContext)
+    private val scope = CoroutineScope(CoroutineName("krossbow-reconnection-watcher") + reconnectConfig.reconnectContext)
 
     override val url: String
         get() = currentConnection.url

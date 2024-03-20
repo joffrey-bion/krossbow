@@ -15,7 +15,7 @@ class ReconnectingWebSocketClientTest {
     @Test
     fun shouldConnectSuccessfully() = runTest {
         val webSocketClientMock = ControlledWebSocketClientMock()
-        val reconnectingClient = webSocketClientMock.withAutoReconnect { coroutineContext = testDispatcher }
+        val reconnectingClient = webSocketClientMock.withAutoReconnect { reconnectContext = testDispatcher }
 
         val deferredConnection = async { reconnectingClient.connect("dummy") }
 
@@ -31,7 +31,7 @@ class ReconnectingWebSocketClientTest {
     @Test
     fun shouldFailConnectionWhenBaseClientFails() = runTest {
         val webSocketClientMock = ControlledWebSocketClientMock()
-        val reconnectingClient = webSocketClientMock.withAutoReconnect { coroutineContext = testDispatcher }
+        val reconnectingClient = webSocketClientMock.withAutoReconnect { reconnectContext = testDispatcher }
 
         launch {
             webSocketClientMock.waitForConnectCall()
@@ -48,7 +48,7 @@ class ReconnectingWebSocketClientTest {
         val baseConnection = WebSocketConnectionMock()
         val baseClient = webSocketClientMock { baseConnection }
 
-        val reconnectingClient = baseClient.withAutoReconnect { coroutineContext = testDispatcher }
+        val reconnectingClient = baseClient.withAutoReconnect { reconnectContext = testDispatcher }
         val connection = reconnectingClient.connect("dummy")
 
         launch { baseConnection.simulateTextFrameReceived("test") }
@@ -61,7 +61,7 @@ class ReconnectingWebSocketClientTest {
         val baseConnection = WebSocketConnectionMock()
         val baseClient = webSocketClientMock { baseConnection }
 
-        val reconnectingClient = baseClient.withAutoReconnect { coroutineContext = testDispatcher }
+        val reconnectingClient = baseClient.withAutoReconnect { reconnectContext = testDispatcher }
         val connection = reconnectingClient.connect("dummy")
 
         launch {
@@ -83,7 +83,7 @@ class ReconnectingWebSocketClientTest {
         }
 
         val reconnectingClient = baseClient.withAutoReconnect {
-            coroutineContext = testDispatcher
+            reconnectContext = testDispatcher
             delayStrategy = FixedDelay(1.milliseconds)
         }
         val connection = reconnectingClient.connect("dummy")
@@ -115,7 +115,7 @@ class ReconnectingWebSocketClientTest {
 
         var reconnected = false
         val reconnectingClient = baseClient.withAutoReconnect {
-            coroutineContext = testDispatcher
+            reconnectContext = testDispatcher
             delayStrategy = FixedDelay(1.milliseconds)
             afterReconnect {
                 reconnected = true
@@ -142,7 +142,7 @@ class ReconnectingWebSocketClientTest {
 
         var reconnected = false
         val reconnectingClient = baseClient.withAutoReconnect {
-            coroutineContext = testDispatcher
+            reconnectContext = testDispatcher
             maxAttempts = 5
             delayStrategy = FixedDelay(100.milliseconds)
             afterReconnect {
@@ -184,7 +184,7 @@ class ReconnectingWebSocketClientTest {
 
         var reconnected = false
         val reconnectingClient = baseClient.withAutoReconnect {
-            coroutineContext = testDispatcher
+            reconnectContext = testDispatcher
             maxAttempts = 5
             delayStrategy = FixedDelay(100.milliseconds)
             reconnectWhen { _, _ -> false }
@@ -211,7 +211,7 @@ class ReconnectingWebSocketClientTest {
     fun shouldFailWhenReconnectPredicateBecomesFalse() = runTest {
         val baseClient = ControlledWebSocketClientMock()
         val reconnectingClient = baseClient.withAutoReconnect {
-            coroutineContext = testDispatcher
+            reconnectContext = testDispatcher
             delayStrategy = FixedDelay(100.milliseconds)
             reconnectWhen { _, attempt -> attempt < 2 }
         }

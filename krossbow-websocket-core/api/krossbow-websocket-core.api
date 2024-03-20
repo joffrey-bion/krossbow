@@ -201,9 +201,9 @@ public final class org/hildan/krossbow/websocket/reconnection/ReconnectConfig {
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/websocket/reconnection/ReconnectConfig;ILorg/hildan/krossbow/websocket/reconnection/RetryDelayStrategy;Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/hildan/krossbow/websocket/reconnection/ReconnectConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAfterReconnect ()Lkotlin/jvm/functions/Function2;
-	public final fun getCoroutineContext ()Lkotlin/coroutines/CoroutineContext;
 	public final fun getDelayStrategy ()Lorg/hildan/krossbow/websocket/reconnection/RetryDelayStrategy;
 	public final fun getMaxAttempts ()I
+	public final fun getReconnectContext ()Lkotlin/coroutines/CoroutineContext;
 	public final fun getShouldReconnect ()Lkotlin/jvm/functions/Function3;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -211,13 +211,13 @@ public final class org/hildan/krossbow/websocket/reconnection/ReconnectConfig {
 
 public final class org/hildan/krossbow/websocket/reconnection/ReconnectConfigBuilder {
 	public final fun afterReconnect (Lkotlin/jvm/functions/Function2;)V
-	public final fun getCoroutineContext ()Lkotlin/coroutines/CoroutineContext;
 	public final fun getDelayStrategy ()Lorg/hildan/krossbow/websocket/reconnection/RetryDelayStrategy;
 	public final fun getMaxAttempts ()I
+	public final fun getReconnectContext ()Lkotlin/coroutines/CoroutineContext;
 	public final fun reconnectWhen (Lkotlin/jvm/functions/Function3;)V
-	public final fun setCoroutineContext (Lkotlin/coroutines/CoroutineContext;)V
 	public final fun setDelayStrategy (Lorg/hildan/krossbow/websocket/reconnection/RetryDelayStrategy;)V
 	public final fun setMaxAttempts (I)V
+	public final fun setReconnectContext (Lkotlin/coroutines/CoroutineContext;)V
 }
 
 public final class org/hildan/krossbow/websocket/reconnection/ReconnectConfigKt {

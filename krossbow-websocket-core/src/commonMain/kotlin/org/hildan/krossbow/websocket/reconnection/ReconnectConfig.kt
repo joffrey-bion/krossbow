@@ -34,7 +34,7 @@ data class ReconnectConfig(
     /**
      * An additional coroutine context for the coroutine that handles reconnections.
      */
-    val coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    val reconnectContext: CoroutineContext = EmptyCoroutineContext,
     /**
      * A predicate to decide whether the web socket should be reconnected when the given `exception` occur.
      * The `attempt` parameter is the index of the current reconnection attempt in a series of retries.
@@ -78,7 +78,7 @@ class ReconnectConfigBuilder internal constructor() {
     /**
      * An additional coroutine context for the coroutine that handles reconnections.
      */
-    var coroutineContext: CoroutineContext = EmptyCoroutineContext
+    var reconnectContext: CoroutineContext = EmptyCoroutineContext
 
     private var shouldReconnect: suspend (Throwable, Int) -> Boolean = { _, _ -> true }
 
@@ -113,6 +113,6 @@ class ReconnectConfigBuilder internal constructor() {
         afterReconnect = body
     }
 
-    internal fun build() = ReconnectConfig(maxAttempts, delayStrategy, coroutineContext, shouldReconnect, afterReconnect)
+    internal fun build() = ReconnectConfig(maxAttempts, delayStrategy, reconnectContext, shouldReconnect, afterReconnect)
 }
 
