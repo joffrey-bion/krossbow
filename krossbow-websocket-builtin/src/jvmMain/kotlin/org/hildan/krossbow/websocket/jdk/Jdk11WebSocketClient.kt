@@ -81,13 +81,11 @@ private class Jdk11WebSocketListener(
         webSocket.request(1)
     }
 
-    @OptIn(UnsafeByteStringApi::class)
     override fun onPing(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = scope.future {
         listener.onPing(message.readByteString())
         webSocket.request(1)
     }
 
-    @OptIn(UnsafeByteStringApi::class)
     override fun onPong(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = scope.future {
         listener.onPong(message.readByteString())
         webSocket.request(1)
@@ -113,6 +111,7 @@ private class Jdk11WebSocketConnection(
     override val incomingFrames: Flow<WebSocketFrame>,
 ) : WebSocketConnectionWithPingPong {
 
+    // send operations must not be called concurrently as per the JDK11 documentation
     private val mutex = Mutex()
 
     override val canSend: Boolean

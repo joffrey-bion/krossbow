@@ -40,6 +40,8 @@ class OkHttpWebSocketClient(
     }
 }
 
+// Note: OkHttp's listener is only ever called on the same thread (web socket reader thread), so we apparently don't 
+// need synchronization to protect our WebSocketListenerFlowAdapter here.
 private class KrossbowToOkHttpListenerAdapter(
     connectionContinuation: Continuation<KrossbowWebSocketSession>,
     private val originalConnectionUrl: String,
@@ -47,7 +49,6 @@ private class KrossbowToOkHttpListenerAdapter(
 ) : WebSocketListener() {
     private var connectionContinuation: Continuation<KrossbowWebSocketSession>? = connectionContinuation
 
-    @Volatile
     private var isConnecting = true
 
     private inline fun completeConnection(resume: Continuation<KrossbowWebSocketSession>.() -> Unit) {

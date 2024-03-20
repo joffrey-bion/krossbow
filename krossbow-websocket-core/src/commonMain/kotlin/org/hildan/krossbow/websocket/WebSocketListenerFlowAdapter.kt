@@ -10,6 +10,8 @@ import kotlinx.io.bytestring.*
  * Adapter between listener calls and a web socket "incoming" frames flow.
  * This is to make it easier to bridge listener-based APIs with the flow-based API of Krossbow.
  * Methods of this listener never fail, but can send failure through the frames channel to the consumers.
+ * 
+ * Note: this class is not thread-safe. The callbacks must not be called concurrently.
  */
 class WebSocketListenerFlowAdapter(
     bufferSize: Int = Channel.BUFFERED,
@@ -116,11 +118,12 @@ class WebSocketListenerFlowAdapter(
      *
      * This adapter cannot be used anymore after a call to this method; calling any method may throw an exception.
      */
-    @OptIn(ExperimentalCoroutinesApi::class) // for isClosedForSend
+    @OptIn(DelicateCoroutinesApi::class)
     suspend fun onClose(code: Int, reason: String?) {
         // At least with Spring's Jetty implementation, onClose may be called after onError
         // (for instance, if frame parsing fails with unknown opcode).
-        // This means that this send(Close) can fail because the channel is already failed.
+        // In such cases, we don't need to send a Close frame (and we can't) as the channel is already closed or failed.
+        // This also guards against multiple calls to onClose(), of course.
         if (frames.isClosedForSend) {
             return
         }

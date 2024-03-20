@@ -54,6 +54,9 @@ private class SpringWebSocketClientAdapter(private val client: SpringWebSocketCl
     }
 }
 
+// The StandardWebSocketClient uses jakarta.websocket.Endpoint behind the scenes as a handler, which guarantees the following:
+// "Each instance of a websocket endpoint is guaranteed not to be called by more than one thread at a time per active connection"
+// which means our handler adapter will not be called concurrently - no need for synchronization here.
 private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
 
     val channelListener: WebSocketListenerFlowAdapter = WebSocketListenerFlowAdapter()
@@ -95,6 +98,8 @@ private class SpringSessionToKrossbowConnectionAdapter(
     override val incomingFrames: Flow<WebSocketFrame>,
 ) : WebSocketConnectionWithPingPong {
 
+    // As per Spring documentation: "The underlying standard WebSocket session (JSR-356) does not allow concurrent
+    // sending. Therefore, sending must be synchronized."
     private val mutex = Mutex()
 
     override val url: String
