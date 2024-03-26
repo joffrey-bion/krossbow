@@ -1,3 +1,5 @@
 package org.hildan.krossbow.websocket.test
 
-actual fun currentPlatform(): Platform = Platform.Apple
+import platform.Foundation.*
+
+actual fun currentPlatform(): Platform = Platform.Apple(NSProcessInfo.processInfo.operatingSystemName())
