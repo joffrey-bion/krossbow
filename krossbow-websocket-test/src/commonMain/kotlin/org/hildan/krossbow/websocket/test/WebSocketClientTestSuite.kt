@@ -28,6 +28,20 @@ abstract class WebSocketClientTestSuite(
         wsClient = provideClient()
     }
 
+    private fun testUrl(path: String, testCaseName: String? = null): String =
+        "${testServerConfig.wsUrl}$path?${testUrlQuery(testCaseName)}"
+
+    private fun testUrlQuery(testCaseName: String? = null): String {
+        val params = buildMap {
+            put("agent", agent)
+            put("testClass", this@WebSocketClientTestSuite::class.simpleName)
+            if (testCaseName != null) {
+                put("testCase", testCaseName)
+            }
+        }
+        return params.entries.joinToString("&") { "${it.key}=${it.value}" }
+    }
+
     @Test
     fun testConnectFailure_failsOnUnresolvedHost() = runTestRealTime {
         // Using the non-reified version because of the suspend inline function bug on JS platform
@@ -155,7 +169,7 @@ abstract class WebSocketClientTestSuite(
         // Using the non-reified version because of the suspend inline function bug on JS platform
         // https://youtrack.jetbrains.com/issue/KT-37645
         val ex = assertFailsWith(WebSocketConnectionException::class) {
-            wsClient.connect("${testServerConfig.wsUrlWithHttpPort}/failHandshakeWithStatusCode/$statusCodeToTest?agent=$agent")
+            wsClient.connect("${testServerConfig.wsUrlWithHttpPort}/failHandshakeWithStatusCode/$statusCodeToTest?${testUrlQuery()}")
         }
         if (supportsStatusCodes) {
             assertEquals(
@@ -173,7 +187,7 @@ abstract class WebSocketClientTestSuite(
         if (wsClient.supportsCustomHeaders) {
             println("Connecting with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
             val session = wsClient.connect(
-                url = "${testServerConfig.wsUrl}/sendHandshakeHeaders?agent=$agent",
+                url = testUrl(path = "/sendHandshakeHeaders"),
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
             println("Connected with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
@@ -189,7 +203,7 @@ abstract class WebSocketClientTestSuite(
         } else {
             assertFailsWith<IllegalArgumentException> {
                 wsClient.connect(
-                    url = "${testServerConfig.wsUrl}/shouldNotReachTheServerAnyway?agent=$agent",
+                    url = testUrl(path = "/shouldNotReachTheServerAnyway"),
                     headers = mapOf("Any-Header" to "Should-Be-Prohibited"),
                 )
             }
@@ -198,7 +212,7 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testEchoText() = runTestRealTime {
-        val session = wsClient.connect("${testServerConfig.wsUrl}/echo?agent=$agent&test=echoText")
+        val session = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoText"))
 
         try {
             session.sendText("hello")
@@ -214,7 +228,7 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testEchoBinary() = runTestRealTime {
-        val session = wsClient.connect("${testServerConfig.wsUrl}/echo?agent=$agent&test=echoBinary")
+        val session = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoBinary"))
 
         try {
             val fortyTwos = ByteString(42, 42, 42)
