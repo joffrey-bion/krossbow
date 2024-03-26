@@ -170,14 +170,11 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testHandshakeHeaders() = runTestRealTime {
-        val connectWithTestHeaders = suspend {
-            wsClient.connect(
+        if (wsClient.supportsCustomHeaders) {
+            val session = wsClient.connect(
                 url = "${testServerConfig.wsUrl}/echoHeaders?agent=$agent",
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
-        }
-        if (wsClient.supportsCustomHeaders) {
-            val session = connectWithTestHeaders()
             try {
                 // for some reason, this can be pretty long with the Ktor/JS client in nodeJS tests on macOS
                 val echoedHeadersFrame = session.expectTextFrame("header info frame", 50.seconds)
@@ -188,7 +185,12 @@ abstract class WebSocketClientTestSuite(
                 session.close()
             }
         } else {
-            assertFailsWith<IllegalArgumentException> { connectWithTestHeaders() }
+            assertFailsWith<IllegalArgumentException> {
+                wsClient.connect(
+                    url = "${testServerConfig.wsUrl}/shouldNotReachTheServerAnyway?agent=$agent",
+                    headers = mapOf("Any-Header" to "Should-Be-Prohibited"),
+                )
+            }
         }
     }
 
