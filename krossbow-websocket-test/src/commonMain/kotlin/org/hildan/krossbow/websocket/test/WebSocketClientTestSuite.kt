@@ -171,10 +171,12 @@ abstract class WebSocketClientTestSuite(
     @Test
     fun testHandshakeHeaders() = runTestRealTime {
         if (wsClient.supportsCustomHeaders) {
+            println("Connecting with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
             val session = wsClient.connect(
                 url = "${testServerConfig.wsUrl}/sendHandshakeHeaders?agent=$agent",
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
+            println("Connected with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
             try {
                 // for some reason, this can be pretty long with the Ktor/JS client in nodeJS tests on macOS
                 val echoedHeadersFrame = session.expectTextFrame("header info frame", 50.seconds)
