@@ -20,8 +20,9 @@ tasks.withType<AbstractTestTask> {
 // The Test task is a parent of all JVM test tasks, including KMP/JVM and pure JVM.
 // This is why we need to use this instead of KotlinJvmTest.
 tasks.withType<Test> {
+    val testServerService = wsTestServerService // to avoid capturing 'this' project for config cache compatibility
     doFirst {
-        val testServer = wsTestServerService.get().wsServer
+        val testServer = testServerService.get().wsServer
         environment("TEST_SERVER_HOST", testServer.host)
         environment("TEST_SERVER_HTTP_PORT", testServer.httpPort)
         environment("TEST_SERVER_WS_PORT", testServer.wsPort)
@@ -29,8 +30,9 @@ tasks.withType<Test> {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest> {
+    val testServerService = wsTestServerService // to avoid capturing 'this' project for config cache compatibility
     doFirst {
-        val testServer = wsTestServerService.get().wsServer
+        val testServer = testServerService.get().wsServer
         environment("TEST_SERVER_HOST", testServer.host)
         environment("TEST_SERVER_HTTP_PORT", testServer.httpPort)
         environment("TEST_SERVER_WS_PORT", testServer.wsPort)
@@ -38,8 +40,9 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest> {
+    val testServerService = wsTestServerService // to avoid capturing 'this' project for config cache compatibility
     doFirst {
-        val testServer = wsTestServerService.get().wsServer
+        val testServer = testServerService.get().wsServer
         // SIMCTL_CHILD_ prefix to pass those variables from test process to the iOS/tvOS/watchOS emulators
         environment("SIMCTL_CHILD_TEST_SERVER_HOST", testServer.host)
         environment("SIMCTL_CHILD_TEST_SERVER_HTTP_PORT", testServer.httpPort)
@@ -52,8 +55,9 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimu
 // this data on to the code under test (see generateKarmaConfig task below).
 tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest> {
     dependsOn(generateKarmaConfig)
+    val testServerService = wsTestServerService // to avoid capturing 'this' project for config cache compatibility
     doFirst {
-        val testServer = wsTestServerService.get().wsServer
+        val testServer = testServerService.get().wsServer
         environment("TEST_SERVER_HOST", testServer.host)
         environment("TEST_SERVER_HTTP_PORT", testServer.httpPort.toString())
         environment("TEST_SERVER_WS_PORT", testServer.wsPort.toString())
