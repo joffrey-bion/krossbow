@@ -16,6 +16,9 @@ abstract class WebSocketClientTestSuite(
 
     private lateinit var wsClient: WebSocketClient
 
+    private val agent: String
+        get() = "${wsClient::class.simpleName}-${currentPlatform()}"
+
     companion object {
         private val testServerConfig: TestServerConfig = getTestServerConfig()
     }
@@ -152,7 +155,7 @@ abstract class WebSocketClientTestSuite(
         // Using the non-reified version because of the suspend inline function bug on JS platform
         // https://youtrack.jetbrains.com/issue/KT-37645
         val ex = assertFailsWith(WebSocketConnectionException::class) {
-            wsClient.connect("${testServerConfig.wsUrlWithHttpPort}/failHandshakeWithStatusCode/$statusCodeToTest")
+            wsClient.connect("${testServerConfig.wsUrlWithHttpPort}/failHandshakeWithStatusCode/$statusCodeToTest?agent=$agent")
         }
         if (supportsStatusCodes) {
             assertEquals(
@@ -169,7 +172,7 @@ abstract class WebSocketClientTestSuite(
     fun testHandshakeHeaders() = runTestRealTime {
         val connectWithTestHeaders = suspend {
             wsClient.connect(
-                url = "${testServerConfig.wsUrl}/echoHeaders?agent=${wsClient::class.simpleName}-${currentPlatform()}",
+                url = "${testServerConfig.wsUrl}/echoHeaders?agent=$agent",
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
         }
@@ -191,7 +194,7 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testEchoText() = runTestRealTime {
-        val session = wsClient.connect(testServerConfig.wsUrl)
+        val session = wsClient.connect("${testServerConfig.wsUrl}/echoText?agent=$agent")
 
         try {
             session.sendText("hello")
@@ -207,7 +210,7 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testEchoBinary() = runTestRealTime {
-        val session = wsClient.connect(testServerConfig.wsUrl)
+        val session = wsClient.connect("${testServerConfig.wsUrl}/echoBinary?agent=$agent")
 
         try {
             val fortyTwos = ByteString(42, 42, 42)
