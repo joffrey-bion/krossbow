@@ -10,8 +10,7 @@ abstract class WSTestServerService : BuildService<BuildServiceParameters.None>, 
     }
 }
 
-// TODO remove empty trailing lambda in Gradle 8.7
-val wsTestServerService = gradle.sharedServices.registerIfAbsent("wsTestServer", WSTestServerService::class) {}
+val wsTestServerService = gradle.sharedServices.registerIfAbsent("wsTestServer", WSTestServerService::class)
 
 // ensure the test server is launched for websocket tests
 tasks.withType<AbstractTestTask> {
