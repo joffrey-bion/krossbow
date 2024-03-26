@@ -18,8 +18,9 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAd
     override fun onOpen(conn: WebSocket?, handshake: ClientHandshake) {
         openedSocket.complete(conn ?: error("onOpen got a null WebSocket"))
 
-        println("Connection to resourceDescriptor=${handshake.resourceDescriptor}")
-        if (handshake.resourceDescriptor == "/echoHeaders") {
+        val uri = URI.create(handshake.resourceDescriptor)
+        println("Connection to URI $uri")
+        if (uri.path == "/echoHeaders") {
             println("Gathering header names...")
             val headerNames = handshake.iterateHttpFields().asSequence().toList()
             println("Gathering header values...")
@@ -28,7 +29,7 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAd
             conn.send(headersData)
             println("Headers frame sent!")
         } else {
-            println("Not sending headers frame, resourceDescriptor=${handshake.resourceDescriptor}")
+            println("Not sending headers frame for URI $uri")
         }
     }
 

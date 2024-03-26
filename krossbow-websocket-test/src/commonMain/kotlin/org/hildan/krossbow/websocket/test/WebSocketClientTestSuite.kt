@@ -169,7 +169,7 @@ abstract class WebSocketClientTestSuite(
     fun testHandshakeHeaders() = runTestRealTime {
         val connectWithTestHeaders = suspend {
             wsClient.connect(
-                url = "${testServerConfig.wsUrl}/echoHeaders",
+                url = "${testServerConfig.wsUrl}/echoHeaders?agent=${wsClient::class.simpleName}-${currentPlatform()}",
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
         }
