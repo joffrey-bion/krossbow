@@ -11,7 +11,7 @@ import kotlinx.io.bytestring.unsafe.*
  */
 @RequiresOptIn("This is an internal Krossbow API for IO conversions and may be removed at any time")
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
-annotation class InternalKrossbowIoApi
+internal annotation class InternalKrossbowIoApi
 
 /**
  * Returns the backing [ByteArray] of this [ByteString], without copying data.

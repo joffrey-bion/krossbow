@@ -6,6 +6,10 @@ plugins {
 
 description = "A Krossbow adapter for OkHttp's WebSocket client"
 
+kotlin {
+    compilerOptions.optIn.add("org.hildan.krossbow.io.InternalKrossbowIoApi")
+}
+
 dependencies {
     api(projects.krossbowWebsocketCore)
     api(libs.okhttp)

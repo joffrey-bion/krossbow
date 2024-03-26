@@ -6,6 +6,10 @@ plugins {
 
 description = "A Krossbow adapter for Spring's default WebSocket client and SockJS client"
 
+kotlin {
+    compilerOptions.optIn.add("org.hildan.krossbow.io.InternalKrossbowIoApi")
+}
+
 dependencies {
     api(projects.krossbowWebsocketCore)
 
