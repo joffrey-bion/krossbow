@@ -27,8 +27,7 @@ class KtorWebSocketClient(
                 "(${httpClient.engine::class.simpleName}) on this platform (${PlatformUtils.platform})"
         }
         try {
-            val wsKtorSession = httpClient.webSocketSession {
-                this.url.takeFrom(url)
+            val wsKtorSession = httpClient.webSocketSession(url) {
                 headers.forEach { (name, value) ->
                     this.headers[name] = value
                 }
