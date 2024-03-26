@@ -6,6 +6,8 @@ on:
     tags:
       - '*'
 
+run-name: "Website update (${{ github.ref_name }})"
+
 jobs:
   publish-website:
     runs-on: ubuntu-latest
