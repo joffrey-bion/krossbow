@@ -12,14 +12,17 @@ import org.hildan.krossbow.websocket.test.*
 private val Platform.supportsStatusCodes: Boolean
     get() = this !is Platform.Windows && this !is Platform.Js
 
+// This test is somewhat redundant with the tests on specific platforms, but it ensures that we don't forget to test
+// new Ktor-supported platforms when they are added to the Krossbow projects.
+// Also, it covers cases of dynamically-selected implementations.
 class KtorMppWebSocketClientTest : WebSocketClientTestSuite(
     supportsStatusCodes = currentPlatform().supportsStatusCodes,
 ) {
     override fun provideClient(): WebSocketClient = KtorWebSocketClient(
         HttpClient {
-            // The CIO engine seems to follow 301 redirects by default, but our test server doesn't provide a URL to
-            // it retries the same URL indefinitely and reach a SendCountExceedException.
-            // To avoid this failure in status code tests, we disable redirect-following explicitly here.
+            // The CIO engine seems to follow 301 redirects by default, but our test server doesn't provide a Location
+            // header with the URL to redirect to, so the client retries the same URL indefinitely.
+            // To avoid a SendCountExceedException in status code tests, we disable redirect-following explicitly here.
             followRedirects = false
 
             install(WebSockets)
