@@ -86,7 +86,7 @@ val generateKarmaConfig by tasks.registering {
             });
             
             // This is to transfer the test server config from the Karma process to the browser environment.
-            // It defines the gobal variable 'testServerConfig', which can then be accessed from the code under test.
+            // It defines the global variable 'testServerConfig', which can then be accessed from the code under test.
             config.webpack.plugins.push(
                 new webpack.DefinePlugin({
                     "testServerConfig" : {
