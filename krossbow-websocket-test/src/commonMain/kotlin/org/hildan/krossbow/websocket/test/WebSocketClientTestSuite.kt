@@ -172,7 +172,7 @@ abstract class WebSocketClientTestSuite(
     fun testHandshakeHeaders() = runTestRealTime {
         if (wsClient.supportsCustomHeaders) {
             val session = wsClient.connect(
-                url = "${testServerConfig.wsUrl}/echoHeaders?agent=$agent",
+                url = "${testServerConfig.wsUrl}/sendHandshakeHeaders?agent=$agent",
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
             try {
@@ -196,7 +196,7 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testEchoText() = runTestRealTime {
-        val session = wsClient.connect("${testServerConfig.wsUrl}/echoText?agent=$agent")
+        val session = wsClient.connect("${testServerConfig.wsUrl}/echo?agent=$agent&test=echoText")
 
         try {
             session.sendText("hello")
@@ -212,7 +212,7 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testEchoBinary() = runTestRealTime {
-        val session = wsClient.connect("${testServerConfig.wsUrl}/echoBinary?agent=$agent")
+        val session = wsClient.connect("${testServerConfig.wsUrl}/echo?agent=$agent&test=echoBinary")
 
         try {
             val fortyTwos = ByteString(42, 42, 42)
