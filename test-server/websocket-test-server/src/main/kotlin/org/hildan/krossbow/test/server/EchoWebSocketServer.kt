@@ -16,11 +16,9 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAd
         val uri = URI.create(handshake.resourceDescriptor)
         println("Connection to URI $uri")
         if (uri.path == "/sendHandshakeHeaders") {
-            println("Gathering header names...")
             val headerNames = handshake.iterateHttpFields().asSequence().toList()
-            println("Gathering header values...")
             val headersData = headerNames.joinToString("\n") { "$it=${handshake.getFieldValue(it)}" }
-            println("Sending headers frame...")
+            println("Sending message with headers...")
             conn.send(headersData)
             println("Headers frame sent!")
         } else {
