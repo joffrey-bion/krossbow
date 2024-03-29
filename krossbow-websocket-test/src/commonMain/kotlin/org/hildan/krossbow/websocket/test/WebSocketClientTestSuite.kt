@@ -10,7 +10,8 @@ import kotlin.time.*
 import kotlin.time.Duration.Companion.seconds
 
 abstract class WebSocketClientTestSuite(
-    val supportsStatusCodes: Boolean = true,
+    private val supportsStatusCodes: Boolean = true,
+    private val headersTestDelay: Duration? = null,
 ) {
     abstract fun provideClient(): WebSocketClient
 
@@ -28,15 +29,21 @@ abstract class WebSocketClientTestSuite(
         wsClient = provideClient()
     }
 
-    private fun testUrl(path: String, testCaseName: String? = null): String =
-        "${testServerConfig.wsUrl}$path?${testUrlQuery(testCaseName)}"
+    private fun testUrl(
+        path: String,
+        testCaseName: String? = null,
+        otherParams: Map<String, String> = emptyMap(),
+    ): String = "${testServerConfig.wsUrl}$path?${testUrlQuery(testCaseName, otherParams)}"
 
-    private fun testUrlQuery(testCaseName: String? = null): String {
+    private fun testUrlQuery(testCaseName: String? = null, otherParams: Map<String, String> = emptyMap()): String {
         val params = buildMap {
             put("agent", agent)
             put("testClass", this@WebSocketClientTestSuite::class.simpleName)
             if (testCaseName != null) {
                 put("testCase", testCaseName)
+            }
+            otherParams.forEach { (key, value) ->
+                put(key, value)
             }
         }
         return params.entries.joinToString("&") { "${it.key}=${it.value}" }
@@ -186,8 +193,10 @@ abstract class WebSocketClientTestSuite(
     fun testHandshakeHeaders() = runTestRealTime {
         if (wsClient.supportsCustomHeaders) {
             println("Connecting with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
+            // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
+            val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
             val session = wsClient.connect(
-                url = testUrl(path = "/sendHandshakeHeaders"),
+                url = testUrl(path = "/sendHandshakeHeaders", otherParams = extraParams),
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
             println("Connected with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
