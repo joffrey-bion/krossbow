@@ -9,15 +9,10 @@ import java.nio.*
 
 internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(port)) {
 
-    @Volatile
-    var openedSocket: CompletableDeferred<WebSocket> = CompletableDeferred()
-
     override fun onStart() {
     }
 
-    override fun onOpen(conn: WebSocket?, handshake: ClientHandshake) {
-        openedSocket.complete(conn ?: error("onOpen got a null WebSocket"))
-
+    override fun onOpen(conn: WebSocket, handshake: ClientHandshake) {
         val uri = URI.create(handshake.resourceDescriptor)
         println("Connection to URI $uri")
         if (uri.path == "/sendHandshakeHeaders") {
@@ -33,20 +28,20 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAd
         }
     }
 
-    override fun onMessage(conn: WebSocket?, message: String?) {
-        conn?.send(message)
+    override fun onMessage(conn: WebSocket, message: String?) {
+        conn.send(message)
     }
 
-    override fun onMessage(conn: WebSocket?, message: ByteBuffer) {
+    override fun onMessage(conn: WebSocket, message: ByteBuffer) {
         val bytes = ByteArray(message.remaining())
         message.get(bytes)
-        conn?.send(bytes)
+        conn.send(bytes)
     }
 
     override fun onError(conn: WebSocket?, ex: Exception?) {
     }
 
-    override fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean) {
+    override fun onClose(conn: WebSocket, code: Int, reason: String?, remote: Boolean) {
     }
 
     suspend fun startAndAwaitPort(timeoutMillis: Long = 1000): Int {
