@@ -899,7 +899,7 @@
 <h1 id="krossbow-with-ktor">Krossbow with Ktor<a class="headerlink" href="#krossbow-with-ktor" title="Permanent link">&para;</a></h1>
 <p>Krossbow allows you to use <a href="https://ktor.io/clients/websockets.html">Ktor's web socket</a> as transport for STOMP.</p>
 <p>Ktor's implementation supports a variety of platforms and is very popular in the Kotlin world, especially in Kotlin multiplatform.</p>
-<p>The <code>krossbow-websocket-ktor</code> module provides the <code>KtorWebSocketClient</code>, which adapts Ktor 2.3.8's
+<p>The <code>krossbow-websocket-ktor</code> module provides the <code>KtorWebSocketClient</code>, which adapts Ktor 2.3.9's
 <code>HttpClient</code> to Krossbow's web socket interface.</p>
 <h2 id="usage-with-stompclient">Usage with StompClient<a class="headerlink" href="#usage-with-stompclient" title="Permanent link">&para;</a></h2>
 <p>To use the <code>KtorWebSocketClient</code> pass an instance of it when creating your <code>StompClient</code>:</p>
@@ -916,15 +916,15 @@
 </code></pre></div>
 <h2 id="dependency-information">Dependency information<a class="headerlink" href="#dependency-information" title="Permanent link">&para;</a></h2>
 <p>You will need to declare the following Gradle dependency to use the <code>KtorWebSocketClient</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:6.0.0&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:6.0.0-2-gb3e3a6dd&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Ktor uses <a href="https://ktor.io/clients/http-client/engines.html">pluggable engines</a> to perform the platform-specific
 network operations (just like Krossbow uses different web socket implementations).
 You need to pick an engine that supports web sockets in order to use Ktor's <code>HttpClient</code> with web sockets.
 Follow Ktor's documentation to find out more about how to use engines.</p>
 <p>For instance, if you want to use Ktor's CIO engine with Krossbow, you need to declare the following:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:6.0.0&quot;</span><span class="p">)</span>
-<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.ktor:ktor-client-cio:2.3.8&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:6.0.0-2-gb3e3a6dd&quot;</span><span class="p">)</span>
+<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.ktor:ktor-client-cio:2.3.9&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 
