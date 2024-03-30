@@ -18,8 +18,8 @@ module of your choice.
 For example to use STOMP with the built-in web socket client:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-stomp-core:{{ git.tag }}")
-implementation("org.hildan.krossbow:krossbow-websocket-builtin:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-stomp-core:{{ git.short_tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-builtin:{{ git.short_tag }}")
 ```
 
 For other web socket clients, check out their dedicated documentation page to find out which Krossbow dependencies are

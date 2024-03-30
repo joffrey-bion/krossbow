@@ -41,5 +41,5 @@ in any way on their web socket traffic.
 Add the following to your `build.gradle(.kts)` in order to get the Krossbow's interfaces and helpers:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-websocket-core:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-core:{{ git.short_tag }}")
 ```

@@ -89,7 +89,7 @@ Krossbow's base Kotlinx Serialization module is format-agnostic, so you need to 
 For instance in the case of protobuf, that would be `kotlinx-serialization-protobuf`:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.short_tag }}")
 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:{{ versions.kotlinxSerialization }}")
 ```
 
@@ -98,7 +98,7 @@ implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:{{ versions
 Since JSON is so common, Krossbow provides an all-in-one module with additional helpers for JSON:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-stomp-kxserialization-json:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-stomp-kxserialization-json:{{ git.short_tag }}")
 ```
 
 This module brings `kotlinx-serialization-json` transitively, so you don't have to add it yourself.

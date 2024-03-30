@@ -29,7 +29,7 @@ To use Moshi conversions, add `krossbow-stomp-moshi` to your Gradle dependencies
 (`krossbow-stomp-core` is unnecessary because it's transitively brought by this one):
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-stomp-moshi:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-stomp-moshi:{{ git.short_tag }}")
 ```
 
 This dependency transitively brings Moshi {{ versions.moshi }}.

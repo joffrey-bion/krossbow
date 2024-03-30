@@ -23,5 +23,5 @@ val client = StompClient(SockJSClient())
 You will need to declare the following Gradle dependency to use the `SockJSClient`:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-websocket-sockjs:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-sockjs:{{ git.short_tag }}")
 ```

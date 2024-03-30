@@ -50,7 +50,7 @@ val stompClient = StompClient(springSockJsWsClient.asKrossbowWebSocketClient())
 You will need to declare the following Gradle dependency to use the Spring adapters:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-websocket-spring:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-spring:{{ git.short_tag }}")
 ```
 
 It transitively depends on `spring-websocket`, so you don't need to add it yourself.

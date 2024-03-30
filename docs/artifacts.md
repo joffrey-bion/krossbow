@@ -18,7 +18,7 @@ Then add the dependency of your choice to your Gradle build.
 For instance, if you intend to use Krossbow with Kotlinx Serialization:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:{{ git.short_tag }}")
 ```
 
 !!! tip "Don't need STOMP?"

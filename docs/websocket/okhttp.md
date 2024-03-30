@@ -33,5 +33,5 @@ val stompClient = StompClient(wsClient)
 You will need to declare the following Gradle dependency to use the `OkHttpWebSocketClient`:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-websocket-okhttp:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-okhttp:{{ git.short_tag }}")
 ```

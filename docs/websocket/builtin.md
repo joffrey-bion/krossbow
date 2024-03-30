@@ -41,5 +41,5 @@ adapts the Foundation framework's
 To use the built-in web socket clients, add the following to your `build.gradle`:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-websocket-builtin:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-builtin:{{ git.short_tag }}")
 ```

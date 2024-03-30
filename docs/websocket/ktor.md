@@ -32,7 +32,7 @@ val stompClient = StompClient(wsClient)
 You will need to declare the following Gradle dependency to use the `KtorWebSocketClient`:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-websocket-ktor:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-ktor:{{ git.short_tag }}")
 ```
 
 Ktor uses [pluggable engines](https://ktor.io/clients/http-client/engines.html) to perform the platform-specific
@@ -43,6 +43,6 @@ Follow Ktor's documentation to find out more about how to use engines.
 For instance, if you want to use Ktor's CIO engine with Krossbow, you need to declare the following:
 
 ```kotlin
-implementation("org.hildan.krossbow:krossbow-websocket-ktor:{{ git.tag }}")
+implementation("org.hildan.krossbow:krossbow-websocket-ktor:{{ git.short_tag }}")
 implementation("io.ktor:ktor-client-cio:{{ versions.ktor }}")
 ```
