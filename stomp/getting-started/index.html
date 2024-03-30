@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gradle-setup" class="md-skip">
+        <a href="#choosing-a-web-socket-implementation" class="md-skip">
           Skip to content
         </a>
       
@@ -356,9 +356,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gradle-setup" class="md-nav__link">
+  <a href="#choosing-a-web-socket-implementation" class="md-nav__link">
     <span class="md-ellipsis">
-      Gradle setup
+      Choosing a web socket implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dependencies setup
     </span>
   </a>
   
@@ -864,9 +873,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gradle-setup" class="md-nav__link">
+  <a href="#choosing-a-web-socket-implementation" class="md-nav__link">
     <span class="md-ellipsis">
-      Gradle setup
+      Choosing a web socket implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dependencies setup
     </span>
   </a>
   
@@ -910,33 +928,43 @@
 
   <h1>Getting started</h1>
 
-<h2 id="gradle-setup">Gradle setup<a class="headerlink" href="#gradle-setup" title="Permanent link">&para;</a></h2>
+<h2 id="choosing-a-web-socket-implementation">Choosing a web socket implementation<a class="headerlink" href="#choosing-a-web-socket-implementation" title="Permanent link">&para;</a></h2>
+<p>Krossbow uses web sockets as transport for the STOMP communication.
+Multiple web socket client implementations are supported.</p>
+<p>Check out the <a href="../../#web-socket-clients-target-support">web socket client table</a> to help you choose a web socket
+implementation based on the platforms you need to support.
+You can find more information about each client in their respective section of this doc.</p>
+<p>We recommend the built-in client adapters if they cover the Kotlin targets you need to support, in order to
+limit 3rd party dependencies. Otherwise, Ktor is a good choice if you don't have special needs like SockJS.</p>
+<h2 id="dependencies-setup">Dependencies setup<a class="headerlink" href="#dependencies-setup" title="Permanent link">&para;</a></h2>
 <p>For the basic usage of STOMP without serialization, add the <code>krossbow-stomp-core</code> dependency as well as the web socket
 module of your choice.</p>
-<p>For example to use STOMP with Ktor's web socket client:</p>
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-core:6.0.0-2-gb3e3a6dd&quot;</span><span class="p">)</span>
-<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-ktor:6.0.0-2-gb3e3a6dd&quot;</span><span class="p">)</span>
+<p>For example to use STOMP with the built-in web socket client:</p>
+<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-stomp-core:6.0.0&quot;</span><span class="p">)</span>
+<span class="n">implementation</span><span class="p">(</span><span class="s">&quot;org.hildan.krossbow:krossbow-websocket-builtin:6.0.0&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Check out the <a href="../../#web-socket-clients-target-support">web socket client table</a> to help you choose.
-We recommend the built-in client adapters if they cover the Kotlin targets you need to support, in order to limit 3rd
-party dependencies.
-Otherwise, Ktor is a good choice if you don't have special needs like SockJS.</p>
+<p>For other web socket clients, check out their dedicated documentation page to find out which Krossbow dependencies are
+needed.</p>
+<div class="admonition tip">
+<p class="admonition-title">The rest of this guide uses the built-in client.</p>
+</div>
 <h2 id="basic-usage-without-body-conversions">Basic usage (without body conversions)<a class="headerlink" href="#basic-usage-without-body-conversions" title="Permanent link">&para;</a></h2>
 <p>This is how to create a STOMP client and interact with it:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">kotlinx.coroutines.flow.*</span>
-<span class="k">import</span><span class="w"> </span><span class="nn">org.hildan.krossbow.stomp.*</span>
-<span class="k">import</span><span class="w"> </span><span class="nn">org.hildan.krossbow.websocket.*</span>
-<span class="k">import</span><span class="w"> </span><span class="nn">org.hildan.krossbow.websocket.builtin.*</span>
-
-<span class="kd">val</span><span class="w"> </span><span class="nv">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">(</span><span class="n">WebSocketClient</span><span class="p">.</span><span class="na">builtIn</span><span class="p">())</span><span class="w"> </span><span class="c1">// other config can be passed in here</span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StompClient</span><span class="p">(</span><span class="n">WebSocketClient</span><span class="p">.</span><span class="na">builtIn</span><span class="p">())</span><span class="w"> </span><span class="c1">// other config can be passed in here</span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="p">:</span><span class="w"> </span><span class="n">StompSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"> </span><span class="c1">// optional login/passcode can be provided here</span>
 
-<span class="n">session</span><span class="p">.</span><span class="na">sendText</span><span class="p">(</span><span class="s">&quot;/some/destination&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Basic text message&quot;</span><span class="p">)</span><span class="w"> </span>
+<span class="c1">// Send text messages using this convenience function</span>
+<span class="n">session</span><span class="p">.</span><span class="na">sendText</span><span class="p">(</span><span class="n">destination</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/some/destination&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Basic text message&quot;</span><span class="p">)</span>
 
-<span class="c1">// this triggers a SUBSCRIBE frame and returns the flow of messages for the subscription</span>
+<span class="c1">// Sometimes no message body is necessary</span>
+<span class="n">session</span><span class="p">.</span><span class="na">sendEmptyMsg</span><span class="p">(</span><span class="n">destination</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/some/destination&quot;</span><span class="p">)</span><span class="w"> </span>
+
+<span class="c1">// This subscribe() call triggers a SUBSCRIBE frame</span>
+<span class="c1">// and returns the flow of messages for the subscription</span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">subscription</span><span class="p">:</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">subscribeText</span><span class="p">(</span><span class="s">&quot;/some/topic/destination&quot;</span><span class="p">)</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">collectorJob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">launch</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Use an appropriate coroutine &#39;scope&#39; to collect the received frames</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">collectorJob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scope</span><span class="p">.</span><span class="na">launch</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">subscription</span><span class="p">.</span><span class="na">collect</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">-&gt;</span>
 <span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Received: </span><span class="si">$</span><span class="n">msg</span><span class="s">&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
