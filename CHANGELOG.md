@@ -1,5 +1,50 @@
 # Change Log
 
+## [6.0.0](https://github.com/joffrey-bion/krossbow/tree/6.0.0) (2024-03-30)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/5.12.0...6.0.0)
+
+**Breaking changes:**
+
+- New `supportsCustomHeaders` property in `WebSocketClient` interface [\#474](https://github.com/joffrey-bion/krossbow/issues/474)
+- Support custom `CoroutineContext` for the `ReconnectingWebSocketClient` [\#473](https://github.com/joffrey-bion/krossbow/issues/473)
+- Use `kotlinx\-io`'s `ByteString` instead of `ByteArray` in web socket API [\#449](https://github.com/joffrey-bion/krossbow/issues/449)
+- Use `kotlinx\-io`'s `ByteString` instead of `ByteArray` in public STOMP APIs [\#448](https://github.com/joffrey-bion/krossbow/issues/448)
+
+**Implemented enhancements:**
+
+- Add support for the `linuxArm64` target [\#467](https://github.com/joffrey-bion/krossbow/issues/467)
+- Switch from okio to kotlinx\-io internally [\#447](https://github.com/joffrey-bion/krossbow/issues/447)
+
+**Removals:**
+
+- Remove the hidden `WebSocketClient.connect\(url\)` overload \(without headers\) [\#455](https://github.com/joffrey-bion/krossbow/issues/455)
+- Remove the deprecated `SpringWebSocketClientAdapter` from public API \(make it private\) [\#454](https://github.com/joffrey-bion/krossbow/issues/454)
+- Remove the deprecated `SpringJettyWebSocketClient` [\#410](https://github.com/joffrey-bion/krossbow/issues/410)
+- Remove the deprecated `JsWebSocketClientAdapter` [\#453](https://github.com/joffrey-bion/krossbow/issues/453)
+- Remove the deprecated `WebSocketClient.Companion.default\(\)` [\#452](https://github.com/joffrey-bion/krossbow/issues/452)
+- Remove the deprecated `SpringDefaultWebSocketClient` and `SpringSockJSWebSocketClient` objects [\#411](https://github.com/joffrey-bion/krossbow/issues/411)
+
+**Upgraded dependencies:**
+
+- Bump com.benasher44:uuid from 0.8.2 to 0.8.4 [\#478](https://github.com/joffrey-bion/krossbow/pull/478) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.1.4 to 6.1.5 [\#472](https://github.com/joffrey-bion/krossbow/pull/472) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.16.1 to 2.17.0 [\#471](https://github.com/joffrey-bion/krossbow/pull/471) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlin from 1.9.22 to 1.9.23 [\#465](https://github.com/joffrey-bion/krossbow/pull/465) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ktor from 2.3.8 to 2.3.9 [\#461](https://github.com/joffrey-bion/krossbow/pull/461) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-serialization from 1.6.2 to 1.6.3 [\#456](https://github.com/joffrey-bion/krossbow/pull/456) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-coroutines from 1.7.3 to 1.8.0 [\#450](https://github.com/joffrey-bion/krossbow/pull/450) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.16.0 to 2.16.1 [\#439](https://github.com/joffrey-bion/krossbow/pull/439) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.jetbrains.kotlinx:atomicfu from 0.23.1 to 0.23.2 [\#437](https://github.com/joffrey-bion/krossbow/pull/437) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump moshi from 1.15.0 to 1.15.1 [\#429](https://github.com/joffrey-bion/krossbow/pull/429) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.eclipse.jetty.websocket:websocket\-jetty\-client from 11.0.18 to 11.0.19 [\#424](https://github.com/joffrey-bion/krossbow/pull/424) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+**Fixed bugs:**
+
+- Ktor\-based websocket client doesn't fail when using custom headers in the browser [\#460](https://github.com/joffrey-bion/krossbow/issues/460)
+- Sometimes 2 `CLOSE` frames are sent in Ktor client \(JS engine\) [\#459](https://github.com/joffrey-bion/krossbow/issues/459)
+- OkHttp implementation reports `http://` scheme in unresolved host error even when `ws://` was used [\#458](https://github.com/joffrey-bion/krossbow/issues/458)
+- Custom headers are not respected in Darwin client [\#457](https://github.com/joffrey-bion/krossbow/issues/457)
+
 ## [5.12.0](https://github.com/joffrey-bion/krossbow/tree/5.12.0) (2023-11-24)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.11.0...5.12.0)
 
