@@ -22,6 +22,8 @@ $dokka.location:/SockJS/CONNECTING/#/PointingToDeclaration/krossbow-websocket-s
 $dokka.location:/SockJS/OPEN/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-o-p-e-n.html
 $dokka.location:/SockJS/invoke/#kotlin.String#kotlin.Any?#SockJS.Options/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/invoke.html
 $dokka.location:/SockJS/prototype/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/prototype.html
+module:krossbow-io
+org.hildan.krossbow.io
 module:krossbow-stomp-core
 org.hildan.krossbow.stomp
 org.hildan.krossbow.stomp.charsets
@@ -40,7 +42,6 @@ org.hildan.krossbow.stomp.conversions.kxserialization.json
 module:krossbow-stomp-moshi
 org.hildan.krossbow.stomp.conversions.moshi
 module:krossbow-websocket-builtin
-org.hildan.krossbow.websocket
 org.hildan.krossbow.websocket.builtin
 org.hildan.krossbow.websocket.darwin
 org.hildan.krossbow.websocket.jdk
