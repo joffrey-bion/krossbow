@@ -2,7 +2,7 @@ import de.fayard.refreshVersions.core.DependencySelection
 import de.fayard.refreshVersions.core.StabilityLevel
 
 plugins {
-    id("com.gradle.enterprise") version "3.16.2"
+    id("com.gradle.enterprise") version "3.17"
     id("de.fayard.refreshVersions") version "0.60.5"
 }
 
