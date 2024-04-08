@@ -32,13 +32,3 @@ nexusPublishing {
         maxRetries.set(90) // sometimes Sonatype takes more than 10min...
     }
 }
-
-subprojects {
-    tasks.withType<AbstractTestTask> {
-        testLogging {
-            events("failed", "standardOut", "standardError")
-            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-            showStackTraces = true
-        }
-    }
-}
