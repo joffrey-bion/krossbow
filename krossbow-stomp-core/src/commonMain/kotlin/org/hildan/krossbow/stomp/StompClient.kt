@@ -38,8 +38,13 @@ class StompClient(
      * If [login] and [passcode] are provided, they are used to connect at STOMP level (after the web socket
      * connection is established).
      *
-     * If [customStompConnectHeaders] is provided, its content will be included in the CONNECT (or STOMP) frame and
-     * might be used by the server for various usages, e.g. Authorization
+     * If some [customStompConnectHeaders] are provided, they are included in the CONNECT (or STOMP) frame and might be
+     * used by the server for various usages, e.g. Authorization. Note that this frame is a STOMP-level frame, and is
+     * sent after the web socket handshake. The [customStompConnectHeaders] are not sent during the web socket 
+     * handshake itself.
+     * If you need to sent custom headers in the web socket handshake, use the [WebSocketClient] directly to establish 
+     * the web socket connection (with custom headers), and then perform the STOMP handshake as a second step over the 
+     * existing web socket connection using [WebSocketConnection.stomp].
      *
      * The `host` header of the CONNECT (or STOMP) frame can be customized via the [host] parameter.
      * This header was introduced as mandatory since STOMP 1.1 and defaults to the host of the provided URL.
