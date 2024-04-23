@@ -18,8 +18,6 @@ private val Platform.supportsStatusCodes: Boolean
 // Also, it covers cases of dynamically-selected implementations.
 class KtorMppWebSocketClientTest : WebSocketClientTestSuite(
     supportsStatusCodes = currentPlatform().supportsStatusCodes,
-    // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
-    headersTestDelay = 200.milliseconds.takeIf { currentPlatform() == Platform.Js.NodeJs },
 ) {
     override fun provideClient(): WebSocketClient = KtorWebSocketClient(
         HttpClient {

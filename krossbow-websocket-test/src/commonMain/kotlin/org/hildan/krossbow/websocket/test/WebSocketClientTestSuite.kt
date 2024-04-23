@@ -11,7 +11,6 @@ import kotlin.time.Duration.Companion.seconds
 
 abstract class WebSocketClientTestSuite(
     private val supportsStatusCodes: Boolean = true,
-    private val headersTestDelay: Duration? = null,
 ) {
     abstract fun provideClient(): WebSocketClient
 
@@ -193,16 +192,14 @@ abstract class WebSocketClientTestSuite(
     fun testHandshakeHeaders() = runTestRealTime {
         if (wsClient.supportsCustomHeaders) {
             println("Connecting with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
-            // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
-            val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
             val session = wsClient.connect(
-                url = testUrl(path = "/sendHandshakeHeaders", otherParams = extraParams),
+                url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeCustomHeaders"),
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
             println("Connected with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
             try {
                 // for some reason, this can be pretty long with the Ktor/JS client in nodeJS tests on macOS
-                val echoedHeadersFrame = session.expectTextFrame("header info frame", 50.seconds)
+                val echoedHeadersFrame = session.expectTextFrame("header info frame")
                 val headers = echoedHeadersFrame.text.lines()
                 assertContains(headers, "My-Header-1=my-value-1")
                 assertContains(headers, "My-Header-2=my-value-2")
