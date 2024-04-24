@@ -258,11 +258,11 @@ abstract class WebSocketClientTestSuite(
 private fun runTestRealTime(
     context: CoroutineContext = EmptyCoroutineContext,
     timeout: Duration = 60.seconds, // same default as runTest
-    block: suspend CoroutineScope.() -> Unit,
+    testBody: suspend CoroutineScope.() -> Unit,
 ) = runTest(timeout = timeout) {
     // Switches to a regular dispatcher to avoid the virtual time from runTest.
-    // We also use limitedParallelism to avoid 
+    // We also use limitedParallelism to keep things deterministic 
     withContext(Dispatchers.Default.limitedParallelism(1) + context) {
-        block()
+        testBody()
     }
 }
