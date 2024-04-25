@@ -13,6 +13,7 @@ public final class org/hildan/krossbow/websocket/UnboundedWsListenerFlowAdapter 
 public abstract interface class org/hildan/krossbow/websocket/WebSocketClient {
 	public static final field Companion Lorg/hildan/krossbow/websocket/WebSocketClient$Companion;
 	public abstract fun connect (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun connect$default (Lorg/hildan/krossbow/websocket/WebSocketClient;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun getSupportsCustomHeaders ()Z
 }
 
@@ -49,8 +50,9 @@ public final class org/hildan/krossbow/websocket/WebSocketCloseReasonUtilsKt {
 
 public abstract interface class org/hildan/krossbow/websocket/WebSocketConnection {
 	public abstract fun close (ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun close$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;ILjava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun getCanSend ()Z
-	public abstract fun getHost ()Ljava/lang/String;
+	public fun getHost ()Ljava/lang/String;
 	public abstract fun getIncomingFrames ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun getUrl ()Ljava/lang/String;
 	public abstract fun sendBinary (Lkotlinx/io/bytestring/ByteString;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
