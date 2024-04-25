@@ -87,6 +87,8 @@ private class WebSocketConnectionProxy(
 
     override val url: String
         get() = currentConnection.url
+    override val protocol: String?
+        get() = currentConnection.protocol
     override val canSend: Boolean
         get() = currentConnection.canSend
 

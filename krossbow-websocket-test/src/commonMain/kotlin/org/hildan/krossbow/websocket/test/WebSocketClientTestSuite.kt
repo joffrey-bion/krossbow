@@ -11,6 +11,7 @@ import kotlin.time.Duration.Companion.seconds
 
 abstract class WebSocketClientTestSuite(
     private val supportsStatusCodes: Boolean = true,
+    private val shouldTestNegotiatedSubprotocol: Boolean = true,
 ) {
     abstract fun provideClient(): WebSocketClient
 
@@ -198,6 +199,7 @@ abstract class WebSocketClientTestSuite(
             val echoedHeadersFrame = connection.expectTextFrame("Sec-WebSocket-Protocol header info frame")
             val secWebSocketProtocolHeaderValues = echoedHeadersFrame.text.lines().filter { it.startsWith("Sec-WebSocket-Protocol=") }
             assertEquals(emptyList(), secWebSocketProtocolHeaderValues, "The Sec-WebSocket-Protocol should not be sent when the protocol list is empty")
+            assertNull(connection.protocol, "the server shouldn't pick any protocol if the client didn't send any")
         } finally {
             connection.close()
         }
@@ -213,6 +215,9 @@ abstract class WebSocketClientTestSuite(
             val echoedHeadersFrame = connection.expectTextFrame("Sec-WebSocket-Protocol header info frame")
             val headers = echoedHeadersFrame.text.lines()
             assertContains(headers, "Sec-WebSocket-Protocol=v12.stomp")
+            if (shouldTestNegotiatedSubprotocol) {
+                assertEquals("v12.stomp", connection.protocol)
+            }
         } finally {
             connection.close()
         }
@@ -232,6 +237,9 @@ abstract class WebSocketClientTestSuite(
                 .map { it.trim() }
                 .toList()
             assertEquals(protocols, listOf("unknown-protocol", "v12.stomp", "v11.stomp", "v10.stomp"))
+            if (shouldTestNegotiatedSubprotocol) {
+                assertEquals("v12.stomp", connection.protocol)
+            }
         } finally {
             connection.close()
         }

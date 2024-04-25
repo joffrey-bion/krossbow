@@ -54,9 +54,10 @@ private class KtorWebSocketConnectionAdapter(
     private val wsSession: DefaultClientWebSocketSession
 ) : WebSocketConnectionWithPingPong {
 
-    override val url: String
-        get() = wsSession.call.request.url.toString()
+    override val url: String = wsSession.call.request.url.toString()
 
+    override val protocol: String? = wsSession.call.response.headers[HttpHeaders.SecWebSocketProtocol]
+    
     @OptIn(DelicateCoroutinesApi::class) // for isClosedForSend
     override val canSend: Boolean
         get() = !wsSession.outgoing.isClosedForSend

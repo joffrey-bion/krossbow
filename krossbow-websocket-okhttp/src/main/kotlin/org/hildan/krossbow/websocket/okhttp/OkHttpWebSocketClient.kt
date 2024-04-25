@@ -70,7 +70,11 @@ private class KrossbowToOkHttpListenerAdapter(
     }
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
-        val krossbowConnection = OkHttpSocketToKrossbowConnectionAdapter(webSocket, channelListener.incomingFrames)
+        val krossbowConnection = OkHttpSocketToKrossbowConnectionAdapter(
+            okSocket = webSocket,
+            protocol = response.header(SecWebSocketProtocol),
+            incomingFrames = channelListener.incomingFrames,
+        )
         completeConnection { resume(krossbowConnection) }
     }
 
@@ -117,11 +121,11 @@ private class KrossbowToOkHttpListenerAdapter(
 
 private class OkHttpSocketToKrossbowConnectionAdapter(
     private val okSocket: WebSocket,
+    override val protocol: String?,
     override val incomingFrames: Flow<WebSocketFrame>,
 ) : KrossbowWebSocketSession {
 
-    override val url: String
-        get() = okSocket.request().url.toString()
+    override val url: String = okSocket.request().url.toString()
 
     override val canSend: Boolean
         get() = true // all send methods are just no-ops when the session is closed, so always OK

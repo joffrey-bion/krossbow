@@ -9,6 +9,8 @@ class KtorJsWebSocketClientTest : KtorClientTestSuite(
     // JS node: error is too generic and doesn't differ per status code (ECONNREFUSED, unlike 'ws')
     // JS browser: cannot support status codes for security reasons
     supportsStatusCodes = false,
+    // See https://youtrack.jetbrains.com/issue/KTOR-6970
+    shouldTestNegotiatedSubprotocol = false,
 ) {
     override fun provideEngine(): HttpClientEngineFactory<*> = Js
 }

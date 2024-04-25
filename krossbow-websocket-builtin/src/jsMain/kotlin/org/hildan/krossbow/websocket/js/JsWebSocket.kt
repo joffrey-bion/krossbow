@@ -116,6 +116,10 @@ private class JsWebSocketConnection(
     override val url: String
         get() = ws.url
 
+    // has to be lazy (computed with getter) because the protocol is not set yet during the construction of this class
+    override val protocol: String?
+        get() = ws.protocol.ifEmpty { null }
+
     override val canSend: Boolean
         get() = ws.readyState == WebSocket.OPEN
 

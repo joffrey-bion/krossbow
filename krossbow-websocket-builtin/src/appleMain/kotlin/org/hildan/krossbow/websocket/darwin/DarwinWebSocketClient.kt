@@ -85,7 +85,7 @@ private class DarwinWebSocketListener(
 
     override fun URLSession(session: NSURLSession, webSocketTask: NSURLSessionWebSocketTask, didOpenWithProtocol: String?) {
         completeConnection {
-            resume(DarwinWebSocketConnection(url, incomingFrames.receiveAsFlow(), webSocketTask))
+            resume(DarwinWebSocketConnection(url, didOpenWithProtocol, incomingFrames.receiveAsFlow(), webSocketTask))
         }
     }
 
@@ -155,6 +155,7 @@ private val NSURLResponse.httpStatusCode: Int?
 
 private class DarwinWebSocketConnection(
     override val url: String,
+    override val protocol: String?,
     override val incomingFrames: Flow<WebSocketFrame>,
     private val webSocket: NSURLSessionWebSocketTask,
 ) : WebSocketConnectionWithPing {

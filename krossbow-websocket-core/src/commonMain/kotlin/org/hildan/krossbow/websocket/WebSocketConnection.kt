@@ -22,6 +22,16 @@ interface WebSocketConnection {
         get() = url.substringAfter("://").substringBefore("/").substringBefore(":")
 
     /**
+     * The web socket subprotocol spoken over this [WebSocketConnection], or null is no specific protocol was agreed
+     * upon during the handshake. This can happen either because the client did not request any protocol, or because 
+     * none of the requested protocols were accepted by the server.
+     * 
+     * To protocols requested by the client are the ones passed to [WebSocketClient.connect] during the handshake.
+     * The value of [protocol] must be one of the protocols requested by the client, or null.
+     */
+    val protocol: String?
+
+    /**
      * If false, sending frames should not be attempted and will likely throw an exception.
      * If true, sending frames will likely succeed.
      * However, no guarantees can be made because there could be a race condition between WS closure and a "send" call.

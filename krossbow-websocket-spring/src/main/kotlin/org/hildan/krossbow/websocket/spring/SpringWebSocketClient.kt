@@ -101,8 +101,10 @@ private class SpringSessionToKrossbowConnectionAdapter(
     // sending. Therefore, sending must be synchronized."
     private val mutex = Mutex()
 
-    override val url: String
-        get() = session.uri?.toString()!!
+    override val url: String = session.uri?.toString()
+        ?: error("the URL used to open the web socket connection isn't available")
+
+    override val protocol: String? = session.acceptedProtocol?.ifEmpty { null }
 
     override val canSend: Boolean
         get() = session.isOpen

@@ -6,7 +6,10 @@ import io.ktor.client.plugins.websocket.*
 import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.test.*
 
-abstract class KtorClientTestSuite(supportsStatusCodes: Boolean) : WebSocketClientTestSuite(supportsStatusCodes) {
+abstract class KtorClientTestSuite(
+    supportsStatusCodes: Boolean,
+    shouldTestNegotiatedSubprotocol: Boolean = true,
+) : WebSocketClientTestSuite(supportsStatusCodes, shouldTestNegotiatedSubprotocol) {
 
     override fun provideClient(): WebSocketClient = KtorWebSocketClient(
         HttpClient(provideEngine()) { install(WebSockets) },

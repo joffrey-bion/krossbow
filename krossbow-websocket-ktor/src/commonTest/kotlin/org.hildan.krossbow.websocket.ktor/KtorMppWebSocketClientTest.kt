@@ -2,9 +2,8 @@ package org.hildan.krossbow.websocket.ktor
 
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
-import org.hildan.krossbow.websocket.WebSocketClient
+import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.test.*
-import kotlin.time.Duration.Companion.milliseconds
 
 // WinHttp: error is too generic and doesn't differ per status code
 // JS node: error is too generic and doesn't differ per status code (ECONNREFUSED, unlike 'ws')
@@ -18,6 +17,9 @@ private val Platform.supportsStatusCodes: Boolean
 // Also, it covers cases of dynamically-selected implementations.
 class KtorMppWebSocketClientTest : WebSocketClientTestSuite(
     supportsStatusCodes = currentPlatform().supportsStatusCodes,
+    // Just to be sure we don't attempt to test this with the Java or JS engines
+    // See https://youtrack.jetbrains.com/issue/KTOR-6970
+    shouldTestNegotiatedSubprotocol = false,
 ) {
     override fun provideClient(): WebSocketClient = KtorWebSocketClient(
         HttpClient {

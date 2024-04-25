@@ -59,6 +59,7 @@ public abstract interface class org/hildan/krossbow/websocket/WebSocketConnectio
 	public abstract fun getCanSend ()Z
 	public fun getHost ()Ljava/lang/String;
 	public abstract fun getIncomingFrames ()Lkotlinx/coroutines/flow/Flow;
+	public abstract fun getProtocol ()Ljava/lang/String;
 	public abstract fun getUrl ()Ljava/lang/String;
 	public abstract fun sendBinary (Lkotlinx/io/bytestring/ByteString;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun sendText (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

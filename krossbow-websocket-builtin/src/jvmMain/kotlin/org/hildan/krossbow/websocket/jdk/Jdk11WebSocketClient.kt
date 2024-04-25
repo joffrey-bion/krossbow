@@ -116,6 +116,8 @@ private class Jdk11WebSocketConnection(
     // send operations must not be called concurrently as per the JDK11 documentation
     private val mutex = Mutex()
 
+    override val protocol: String? = webSocket.subprotocol?.ifEmpty { null }
+
     override val canSend: Boolean
         get() = !webSocket.isOutputClosed
 

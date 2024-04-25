@@ -7,10 +7,10 @@ import org.hildan.krossbow.websocket.WebSocketFrame
 import org.hildan.krossbow.websocket.WebSocketListenerFlowAdapter
 import kotlin.test.fail
 
-class WebSocketConnectionMock : WebSocketConnection {
-
-    override val url: String
-        get() = "dummy-url"
+class WebSocketConnectionMock(
+    override val url: String = "dummy-url",
+    override val protocol: String? = "dummy-protocol",
+) : WebSocketConnection {
 
     private val listener = WebSocketListenerFlowAdapter()
 
