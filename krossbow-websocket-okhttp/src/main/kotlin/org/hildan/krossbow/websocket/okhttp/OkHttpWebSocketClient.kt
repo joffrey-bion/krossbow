@@ -8,9 +8,7 @@ import okhttp3.Headers.Companion.toHeaders
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
 import org.hildan.krossbow.io.*
-import org.hildan.krossbow.websocket.WebSocketConnectionException
-import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.WebSocketListenerFlowAdapter
+import org.hildan.krossbow.websocket.*
 import java.net.SocketException
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -18,14 +16,29 @@ import kotlin.coroutines.resumeWithException
 import org.hildan.krossbow.websocket.WebSocketClient as KrossbowWebSocketClient
 import org.hildan.krossbow.websocket.WebSocketConnection as KrossbowWebSocketSession
 
+/**
+ * This header specifies one or more (comma-separated) WebSocket protocols that you wish to use, in order of
+ * preference. The first one that is supported by the server will be selected and returned by the server in a
+ * `Sec-WebSocket-Protocol` header included in the response.
+ */
+private const val SecWebSocketProtocol = "Sec-WebSocket-Protocol"
+
 class OkHttpWebSocketClient(
     private val client: OkHttpClient = OkHttpClient(),
 ) : KrossbowWebSocketClient {
 
     override val supportsCustomHeaders: Boolean = true
 
-    override suspend fun connect(url: String, headers: Map<String, String>): KrossbowWebSocketSession {
-        val request = Request.Builder().url(url).headers(headers.toHeaders()).build()
+    override suspend fun connect(url: String, protocols: List<String>, headers: Map<String, String>): KrossbowWebSocketSession {
+        val request = Request.Builder()
+            .url(url)
+            .headers(headers.toHeaders())
+            .apply {
+                if (protocols.isNotEmpty()) {
+                    header(SecWebSocketProtocol, protocols.joinToString(", "))
+                }
+            }
+            .build()
         val channelListener = WebSocketListenerFlowAdapter()
 
         return suspendCancellableCoroutine { continuation ->

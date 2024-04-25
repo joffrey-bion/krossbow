@@ -3,6 +3,7 @@ package org.hildan.krossbow.websocket.ktor
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.websocket.*
+import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.util.*
 import io.ktor.websocket.*
@@ -21,15 +22,20 @@ class KtorWebSocketClient(
 
     override val supportsCustomHeaders: Boolean = !PlatformUtils.IS_BROWSER
 
-    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
+    override suspend fun connect(url: String, protocols: List<String>, headers: Map<String, String>): WebSocketConnectionWithPingPong {
         require(headers.isEmpty() || supportsCustomHeaders) {
             "Custom web socket handshake headers are not supported in this Ktor engine " +
                 "(${httpClient.engine::class.simpleName}) on this platform (${PlatformUtils.platform})"
         }
         try {
             val wsKtorSession = httpClient.webSocketSession(url) {
+                // Ktor doesn't support comma-separated protocols in a single header, so we send a repeated header 
+                // instead (see https://youtrack.jetbrains.com/issue/KTOR-6971)
+                protocols.forEach {
+                    header(HttpHeaders.SecWebSocketProtocol, it)
+                }
                 headers.forEach { (name, value) ->
-                    this.headers[name] = value
+                    header(name, value)
                 }
             }
             return KtorWebSocketConnectionAdapter(wsKtorSession)

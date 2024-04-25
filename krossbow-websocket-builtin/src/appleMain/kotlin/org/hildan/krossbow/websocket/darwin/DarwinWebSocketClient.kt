@@ -35,7 +35,7 @@ class DarwinWebSocketClient(
     override val supportsCustomHeaders: Boolean = true
 
     @OptIn(ExperimentalForeignApi::class)
-    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection {
+    override suspend fun connect(url: String, protocols: List<String>, headers: Map<String, String>): WebSocketConnection {
         val socketEndpoint = NSURL.URLWithString(url)!!
 
         return suspendCancellableCoroutine { cont ->
@@ -49,7 +49,16 @@ class DarwinWebSocketClient(
                 delegate = DarwinWebSocketListener(url, cont, incomingFrames),
                 delegateQueue = NSOperationQueue.currentQueue()
             )
-            val webSocket = urlSession.webSocketTaskWithURL(socketEndpoint)
+            // The NSURLSession sends an empty `Sec-WebSocket-Protocol` header if we pass an empty list, which is not
+            // supposed to be valid, and might break on some servers.
+            // As per the RFC 6455 section 4.1 (https://datatracker.ietf.org/doc/html/rfc6455#section-4.1):
+            // "The elements that comprise this value MUST be non-empty strings with characters in the range U+0021 to
+            // U+007E not including separator characters as defined in [RFC2616] and MUST all be unique strings."
+            val webSocket = if (protocols.isEmpty()) {
+                urlSession.webSocketTaskWithURL(socketEndpoint)
+            } else {
+                urlSession.webSocketTaskWithURL(socketEndpoint, protocols = protocols)
+            }
             maximumMessageSize?.let { webSocket.setMaximumMessageSize(it.convert()) }
             webSocket.forwardNextIncomingMessagesAsyncTo(incomingFrames)
             webSocket.resume()

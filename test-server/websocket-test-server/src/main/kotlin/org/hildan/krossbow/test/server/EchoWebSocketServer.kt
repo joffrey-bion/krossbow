@@ -2,14 +2,20 @@ package org.hildan.krossbow.test.server
 
 import kotlinx.coroutines.*
 import org.java_websocket.*
+import org.java_websocket.drafts.Draft_6455
 import org.java_websocket.handshake.*
+import org.java_websocket.protocols.*
 import org.java_websocket.server.*
 import java.net.*
 import java.nio.*
-import kotlin.time.*
 
-internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(InetSocketAddress(port)) {
+private val Draft6455Default = Draft_6455()
+private val Draft6455WithStomp12 = Draft_6455(emptyList(), listOf(Protocol("v12.stomp")))
 
+internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(
+    InetSocketAddress(port),
+    listOf(Draft6455WithStomp12, Draft6455Default),
+) {
     override fun onStart() {
     }
 

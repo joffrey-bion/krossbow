@@ -17,11 +17,11 @@ object BrowserWebSocketClient : JsWebSocketClient {
 
     override val supportsCustomHeaders: Boolean = false
 
-    override fun newWebSocket(url: String, headers: Map<String, String>): WebSocket {
+    override fun newWebSocket(url: String, protocols: List<String>, headers: Map<String, String>): WebSocket {
         require(headers.isEmpty()) {
             "custom HTTP headers are not supported in the browser, see https://github.com/whatwg/websockets/issues/16"
         }
-        return WebSocket(url)
+        return WebSocket(url, protocols.toTypedArray())
     }
 }
 
@@ -38,12 +38,12 @@ interface JsWebSocketClient : WebSocketClient {
      * This function may throw an exception if [headers] is not empty and the underlying implementation doesn't support
      * custom headers in the handshake.
      */
-    fun newWebSocket(url: String, headers: Map<String, String>): WebSocket
+    fun newWebSocket(url: String, protocols: List<String>, headers: Map<String, String>): WebSocket
 
-    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection {
+    override suspend fun connect(url: String, protocols: List<String>, headers: Map<String, String>): WebSocketConnection {
         return suspendCancellableCoroutine { cont ->
             try {
-                val ws = newWebSocket(url, headers)
+                val ws = newWebSocket(url, protocols, headers)
                 ws.binaryType = BinaryType.ARRAYBUFFER // to receive arraybuffer instead of blob
                 var pendingConnect = true
                 // We use unlimited buffer size because we have no means for backpressure anyway

@@ -8,7 +8,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.io.*
 import kotlinx.io.bytestring.*
-import kotlinx.io.bytestring.unsafe.*
 import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import java.net.URI
@@ -28,7 +27,7 @@ class Jdk11WebSocketClient(
 
     override val supportsCustomHeaders: Boolean = true
 
-    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
+    override suspend fun connect(url: String, protocols: List<String>, headers: Map<String, String>): WebSocketConnectionWithPingPong {
         try {
             val listener = WebSocketListenerFlowAdapter()
             val jdk11WebSocketListener = Jdk11WebSocketListener(listener)
@@ -36,6 +35,9 @@ class Jdk11WebSocketClient(
                     .apply {
                         headers.forEach { (key, value) ->
                             header(key, value)
+                        }
+                        if (protocols.isNotEmpty()) {
+                            subprotocols(protocols[0], *protocols.drop(1).toTypedArray())
                         }
                         configureWebSocket()
                     }

@@ -189,7 +189,56 @@ abstract class WebSocketClientTestSuite(
     }
 
     @Test
-    fun testHandshakeHeaders() = runTestRealTime {
+    fun testHandshakeSubprotocolHeader_noProtocol() = runTestRealTime {
+        val connection = wsClient.connect(
+            url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeSubprotocolHeader_noProtocol"),
+            protocols = emptyList(),
+        )
+        try {
+            val echoedHeadersFrame = connection.expectTextFrame("Sec-WebSocket-Protocol header info frame")
+            val secWebSocketProtocolHeaderValues = echoedHeadersFrame.text.lines().filter { it.startsWith("Sec-WebSocket-Protocol=") }
+            assertEquals(emptyList(), secWebSocketProtocolHeaderValues, "The Sec-WebSocket-Protocol should not be sent when the protocol list is empty")
+        } finally {
+            connection.close()
+        }
+    }
+
+    @Test
+    fun testHandshakeSubprotocolHeader_singleProtocol() = runTestRealTime {
+        val connection = wsClient.connect(
+            url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeSubprotocolHeader_singleProtocol"),
+            protocols = listOf("v12.stomp"),
+        )
+        try {
+            val echoedHeadersFrame = connection.expectTextFrame("Sec-WebSocket-Protocol header info frame")
+            val headers = echoedHeadersFrame.text.lines()
+            assertContains(headers, "Sec-WebSocket-Protocol=v12.stomp")
+        } finally {
+            connection.close()
+        }
+    }
+
+    @Test
+    fun testHandshakeSubprotocolHeader_multipleProtocols() = runTestRealTime {
+        val connection = wsClient.connect(
+            url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeSubprotocolHeader_singleProtocol"),
+            protocols = listOf("unknown-protocol", "v12.stomp", "v11.stomp", "v10.stomp"),
+        )
+        try {
+            val echoedHeadersFrame = connection.expectTextFrame("Sec-WebSocket-Protocol header info frame")
+            val protocols = echoedHeadersFrame.text.lineSequence()
+                .filter { it.startsWith("Sec-WebSocket-Protocol=") }
+                .flatMap { it.removePrefix("Sec-WebSocket-Protocol=").split(",") }
+                .map { it.trim() }
+                .toList()
+            assertEquals(protocols, listOf("unknown-protocol", "v12.stomp", "v11.stomp", "v10.stomp"))
+        } finally {
+            connection.close()
+        }
+    }
+
+    @Test
+    fun testHandshakeCustomHeaders() = runTestRealTime {
         if (wsClient.supportsCustomHeaders) {
             println("Connecting with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
             val connection = wsClient.connect(

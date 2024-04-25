@@ -24,10 +24,11 @@ private class SpringWebSocketClientAdapter(private val client: SpringWebSocketCl
 
     override val supportsCustomHeaders: Boolean = true
 
-    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnectionWithPingPong {
+    override suspend fun connect(url: String, protocols: List<String>, headers: Map<String, String>): WebSocketConnectionWithPingPong {
         try {
             val handler = KrossbowToSpringHandlerAdapter()
             val handshakeHeaders = WebSocketHttpHeaders().apply {
+                secWebSocketProtocol = protocols
                 headers.forEach { (name, value) ->
                     put(name, listOf(value))
                 }

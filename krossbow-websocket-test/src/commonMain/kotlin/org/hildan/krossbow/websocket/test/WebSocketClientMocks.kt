@@ -9,7 +9,7 @@ fun webSocketClientMock(connect: suspend () -> WebSocketConnection = { WebSocket
 
         override val supportsCustomHeaders: Boolean = false
 
-        override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection = connect()
+        override suspend fun connect(url: String, protocols: List<String>, headers: Map<String, String>): WebSocketConnection = connect()
     }
 
 /**
@@ -24,7 +24,7 @@ class ControlledWebSocketClientMock : WebSocketClient {
     private val connectEventChannel = Channel<Unit>()
     private val connectedEventChannel = Channel<Result<WebSocketConnection>>()
 
-    override suspend fun connect(url: String, headers: Map<String, String>): WebSocketConnection {
+    override suspend fun connect(url: String, protocols: List<String>, headers: Map<String, String>): WebSocketConnection {
         connectEventChannel.send(Unit)
         return connectedEventChannel.receive().getOrThrow()
     }

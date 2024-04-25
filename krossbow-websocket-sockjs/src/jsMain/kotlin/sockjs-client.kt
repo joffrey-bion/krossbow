@@ -8,7 +8,7 @@ import org.w3c.dom.events.Event
 @JsNonModule
 external object SockJS {
     @nativeInvoke
-    operator fun invoke(url: String, _reserved: Any? = definedExternally, options: Options = definedExternally): WebSocket
+    operator fun invoke(url: String, protocols: List<String> = definedExternally, options: Options = definedExternally): WebSocket
     var prototype: WebSocket
     var CONNECTING: String /* 0 */
     var OPEN: String /* 1 */
