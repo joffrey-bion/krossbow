@@ -192,19 +192,19 @@ abstract class WebSocketClientTestSuite(
     fun testHandshakeHeaders() = runTestRealTime {
         if (wsClient.supportsCustomHeaders) {
             println("Connecting with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
-            val session = wsClient.connect(
+            val connection = wsClient.connect(
                 url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeCustomHeaders"),
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
             println("Connected with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
             try {
                 // for some reason, this can be pretty long with the Ktor/JS client in nodeJS tests on macOS
-                val echoedHeadersFrame = session.expectTextFrame("header info frame")
+                val echoedHeadersFrame = connection.expectTextFrame("header info frame")
                 val headers = echoedHeadersFrame.text.lines()
                 assertContains(headers, "My-Header-1=my-value-1")
                 assertContains(headers, "My-Header-2=my-value-2")
             } finally {
-                session.close()
+                connection.close()
             }
         } else {
             assertFailsWith<IllegalArgumentException> {
@@ -218,35 +218,35 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testEchoText() = runTestRealTime {
-        val session = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoText"))
+        val connection = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoText"))
 
         try {
-            session.sendText("hello")
-            val helloResponse = session.expectTextFrame("hello frame")
+            connection.sendText("hello")
+            val helloResponse = connection.expectTextFrame("hello frame")
             assertEquals("hello", helloResponse.text)
         } finally {
-            session.close()
+            connection.close()
         }
 
-        session.expectCloseFrame("after echo text")
-        session.expectNoMoreFrames("after echo text CLOSE frame")
+        connection.expectCloseFrame("after echo text")
+        connection.expectNoMoreFrames("after echo text CLOSE frame")
     }
 
     @Test
     fun testEchoBinary() = runTestRealTime {
-        val session = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoBinary"))
+        val connection = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoBinary"))
 
         try {
             val fortyTwos = ByteString(42, 42, 42)
-            session.sendBinary(fortyTwos)
-            val fortyTwosResponse = session.expectBinaryFrame("3 binary 42s")
+            connection.sendBinary(fortyTwos)
+            val fortyTwosResponse = connection.expectBinaryFrame("3 binary 42s")
             assertEquals(fortyTwos, fortyTwosResponse.bytes)
         } finally {
-            session.close()
+            connection.close()
         }
 
-        session.expectCloseFrame("after echo binary")
-        session.expectNoMoreFrames("after echo binary CLOSE frame")
+        connection.expectCloseFrame("after echo binary")
+        connection.expectNoMoreFrames("after echo binary CLOSE frame")
     }
 }
 
