@@ -88,7 +88,7 @@ data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHead
 }
 
 data class StompConnectedHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val version: String by header()
+    val version: String by optionalHeader(default = "1.0") { it } // mandatory since 1.1, but not sent by 1.0 servers
     val session: String? by optionalHeader()
     val server: String? by optionalHeader()
     val heartBeat: HeartBeat? by heartBeatHeader()

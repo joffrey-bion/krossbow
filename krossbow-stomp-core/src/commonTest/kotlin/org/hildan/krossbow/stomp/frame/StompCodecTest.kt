@@ -17,7 +17,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host")
+        val headers = StompConnectHeaders(host = "some.host", acceptVersion = listOf("1.2"))
         val frame = StompFrame.Stomp(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -32,7 +32,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host")
+        val headers = StompConnectHeaders(host = "some.host", acceptVersion = listOf("1.2"))
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -49,7 +49,12 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host", login = "bob", passcode = "mypass")
+        val headers = StompConnectHeaders(
+            host = "some.host",
+            acceptVersion = listOf("1.2"),
+            login = "bob",
+            passcode = "mypass",
+        )
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -69,6 +74,7 @@ class StompCodecTest {
 
         val headers = StompConnectHeaders(
             host = "some.host",
+            acceptVersion = listOf("1.2"),
             login = "bob",
             passcode = "mypass",
             customHeaders = mapOf("Authorization" to "Bearer -jwt-")
@@ -101,9 +107,36 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = null)
+        val headers = StompConnectHeaders(host = null, acceptVersion = listOf("1.2"))
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
+    fun connected() {
+        val frameText = """
+            CONNECTED
+            version:1.2
+            
+            $nullChar
+        """.trimIndent()
+
+        val headers = StompConnectedHeaders(version = "1.2")
+        val frame = StompFrame.Connected(headers)
+        assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
+    fun connected_noVersionShouldBe10() {
+        val frameText = """
+            CONNECTED
+            
+            $nullChar
+        """.trimIndent()
+
+        val actualFrame = frameText.decodeToStompFrame()
+        assertIs<StompFrame.Connected>(actualFrame)
+        assertEquals("1.0", actualFrame.headers.version)
     }
 
     @Test

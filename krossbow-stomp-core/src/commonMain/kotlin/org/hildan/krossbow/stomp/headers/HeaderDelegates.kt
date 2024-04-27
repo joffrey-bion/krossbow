@@ -6,8 +6,7 @@ import kotlin.reflect.KProperty
 
 internal fun header(customKey: String? = null): HeaderDelegate<String> = header(customKey) { it }
 
-internal fun optionalHeader(customKey: String? = null, default: String? = null): HeaderDelegate<String?> =
-    optionalHeader(customKey, default) { it }
+internal fun optionalHeader(customKey: String? = null): HeaderDelegate<String?> = optionalHeader(customKey) { it }
 
 internal inline fun <T> optionalHeader(
     customKey: String? = null,
