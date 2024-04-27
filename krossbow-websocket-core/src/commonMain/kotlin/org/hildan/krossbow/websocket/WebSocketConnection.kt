@@ -26,7 +26,7 @@ interface WebSocketConnection {
      * upon during the handshake. This can happen either because the client did not request any protocol, or because 
      * none of the requested protocols were accepted by the server.
      * 
-     * To protocols requested by the client are the ones passed to [WebSocketClient.connect] during the handshake.
+     * The protocols requested by the client are the ones passed to [WebSocketClient.connect] during the handshake.
      * The value of [protocol] must be one of the protocols requested by the client, or null.
      */
     val protocol: String?

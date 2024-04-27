@@ -22,8 +22,11 @@ interface WebSocketClient {
      * Opens a web socket connection to the given [url] and suspends until the connection is OPEN.
      *
      * @param url the URL to connect to
-     * @param protocols an optional list of one or more web socket subprotocols that you wish to use, in order of
-     * preference. The first one that is supported by the server will be selected and returned by the server.
+     * @param protocols an optional list of one or more
+     * [web socket subprotocols](https://www.iana.org/assignments/websocket/websocket.xhtml#subprotocol-name) that 
+     * is intended to be spoken over the created web socket connection. The list should be provided in order of
+     * preference. The first one that is supported by the server will be selected during the handshake, and can be 
+     * found at [WebSocketConnection.protocol].
      * @param headers custom headers to send during the web socket handshake. Support for custom handshake headers is
      * optional. Implementations that don't support them must throw an [IllegalArgumentException] if [headers] is not
      * empty.
@@ -38,8 +41,8 @@ interface WebSocketClient {
     ): WebSocketConnection
     
     @Deprecated(
+        message = "This method is only kept for binary compatibility. Use the overload with the 'protocols' parameter",
         level = DeprecationLevel.HIDDEN,
-        message = "This method is only kept for binary compatibiliy. Use the overload with the 'protocols' parameter",
     )
     suspend fun connect(url: String, headers: Map<String, String> = emptyMap()): WebSocketConnection =
         connect(url, protocols = emptyList(), headers)
