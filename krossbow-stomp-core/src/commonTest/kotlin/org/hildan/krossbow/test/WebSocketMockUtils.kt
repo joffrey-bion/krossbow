@@ -11,26 +11,27 @@ import org.hildan.krossbow.stomp.headers.StompErrorHeaders
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
 import org.hildan.krossbow.stomp.headers.StompReceiptHeaders
 import org.hildan.krossbow.websocket.WebSocketFrame
-import org.hildan.krossbow.websocket.test.WebSocketConnectionMock
-import org.hildan.krossbow.websocket.test.webSocketClientMock
+import org.hildan.krossbow.websocket.test.*
 import kotlin.coroutines.*
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 suspend fun connectWithMocks(
     connectedHeaders: StompConnectedHeaders = StompConnectedHeaders(),
+    wsSelectedProtocol: String? = null,
     configure: StompConfig.() -> Unit = {},
 ): Pair<WebSocketConnectionMock, StompSession> = coroutineScope {
-    val wsSession = WebSocketConnectionMock()
-    val stompClient = StompClient(webSocketClientMock { wsSession }) {
+    val wsClient = WebSocketClientMock()
+    val stompClient = StompClient(wsClient) {
         configure()
         // to use the test dispatcher
         defaultSessionCoroutineContext = coroutineContext[ContinuationInterceptor] ?: EmptyCoroutineContext
     }
-    val session = async { stompClient.connect("dummy URL") }
+    val deferredStompSession = async { stompClient.connect("dummy URL") }
+    val wsSession = wsClient.awaitConnectAndSimulateSuccess(selectedProtocol = wsSelectedProtocol)
     wsSession.awaitConnectFrameAndSimulateCompletion()
     wsSession.simulateConnectedFrameReceived(connectedHeaders)
-    val stompSession = session.await()
+    val stompSession = deferredStompSession.await()
     Pair(wsSession, stompSession)
 }
 

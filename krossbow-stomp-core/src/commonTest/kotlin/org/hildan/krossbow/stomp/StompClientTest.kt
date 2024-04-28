@@ -19,12 +19,27 @@ private val TEST_CONNECTION_TIMEOUT: Duration = 500.milliseconds
 class StompClientTest {
 
     @Test
-    fun connect_suspendsUntilConnectedFrame() = runTest {
-        val wsClient = ControlledWebSocketClientMock()
+    fun connect_translatesToCorrectWebSocketConnect() = runTest {
+        val wsClient = WebSocketClientMock()
         val stompClient = StompClient(wsClient)
 
-        val deferredStompSession = async { stompClient.connect("dummy") }
-        wsClient.waitForConnectCall()
+        val deferredStompSession = async { stompClient.connect("ws://dummy") }
+
+        val connectCall = wsClient.awaitConnectCall()
+        assertEquals("ws://dummy", connectCall.url)
+        assertEquals(emptyList(), connectCall.protocols)
+        assertEquals(emptyMap(), connectCall.headers)
+        
+        deferredStompSession.cancelAndJoin()
+    }
+
+    @Test
+    fun connect_suspendsUntilConnectedFrame() = runTest {
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient)
+
+        val deferredStompSession = async { stompClient.connect("ws://dummy") }
+        wsClient.awaitConnectCall()
         assertFalse(deferredStompSession.isCompleted, "connect() call should wait for web socket connection")
 
         val wsSession = WebSocketConnectionMock()
@@ -114,26 +129,31 @@ class StompClientTest {
     private suspend fun testConnectHeaders(
         expectedHeaders: StompConnectHeaders,
         configureClient: StompConfig.() -> Unit = {},
-        connectCall: suspend (StompClient) -> Unit,
+        connectCall: suspend (StompClient) -> StompSession,
     ) {
         coroutineScope {
-            val wsSession = WebSocketConnectionMock()
-            val stompClient = StompClient(webSocketClientMock { wsSession }, configureClient)
+            val webSocketClient = WebSocketClientMock()
+            val stompClient = StompClient(webSocketClient, configureClient)
 
-            launch { connectCall(stompClient) }
+            launch {
+                val session = connectCall(stompClient)
+                session.disconnect()
+            }
+            val wsSession = webSocketClient.awaitConnectAndSimulateSuccess()
             val frame = wsSession.awaitConnectFrameAndSimulateCompletion()
             assertEquals<Map<String, String>>(HashMap(expectedHeaders), HashMap(frame.headers))
             assertNull(frame.body, "connect frame should not have a body")
 
             // just to end the connect call
             wsSession.simulateConnectedFrameReceived()
+            wsSession.expectClose()
         }
     }
 
     @Test
     fun connect_timesOutIfWebSocketDoesNotConnect() = runTest {
         // this WS client will suspend on connect() until manually triggered (which is not done during this test)
-        val stompClient = StompClient(ControlledWebSocketClientMock()) {
+        val stompClient = StompClient(WebSocketClientMock()) {
             connectionTimeout = TEST_CONNECTION_TIMEOUT
         }
         // we don't expect the closure of the web socket here, because it has not even been connected at all
@@ -144,13 +164,14 @@ class StompClientTest {
 
     @Test
     fun connect_timesOutIfConnectedFrameIsNotReceived() = runTest {
-        val wsSession = WebSocketConnectionMock()
-        val stompClient = StompClient(webSocketClientMock { wsSession }) {
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient) {
             connectionTimeout = TEST_CONNECTION_TIMEOUT
         }
         launch {
+            val wsConnection = wsClient.awaitConnectAndSimulateSuccess()
             // should close WS on timeout to avoid leaking it (connection at WS level was done, just not at STOMP level)
-            wsSession.expectClose()
+            wsConnection.expectClose()
         }
         assertTimesOutWith(ConnectionTimeout::class, TEST_CONNECTION_TIMEOUT) {
             stompClient.connect("dummy")
@@ -160,7 +181,11 @@ class StompClientTest {
     @Test
     fun connect_failsIfWebSocketFailsToConnect() = runTest {
         val wsConnectionException = Exception("some web socket exception")
-        val stompClient = StompClient(webSocketClientMock { throw wsConnectionException })
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient)
+        launch {
+            wsClient.awaitConnectAndSimulateFailure(wsConnectionException)
+        }
         val exception = assertFailsWith(WebSocketConnectionException::class) {
             stompClient.connect("wss://dummy.com")
         }
@@ -172,10 +197,11 @@ class StompClientTest {
 
     @Test
     fun connect_failsIfErrorFrameReceived() = runTest {
-        val wsSession = WebSocketConnectionMock()
-        val stompClient = StompClient(webSocketClientMock { wsSession })
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient)
 
         launch {
+            val wsSession = wsClient.awaitConnectAndSimulateSuccess()
             wsSession.awaitConnectFrameAndSimulateCompletion()
             wsSession.simulateErrorFrameReceived("connection failed")
             wsSession.expectClose()
@@ -190,10 +216,11 @@ class StompClientTest {
 
     @Test
     fun connect_failsIfWebSocketIsClosedWhenConnecting() = runTest {
-        val wsSession = WebSocketConnectionMock()
-        val stompClient = StompClient(webSocketClientMock { wsSession })
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient)
 
         launch {
+            val wsSession = wsClient.awaitConnectAndSimulateSuccess()
             wsSession.awaitConnectFrameAndSimulateCompletion()
             wsSession.simulateClose(1000, "abrupt close")
             wsSession.expectNoClose()
@@ -208,13 +235,14 @@ class StompClientTest {
 
     @Test
     fun connect_shouldNotLeakWebSocketConnectionIfCancelled() = runTest {
-        val wsSession = WebSocketConnectionMock()
-        val stompClient = StompClient(webSocketClientMock { wsSession })
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient)
 
         val connectJob = launch {
             stompClient.connect("wss://dummy.com/path")
         }
-        // ensures we have already connected the WS
+        val wsSession = wsClient.awaitConnectAndSimulateSuccess()
+        // ensures we have sent the STOMP CONNECT frame over the WS
         wsSession.awaitConnectFrameAndSimulateCompletion()
         // simulates the cancellation of the connect() call during the STOMP connect handshake
         connectJob.cancel()
@@ -239,8 +267,8 @@ class StompClientTest {
     fun errorOnWebSocketShouldCloseTheSession_messageBiggerThanCloseReasonMaxLength() = runTest {
         val errorMessage = "some web socket exception with a very long message that exceeds the maximum " +
             "allowed length for the 'reason' in web socket close frames. It needs to be truncated."
-        val wsSession = WebSocketConnectionMock()
-        val stompClient = StompClient(webSocketClientMock { wsSession }) {
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient) {
             // necessary so runTest knows to wait for the session's coroutines to progress
             defaultSessionCoroutineContext = coroutineContext[ContinuationInterceptor.Key]!! // retrieves the test dispatcher
         }
@@ -248,6 +276,7 @@ class StompClientTest {
         launch {
             stompClient.connect("wss://dummy.com")
         }
+        val wsSession = wsClient.awaitConnectAndSimulateSuccess()
         wsSession.awaitConnectFrameAndSimulateCompletion()
         wsSession.simulateConnectedFrameReceived()
         wsSession.simulateErrorFrameReceived(errorMessage)
