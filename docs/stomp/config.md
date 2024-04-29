@@ -72,9 +72,18 @@ You can find out about all configuration properties in the
 :   Like `receiptTimeout` but only for the receipt of the DISCONNECT frame.
     This is ignored if `gracefulDisconnect` is disabled.
 
-    Note that if this timeout expires, the [StompSession.disconnect] call doesn't throw an exception.
+    Note that if this timeout expires, the `StompSession.disconnect` call doesn't throw an exception.
     This is to allow servers to close the connection quickly (sometimes too quick for sending a RECEIPT/ERROR) as
     [mentioned in the specification](http://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
+
+`subscriptionCompletionTimeout`
+:   When the session is disconnected or when an error occurs, subscription flows complete or throw an exception.
+    This timeout defines how long the STOMP session will wait for subscribers to reach this completion/error before
+    cancelling them along with internal coroutines.
+    
+    Slow subscribers that take longer than this timeout may miss messages that were buffered before the completion or
+    error, because they will instead get a `CancellationException`. The original error will be provided as cause of the
+    cancellation in this case. They may miss previously buffered messages.
 
 `gracefulDisconnect` (default: true) { #gracefulDisconnect }
 :   Enables [graceful disconnect](https://stomp.github.io/stomp-specification-1.2.html#DISCONNECT).
@@ -82,10 +91,18 @@ You can find out about all configuration properties in the
     If enabled, when disconnecting from the server, the client first sends a DISCONNECT frame with a `receipt`
     header, and then waits for a RECEIPT frame before closing the connection.
     
-    If this graceful disconnect is disabled, then calling [StompSession.disconnect] immediately closes the web
+    If this graceful disconnect is disabled, then calling `StompSession.disconnect` immediately closes the web
     socket connection.
     In this case, there is no guarantee that the server received all previous messages.
 
 `instrumentation`
 :   A set of hooks that are called in different places of the internal execution of Krossbow.
     The instrumentation can be used for monitoring, logging or debugging purposes.
+
+`defaultSessionCoroutineContext`
+:   An additional coroutine context used for the collection and decoding of the STOMP frames within [StompSession]s
+    created by this client.
+    
+    It can be overridden independently for each session when calling `StompClient.connect`.
+    
+    This is mostly useful to inject a test dispatcher.
