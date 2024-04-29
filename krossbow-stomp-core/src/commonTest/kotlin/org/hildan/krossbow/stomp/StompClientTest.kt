@@ -236,13 +236,10 @@ class StompClientTest {
         launch {
             wsClient.awaitConnectAndSimulateFailure(wsConnectionException)
         }
-        val exception = assertFailsWith(WebSocketConnectionException::class) {
+        val exception = assertFailsWith(Exception::class) {
             stompClient.connect("wss://dummy.com")
         }
-        assertNotNull(exception.cause, "ConnectException should have original exception as cause")
-        assertEquals("wss://dummy.com", exception.url)
-        assertEquals(wsConnectionException::class, exception.cause!!::class)
-        assertEquals(wsConnectionException.message, exception.cause?.message)
+        assertEquals(wsConnectionException.message, exception.message)
     }
 
     @Test

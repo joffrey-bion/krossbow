@@ -68,7 +68,10 @@ class StompClient(
         sessionCoroutineContext: CoroutineContext = EmptyCoroutineContext,
     ): StompSession {
         val session = withTimeoutOrNull(config.connectionTimeout) {
-            val webSocket = webSocketConnect(url)
+            val webSocket = webSocketClient.connect(
+                url = url,
+                protocols = StompVersion.preferredOrder.map { it.wsSubprotocolId },
+            )
             webSocket.stomp(
                 config = config,
                 host = host,
@@ -79,20 +82,6 @@ class StompClient(
             )
         }
         return session ?: throw ConnectionTimeout(url, config.connectionTimeout)
-    }
-
-    private suspend fun webSocketConnect(url: String): WebSocketConnection {
-        try {
-            return webSocketClient.connect(
-                url = url,
-                protocols = StompVersion.preferredOrder.map { it.wsSubprotocolId },
-            )
-        } catch (e: CancellationException) {
-            // this cancellation comes from the outside, we should not wrap this exception
-            throw e
-        } catch (e: Exception) {
-            throw WebSocketConnectionException(url, cause = e)
-        }
     }
 }
 
@@ -117,6 +106,11 @@ class ConnectionTimeout(url: String, timeout: Duration) :
 /**
  * Exception thrown when the connection attempt failed at web socket level.
  */
+@Deprecated(
+    message = "This exception is no longer thrown by the StompClient, in favor of org.hildan.krossbow.websocket.WebSocketConnectionException.",
+    level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("org.hildan.krossbow.websocket.WebSocketConnectionException"),
+)
 open class WebSocketConnectionException(
     url: String,
     message: String = "Failed to connect at web socket level to $url",
