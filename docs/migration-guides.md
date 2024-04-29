@@ -1,5 +1,73 @@
 Here are some details about how to migrate from one major version to another.
 
+## From 6.x to 7.x
+
+### Web socket subprotocol negotiation
+
+As part of issue [#493](https://github.com/joffrey-bion/krossbow/issues/493), a separate `protocols` parameter was added
+to `WebSocketClient.connect` to enable web socket subprotocol negotiation.
+
+Binary compatibility is preserved through some hidden synthetic functions. 
+However, source compatibility isn't: usages of the `connect()` method that passed custom headers without a named `headers` parameter
+will no longer compile. Adding the `headers =` parameter name will solve the issue.
+
+For full negotiation support, clients need to be aware of which subprotocol the server chose to speak. This is why the
+`protocol` property was added to `WebSocketConnection` ([#498](https://github.com/joffrey-bion/krossbow/issues/498)).
+Implementers of this interface must implement this property. There shouldn't be many 3rd party implementations of the
+connection interface, so binary compatibility should not be a real issue here.
+
+### STOMP web socket subprotocol negotiation
+
+Some servers like ActiveMQ require negotiating the STOMP protocol as a web socket subprotocol during the web socket
+handshake (see issue [#492](https://github.com/joffrey-bion/krossbow/issues/492)), and cannot work otherwise.
+
+**Breaking change:** To make the experience smoother, Krossbow v7.0.0 now automatically sends STOMP subprotocols (in all
+supported versions) during the web socket handshake via the `Sec-WebSocket-Protocol` header.
+
+If your server doesn't support it, you can customize the web socket handshake by manually connecting using
+`WebSocketClient.connect()` with the parameters that suit you best, and then connect at STOMP level using the
+`WebSocketConnection.stomp()` extension (without the need for a `StompClient` at all):
+
+```kotlin
+val client: WebSocketClient = TODO("get some web socket client implementation")
+val wsConnection = client.connect(url) // without any subprotocols
+val stompConfig = StompConfig().apply { 
+    // set your config here if needed
+}
+val stompSession = wsConnection.stomp(config)
+```
+
+### No `host` header sent for STOMP 1.0
+
+Thanks to the aforementioned changes, we can now detect the STOMP protocol version used by the server before sending
+the first STOMP frame (`CONNECT` or `STOMP`).
+If STOMP 1.0 is detected as web socket subprotocol during the web socket handshake, we no longer send by default the
+`host` header which was introduced in 1.1 (and effectively breaks some old servers, see
+[#122](https://github.com/joffrey-bion/krossbow/issues/122)). It can still be sent by manually specifying it of course.
+
+### STOMP protocol version negotiation
+
+The STOMP protocol itself supports negotiation of the version via headers in the `CONNECT` (or `STOMP`) frame.
+So far, Krossbow only specified `1.2` as supported version. From now on, all 3 versions `1.0`, `1.1`, and `1.2` are
+advertised as supported by the client.
+
+If necessary, this behavior can be overridden by sending the `accept-version` header manually in
+`customStompConnectHeaders`.
+
+Because the protocol version can be negotiated both via web socket subprotocol and at STOMP level, there could
+potentially be a mismatch. If this happens, the `connect()` call throws an exception. This can be disabled with
+`StompConfig.failOnStompVersionMismatch`.
+
+### `StompClient.connect()` now throws a different `WebSocketConnectionException`
+
+The `org.hildan.krossbow.stomp.WebSocketConnectionException` is deprecated in favor of
+`org.hildan.krossbow.websocket.WebSocketConnectionException`.
+That exception has been around for a few years now and encapsulates all connection failures from different client
+implementations already, so there is no need for a similar exception at the `StompClient` level.
+
+If you used to catch this exception, make sure to update your import (the error-level deprecation should mitigate
+any risk of missing the new exception).
+
 ## From 5.x to 6.x
 
 ### Switch to `kotlinx-io` and the `ByteString` type
