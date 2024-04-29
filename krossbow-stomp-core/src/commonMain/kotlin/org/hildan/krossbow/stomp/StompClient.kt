@@ -1,13 +1,12 @@
 package org.hildan.krossbow.stomp
 
 import kotlinx.coroutines.*
-import org.hildan.krossbow.stomp.config.StompConfig
-import org.hildan.krossbow.stomp.headers.StompConnectHeaders
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.WebSocketConnection
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.time.Duration
+import org.hildan.krossbow.stomp.config.*
+import org.hildan.krossbow.stomp.version.*
+import org.hildan.krossbow.websocket.*
+import kotlin.coroutines.*
+import kotlin.jvm.*
+import kotlin.time.*
 
 /**
  * A STOMP 1.2 client based on web sockets.
@@ -47,9 +46,10 @@ class StompClient(
      * existing web socket connection using [WebSocketConnection.stomp].
      *
      * The `host` header of the CONNECT (or STOMP) frame can be customized via the [host] parameter.
-     * This header was introduced as mandatory since STOMP 1.1 and defaults to the host of the provided URL.
-     * Some old STOMP servers may refuse connections with a `host` header, in which case you can force it to null to
-     * prevent it from being sent.
+     * This header was introduced as mandatory since STOMP 1.1 and defaults to the host of the provided URL, or is not
+     * send in case version 1.0 of the STOMP protocol was negotiated during the web socket handshake as subprotocol.
+     * Some old STOMP servers may refuse connections with a `host` header, and not advertise themselves as 1.0 servers
+     * during the web socket handshake, in which case you can force it to null to prevent it from being sent.
      *
      * An additional [sessionCoroutineContext] can be provided to override the context used for the collection and
      * decoding of the STOMP frames in the created [StompSession].
@@ -63,27 +63,30 @@ class StompClient(
         url: String,
         login: String? = null,
         passcode: String? = null,
-        host: String? = extractHost(url),
+        host: String? = DefaultHost,
         customStompConnectHeaders: Map<String, String> = emptyMap(),
         sessionCoroutineContext: CoroutineContext = EmptyCoroutineContext,
     ): StompSession {
         val session = withTimeoutOrNull(config.connectionTimeout) {
             val webSocket = webSocketConnect(url)
-            val connectHeaders = StompConnectHeaders(
+            webSocket.stomp(
+                config = config,
                 host = host,
                 login = login,
                 passcode = passcode,
-                heartBeat = config.heartBeat,
                 customHeaders = customStompConnectHeaders,
+                sessionCoroutineContext = sessionCoroutineContext,
             )
-            webSocket.stomp(config, connectHeaders, sessionCoroutineContext)
         }
         return session ?: throw ConnectionTimeout(url, config.connectionTimeout)
     }
 
     private suspend fun webSocketConnect(url: String): WebSocketConnection {
         try {
-            return webSocketClient.connect(url)
+            return webSocketClient.connect(
+                url = url,
+                protocols = StompVersion.preferredOrder.map { it.wsSubprotocolId },
+            )
         } catch (e: CancellationException) {
             // this cancellation comes from the outside, we should not wrap this exception
             throw e
@@ -93,39 +96,17 @@ class StompClient(
     }
 }
 
-/**
- * Establishes a STOMP session over an existing [WebSocketConnection].
- *
- * The behaviour of the STOMP protocol can be customized via the [config].
- * However, the semantics of [StompConfig.connectionTimeout] is slightly changed: it doesn't take into account
- * the web socket connection time (since it already happened outside of this method call).
- *
- * If [login] and [passcode] are provided, they are used for STOMP authentication.
- *
- * The CONNECT/STOMP frame can be further customized by using [customHeaders], which may be useful for server-specific
- * behaviour, like token-based authentication.
- *
- * If the connection at the STOMP level fails, the underlying web socket is closed.
- */
-suspend fun WebSocketConnection.stomp(
+@Suppress("unused")
+@Deprecated(message = "kept only for binary compatibility", level = DeprecationLevel.HIDDEN)
+@JvmName("stomp")
+suspend fun WebSocketConnection.stompHidden(
     config: StompConfig,
-    host: String? = this.host,
+    host: String? = DefaultHost,
     login: String? = null,
     passcode: String? = null,
     customHeaders: Map<String, String> = emptyMap(),
     sessionCoroutineContext: CoroutineContext = EmptyCoroutineContext,
-): StompSession {
-    val connectHeaders = StompConnectHeaders(
-        host = host,
-        login = login,
-        passcode = passcode,
-        heartBeat = config.heartBeat,
-        customHeaders = customHeaders,
-    )
-    return stomp(config, connectHeaders, sessionCoroutineContext)
-}
-
-private fun extractHost(url: String) = url.substringAfter("://").substringBefore("/").substringBefore(":")
+): StompSession = stomp(config, host, login, passcode, customHeaders, sessionCoroutineContext)
 
 /**
  * Exception thrown when the websocket connection + STOMP connection takes too much time.

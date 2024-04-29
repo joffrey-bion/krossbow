@@ -5,7 +5,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
-import org.hildan.krossbow.stomp.headers.StompConnectHeaders
+import org.hildan.krossbow.stomp.headers.*
 import org.hildan.krossbow.test.*
 import org.hildan.krossbow.websocket.test.*
 import kotlin.coroutines.ContinuationInterceptor
@@ -27,7 +27,7 @@ class StompClientTest {
 
         val connectCall = wsClient.awaitConnectCall()
         assertEquals("ws://dummy", connectCall.url)
-        assertEquals(emptyList(), connectCall.protocols)
+        assertEquals(listOf("v12.stomp", "v11.stomp", "v10.stomp"), connectCall.protocols)
         assertEquals(emptyMap(), connectCall.headers)
         
         deferredStompSession.cancelAndJoin()
@@ -50,6 +50,56 @@ class StompClientTest {
         wsSession.simulateConnectedFrameReceived()
         advanceUntilIdle()
         assertTrue(deferredStompSession.isCompleted, "connect() call should finish after receiving CONNECTED frame")
+    }
+
+    @Test
+    fun connect_wsSubprotocolNegotiation_hostNotSentInV10() = runTest {
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient)
+
+        launch { stompClient.connect("ws://dummy") }
+
+        val wsSession = wsClient.awaitConnectAndSimulateSuccess(selectedProtocol = "v10.stomp")
+
+        val connectFrame = wsSession.awaitConnectFrameAndSimulateCompletion()
+        assertNull(connectFrame.headers.host, "should not send 'host' header in STOMP 1.0")
+
+        wsSession.simulateConnectedFrameReceived(StompConnectedHeaders(version = "1.0"))
+    }
+
+    @Test
+    fun connect_wsSubprotocolNegotiation_failOnVersionMismatch() = runTest {
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient)
+
+        launch {
+            val wsSession = wsClient.awaitConnectAndSimulateSuccess(selectedProtocol = "v11.stomp")
+            wsSession.awaitConnectFrameAndSimulateCompletion()
+            wsSession.simulateConnectedFrameReceived(StompConnectedHeaders(version = "1.2"))
+        }
+
+        val exception = assertFailsWith<StompConnectionException> {
+            stompClient.connect("ws://dummy")
+        }
+        assertEquals("negotiated STOMP version mismatch: 1.1 at web socket level (subprotocol 'v11.stomp'), 1.2 at STOMP level", exception.cause?.message)
+    }
+
+    @Test
+    fun connect_wsSubprotocolNegotiation_noFailOnVersionMismatch() = runTest {
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient) {
+            failOnStompVersionMismatch = false
+        }
+
+        launch {
+            val wsSession = wsClient.awaitConnectAndSimulateSuccess(selectedProtocol = "v11.stomp")
+            wsSession.awaitConnectFrameAndSimulateCompletion()
+            wsSession.simulateConnectedFrameReceived(StompConnectedHeaders(version = "1.2"))
+            wsSession.expectClose()
+        }
+
+        val session = stompClient.connect("ws://dummy") // should not fail
+        session.disconnect()
     }
 
     @Test

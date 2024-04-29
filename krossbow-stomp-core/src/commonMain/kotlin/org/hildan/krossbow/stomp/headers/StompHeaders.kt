@@ -20,6 +20,7 @@ import org.hildan.krossbow.stomp.headers.HeaderNames.SESSION
 import org.hildan.krossbow.stomp.headers.HeaderNames.SUBSCRIPTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.TRANSACTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.VERSION
+import org.hildan.krossbow.stomp.version.*
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -70,7 +71,7 @@ data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHead
 
     constructor(
         host: String?,
-        acceptVersion: List<String> = listOf("1.2"),
+        acceptVersion: List<String> = StompVersion.preferredOrder.map { it.headerValue },
         login: String? = null,
         passcode: String? = null,
         heartBeat: HeartBeat? = null,

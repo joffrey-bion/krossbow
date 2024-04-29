@@ -33,7 +33,7 @@ public final class org/hildan/krossbow/stomp/StompClient {
 }
 
 public final class org/hildan/krossbow/stomp/StompClientKt {
-	public static final fun stomp (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final synthetic fun stomp (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun stomp$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
@@ -88,6 +88,11 @@ public final class org/hildan/krossbow/stomp/StompSessionKt {
 	public static final fun withTransaction (Lorg/hildan/krossbow/stomp/StompSession;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class org/hildan/krossbow/stomp/StompWsExtensionsKt {
+	public static final fun stomp (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun stomp$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
 public final class org/hildan/krossbow/stomp/WebSocketClosedUnexpectedly : java/lang/Exception {
 	public fun <init> (ILjava/lang/String;)V
 	public final fun getCode ()I
@@ -135,6 +140,7 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun getConnectionTimeout-UwyO8pc ()J
 	public final fun getDefaultSessionCoroutineContext ()Lkotlin/coroutines/CoroutineContext;
 	public final fun getDisconnectTimeout-UwyO8pc ()J
+	public final fun getFailOnStompVersionMismatch ()Z
 	public final fun getGracefulDisconnect ()Z
 	public final fun getHeartBeat ()Lorg/hildan/krossbow/stomp/config/HeartBeat;
 	public final fun getHeartBeatTolerance ()Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;
@@ -147,6 +153,7 @@ public final class org/hildan/krossbow/stomp/config/StompConfig {
 	public final fun setConnectionTimeout-LRDsOJo (J)V
 	public final fun setDefaultSessionCoroutineContext (Lkotlin/coroutines/CoroutineContext;)V
 	public final fun setDisconnectTimeout-LRDsOJo (J)V
+	public final fun setFailOnStompVersionMismatch (Z)V
 	public final fun setGracefulDisconnect (Z)V
 	public final fun setHeartBeat (Lorg/hildan/krossbow/stomp/config/HeartBeat;)V
 	public final fun setHeartBeatTolerance (Lorg/hildan/krossbow/stomp/config/HeartBeatTolerance;)V

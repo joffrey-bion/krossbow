@@ -121,6 +121,12 @@ class StompConfig {
      * The instrumentation can be used for monitoring, logging or debugging purposes.
      */
     var instrumentation: KrossbowInstrumentation? = null
+
+    /**
+     * Whether the connection fails if the version of the STOMP protocol is negotiated to different values at the web
+     * socket handshake level (via subprotocol), and at STOMP level (in the `CONNECT`/`CONNECTED` frames).
+     */
+    var failOnStompVersionMismatch: Boolean = true
 }
 
 /**
