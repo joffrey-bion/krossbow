@@ -20,7 +20,7 @@ $dokka.location:/SockJS/CLOSED/#/PointingToDeclaration/krossbow-websocket-sockj
 $dokka.location:/SockJS/CLOSING/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-c-l-o-s-i-n-g.html
 $dokka.location:/SockJS/CONNECTING/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-c-o-n-n-e-c-t-i-n-g.html
 $dokka.location:/SockJS/OPEN/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/-o-p-e-n.html
-$dokka.location:/SockJS/invoke/#kotlin.String#kotlin.Any?#SockJS.Options/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/invoke.html
+$dokka.location:/SockJS/invoke/#kotlin.String#kotlin.collections.List[kotlin.String]#SockJS.Options/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/invoke.html
 $dokka.location:/SockJS/prototype/#/PointingToDeclaration/krossbow-websocket-sockjs/[root]/-sock-j-s/prototype.html
 module:krossbow-io
 org.hildan.krossbow.io
