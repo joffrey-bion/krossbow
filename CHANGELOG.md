@@ -1,5 +1,26 @@
 # Change Log
 
+## [7.0.0](https://github.com/joffrey-bion/krossbow/tree/7.0.0) (2024-04-30)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/6.0.0...7.0.0)
+
+**Breaking changes:**
+
+- Stop throwing and deprecate `org.hildan.krossbow.stomp.WebSocketConnectionException` [\#499](https://github.com/joffrey-bion/krossbow/issues/499)
+- Add websocket subprotocol negotiation for STOMP [\#497](https://github.com/joffrey-bion/krossbow/issues/497)
+- Expose the negotiated web socket subprotocol as `WebSocketConnection.protocol` [\#498](https://github.com/joffrey-bion/krossbow/issues/498)
+- Support selecting web socket subprotocols \(`Sec\-WebSocket\-Protocol` header\) [\#493](https://github.com/joffrey-bion/krossbow/issues/493)
+
+**Implemented enhancements:**
+
+- Enable binary compatibility mode for default methods in interfaces [\#496](https://github.com/joffrey-bion/krossbow/issues/496)
+
+**Upgraded dependencies:**
+
+- Bump kotlinx\-io from 0.3.2 to 0.3.3 [\#495](https://github.com/joffrey-bion/krossbow/pull/495) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.jetbrains.kotlinx:atomicfu from 0.23.2 to 0.24.0 [\#490](https://github.com/joffrey-bion/krossbow/pull/490) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.1.5 to 6.1.6 [\#488](https://github.com/joffrey-bion/krossbow/pull/488) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ktor from 2.3.9 to 2.3.10 [\#484](https://github.com/joffrey-bion/krossbow/pull/484) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [6.0.0](https://github.com/joffrey-bion/krossbow/tree/6.0.0) (2024-03-30)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/5.12.0...6.0.0)
 
