@@ -1,6 +1,7 @@
 .idea
 .fleet
 
+.kotlin
 .gradle
 build/
 

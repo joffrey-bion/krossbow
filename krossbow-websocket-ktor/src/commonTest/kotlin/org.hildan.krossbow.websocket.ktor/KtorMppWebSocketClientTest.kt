@@ -6,11 +6,11 @@ import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.test.*
 
 // WinHttp: error is too generic and doesn't differ per status code
-// JS node: error is too generic and doesn't differ per status code (ECONNREFUSED, unlike 'ws')
 // JS browser: cannot support status codes for security reasons
+// JS node: supports status codes since Kotlin 2.0
 // Other: currently the other platforms use the CIO engine because of classpath order, and CIO supports status codes
 private val Platform.supportsStatusCodes: Boolean
-    get() = this !is Platform.Windows && this !is Platform.Js
+    get() = this !is Platform.Windows && this !is Platform.Js.Browser
 
 // This test is somewhat redundant with the tests on specific platforms, but it ensures that we don't forget to test
 // new Ktor-supported platforms when they are added to the Krossbow projects.
