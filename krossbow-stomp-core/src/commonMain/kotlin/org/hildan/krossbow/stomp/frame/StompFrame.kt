@@ -1,6 +1,5 @@
 package org.hildan.krossbow.stomp.frame
 
-import org.hildan.krossbow.stomp.charsets.*
 import org.hildan.krossbow.stomp.charsets.Charset
 import org.hildan.krossbow.stomp.charsets.extractCharset
 import org.hildan.krossbow.stomp.headers.*
@@ -214,7 +213,7 @@ private fun inferCharset(contentTypeHeader: String?): Charset {
     val charset = extractCharset(contentTypeHeader)
     return when {
         charset != null -> charset
-        contentTypeHeader.startsWith("text/") -> Charsets.UTF_8
+        contentTypeHeader.startsWith("text/") -> Charset.UTF_8
         else -> throw UnsupportedOperationException(
             "Binary frame with content-type '$contentTypeHeader' cannot be converted to text"
         )

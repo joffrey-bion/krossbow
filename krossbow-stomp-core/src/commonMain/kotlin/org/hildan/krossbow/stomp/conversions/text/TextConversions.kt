@@ -48,8 +48,8 @@ private class SingleConverterStompSession(
     private val converter: TextMessageConverter,
 ) : StompSession by session, TypedStompSession {
 
-    private val charset: Charset = extractCharset(converter.mediaType) ?: Charsets.UTF_8
-    private val sendBinaryFrames: Boolean = charset != Charsets.UTF_8
+    private val charset: Charset = extractCharset(converter.mediaType) ?: Charset.UTF_8
+    private val sendBinaryFrames: Boolean = charset != Charset.UTF_8
 
     override suspend fun <T> convertAndSend(
         headers: StompSendHeaders,
