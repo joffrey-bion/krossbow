@@ -21,21 +21,15 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(
 
     override fun onOpen(conn: WebSocket, handshake: ClientHandshake) {
         val uri = URI.create(handshake.resourceDescriptor)
-        println("Connection to URI $uri")
-
         if (uri.path == "/sendHandshakeHeaders") {
             conn.sendMessageWithHeaders(handshake)
-        } else {
-            println("Not sending headers frame for URI $uri")
         }
     }
 
     private fun WebSocket.sendMessageWithHeaders(handshake: ClientHandshake) {
         val headerNames = handshake.iterateHttpFields().asSequence().toList()
         val headersData = headerNames.joinToString("\n") { "$it=${handshake.getFieldValue(it)}" }
-        println("Sending message with headers...")
         send(headersData)
-        println("Headers frame sent!")
     }
 
     override fun onMessage(conn: WebSocket, message: String?) {
@@ -66,8 +60,3 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(
         port
     }
 }
-
-private fun URI.queryAsMap() = query.split("&")
-    .map { it.split("=") }
-    .associate { it[0] to it[1] }
-
