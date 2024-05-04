@@ -15,6 +15,9 @@ kotlin {
         }
     }
     compilerOptions {
+        progressiveMode = true
+        // we can't enable this yet because of -Xjvm-default=all-compatibility generating a waning on non-JVM
+        // allWarningsAsErrors = true
         freeCompilerArgs.add("-Xjvm-default=all-compatibility")
     }
 }
