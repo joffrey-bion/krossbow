@@ -66,11 +66,7 @@ private class Jdk11WebSocketListener(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO + CoroutineName("krossbow-jdk11-ws-listener-adapter"))
 
     override fun onText(webSocket: WebSocket, data: CharSequence, last: Boolean): CompletionStage<*> = scope.future {
-        listener.onTextMessage(last) {
-            // currently there is nothing better to write UTF-8
-            // https://github.com/Kotlin/kotlinx-io/issues/261
-            writeString(data.toString())
-        }
+        listener.onTextMessage(last) { writeString(data) }
         // The call to request(1) here is to ensure that onText() is not called again before the (potentially partial)
         // message has been processed
         webSocket.request(1)
