@@ -20,7 +20,7 @@ import org.hildan.krossbow.stomp.headers.HeaderNames.SESSION
 import org.hildan.krossbow.stomp.headers.HeaderNames.SUBSCRIPTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.TRANSACTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.VERSION
-import org.hildan.krossbow.stomp.version.*
+import org.hildan.krossbow.stomp.version.StompVersion
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -88,7 +88,8 @@ data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHead
     )
 }
 
-data class StompConnectedHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompConnectedHeaders(private val rawHeaders: StompHeaders) :
+    StompHeaders by rawHeaders {
     val version: String by optionalHeader(default = "1.0") { it } // mandatory since 1.1, but not sent by 1.0 servers
     val session: String? by optionalHeader()
     val server: String? by optionalHeader()
@@ -99,12 +100,14 @@ data class StompConnectedHeaders(private val rawHeaders: StompHeaders) : StompHe
         session: String? = null,
         server: String? = null,
         heartBeat: HeartBeat? = null,
+        customHeaders: Map<String, String> = emptyMap(),
     ) : this(
         headersOf(
             VERSION to version,
             SESSION to session,
             SERVER to server,
             HEART_BEAT to heartBeat?.formatAsHeaderValue(),
+            customHeaders = customHeaders,
         )
     )
 }
@@ -128,7 +131,8 @@ data class StompSendHeaders(private val rawHeaders: StompHeaders) : StompHeaders
     )
 }
 
-data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) :
+    StompHeaders by rawHeaders {
     val destination: String by header()
     val id: String by header()
     val ack: AckMode by optionalHeader(default = AckMode.AUTO) { AckMode.fromHeader(it) }
@@ -150,47 +154,69 @@ data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) : StompHe
     )
 }
 
-data class StompUnsubscribeHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompUnsubscribeHeaders(private val rawHeaders: StompHeaders) :
+    StompHeaders by rawHeaders {
     val id: String by header()
 
-    constructor(id: String) : this(headersOf(ID to id))
+    constructor(
+        id: String,
+        customHeaders: Map<String, String> = emptyMap(),
+    ) : this(headersOf(ID to id, customHeaders = customHeaders))
 }
 
-data class StompDisconnectHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
+data class StompDisconnectHeaders(private val rawHeaders: StompHeaders) :
+    StompHeaders by rawHeaders {
 
-    constructor(receipt: String? = null) : this(headersOf(RECEIPT to receipt))
+    constructor(
+        receipt: String? = null,
+        customHeaders: Map<String, String> = emptyMap(),
+    ) : this(headersOf(RECEIPT to receipt, customHeaders = customHeaders))
 }
 
 data class StompAckHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val id: String by header()
     val transaction: String? by optionalHeader()
 
-    constructor(id: String, transaction: String? = null) : this(headersOf(ID to id, TRANSACTION to transaction))
+    constructor(
+        id: String,
+        transaction: String? = null,
+        customHeaders: Map<String, String> = emptyMap()
+    ) : this(headersOf(ID to id, TRANSACTION to transaction, customHeaders = customHeaders))
 }
 
 data class StompNackHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val id: String by header()
     val transaction: String? by optionalHeader()
 
-    constructor(id: String, transaction: String? = null) : this(headersOf(ID to id, TRANSACTION to transaction))
+    constructor(
+        id: String,
+        transaction: String? = null,
+        customHeaders: Map<String, String> = emptyMap()
+    ) : this(headersOf(ID to id, TRANSACTION to transaction, customHeaders = customHeaders))
 }
 
 data class StompBeginHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val transaction: String by header()
 
-    constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
+    constructor(transaction: String, customHeaders: Map<String, String> = emptyMap()) : this(
+        headersOf(TRANSACTION to transaction, customHeaders = customHeaders)
+    )
 }
 
 data class StompCommitHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val transaction: String by header()
 
-    constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
+    constructor(transaction: String, customHeaders: Map<String, String> = emptyMap()) : this(
+        headersOf(TRANSACTION to transaction, customHeaders = customHeaders)
+    )
 }
 
 data class StompAbortHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val transaction: String by header()
 
-    constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
+    constructor(transaction: String, customHeaders: Map<String, String> = emptyMap()) : this(
+        headersOf(TRANSACTION to transaction, customHeaders = customHeaders)
+    )
 }
 
 data class StompMessageHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
@@ -219,7 +245,10 @@ data class StompMessageHeaders(private val rawHeaders: StompHeaders) : StompHead
 data class StompReceiptHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val receiptId: String by header(RECEIPT_ID)
 
-    constructor(receiptId: String) : this(headersOf(RECEIPT_ID to receiptId))
+    constructor(
+        receiptId: String,
+        customHeaders: Map<String, String> = emptyMap()
+    ) : this(headersOf(RECEIPT_ID to receiptId, customHeaders = customHeaders))
 }
 
 data class StompErrorHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
@@ -251,4 +280,5 @@ private fun String.toHeartBeat(): HeartBeat {
     )
 }
 
-private fun HeartBeat.formatAsHeaderValue() = "${minSendPeriod.inWholeMilliseconds},${expectedPeriod.inWholeMilliseconds}"
+private fun HeartBeat.formatAsHeaderValue() =
+    "${minSendPeriod.inWholeMilliseconds},${expectedPeriod.inWholeMilliseconds}"
