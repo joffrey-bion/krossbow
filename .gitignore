@@ -2,6 +2,7 @@
 .fleet
 
 .gradle
+.kotlin
 build/
 
 docs/kdoc
