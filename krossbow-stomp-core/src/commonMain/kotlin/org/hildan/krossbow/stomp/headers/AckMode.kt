@@ -27,7 +27,7 @@ enum class AckMode(val headerValue: String) {
     CLIENT_INDIVIDUAL("client-individual");
 
     companion object {
-        private val valuesByText = values().associateBy { it.headerValue }
+        private val valuesByText = entries.associateBy { it.headerValue }
 
         fun fromHeader(text: String) = valuesByText[text] ?: throw InvalidAckHeaderException(text)
     }
