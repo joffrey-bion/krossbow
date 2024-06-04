@@ -1,5 +1,17 @@
 # Change Log
 
+## [7.1.0](https://github.com/joffrey-bion/krossbow/tree/7.1.0) (2024-06-04)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/7.0.0...7.1.0)
+
+**Upgraded dependencies:**
+
+- Bump org.springframework:spring\-websocket from 6.1.7 to 6.1.8 [\#514](https://github.com/joffrey-bion/krossbow/pull/514) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-io from 0.3.4 to 0.3.5 [\#510](https://github.com/joffrey-bion/krossbow/pull/510) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ktor from 2.3.10 to 2.3.11 [\#503](https://github.com/joffrey-bion/krossbow/pull/503) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.1.6 to 6.1.7 [\#508](https://github.com/joffrey-bion/krossbow/pull/508) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-coroutines from 1.8.0 to 1.8.1 [\#505](https://github.com/joffrey-bion/krossbow/pull/505) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.17.0 to 2.17.1 [\#501](https://github.com/joffrey-bion/krossbow/pull/501) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [7.0.0](https://github.com/joffrey-bion/krossbow/tree/7.0.0) (2024-04-30)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/6.0.0...7.0.0)
 
