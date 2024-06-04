@@ -149,16 +149,22 @@ interface StompSession {
 
     /**
      * Sends a BEGIN frame with the given [transactionId].
+     *
+     * @see withTransaction
      */
     suspend fun begin(transactionId: String)
 
     /**
      * Sends a COMMIT frame with the given [transactionId].
+     *
+     * @see withTransaction
      */
     suspend fun commit(transactionId: String)
 
     /**
      * Sends an ABORT frame with the given [transactionId].
+     *
+     * @see withTransaction
      */
     suspend fun abort(transactionId: String)
 
