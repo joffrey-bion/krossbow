@@ -162,9 +162,8 @@ internal class BaseStompSession(
         get() = if (command == StompCommand.DISCONNECT) config.disconnectTimeout else config.receiptTimeout
 
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> {
-        val headersWithId = headers.withId()
 
-        return startSubscription(headersWithId)
+        return startSubscription(headers)
             .consumeAsFlow()
             .onCompletion {
                 when (it) {
@@ -174,7 +173,7 @@ internal class BaseStompSession(
                     // covered here.
                     is CancellationException -> {
                         if (scope.isActive) {
-                            unsubscribe(headersWithId.id)
+                            unsubscribe(headers.id)
                         } else {
                             // The whole session is cancelled, the web socket must be already closed
                         }
@@ -235,17 +234,6 @@ internal class BaseStompSession(
             // http://stomp.github.io/stomp-specification-1.2.html#Connection_Lingering
         }
     }
-}
-
-private fun StompSubscribeHeaders.withId(): StompSubscribeHeaders {
-    // we can't use the delegated id property here, because it would crash if the underlying header is absent
-    val existingId = get(HeaderNames.ID)
-    if (existingId != null) {
-        return this
-    }
-    val rawHeadersCopy = HashMap(this)
-    rawHeadersCopy[HeaderNames.ID] = generateUuid()
-    return StompSubscribeHeaders(rawHeadersCopy.asStompHeaders())
 }
 
 private fun Flow<StompEvent>.materializeErrorsAndCompletion(): Flow<StompEvent> =

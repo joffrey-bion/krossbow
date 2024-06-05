@@ -20,6 +20,7 @@ import org.hildan.krossbow.stomp.headers.HeaderNames.SESSION
 import org.hildan.krossbow.stomp.headers.HeaderNames.SUBSCRIPTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.TRANSACTION
 import org.hildan.krossbow.stomp.headers.HeaderNames.VERSION
+import org.hildan.krossbow.stomp.utils.generateUuid
 import org.hildan.krossbow.stomp.version.*
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -135,7 +136,7 @@ data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) : StompHe
 
     constructor(
         destination: String,
-        id: String? = null, // not optional, but this allows generating it in subscription flows
+        id: String = generateUuid(),
         ack: AckMode = AckMode.AUTO,
         receipt: String? = null,
         customHeaders: Map<String, String> = emptyMap(),

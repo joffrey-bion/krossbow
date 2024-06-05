@@ -22,7 +22,7 @@ interface WebSocketConnection {
         get() = url.substringAfter("://").substringBefore("/").substringBefore(":")
 
     /**
-     * The web socket subprotocol spoken over this [WebSocketConnection], or null is no specific protocol was agreed
+     * The web socket subprotocol spoken over this [WebSocketConnection], or null if no specific protocol was agreed
      * upon during the handshake. This can happen either because the client did not request any protocol, or because 
      * none of the requested protocols were accepted by the server.
      * 
