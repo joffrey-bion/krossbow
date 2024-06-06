@@ -219,3 +219,28 @@ private fun inferCharset(contentTypeHeader: String?): Charset {
         )
     }
 }
+
+/**
+ * Creates a copy of this [StompFrame] with the headers changed via [updateHeadersCopy].
+ * This operation doesn't mutate the headers of this [StompFrame].
+ */
+// Note: this is a poor man's copy function, but adding it to the interface would require making the interface generic,
+// and would mean more bloat in the headers classes (which should be redesigned soon anyway).
+@Suppress("UNCHECKED_CAST")
+internal fun <T : StompFrame> T.copyWithHeaders(updateHeadersCopy: StompHeaders.() -> Unit): T = when (this) {
+    is StompFrame.Connect -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Connected -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Send -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Subscribe -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Unsubscribe -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Disconnect -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Ack -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Nack -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Begin -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Commit -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Abort -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Message -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Receipt -> copy(headers.copy(updateHeadersCopy)) as T
+    is StompFrame.Error -> copy(headers.copy(updateHeadersCopy)) as T
+    else -> error("Unknown StompFrame type ${this::class.simpleName}") // qualifiedName cannot be used in JS
+}

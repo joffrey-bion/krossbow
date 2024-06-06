@@ -5,10 +5,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.*
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
-import org.hildan.krossbow.stomp.frame.FrameBody
-import org.hildan.krossbow.stomp.frame.StompCommand
-import org.hildan.krossbow.stomp.frame.StompEvent
-import org.hildan.krossbow.stomp.frame.StompFrame
+import org.hildan.krossbow.stomp.frame.*
 import org.hildan.krossbow.stomp.headers.*
 import org.hildan.krossbow.stomp.heartbeats.HeartBeater
 import org.hildan.krossbow.stomp.heartbeats.NO_HEART_BEATS
@@ -122,26 +119,28 @@ internal class BaseStompSession(
     }
 
     private suspend fun prepareHeadersAndSendFrame(frame: StompFrame): StompReceipt? {
-        maybeSetContentLength(frame)
-        maybeSetAutoReceipt(frame)
-        val receiptId = frame.headers.receipt
+        val effectiveFrame = frame.copyWithHeaders {
+            maybeSetContentLength(frame.body)
+            maybeSetAutoReceipt()
+        }
+        val receiptId = effectiveFrame.headers.receipt
         if (receiptId == null) {
-            sendStompFrame(frame)
+            sendStompFrame(effectiveFrame)
             return null
         }
-        sendAndWaitForReceipt(receiptId, frame)
+        sendAndWaitForReceipt(receiptId, effectiveFrame)
         return StompReceipt(receiptId)
     }
 
-    private fun maybeSetContentLength(frame: StompFrame) {
-        if (config.autoContentLength && frame.headers.contentLength == null) {
-            frame.headers.contentLength = frame.body?.bytes?.size ?: 0
+    private fun StompHeaders.maybeSetContentLength(frameBody: FrameBody?) {
+        if (config.autoContentLength && contentLength == null) {
+            contentLength = frameBody?.bytes?.size ?: 0
         }
     }
 
-    private fun maybeSetAutoReceipt(frame: StompFrame) {
-        if (config.autoReceipt && frame.headers.receipt == null) {
-            frame.headers.receipt = generateUuid()
+    private fun StompHeaders.maybeSetAutoReceipt() {
+        if (config.autoReceipt && receipt == null) {
+            receipt = generateUuid()
         }
     }
 

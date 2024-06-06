@@ -62,6 +62,29 @@ internal fun headersOf(
     return headersMap.asStompHeaders()
 }
 
+@Suppress("UNCHECKED_CAST")
+internal fun <H : StompHeaders> H.copy(update: StompHeaders.() -> Unit): H {
+    val newRawHeaders = SimpleStompHeaders(toMutableMap()).apply(update)
+    return when (this) {
+        is StompConnectHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompConnectedHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompSendHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompSubscribeHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompUnsubscribeHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompDisconnectHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompAckHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompNackHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompBeginHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompCommitHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompAbortHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompMessageHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompReceiptHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is StompErrorHeaders -> copy(rawHeaders = newRawHeaders) as H
+        is SimpleStompHeaders -> newRawHeaders as H
+        else -> error("copy() doesn't support the given class ${this::class.simpleName}") // qualifiedName cannot be used in JS
+    }
+}
+
 data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
     val host: String? by optionalHeader() // mandatory since 1.2, but forbidden in some 1.0 servers
     val acceptVersion: List<String> by acceptVersionHeader()
