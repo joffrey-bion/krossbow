@@ -228,6 +228,18 @@ class StompCodecTest {
     }
 
     @Test
+    fun send_classicTextBody_contentLengthTooShort() {
+        val headers = StompSendHeaders(destination = "test").apply {
+            contentLength = 5
+        }
+        val bodyText = "The body of the message."
+        val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteString()))
+        assertFailsWith<InvalidContentLengthException> { textFrame.encodeToText() }
+        assertFailsWith<InvalidContentLengthException> { binFrame.encodeToByteString() }
+    }
+
+    @Test
     fun message_noBody_noContentLength() {
         val frameText = """
             MESSAGE
@@ -369,6 +381,22 @@ class StompCodecTest {
         val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
         val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteString()))
         assertEncodingDecoding(frameText, textFrame, binFrame)
+    }
+
+    @Test
+    fun message_classicTextBody_contentLengthTooShort() {
+        val headers = StompMessageHeaders(
+            destination = "test",
+            messageId = "123",
+            subscription = "42"
+        ).apply {
+            contentLength = 5
+        }
+        val bodyText = "The body of the message."
+        val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
+        val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteString()))
+        assertFailsWith<InvalidContentLengthException> { textFrame.encodeToText() }
+        assertFailsWith<InvalidContentLengthException> { binFrame.encodeToByteString() }
     }
 
     private fun assertEncodingDecoding(frameText: String, textFrame: StompFrame, binFrame: StompFrame) {
