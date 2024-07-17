@@ -16,7 +16,7 @@ vyarus-github-info = { id = "ru.vyarus.github-info", version.ref = "vyarus-githu
 [versions]
 
 avast-docker-compose-plugin = "0.17.7"
-binary-compatibility-validator-plugin = "0.15.1"
+binary-compatibility-validator-plugin = "0.16.0"
 complete-kotlin-plugin = "1.1.0"
 dokka = "1.9.20"
 hildan-kotlin-publish-plugin = "1.6.0"
