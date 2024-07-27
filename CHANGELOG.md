@@ -1,5 +1,23 @@
 # Change Log
 
+## [7.2.0](https://github.com/joffrey-bion/krossbow/tree/7.2.0) (2024-07-27)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/7.1.0...7.2.0)
+
+**Upgraded dependencies:**
+
+- Bump kotlinx\-io to 0.5.1 [\#538](https://github.com/joffrey-bion/krossbow/pull/538) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.17.1 to 2.17.2 [\#537](https://github.com/joffrey-bion/krossbow/pull/537) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-serialization to 1.7.1 [\#529](https://github.com/joffrey-bion/krossbow/pull/529) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ktor from 2.3.11 to 2.3.12 [\#528](https://github.com/joffrey-bion/krossbow/pull/528) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket to 6.1.11 [\#532](https://github.com/joffrey-bion/krossbow/pull/532) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.jetbrains.kotlinx:atomicfu from 0.24.0 to 0.25.0 [\#530](https://github.com/joffrey-bion/krossbow/pull/530) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlin from 1.9.24 to 2.0.0 [\#512](https://github.com/joffrey-bion/krossbow/pull/512) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+**Fixed bugs:**
+
+- The frame encoder should fail when encoding an invalid content\-length [\#521](https://github.com/joffrey-bion/krossbow/issues/521)
+- Frame must be terminated with a null octet [\#482](https://github.com/joffrey-bion/krossbow/issues/482)
+
 ## [7.1.0](https://github.com/joffrey-bion/krossbow/tree/7.1.0) (2024-06-04)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/7.0.0...7.1.0)
 
