@@ -1,7 +1,7 @@
 package org.hildan.krossbow.stomp
 
 import org.hildan.krossbow.stomp.frame.FrameBody
-import org.hildan.krossbow.stomp.headers.StompSendHeaders
+import org.hildan.krossbow.stomp.headers.*
 
 /**
  * A special [StompSession] that automatically fills the `transaction` header (if absent) for all SEND, ACK, and NACK
@@ -13,8 +13,12 @@ internal class TransactionStompSession(
 ) : StompSession by session {
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
-        headers.transaction = headers.transaction ?: transactionId
-        return session.send(headers, body)
+        val newHeaders = if (HeaderNames.TRANSACTION in headers) {
+            headers
+        } else {
+            headers.copy { this[HeaderNames.TRANSACTION] = transactionId }
+        }
+        return session.send(newHeaders, body)
     }
 
     override suspend fun ack(ackId: String, transactionId: String?) {
