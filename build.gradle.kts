@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.hildan.github.changelog)
     alias(libs.plugins.nexus.publish)
-    alias(libs.plugins.louiscad.complete.kotlin) // for autocomplete of Apple libraries on non-macOS systems
+    // Commented out for now because of https://github.com/LouisCAD/CompleteKotlin/issues/15
+//    alias(libs.plugins.louiscad.complete.kotlin) // for autocomplete of Apple libraries on non-macOS systems
     id("krossbow-githubinfo")
 
     // workaround for https://github.com/gradle/gradle/issues/17559

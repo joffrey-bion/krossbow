@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.*
+
 plugins {
     id("krossbow-multiplatform")
     id("krossbow-publish")
@@ -9,6 +11,7 @@ kotlin {
     allTargets()
     sourceSets {
         all {
+            @OptIn(ExperimentalKotlinGradlePluginApi::class)
             compilerOptions {
                 freeCompilerArgs.add("-Xexpect-actual-classes") // for charsets
             }
