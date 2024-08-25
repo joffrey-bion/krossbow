@@ -24,7 +24,6 @@ kotlin {
                 implementation(projects.krossbowIo)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.io.core)
-                implementation(libs.uuid)
             }
         }
         val commonTest by getting {
