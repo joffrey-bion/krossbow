@@ -1,5 +1,22 @@
 # Change Log
 
+## [7.3.0](https://github.com/joffrey-bion/krossbow/tree/7.3.0) (2024-08-25)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/7.2.0...7.3.0)
+
+**Implemented enhancements:**
+
+- Use Kotlin stdlib's UUID instead of `benasher44/uuid` [\#558](https://github.com/joffrey-bion/krossbow/issues/558)
+
+**Upgraded dependencies:**
+
+- Bump kotlin from 2.0.0 to 2.0.20 [\#557](https://github.com/joffrey-bion/krossbow/pull/557) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-io from 0.5.1 to 0.5.3 [\#555](https://github.com/joffrey-bion/krossbow/pull/555) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.1.11 to 6.1.12 [\#551](https://github.com/joffrey-bion/krossbow/pull/551) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+**Fixed bugs:**
+
+- Transaction mutates headers object [\#542](https://github.com/joffrey-bion/krossbow/issues/542)
+
 ## [7.2.0](https://github.com/joffrey-bion/krossbow/tree/7.2.0) (2024-07-27)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/7.1.0...7.2.0)
 
