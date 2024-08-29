@@ -1,6 +1,5 @@
 [plugins]
 
-avast-docker-compose = { id = "com.avast.gradle.docker-compose", version.ref = "avast-docker-compose-plugin" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator-plugin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 hildan-github-changelog = { id = "org.hildan.github.changelog", version.ref = "hildan-github-changelog-plugin" }
@@ -15,7 +14,6 @@ vyarus-github-info = { id = "ru.vyarus.github-info", version.ref = "vyarus-githu
 
 [versions]
 
-avast-docker-compose-plugin = "0.17.7"
 binary-compatibility-validator-plugin = "0.16.3"
 complete-kotlin-plugin = "1.1.0"
 dokka = "1.9.20"
