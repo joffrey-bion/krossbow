@@ -89,7 +89,6 @@ internal class BaseStompSession(
         }
     }
 
-    @OptIn(FlowPreview::class) // for produceIn(scope)
     private suspend fun startSubscription(headers: StompSubscribeHeaders): ReceiveChannel<StompFrame.Message> {
         val subscriptionStarted = CompletableDeferred<Unit>()
 
