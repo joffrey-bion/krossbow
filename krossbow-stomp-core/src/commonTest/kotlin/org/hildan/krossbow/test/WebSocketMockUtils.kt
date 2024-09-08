@@ -44,7 +44,7 @@ suspend fun WebSocketConnectionMock.simulateBinaryStompFrameReceived(frame: Stom
 }
 
 suspend fun WebSocketConnectionMock.simulateErrorFrameReceived(errorMessage: String): StompFrame.Error {
-    val errorFrame = StompFrame.Error(StompErrorHeaders(errorMessage), null)
+    val errorFrame = StompFrame.Error(StompErrorHeaders { message = errorMessage }, null)
     val result = runCatching {
         simulateTextStompFrameReceived(errorFrame)
     }

@@ -44,7 +44,7 @@ class StompSessionSubscriptionsTest {
 
         val receiptId = "my-receipt"
         val deferredFlow = async(start = CoroutineStart.UNDISPATCHED) {
-            val headers = StompSubscribeHeaders(destination = "/dest", receipt = receiptId)
+            val headers = StompSubscribeHeaders(destination = "/dest") { receipt = receiptId }
             stompSession.subscribe(headers)
         }
         runCurrent()
@@ -123,12 +123,11 @@ class StompSessionSubscriptionsTest {
         val customHeaderKey = "my-header"
         val customHeaderValue = "my-header-value"
         launch {
-            val headers = StompSubscribeHeaders(
-                destination = destination,
-                id = customId,
-                ack = customAck,
-                customHeaders = mapOf(customHeaderKey to customHeaderValue)
-            )
+            val headers = StompSubscribeHeaders(destination = destination) {
+                id = customId
+                ack = customAck
+                this[customHeaderKey] = customHeaderValue
+            }
             stompSession.subscribe(headers).first()
             stompSession.disconnect()
         }
@@ -152,11 +151,10 @@ class StompSessionSubscriptionsTest {
         val customHeaderKey = "my-header"
         val customHeaderValue = "my-header-value"
 
-        val headers = StompSubscribeHeaders(
-            destination = destination,
-            ack = customAck,
-            customHeaders = mapOf(customHeaderKey to customHeaderValue)
-        )
+        val headers = StompSubscribeHeaders(destination = destination) {
+            ack = customAck
+            this[customHeaderKey] = customHeaderValue
+        }
 
         launch {
             stompSession.subscribe(headers).first()

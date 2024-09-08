@@ -41,7 +41,7 @@ private val StompFrame.preambleText: String
     get() = buildString {
         append(command.text)
         append('\n')
-        headers.forEach { (name, value) ->
+        headers.asMap().forEach { (name, value) ->
             append(maybeEscape(name))
             append(':')
             append(maybeEscape(value))

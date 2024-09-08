@@ -8,8 +8,7 @@ import org.hildan.krossbow.stomp.charsets.*
 import org.hildan.krossbow.stomp.conversions.KTypeRef
 import org.hildan.krossbow.stomp.conversions.TypedStompSession
 import org.hildan.krossbow.stomp.frame.FrameBody
-import org.hildan.krossbow.stomp.headers.StompSendHeaders
-import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
+import org.hildan.krossbow.stomp.headers.*
 
 /**
  * Wraps this [StompSession] to add methods that can convert message bodies using the provided [converter].
@@ -56,12 +55,14 @@ private class SingleConverterStompSession(
         body: T,
         bodyType: KTypeRef<T>,
     ): StompReceipt? {
-        if (headers.contentType == null) {
-            headers.contentType = converter.mediaType
+        val effectiveHeaders = if (headers.contentType == null) {
+            headers.copy { contentType = converter.mediaType }
+        } else {
+            headers
         }
         val bodyText = body?.let { converter.convertToString(it, bodyType) }
         val frameBody = bodyText?.let { createBody(it) }
-        return send(headers, frameBody)
+        return send(effectiveHeaders, frameBody)
     }
 
     private fun createBody(bodyText: String): FrameBody = if (sendBinaryFrames) {

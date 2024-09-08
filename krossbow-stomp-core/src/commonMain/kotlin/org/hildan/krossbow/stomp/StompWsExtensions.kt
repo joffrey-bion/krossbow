@@ -41,14 +41,13 @@ suspend fun WebSocketConnection.stomp(
 ): StompSession {
     val wsStompVersion = StompVersion.fromWsProtocol(protocol)
     val serverPossiblySupportsHost = wsStompVersion == null || wsStompVersion.supportsHostHeader
-    val connectHeaders = StompConnectHeaders(
-        host = if (host == DefaultHost) this.host.takeIf { serverPossiblySupportsHost } else host,
-        acceptVersion = StompVersion.preferredOrder.map { it.headerValue },
-        login = login,
-        passcode = passcode,
-        heartBeat = config.heartBeat,
-        customHeaders = customHeaders,
-    )
+    val effectiveHost = if (host == DefaultHost) this.host.takeIf { serverPossiblySupportsHost } else host
+    val connectHeaders = StompConnectHeaders(host = effectiveHost) {
+        this.login = login
+        this.passcode = passcode
+        this.heartBeat = config.heartBeat
+        setAll(customHeaders)
+    }
     return stomp(config, connectHeaders, sessionCoroutineContext)
 }
 

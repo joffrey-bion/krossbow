@@ -150,8 +150,9 @@ class StompSessionReceiptTests {
     fun send_manualReceipt_waitsForCorrectReceipt() = runTest {
         val (wsSession, stompSession) = connectWithMocks()
         val manualReceiptId = "my-receipt"
-        val headers = StompSendHeaders(destination = "/destination")
-        headers.receipt = manualReceiptId
+        val headers = StompSendHeaders(destination = "/destination") {
+            receipt = manualReceiptId
+        }
         val deferredSend = async { stompSession.send(headers, null) }
         assertFalse(deferredSend.isCompleted, "send() should wait until ws send finishes")
         wsSession.awaitSendFrameAndSimulateCompletion()
@@ -174,8 +175,9 @@ class StompSessionReceiptTests {
         val deferredSend = async {
             wsSession.awaitSendFrameAndSimulateCompletion()
         }
-        val headers = StompSendHeaders(destination = "/destination")
-        headers.receipt = "my-receipt"
+        val headers = StompSendHeaders(destination = "/destination") {
+            receipt = "my-receipt"
+        }
 
         val exception = assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
             stompSession.send(headers, null)
@@ -243,7 +245,7 @@ class StompSessionReceiptTests {
             wsSession.awaitSubscribeFrameAndSimulateCompletion()
         }
         val exception = assertTimesOutWith(LostReceiptException::class, TEST_RECEIPT_TIMEOUT) {
-            stompSession.subscribe(StompSubscribeHeaders("/destination", receipt = "my-receipt"))
+            stompSession.subscribe(StompSubscribeHeaders("/destination") { receipt = "my-receipt" })
         }
         val subscribeFrame = deferredSub.await()
         assertEquals(subscribeFrame.headers.receipt, exception.receiptId)

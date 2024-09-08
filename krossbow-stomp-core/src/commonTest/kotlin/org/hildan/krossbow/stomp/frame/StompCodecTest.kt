@@ -17,7 +17,9 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host", acceptVersion = listOf("1.2"))
+        val headers = StompConnectHeaders(host = "some.host") {
+            acceptVersion = listOf("1.2")
+        }
         val frame = StompFrame.Stomp(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -32,7 +34,24 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host", acceptVersion = listOf("1.2"))
+        val headers = StompConnectHeaders(host = "some.host") {
+            acceptVersion = listOf("1.2")
+        }
+        val frame = StompFrame.Connect(headers)
+        assertEncodingDecoding(frameText, frame, frame)
+    }
+
+    @Test
+    fun connect_default() {
+        val frameText = """
+            CONNECT
+            host:some.host
+            accept-version:1.2,1.1,1.0
+            
+            $nullChar
+        """.trimIndent()
+
+        val headers = StompConnectHeaders(host = "some.host")
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -49,12 +68,11 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(
-            host = "some.host",
-            acceptVersion = listOf("1.2"),
-            login = "bob",
-            passcode = "mypass",
-        )
+        val headers = StompConnectHeaders(host = "some.host") {
+            acceptVersion = listOf("1.2")
+            login = "bob"
+            passcode = "mypass"
+        }
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -72,13 +90,12 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(
-            host = "some.host",
-            acceptVersion = listOf("1.2"),
-            login = "bob",
-            passcode = "mypass",
-            customHeaders = mapOf("Authorization" to "Bearer -jwt-")
-        )
+        val headers = StompConnectHeaders(host = "some.host") {
+            acceptVersion = listOf("1.2")
+            login = "bob"
+            passcode = "mypass"
+            this["Authorization"] = "Bearer -jwt-"
+        }
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -93,7 +110,9 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host", acceptVersion = listOf("1.0", "1.1", "1.2"))
+        val headers = StompConnectHeaders(host = "some.host") {
+            acceptVersion = listOf("1.0", "1.1", "1.2")
+        }
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -107,7 +126,9 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = null, acceptVersion = listOf("1.2"))
+        val headers = StompConnectHeaders(host = null) {
+            acceptVersion = listOf("1.2")
+        }
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -121,7 +142,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectedHeaders(version = "1.2")
+        val headers = StompConnectedHeaders { version = "1.2" }
         val frame = StompFrame.Connected(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -152,13 +173,12 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompSubscribeHeaders(
-                destination = "/topic/dest",
-                id = "0",
-                ack = AckMode.AUTO,
-                receipt = "message-1234",
-                customHeaders = mapOf("Authorization" to "Bearer -jwt-")
-        )
+        val headers = StompSubscribeHeaders(destination = "/topic/dest") {
+            id = "0"
+            ack = AckMode.AUTO
+            receipt = "message-1234"
+            this["Authorization"] = "Bearer -jwt-"
+        }
         val frame = StompFrame.Subscribe(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -203,7 +223,7 @@ class StompCodecTest {
             The body of the message.$nullChar
         """.trimIndent()
 
-        val headers = StompSendHeaders(destination = "test").apply { contentLength = 24 }
+        val headers = StompSendHeaders(destination = "test") { contentLength = 24 }
         val bodyText = "The body of the message."
         val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
         val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteString()))
@@ -220,7 +240,7 @@ class StompCodecTest {
             The body of$nullChar the message.$nullChar
         """.trimIndent()
 
-        val headers = StompSendHeaders(destination = "test").apply { contentLength = 25 }
+        val headers = StompSendHeaders(destination = "test") { contentLength = 25 }
         val bodyText = "The body of$nullChar the message."
         val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
         val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteString()))
@@ -229,7 +249,7 @@ class StompCodecTest {
 
     @Test
     fun send_classicTextBody_contentLengthTooShort() {
-        val headers = StompSendHeaders(destination = "test").apply {
+        val headers = StompSendHeaders(destination = "test") {
             contentLength = 5
         }
         val bodyText = "The body of the message."
@@ -297,7 +317,7 @@ class StompCodecTest {
             destination = "test",
             messageId = "123",
             subscription = "42"
-        ).apply {
+        ) {
             contentLength = 24
         }
         val bodyText = "The body of the message."
@@ -322,7 +342,7 @@ class StompCodecTest {
             destination = "test",
             messageId = "123",
             subscription = "42"
-        ).apply {
+        ) {
             contentLength = 25
         }
         val bodyText = "The body of$nullChar the message."
@@ -347,7 +367,7 @@ class StompCodecTest {
             destination = "/topic/dest",
             messageId = "456",
             subscription = "123",
-        ).apply {
+        ) {
             contentLength = 2
         }
         val bodyText = "é"
@@ -373,7 +393,7 @@ class StompCodecTest {
             destination = "/topic/dest",
             messageId = "456",
             subscription = "123",
-        ).apply {
+        ) {
             contentLength = 13
             contentType = "application/json"
         }
@@ -389,7 +409,7 @@ class StompCodecTest {
             destination = "test",
             messageId = "123",
             subscription = "42"
-        ).apply {
+        ) {
             contentLength = 5
         }
         val bodyText = "The body of the message."

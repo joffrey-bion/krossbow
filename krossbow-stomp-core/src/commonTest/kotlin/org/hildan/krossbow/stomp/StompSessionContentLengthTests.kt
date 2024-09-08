@@ -28,7 +28,7 @@ class StompSessionContentLengthTests {
         val (wsSession, stompSession) = connectWithMocks {
             autoContentLength = false
         }
-        val headers = StompSendHeaders("/destination").apply {
+        val headers = StompSendHeaders("/destination") {
             contentLength = 9
         }
         launch { stompSession.send(headers, FrameBody.Text("something")) }
@@ -41,7 +41,7 @@ class StompSessionContentLengthTests {
         val (_, stompSession) = connectWithMocks {
             autoContentLength = false
         }
-        val headers = StompSendHeaders("/destination").apply {
+        val headers = StompSendHeaders("/destination") {
             contentLength = 5
         }
         assertFailsWith<InvalidContentLengthException> {
@@ -54,7 +54,7 @@ class StompSessionContentLengthTests {
         val (_, stompSession) = connectWithMocks {
             autoContentLength = false
         }
-        val headers = StompSendHeaders("/destination").apply {
+        val headers = StompSendHeaders("/destination") {
             contentLength = 100
         }
         assertFailsWith<InvalidContentLengthException> {

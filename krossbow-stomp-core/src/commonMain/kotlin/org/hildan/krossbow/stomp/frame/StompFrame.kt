@@ -167,30 +167,7 @@ sealed class StompFrame(
         internal val message: String = headers.message ?: (body as? FrameBody.Text)?.text ?: "(binary error message)"
     }
 
-    companion object {
-
-        internal fun create(
-            command: StompCommand,
-            headers: StompHeaders,
-            body: FrameBody?,
-        ): StompFrame = when (command) {
-            StompCommand.STOMP -> Stomp(StompConnectHeaders(headers))
-            StompCommand.CONNECT -> Connect(StompConnectHeaders(headers))
-            StompCommand.CONNECTED -> Connected(StompConnectedHeaders(headers))
-            StompCommand.MESSAGE -> Message(StompMessageHeaders(headers), body)
-            StompCommand.RECEIPT -> Receipt(StompReceiptHeaders(headers))
-            StompCommand.SEND -> Send(StompSendHeaders(headers), body)
-            StompCommand.SUBSCRIBE -> Subscribe(StompSubscribeHeaders(headers))
-            StompCommand.UNSUBSCRIBE -> Unsubscribe(StompUnsubscribeHeaders(headers))
-            StompCommand.ACK -> Ack(StompAckHeaders(headers))
-            StompCommand.NACK -> Nack(StompNackHeaders(headers))
-            StompCommand.BEGIN -> Begin(StompBeginHeaders(headers))
-            StompCommand.COMMIT -> Commit(StompCommitHeaders(headers))
-            StompCommand.ABORT -> Abort(StompAbortHeaders(headers))
-            StompCommand.DISCONNECT -> Disconnect(StompDisconnectHeaders(headers))
-            StompCommand.ERROR -> Error(StompErrorHeaders(headers), body)
-        }
-    }
+    companion object // kept for backwards compatibility
 }
 
 private fun FrameBody.asText(contentType: String?): String = when (this) {
@@ -227,7 +204,7 @@ private fun inferCharset(contentTypeHeader: String?): Charset {
 // Note: this is a poor man's copy function, but adding it to the interface would require making the interface generic,
 // and would mean more bloat in the headers classes (which should be redesigned soon anyway).
 @Suppress("UNCHECKED_CAST")
-internal fun <T : StompFrame> T.copyWithHeaders(updateHeadersCopy: StompHeaders.() -> Unit): T = when (this) {
+internal fun <T : StompFrame> T.copyWithHeaders(updateHeadersCopy: StompHeadersBuilder.() -> Unit): T = when (this) {
     is StompFrame.Connect -> copy(headers.copy(updateHeadersCopy)) as T
     is StompFrame.Connected -> copy(headers.copy(updateHeadersCopy)) as T
     is StompFrame.Send -> copy(headers.copy(updateHeadersCopy)) as T

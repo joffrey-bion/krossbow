@@ -1,277 +1,142 @@
 package org.hildan.krossbow.stomp.headers
 
-import org.hildan.krossbow.stomp.config.HeartBeat
-import org.hildan.krossbow.stomp.headers.HeaderNames.ACCEPT_VERSION
-import org.hildan.krossbow.stomp.headers.HeaderNames.ACK
 import org.hildan.krossbow.stomp.headers.HeaderNames.CONTENT_LENGTH
 import org.hildan.krossbow.stomp.headers.HeaderNames.CONTENT_TYPE
-import org.hildan.krossbow.stomp.headers.HeaderNames.DESTINATION
-import org.hildan.krossbow.stomp.headers.HeaderNames.HEART_BEAT
-import org.hildan.krossbow.stomp.headers.HeaderNames.HOST
-import org.hildan.krossbow.stomp.headers.HeaderNames.ID
-import org.hildan.krossbow.stomp.headers.HeaderNames.LOGIN
-import org.hildan.krossbow.stomp.headers.HeaderNames.MESSAGE
-import org.hildan.krossbow.stomp.headers.HeaderNames.MESSAGE_ID
-import org.hildan.krossbow.stomp.headers.HeaderNames.PASSCODE
 import org.hildan.krossbow.stomp.headers.HeaderNames.RECEIPT
-import org.hildan.krossbow.stomp.headers.HeaderNames.RECEIPT_ID
-import org.hildan.krossbow.stomp.headers.HeaderNames.SERVER
-import org.hildan.krossbow.stomp.headers.HeaderNames.SESSION
-import org.hildan.krossbow.stomp.headers.HeaderNames.SUBSCRIPTION
-import org.hildan.krossbow.stomp.headers.HeaderNames.TRANSACTION
-import org.hildan.krossbow.stomp.headers.HeaderNames.VERSION
-import org.hildan.krossbow.stomp.version.*
-import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * Represents the headers of a STOMP frame.
+ * The headers of a STOMP frame.
  */
-interface StompHeaders : MutableMap<String, String> {
+sealed interface StompHeaders {
+    /**
+     * This header is an octet count for the length of the message body.
+     *
+     * If a `content-length` header is included, this number of octets MUST be read, regardless of whether there
+     * are NULL octets in the body. The frame still needs to be terminated with a NULL octet.
+     *
+     * If the frame body contains NULL octets, the frame MUST include a content-length header.
+     */
+    val contentLength: Int?
 
-    var contentLength: Int?
+    /**
+     * If this header is set, its value MUST be a MIME type that describes the format of the body.
+     * Otherwise, the receiver SHOULD consider the body to be a binary blob.
+     *
+     * The implied text encoding for MIME types starting with `text/` is UTF-8. If you are using a text-based MIME type
+     * with a different encoding then you SHOULD append `;charset=<encoding>` to the MIME type.
+     *
+     * For example, `text/html;charset=utf-16` SHOULD be used if you're sending an HTML body in UTF-16 encoding.
+     * The `;charset=<encoding>` SHOULD also get appended to any non `text/` MIME types which can be interpreted as text.
+     * A good example of this would be a UTF-8 encoded XML.
+     * Its content-type SHOULD get set to `application/xml;charset=utf-8`.
+     *
+     * All STOMP clients and servers MUST support UTF-8 encoding and decoding. Therefore, for maximum interoperability
+     * in a heterogeneous computing environment, it is RECOMMENDED that text-based content be encoded with UTF-8.
+     */
+    val contentType: String?
 
-    var contentType: String?
+    /**
+     * Any client frame other than `CONNECT` MAY specify a `receipt` header with an arbitrary value.
+     * This will cause the server to acknowledge the processing of the client frame with a RECEIPT frame.
+     */
+    val receipt: String?
 
-    var receipt: String?
+    /**
+     * Gets the header with the given [headerName], or null if it's not present.
+     * Usually, headers should be accessed via type-safe properties, but this is useful to access custom headers.
+     */
+    operator fun get(headerName: String): String?
+
+    /**
+     * Returns a [Map] view of these headers.
+     */
+    fun asMap(): Map<String, String>
 }
 
-private data class SimpleStompHeaders(
-    private val headers: MutableMap<String, String>,
-) : StompHeaders, MutableMap<String, String> by headers {
+/**
+ * A temporary mutable representation of [StompHeaders] to ease their construction (or copy with modification).
+ */
+sealed interface StompHeadersBuilder : StompHeaders { // override mostly to get docs for free
+    override var contentLength: Int?
+    override var contentType: String?
+    override var receipt: String?
 
-    override var contentLength: Int? by mutableOptionalIntHeader(CONTENT_LENGTH)
+    /**
+     * Sets the header named [headerName] to the given [headerValue].
+     *
+     * Standard headers should be set using type-safe accessors, so this untyped approach should be exclusively used
+     * for custom headers.
+     *
+     * The specification is rather imprecise as to which frames may or may not contain custom headers.
+     * The following sentence opens the door for custom headers in all frames:
+     *
+     * > Finally, STOMP servers MAY use additional headers to give access to features like persistence or expiration.
+     * > Consult your server's documentation for details.
+     *
+     * For this reason, custom headers are allowed in every frame here. Please use this method carefully.
+     */
+    operator fun set(headerName: String, headerValue: String?)
 
-    override var contentType: String? by mutableOptionalHeader(CONTENT_TYPE)
-
-    override var receipt: String? by mutableOptionalHeader(RECEIPT)
+    /**
+     * Sets all the given [headers].
+     *
+     * Standard headers should usually be set using type-safe accessors, unless setting them in a batch is necessary.
+     * Therefore, this untyped approach should mostly be used for custom headers.
+     *
+     * The specification is rather imprecise as to which frames may or may not contain custom headers.
+     * The following sentence opens the door for custom headers in all frames:
+     *
+     * > Finally, STOMP servers MAY use additional headers to give access to features like persistence or expiration.
+     * > Consult your server's documentation for details.
+     *
+     * For this reason, custom headers are allowed in every frame here. Please use this method carefully.
+     */
+    fun setAll(headers: Map<String, String>)
 }
 
-internal fun MutableMap<String, String>.asStompHeaders(): StompHeaders = SimpleStompHeaders(this)
+/**
+ * An implementation of [StompHeadersBuilder] backed by a [MutableMap].
+ * This can be used as a base for each header type implementation.
+ *
+ * It allows type-safe access to the headers, but also avoids extra instances and copies (during encoding/decoding) by
+ * directly storing the headers in the backing map.
+ */
+internal abstract class MapBasedStompHeaders(
+    internal val backingMap: MutableMap<String, String>,
+) : StompHeadersBuilder {
+    override var contentLength: Int? by optionalHeader(
+        name = CONTENT_LENGTH,
+        default = null,
+        decode = { it.toIntOrNull() ?: error("invalid 'content-length' header '$it'") },
+        encode = { it?.toString() },
+    )
+    override var contentType: String? by optionalHeader(CONTENT_TYPE)
+    override var receipt: String? by optionalHeader(RECEIPT)
 
-internal fun headersOf(
-    vararg pairs: Pair<String, String?>,
-    customHeaders: Map<String, String> = emptyMap(),
-): StompHeaders {
-    val headersMap = mutableMapOf<String, String>()
-    pairs.forEach { (key, value) ->
-        if (value != null) {
-            headersMap[key] = value
+    override fun get(headerName: String): String? = backingMap[headerName]
+
+    override fun set(headerName: String, headerValue: String?) {
+        if (headerValue == null) {
+            backingMap.remove(headerName)
+        } else {
+            backingMap[headerName] = headerValue
         }
     }
-    headersMap.putAll(customHeaders)
-    return headersMap.asStompHeaders()
-}
 
-@Suppress("UNCHECKED_CAST")
-internal fun <H : StompHeaders> H.copy(update: StompHeaders.() -> Unit): H {
-    val newRawHeaders = SimpleStompHeaders(toMutableMap()).apply(update)
-    return when (this) {
-        is StompConnectHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompConnectedHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompSendHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompSubscribeHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompUnsubscribeHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompDisconnectHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompAckHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompNackHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompBeginHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompCommitHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompAbortHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompMessageHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompReceiptHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is StompErrorHeaders -> copy(rawHeaders = newRawHeaders) as H
-        is SimpleStompHeaders -> newRawHeaders as H
-        else -> error("copy() doesn't support the given class ${this::class.simpleName}") // qualifiedName cannot be used in JS
+    override fun setAll(headers: Map<String, String>) {
+        backingMap.putAll(headers)
     }
+
+    override fun asMap(): Map<String, String> = backingMap
+
+    override fun hashCode(): Int = backingMap.hashCode()
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+        other as MapBasedStompHeaders
+        return backingMap == other.backingMap
+    }
+
+    override fun toString(): String = "StompHeaders${backingMap}"
 }
-
-data class StompConnectHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val host: String? by optionalHeader() // mandatory since 1.2, but forbidden in some 1.0 servers
-    val acceptVersion: List<String> by acceptVersionHeader()
-    val login: String? by optionalHeader()
-    val passcode: String? by optionalHeader()
-    val heartBeat: HeartBeat? by heartBeatHeader()
-
-    constructor(
-        host: String?,
-        acceptVersion: List<String> = StompVersion.preferredOrder.map { it.headerValue },
-        login: String? = null,
-        passcode: String? = null,
-        heartBeat: HeartBeat? = null,
-        customHeaders: Map<String, String> = emptyMap(),
-    ) : this(
-        headersOf(
-            HOST to host,
-            ACCEPT_VERSION to acceptVersion.joinToString(","),
-            LOGIN to login,
-            PASSCODE to passcode,
-            HEART_BEAT to heartBeat?.formatAsHeaderValue(),
-            customHeaders = customHeaders,
-        )
-    )
-}
-
-data class StompConnectedHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val version: String by optionalHeader(default = "1.0") { it } // mandatory since 1.1, but not sent by 1.0 servers
-    val session: String? by optionalHeader()
-    val server: String? by optionalHeader()
-    val heartBeat: HeartBeat? by heartBeatHeader()
-
-    constructor(
-        version: String = "1.2",
-        session: String? = null,
-        server: String? = null,
-        heartBeat: HeartBeat? = null,
-    ) : this(
-        headersOf(
-            VERSION to version,
-            SESSION to session,
-            SERVER to server,
-            HEART_BEAT to heartBeat?.formatAsHeaderValue(),
-        )
-    )
-}
-
-data class StompSendHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val destination: String by header()
-    var transaction: String? by mutableOptionalHeader()
-
-    constructor(
-        destination: String,
-        transaction: String? = null,
-        receipt: String? = null,
-        customHeaders: Map<String, String> = emptyMap(),
-    ) : this(
-        headersOf(
-            DESTINATION to destination,
-            TRANSACTION to transaction,
-            RECEIPT to receipt,
-            customHeaders = customHeaders,
-        )
-    )
-}
-
-data class StompSubscribeHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val destination: String by header()
-    val id: String by header()
-    val ack: AckMode by optionalHeader(default = AckMode.AUTO) { AckMode.fromHeader(it) }
-
-    constructor(
-        destination: String,
-        id: String? = null, // not optional, but this allows generating it in subscription flows
-        ack: AckMode = AckMode.AUTO,
-        receipt: String? = null,
-        customHeaders: Map<String, String> = emptyMap(),
-    ) : this(
-        headersOf(
-            DESTINATION to destination,
-            ID to id,
-            ACK to ack.headerValue,
-            RECEIPT to receipt,
-            customHeaders = customHeaders,
-        )
-    )
-}
-
-data class StompUnsubscribeHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val id: String by header()
-
-    constructor(id: String) : this(headersOf(ID to id))
-}
-
-data class StompDisconnectHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-
-    constructor(receipt: String? = null) : this(headersOf(RECEIPT to receipt))
-}
-
-data class StompAckHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val id: String by header()
-    val transaction: String? by optionalHeader()
-
-    constructor(id: String, transaction: String? = null) : this(headersOf(ID to id, TRANSACTION to transaction))
-}
-
-data class StompNackHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val id: String by header()
-    val transaction: String? by optionalHeader()
-
-    constructor(id: String, transaction: String? = null) : this(headersOf(ID to id, TRANSACTION to transaction))
-}
-
-data class StompBeginHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val transaction: String by header()
-
-    constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
-}
-
-data class StompCommitHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val transaction: String by header()
-
-    constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
-}
-
-data class StompAbortHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val transaction: String by header()
-
-    constructor(transaction: String) : this(headersOf(TRANSACTION to transaction))
-}
-
-data class StompMessageHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val destination: String by header()
-    val messageId: String by header(MESSAGE_ID)
-    val subscription: String by header()
-    val ack: String? by optionalHeader()
-
-    constructor(
-        destination: String,
-        messageId: String,
-        subscription: String,
-        ack: String? = null,
-        customHeaders: Map<String, String> = emptyMap(),
-    ) : this(
-        headersOf(
-            DESTINATION to destination,
-            MESSAGE_ID to messageId,
-            SUBSCRIPTION to subscription,
-            ACK to ack,
-            customHeaders = customHeaders,
-        )
-    )
-}
-
-data class StompReceiptHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val receiptId: String by header(RECEIPT_ID)
-
-    constructor(receiptId: String) : this(headersOf(RECEIPT_ID to receiptId))
-}
-
-data class StompErrorHeaders(private val rawHeaders: StompHeaders) : StompHeaders by rawHeaders {
-    val message: String? by optionalHeader()
-    val receiptId: String? by optionalHeader(RECEIPT_ID)
-
-    constructor(
-        message: String? = null,
-        receiptId: String? = null,
-        customHeaders: Map<String, String> = emptyMap(),
-    ) : this(
-        headersOf(
-            MESSAGE to message,
-            RECEIPT_ID to receiptId,
-            customHeaders = customHeaders,
-        )
-    )
-}
-
-private fun acceptVersionHeader() = header(ACCEPT_VERSION) { it.split(',') }
-
-private fun heartBeatHeader() = optionalHeader(HEART_BEAT) { it.toHeartBeat() }
-
-private fun String.toHeartBeat(): HeartBeat {
-    val (minSendPeriod, expectedReceivePeriod) = split(',')
-    return HeartBeat(
-        minSendPeriod = minSendPeriod.toInt().milliseconds,
-        expectedPeriod = expectedReceivePeriod.toInt().milliseconds,
-    )
-}
-
-private fun HeartBeat.formatAsHeaderValue() = "${minSendPeriod.inWholeMilliseconds},${expectedPeriod.inWholeMilliseconds}"

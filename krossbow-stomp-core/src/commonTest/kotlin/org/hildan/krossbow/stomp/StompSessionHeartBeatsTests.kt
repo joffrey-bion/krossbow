@@ -20,7 +20,7 @@ class StompSessionHeartBeatsTests {
     @Test
     fun heartBeatNegotiation_noneIfClientSaysNone() = runTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
+            StompConnectedHeaders { heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO) },
         ) {
             heartBeat = HeartBeat(ZERO, ZERO)
             heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
@@ -33,7 +33,7 @@ class StompSessionHeartBeatsTests {
     @Test
     fun heartBeatNegotiation_noneIfServerSaysNone() = runTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 0.milliseconds, expectedPeriod = ZERO))
+            StompConnectedHeaders { heartBeat = HeartBeat(minSendPeriod = 0.milliseconds, expectedPeriod = ZERO) },
         ) {
             heartBeat = HeartBeat(ZERO, 1000.milliseconds)
             heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
@@ -46,7 +46,7 @@ class StompSessionHeartBeatsTests {
     @Test
     fun heartBeatNegotiation_noneIfServerDoesntSay() = runTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = null)
+            StompConnectedHeaders { heartBeat = null },
         ) {
             heartBeat = HeartBeat(ZERO, 1000.milliseconds)
             heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
@@ -59,7 +59,7 @@ class StompSessionHeartBeatsTests {
     @Test
     fun heartBeatNegotiation_clientExpectsBiggestPeriod_followClient() = runTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
+            StompConnectedHeaders { heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO) },
         ) {
             heartBeat = HeartBeat(ZERO, 2000.milliseconds)
             heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
@@ -73,7 +73,7 @@ class StompSessionHeartBeatsTests {
     @Test
     fun heartBeatNegotiation_serverExpectsBiggestPeriod_followServer() = runTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 2000.milliseconds, expectedPeriod = ZERO))
+            StompConnectedHeaders { heartBeat = HeartBeat(minSendPeriod = 2000.milliseconds, expectedPeriod = ZERO) },
         ) {
             heartBeat = HeartBeat(ZERO, 1000.milliseconds)
             heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
@@ -87,7 +87,7 @@ class StompSessionHeartBeatsTests {
     @Test
     fun wsSessionClosedOnHeartBeatTimeOut() = runTest {
         val (wsSession, _) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
+            StompConnectedHeaders { heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO) },
         ) {
             heartBeat = HeartBeat(ZERO, 1000.milliseconds)
             heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
@@ -100,10 +100,10 @@ class StompSessionHeartBeatsTests {
     @Test
     fun receiveSubMessage_success() = runTest {
         val (wsSession, stompSession) = connectWithMocks(
-            StompConnectedHeaders(
-                version = "1.2",
+            StompConnectedHeaders {
+                version = "1.2"
                 heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO)
-            )
+            }
         ) {
             heartBeat = HeartBeat(ZERO, 1000.milliseconds)
             heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
@@ -127,7 +127,7 @@ class StompSessionHeartBeatsTests {
     @Test
     fun receiveSubMessage_failsOnHeartBeatTimeOut() = runTest {
         val (wsSession, stompSession) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
+            StompConnectedHeaders { heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO) },
         ) {
             heartBeat = HeartBeat(ZERO, 1000.milliseconds)
             heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)
@@ -148,7 +148,7 @@ class StompSessionHeartBeatsTests {
     @Test
     fun receiveSubMessage_succeedsIfKeptAlive() = runTest {
         val (wsSession, stompSession) = connectWithMocks(
-            StompConnectedHeaders(heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO))
+            StompConnectedHeaders { heartBeat = HeartBeat(minSendPeriod = 1000.milliseconds, expectedPeriod = ZERO) },
         ) {
             heartBeat = HeartBeat(ZERO, 1000.milliseconds)
             heartBeatTolerance = HeartBeatTolerance(incomingMargin = 100.milliseconds)

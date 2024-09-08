@@ -1,70 +1,97 @@
 package org.hildan.krossbow.stomp.headers
 
-import kotlin.properties.ReadOnlyProperty
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
+import kotlin.properties.*
+import kotlin.reflect.*
 
-internal fun header(customKey: String? = null): HeaderDelegate<String> = header(customKey) { it }
+/**
+ * An optional string header with the given [name].
+ * The header doesn't have to be present in the frame.
+ * If the header is absent, the property is null.
+ */
+internal fun optionalHeader(name: String): HeaderDelegate<String?> =
+    optionalHeader(name, default = null, { it }, { it })
 
-internal fun optionalHeader(customKey: String? = null): HeaderDelegate<String?> = optionalHeader(customKey) { it }
-
-internal inline fun <T> optionalHeader(
-    customKey: String? = null,
-    crossinline transform: (String) -> T,
-): HeaderDelegate<T?> = optionalHeader(customKey, null, transform)
-
-internal fun mutableOptionalHeader(customKey: String? = null, default: String? = null): MutableHeaderDelegate<String?> =
-    mutableOptionalHeader(customKey, default, { it }, { it })
-
-internal fun mutableOptionalIntHeader(customKey: String? = null, default: Int? = null): MutableHeaderDelegate<Int?> =
-    mutableOptionalHeader(customKey, default, { it.toInt() }, { it.toString() })
-
-internal inline fun <T> header(customKey: String? = null, crossinline transform: (String) -> T): HeaderDelegate<T> =
-    HeaderDelegate(customKey) { value, key ->
-        value?.let(transform) ?: throw IllegalStateException("missing required header '$key'")
-    }
-
-internal inline fun <T> optionalHeader(
-    customKey: String? = null,
-    default: T,
-    crossinline transform: (String) -> T,
-): HeaderDelegate<T> = HeaderDelegate(customKey) { value, _ -> value?.let(transform) ?: default }
-
-internal inline fun <T> mutableOptionalHeader(
-    customKey: String? = null,
-    default: T,
-    crossinline getTransform: (String) -> T,
-    noinline setTransform: (T) -> String?,
-): MutableHeaderDelegate<T> = MutableHeaderDelegate(
-    customName = customKey,
-    getTransform = { value, _ -> value?.let(getTransform) ?: default },
-    setTransform = setTransform,
+/**
+ * A required string header with the given [name].
+ * The header has to be present in the frame.
+ * The property throws an exception if it is accessed before a value was set.
+ */
+internal fun requiredHeader(name: String): HeaderDelegate<String> = HeaderDelegate(
+    headerName = name,
+    getTransform = { value -> value ?: error("missing required header '$name'") },
+    setTransform = { it },
 )
 
-internal open class HeaderDelegate<T>(
-    private val customName: String? = null,
-    private val transform: (String?, String) -> T,
-) : ReadOnlyProperty<StompHeaders, T> {
-
-    override operator fun getValue(thisRef: StompHeaders, property: KProperty<*>): T {
-        val headerName = customName ?: property.name
-        return transform(thisRef[headerName], headerName)
+/**
+ * A required string header with the given [name].
+ *
+ * The header has to be present in the frame, but we provide a sensible default for the user.
+ * The header is immediately set to the given [preset] value if it is absent from the initial map, so it is always
+ * encoded even without user action.
+ */
+internal fun MapBasedStompHeaders.requiredHeader(name: String, preset: String): HeaderDelegate<String> {
+    if (!backingMap.containsKey(name)) {
+        this[name] = preset
     }
+    return requiredHeader(name)
 }
 
-internal class MutableHeaderDelegate<T>(
-    private val customName: String? = null,
-    getTransform: (String?, String) -> T,
-    private val setTransform: (T) -> String?,
-) : HeaderDelegate<T>(customName, getTransform), ReadWriteProperty<StompHeaders, T> {
+/**
+ * A required header with the given [name].
+ *
+ * The header has to be present in the frame, but we provide a sensible default for the user.
+ * The header is immediately set to the given [preset] value if it is absent from the initial map, so it is always
+ * encoded even without user action.
+ */
+internal fun <T> MapBasedStompHeaders.requiredHeader(
+    name: String,
+    preset: T,
+    decode: (String) -> T,
+    encode: (T) -> String?,
+): HeaderDelegate<T> {
+    if (!backingMap.containsKey(name)) {
+        this[name] = encode(preset)
+    }
+    return HeaderDelegate(
+        headerName = name,
+        getTransform = { value -> value?.let(decode) ?: error("missing required header '$name'") },
+        setTransform = encode,
+    )
+}
 
-    override operator fun setValue(thisRef: StompHeaders, property: KProperty<*>, value: T) {
-        val headerName = customName ?: property.name
+/**
+ * An optional header with the given [name].
+ * If the header is absent, the property returns the given [default] value.
+ *
+ * The value of the property is converted from and to strings using the [decode] and [encode] functions respectively.
+ */
+internal fun <T> optionalHeader(
+    name: String,
+    default: T,
+    decode: (String) -> T,
+    encode: (T) -> String?,
+): HeaderDelegate<T> = HeaderDelegate(
+    headerName = name,
+    getTransform = { value -> value?.let(decode) ?: default },
+    setTransform = encode,
+)
+
+internal class HeaderDelegate<T>(
+    private val headerName: String,
+    private val getTransform: (String?) -> T,
+    private val setTransform: (T) -> String?,
+) : ReadWriteProperty<MapBasedStompHeaders, T> {
+
+    override operator fun getValue(thisRef: MapBasedStompHeaders, property: KProperty<*>): T {
+        return getTransform(thisRef.backingMap[headerName])
+    }
+
+    override operator fun setValue(thisRef: MapBasedStompHeaders, property: KProperty<*>, value: T) {
         val strValue = setTransform(value)
         if (strValue == null) {
-            thisRef.remove(headerName)
+            thisRef.backingMap.remove(headerName)
         } else {
-            thisRef[headerName] = strValue
+            thisRef.backingMap[headerName] = strValue
         }
     }
 }

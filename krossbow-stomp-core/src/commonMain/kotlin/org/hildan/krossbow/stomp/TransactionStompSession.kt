@@ -13,10 +13,10 @@ internal class TransactionStompSession(
 ) : StompSession by session {
 
     override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
-        val newHeaders = if (HeaderNames.TRANSACTION in headers) {
+        val newHeaders = if (headers.transaction != null) {
             headers
         } else {
-            headers.copy { this[HeaderNames.TRANSACTION] = transactionId }
+            headers.copy { transaction = transactionId }
         }
         return session.send(newHeaders, body)
     }

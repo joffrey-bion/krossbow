@@ -131,13 +131,13 @@ internal class BaseStompSession(
         return StompReceipt(receiptId)
     }
 
-    private fun StompHeaders.maybeSetContentLength(frameBody: FrameBody?) {
+    private fun StompHeadersBuilder.maybeSetContentLength(frameBody: FrameBody?) {
         if (config.autoContentLength && contentLength == null) {
             contentLength = frameBody?.bytes?.size ?: 0
         }
     }
 
-    private fun StompHeaders.maybeSetAutoReceipt() {
+    private fun StompHeadersBuilder.maybeSetAutoReceipt() {
         if (config.autoReceipt && receipt == null) {
             receipt = generateUuid()
         }
@@ -160,9 +160,7 @@ internal class BaseStompSession(
         get() = if (command == StompCommand.DISCONNECT) config.disconnectTimeout else config.receiptTimeout
 
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> {
-        val headersWithId = headers.withId()
-
-        return startSubscription(headersWithId)
+        return startSubscription(headers)
             .consumeAsFlow()
             .onCompletion {
                 when (it) {
@@ -172,7 +170,7 @@ internal class BaseStompSession(
                     // covered here.
                     is CancellationException -> {
                         if (scope.isActive) {
-                            unsubscribe(headersWithId.id)
+                            unsubscribe(headers.id)
                         } else {
                             // The whole session is cancelled, the web socket must be already closed
                         }
@@ -191,11 +189,11 @@ internal class BaseStompSession(
     }
 
     override suspend fun ack(ackId: String, transactionId: String?) {
-        sendStompFrame(StompFrame.Ack(StompAckHeaders(ackId, transactionId)))
+        sendStompFrame(StompFrame.Ack(StompAckHeaders(ackId) { transaction = transactionId }))
     }
 
     override suspend fun nack(ackId: String, transactionId: String?) {
-        sendStompFrame(StompFrame.Nack(StompNackHeaders(ackId, transactionId)))
+        sendStompFrame(StompFrame.Nack(StompNackHeaders(ackId) { transaction = transactionId }))
     }
 
     override suspend fun begin(transactionId: String) {
@@ -226,24 +224,13 @@ internal class BaseStompSession(
     private suspend fun sendDisconnectFrameAndWaitForReceipt() {
         try {
             val receiptId = generateUuid()
-            val disconnectFrame = StompFrame.Disconnect(StompDisconnectHeaders(receiptId))
+            val disconnectFrame = StompFrame.Disconnect(StompDisconnectHeaders { receipt = receiptId })
             sendAndWaitForReceipt(receiptId, disconnectFrame)
         } catch (e: LostReceiptException) {
             // Sometimes the server closes the connection too quickly to send a RECEIPT, which is not really an error
             // http://stomp.github.io/stomp-specification-1.2.html#Connection_Lingering
         }
     }
-}
-
-private fun StompSubscribeHeaders.withId(): StompSubscribeHeaders {
-    // we can't use the delegated id property here, because it would crash if the underlying header is absent
-    val existingId = get(HeaderNames.ID)
-    if (existingId != null) {
-        return this
-    }
-    val rawHeadersCopy = HashMap(this)
-    rawHeadersCopy[HeaderNames.ID] = generateUuid()
-    return StompSubscribeHeaders(rawHeadersCopy.asStompHeaders())
 }
 
 private fun Flow<StompEvent>.materializeErrorsAndCompletion(): Flow<StompEvent> =

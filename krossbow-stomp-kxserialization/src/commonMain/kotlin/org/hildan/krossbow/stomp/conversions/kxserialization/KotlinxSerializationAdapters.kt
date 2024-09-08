@@ -10,8 +10,7 @@ import org.hildan.krossbow.stomp.StompReceipt
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
-import org.hildan.krossbow.stomp.headers.StompSendHeaders
-import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
+import org.hildan.krossbow.stomp.headers.*
 
 /**
  * Wraps this [StompSession] to add methods that can convert message bodies using the provided Kotlinx Serialization's
@@ -47,10 +46,12 @@ private abstract class BaseStompSessionWithConversions(
         if (body == null) {
             return send(headers, null)
         }
-        if (headers.contentType == null) {
-            headers.contentType = mediaType
+        val effectiveHeaders = if (headers.contentType == null) {
+            headers.copy { contentType = mediaType }
+        } else {
+            headers
         }
-        return send(headers, serializeBody(body, serializer))
+        return send(effectiveHeaders, serializeBody(body, serializer))
     }
 
     protected abstract fun <T : Any> serializeBody(body: T?, serializer: SerializationStrategy<T>): FrameBody?

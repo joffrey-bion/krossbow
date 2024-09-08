@@ -123,7 +123,7 @@ class StompSessionTransactionsTests {
 
         launch {
             stompSession.withTransaction { id ->
-                val headers = StompSendHeaders("/dest", transaction = "override")
+                val headers = StompSendHeaders("/dest") { transaction = "override" }
                 send(headers, FrameBody.Text("Transaction: override"))
                 sendText("/dest", "Transaction: $id")
             }

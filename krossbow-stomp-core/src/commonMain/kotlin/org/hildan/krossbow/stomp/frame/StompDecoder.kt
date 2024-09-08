@@ -2,10 +2,8 @@ package org.hildan.krossbow.stomp.frame
 
 import kotlinx.io.*
 import kotlinx.io.bytestring.*
-import org.hildan.krossbow.io.*
-import org.hildan.krossbow.stomp.headers.HeaderEscaper
-import org.hildan.krossbow.stomp.headers.StompHeaders
-import org.hildan.krossbow.stomp.headers.asStompHeaders
+import org.hildan.krossbow.stomp.frame.StompFrame.*
+import org.hildan.krossbow.stomp.headers.*
 
 private const val NULL_BYTE: Byte = 0
 
@@ -23,10 +21,39 @@ private fun Source.readStompFrame(isBinary: Boolean): StompFrame {
         val body = readBodyBytes(headers.contentLength)?.toFrameBody(isBinary)
         expectNullOctet()
         expectOnlyEOLs()
-        return StompFrame.create(command, headers, body)
+        return create(command, headers, body)
     } catch (e: Exception) {
         throw InvalidStompFrameException(e)
     }
+}
+
+private val Map<String, String>.contentLength: Int?
+    get() {
+        val headerTextValue = this[HeaderNames.CONTENT_LENGTH] ?: return null
+        return headerTextValue.toIntOrNull()
+            ?: throw InvalidStompHeaderException("invalid 'content-length' header value '$headerTextValue'")
+    }
+
+private fun create(
+    command: StompCommand,
+    headers: MutableMap<String, String>,
+    body: FrameBody?,
+): StompFrame = when (command) {
+    StompCommand.STOMP -> Stomp(StompConnectHeaders(headers))
+    StompCommand.CONNECT -> Connect(StompConnectHeaders(headers))
+    StompCommand.CONNECTED -> Connected(StompConnectedHeaders(headers))
+    StompCommand.MESSAGE -> Message(StompMessageHeaders(headers), body)
+    StompCommand.RECEIPT -> Receipt(StompReceiptHeaders(headers))
+    StompCommand.SEND -> Send(StompSendHeaders(headers), body)
+    StompCommand.SUBSCRIBE -> Subscribe(StompSubscribeHeaders(headers))
+    StompCommand.UNSUBSCRIBE -> Unsubscribe(StompUnsubscribeHeaders(headers))
+    StompCommand.ACK -> Ack(StompAckHeaders(headers))
+    StompCommand.NACK -> Nack(StompNackHeaders(headers))
+    StompCommand.BEGIN -> Begin(StompBeginHeaders(headers))
+    StompCommand.COMMIT -> Commit(StompCommitHeaders(headers))
+    StompCommand.ABORT -> Abort(StompAbortHeaders(headers))
+    StompCommand.DISCONNECT -> Disconnect(StompDisconnectHeaders(headers))
+    StompCommand.ERROR -> Error(StompErrorHeaders(headers), body)
 }
 
 private fun Source.readStompCommand(): StompCommand {
@@ -34,12 +61,12 @@ private fun Source.readStompCommand(): StompCommand {
     return StompCommand.parse(firstLine)
 }
 
-private fun Source.readStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders =
+private fun Source.readStompHeaders(shouldUnescapeHeaders: Boolean): MutableMap<String, String> =
     generateSequence { readLineStrict() }
         .takeWhile { it.isNotEmpty() } // empty line marks end of headers
         .parseLinesAsStompHeaders(shouldUnescapeHeaders)
 
-private fun Sequence<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boolean): StompHeaders {
+private fun Sequence<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boolean): MutableMap<String, String> {
     val headersMap = mutableMapOf<String, String>()
     forEach { line ->
         // the colon ':' is safe to use to split the line because it is escaped as \c (see HeaderEscaper)
@@ -54,7 +81,7 @@ private fun Sequence<String>.parseLinesAsStompHeaders(shouldUnescapeHeaders: Boo
             headersMap[key] = value
         }
     }
-    return headersMap.asStompHeaders()
+    return headersMap
 }
 
 private fun Source.readBodyBytes(contentLength: Int?) = when (contentLength) {
@@ -87,3 +114,6 @@ private fun Source.expectOnlyEOLs() {
  * Exception thrown when some frame data could not be decoded as a STOMP frame.
  */
 class InvalidStompFrameException(cause: Throwable) : Exception("Failed to decode invalid STOMP frame", cause)
+
+// ok to be private, it will be wrapped in InvalidStompFrameException anyway
+private class InvalidStompHeaderException(message: String) : Exception(message)
