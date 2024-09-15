@@ -82,7 +82,7 @@ internal fun StompConnectedHeaders(rawHeaders: MutableMap<String, String>): Stom
         // If we receive a frame without it, we should consider it from such a server.
         rawHeaders[VERSION] = "1.0"
     }
-    return StompConnectedHeaders(rawHeaders)
+    return MapBasedStompConnectedHeaders(rawHeaders)
 }
 
 private class MapBasedStompConnectedHeaders(
