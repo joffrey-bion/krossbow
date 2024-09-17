@@ -11,8 +11,8 @@ class StompCodecTest {
     fun stomp_basic() {
         val frameText = """
             STOMP
-            host:some.host
             accept-version:1.2
+            host:some.host
             
             $nullChar
         """.trimIndent()
@@ -28,8 +28,8 @@ class StompCodecTest {
     fun connect_basic() {
         val frameText = """
             CONNECT
-            host:some.host
             accept-version:1.2
+            host:some.host
             
             $nullChar
         """.trimIndent()
@@ -45,8 +45,8 @@ class StompCodecTest {
     fun connect_default() {
         val frameText = """
             CONNECT
-            host:some.host
             accept-version:1.2,1.1,1.0
+            host:some.host
             
             $nullChar
         """.trimIndent()
@@ -60,8 +60,8 @@ class StompCodecTest {
     fun connect_credentials() {
         val frameText = """
             CONNECT
-            host:some.host
             accept-version:1.2
+            host:some.host
             login:bob
             passcode:mypass
             
@@ -81,8 +81,8 @@ class StompCodecTest {
     fun connect_custom_headers() {
         val frameText = """
             CONNECT
-            host:some.host
             accept-version:1.2
+            host:some.host
             login:bob
             passcode:mypass
             Authorization:Bearer -jwt-
@@ -104,8 +104,8 @@ class StompCodecTest {
     fun connect_versions() {
         val frameText = """
             CONNECT
-            host:some.host
             accept-version:1.0,1.1,1.2
+            host:some.host
             
             $nullChar
         """.trimIndent()
@@ -164,8 +164,8 @@ class StompCodecTest {
     fun subscribe_custom_headers() {
         val frameText = """
             SUBSCRIBE
-            destination:/topic/dest
             id:0
+            destination:/topic/dest
             ack:auto
             receipt:message-1234
             Authorization:Bearer -jwt-
@@ -420,9 +420,11 @@ class StompCodecTest {
     }
 
     private fun assertEncodingDecoding(frameText: String, textFrame: StompFrame, binFrame: StompFrame) {
+        val frameBytes = frameText.encodeToByteString()
         assertEquals(textFrame, frameText.decodeToStompFrame())
-        assertEquals(binFrame, frameText.encodeToByteString().decodeToStompFrame())
+        assertEquals(binFrame, frameBytes.decodeToStompFrame())
         assertEquals(frameText, textFrame.encodeToText())
-        assertEquals(frameText.encodeToByteString(), textFrame.encodeToByteString())
+        assertEquals(frameBytes, textFrame.encodeToByteString())
+        assertEquals(frameBytes, binFrame.encodeToByteString())
     }
 }
