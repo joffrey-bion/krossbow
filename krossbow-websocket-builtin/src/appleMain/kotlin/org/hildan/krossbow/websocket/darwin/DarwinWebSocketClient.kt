@@ -8,7 +8,6 @@ import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.*
 import kotlinx.io.bytestring.*
-import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import platform.Foundation.*
 import platform.darwin.*
@@ -256,6 +255,7 @@ private fun NSURLSessionWebSocketMessage.toWebSocketFrame(): WebSocketFrame = wh
 @Suppress("CAST_NEVER_SUCCEEDS")
 private fun String.encodeToNSData(): NSData? = (this as NSString).dataUsingEncoding(NSUTF8StringEncoding)
 
+@OptIn(BetaInteropApi::class)
 @Suppress("CAST_NEVER_SUCCEEDS")
 private fun NSData.decodeToString(): String = NSString.create(this, NSUTF8StringEncoding) as String
 

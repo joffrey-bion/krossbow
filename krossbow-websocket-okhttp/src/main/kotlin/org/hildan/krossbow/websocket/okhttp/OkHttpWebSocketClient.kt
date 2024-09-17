@@ -2,6 +2,7 @@ package org.hildan.krossbow.websocket.okhttp
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.io.bytestring.*
 import kotlinx.io.bytestring.unsafe.*
 import okhttp3.*
 import okhttp3.Headers.Companion.toHeaders
@@ -79,7 +80,7 @@ private class KrossbowToOkHttpListenerAdapter(
     }
 
     override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-        runBlocking { channelListener.onBinaryMessage(bytes.asByteBuffer().readByteString()) }
+        runBlocking { channelListener.onBinaryMessage(bytes.asByteBuffer().getByteString()) }
     }
 
     override fun onMessage(webSocket: WebSocket, text: String) {

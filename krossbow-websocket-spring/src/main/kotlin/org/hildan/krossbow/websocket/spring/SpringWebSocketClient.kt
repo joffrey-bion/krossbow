@@ -6,7 +6,6 @@ import kotlinx.coroutines.future.*
 import kotlinx.coroutines.sync.*
 import kotlinx.io.*
 import kotlinx.io.bytestring.*
-import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import org.springframework.web.socket.*
 import java.net.*
@@ -67,8 +66,8 @@ private class KrossbowToSpringHandlerAdapter : WebSocketHandler {
             when (message) {
                 is TextMessage -> channelListener.onTextMessage(message.payload, message.isLast)
                 is BinaryMessage -> channelListener.onBinaryMessage(message.isLast) { write(message.payload) }
-                is PingMessage -> channelListener.onPing(message.payload.readByteString())
-                is PongMessage -> channelListener.onPong(message.payload.readByteString())
+                is PingMessage -> channelListener.onPing(message.payload.getByteString())
+                is PongMessage -> channelListener.onPong(message.payload.getByteString())
                 else -> channelListener.onError("Unsupported Spring websocket message type: ${message.javaClass}")
             }
         }

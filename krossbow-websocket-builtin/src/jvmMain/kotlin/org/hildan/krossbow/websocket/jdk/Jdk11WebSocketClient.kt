@@ -8,7 +8,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.io.*
 import kotlinx.io.bytestring.*
-import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import java.net.URI
 import java.net.http.HttpClient
@@ -80,12 +79,12 @@ private class Jdk11WebSocketListener(
     }
 
     override fun onPing(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = scope.future {
-        listener.onPing(message.readByteString())
+        listener.onPing(message.getByteString())
         webSocket.request(1)
     }
 
     override fun onPong(webSocket: WebSocket, message: ByteBuffer): CompletionStage<*> = scope.future {
-        listener.onPong(message.readByteString())
+        listener.onPong(message.getByteString())
         webSocket.request(1)
     }
 
