@@ -1,5 +1,25 @@
 Here are some details about how to migrate from one major version to another.
 
+## From 7.x to 8.x
+
+### Headers rework
+
+The headers types have been vastly reworked, for multiple reasons described in issue
+[#518](https://github.com/joffrey-bion/krossbow/issues/518).
+
+The following source-incompatible changes have been made:
+
+* The `StompHeaders` interface no longer extends `MutableMap`, and is no longer mutable.
+  * for modifications, use the `copy` functions of different header types to create a copy of the instance with some changes.
+  * for access, use the typed properties for standard headers, and the `get(headerName)` function to get custom headers.
+  * for access as a map (e.g. iteration), please open an issue describing your use case.
+    The experimental `asMap()` function can be used in the meantime. 
+* Header types were converted from `data class` to `interface`.
+* Header constructors with typed parameters were replaced with factory functions of the same name.
+  These functions take the mandatory headers as arguments, and the optional headers can be set via a lambda parameter.
+* Header constructors that used to take a `rawHeaders: StompHeaders` argument were removed.
+  If you need this functionality, please open an issue describing your use case.
+
 ## From 6.x to 7.x
 
 ### Web socket subprotocol negotiation
