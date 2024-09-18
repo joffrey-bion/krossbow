@@ -461,6 +461,9 @@ public final class org/hildan/krossbow/stomp/headers/AckMode$Companion {
 	public final fun fromHeader (Ljava/lang/String;)Lorg/hildan/krossbow/stomp/headers/AckMode;
 }
 
+public abstract interface annotation class org/hildan/krossbow/stomp/headers/ExperimentalHeadersApi : java/lang/annotation/Annotation {
+}
+
 public final class org/hildan/krossbow/stomp/headers/HeaderNames {
 	public static final field ACCEPT_VERSION Ljava/lang/String;
 	public static final field ACK Ljava/lang/String;

@@ -16,6 +16,7 @@ kotlin {
                 freeCompilerArgs.add("-Xexpect-actual-classes") // for charsets
             }
             languageSettings.optIn("org.hildan.krossbow.io.InternalKrossbowIoApi")
+            languageSettings.optIn("org.hildan.krossbow.stomp.headers.ExperimentalHeadersApi")
         }
         val commonMain by getting {
             dependencies {

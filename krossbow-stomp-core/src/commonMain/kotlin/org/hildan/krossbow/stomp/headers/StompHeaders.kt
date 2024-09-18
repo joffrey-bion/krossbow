@@ -5,6 +5,14 @@ import org.hildan.krossbow.stomp.headers.HeaderNames.CONTENT_TYPE
 import org.hildan.krossbow.stomp.headers.HeaderNames.RECEIPT
 
 /**
+ * Declarations annotated with this annotation are unstable and may be changed or removed at any time without a major
+ * version bump.
+ */
+@RequiresOptIn("This API is experimental and may be changed or removed in the future without notice.")
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+annotation class ExperimentalHeadersApi
+
+/**
  * The headers of a STOMP frame.
  */
 sealed interface StompHeaders {
@@ -50,6 +58,7 @@ sealed interface StompHeaders {
     /**
      * Returns a [Map] view of these headers.
      */
+    @ExperimentalHeadersApi
     fun asMap(): Map<String, String>
 }
 
