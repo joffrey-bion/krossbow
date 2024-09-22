@@ -1,6 +1,7 @@
 plugins {
     id("krossbow-multiplatform")
     alias(libs.plugins.kotlin.serialization)
+    id("websocket-test-server") // just to test that the server config is available on all target platforms
 }
 
 description = "Test utilities for Krossbow WebSocket adapter implementations."

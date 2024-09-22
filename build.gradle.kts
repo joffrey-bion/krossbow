@@ -6,8 +6,10 @@ plugins {
 //    alias(libs.plugins.louiscad.complete.kotlin) // for autocomplete of Apple libraries on non-macOS systems
     id("krossbow-githubinfo")
 
-    // workaround for https://github.com/gradle/gradle/issues/17559
+    // The following plugins are only added as a Workaround for https://github.com/gradle/gradle/issues/17559.
+    // In short, we need to align the plugin classpath between all projects in the build.
     alias(libs.plugins.kotlin.atomicfu) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
 }
 
 allprojects {
