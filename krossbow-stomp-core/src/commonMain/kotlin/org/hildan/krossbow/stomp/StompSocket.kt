@@ -78,14 +78,13 @@ internal class StompSocket(
 
 private fun WebSocketFrame.decodeToStompEvent(): StompEvent {
     if (isHeartBeat()) {
-        return StompEvent.HeartBeat
+        return StompHeartBeat
     }
     return when (this) {
         is WebSocketFrame.Text -> text.decodeToStompFrame()
         is WebSocketFrame.Binary -> bytes.decodeToStompFrame()
         is WebSocketFrame.Ping,
-        is WebSocketFrame.Pong
-        -> StompEvent.HeartBeat // we need to count this traffic
+        is WebSocketFrame.Pong -> StompHeartBeat // we need to count this traffic
         is WebSocketFrame.Close -> throw WebSocketClosedUnexpectedly(code, reason)
     }
 }

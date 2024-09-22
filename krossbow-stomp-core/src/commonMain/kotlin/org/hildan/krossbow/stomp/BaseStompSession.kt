@@ -44,7 +44,7 @@ internal class BaseStompSession(
             },
             onMissingHeartBeat = {
                 val cause = MissingHeartBeatException(heartBeat.expectedPeriod)
-                sharedStompEvents.emit(StompEvent.Error(cause))
+                sharedStompEvents.emit(StompConnectionError(cause))
                 stompSocket.close(cause)
             },
         )
@@ -67,8 +67,8 @@ internal class BaseStompSession(
         scope.launch {
             sharedStompEvents.collect {
                 when (it) {
-                    is StompEvent.Close -> shutdown("STOMP session disconnected")
-                    is StompEvent.Error -> shutdown("STOMP session cancelled due to upstream error", cause = it.cause)
+                    is StompConnectionClosed -> shutdown("STOMP session disconnected")
+                    is StompConnectionError -> shutdown("STOMP session cancelled due to upstream error", cause = it.cause)
                     else -> Unit
                 }
             }
@@ -218,7 +218,7 @@ internal class BaseStompSession(
             sendDisconnectFrameAndWaitForReceipt()
         }
         stompSocket.close()
-        sharedStompEvents.emit(StompEvent.Close)
+        sharedStompEvents.emit(StompConnectionClosed)
     }
 
     private suspend fun sendDisconnectFrameAndWaitForReceipt() {
@@ -234,9 +234,9 @@ internal class BaseStompSession(
 }
 
 private fun Flow<StompEvent>.materializeErrorsAndCompletion(): Flow<StompEvent> =
-    catch { emit(StompEvent.Error(cause = it)) }
-        .onCompletion { if (it == null) emit(StompEvent.Close) }
+    catch { emit(StompConnectionError(cause = it)) }
+        .onCompletion { if (it == null) emit(StompConnectionClosed) }
 
 private fun Flow<StompEvent>.dematerializeErrorsAndCompletion(): Flow<StompEvent> =
-    takeWhile { it !is StompEvent.Close }
-        .onEach { if (it is StompEvent.Error) throw it.cause }
+    takeWhile { it !is StompConnectionClosed }
+        .onEach { if (it is StompConnectionError) throw it.cause }

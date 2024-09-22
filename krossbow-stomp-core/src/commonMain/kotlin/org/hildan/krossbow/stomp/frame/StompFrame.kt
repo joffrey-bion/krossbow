@@ -9,35 +9,39 @@ import org.hildan.krossbow.stomp.headers.*
  *
  * [StompFrame] directly extend it to avoid the overhead of wrapping every frame in a [StompEvent] internally.
  */
-sealed class StompEvent {
-    /**
-     * Represents data-less traffic that needs to be registered to reset heartbeat counters.
-     */
-    internal data object HeartBeat : StompEvent()
+sealed interface StompEvent
 
-    /**
-     * Materializes completion of the STOMP frames flow.
-     */
-    internal data object Close : StompEvent()
+/**
+ * Represents data-less traffic that needs to be registered to reset heartbeat counters.
+ */
+internal data object StompHeartBeat : StompEvent
 
-    /**
-     * Materializes errors in the STOMP frames flow.
-     */
-    internal data class Error(val cause: Throwable) : StompEvent()
-}
+/**
+ * Materializes completion of the STOMP frames flow.
+ */
+internal data object StompConnectionClosed : StompEvent
+
+/**
+ * Materializes errors in the STOMP frames flow.
+ */
+internal data class StompConnectionError(val cause: Throwable) : StompEvent
 
 /**
  * Represents a STOMP frame. The structure of STOMP frames is
  * [defined by the specification](https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames).
  */
-sealed class StompFrame(
+sealed interface StompFrame : StompEvent {
     /** The command of this STOMP frame, which is the first word of the frame. */
-    val command: StompCommand,
+    @Deprecated(
+        message = "This property is an implementation detail of frame encoding and will be removed in a future " +
+            "release. Please use 'is' checks on the frame type if you need to distinguish particular frames.",
+    )
+    val command: StompCommand
     /** The headers of this STOMP frame. */
-    open val headers: StompHeaders,
+    val headers: StompHeaders
     /** The body of this STOMP frame. */
-    open val body: FrameBody? = null,
-) : StompEvent() {
+    val body: FrameBody?
+
     /**
      * The body of this frame as text.
      *
@@ -45,7 +49,7 @@ sealed class StompFrame(
      *
      * If this STOMP frame comes from a binary web socket frame, the binary body is decoded to text based on the
      * `content-type` header of this frame.
-     * The `content-type` header must be present and its value must start with `text/` or contain an explicit charset,
+     * The `content-type` header must be present, and its value must start with `text/` or contain an explicit charset,
      * as defined in the [specification](https://stomp.github.io/stomp-specification-1.2.html#Header_content-type).
      * If there is no `content-type` header, or if the charset cannot be properly extracted/inferred from it, accessing
      * [bodyAsText] throws an exception.
@@ -53,27 +57,42 @@ sealed class StompFrame(
      * The STOMP protocol doesn't distinguish between missing bodies and 0-length bodies.
      * For this reason and for convenience, [bodyAsText] is the empty string in both cases.
      */
-    val bodyAsText: String by lazy { body?.asText(headers.contentType) ?: "" }
+    val bodyAsText: String
+        get() = body?.asText(headers.contentType) ?: ""
+
+    sealed interface ControlFrame : StompFrame {
+        override val body: Nothing? get() = null
+    }
+
+    sealed interface ClientFrame : StompFrame
+
+    sealed interface ServerFrame : StompFrame
 
     /**
      * A STOMP frame is a STOMP 1.2 replacement for the CONNECT frame, used to start a STOMP session on a web socket
      * connection.
      *
      * Clients that use the STOMP frame instead of the CONNECT frame will only be able to connect to STOMP 1.2 servers
-     * (as well as some STOMP 1.1 servers) but the advantage is that a protocol sniffer/discriminator will be able to
+     * (as well as some STOMP 1.1 servers), but the advantage is that a protocol sniffer/discriminator will be able to
      * differentiate the STOMP connection from an HTTP connection.
      */
-    data class Stomp(override val headers: StompConnectHeaders) : StompFrame(StompCommand.STOMP, headers)
+    data class Stomp(override val headers: StompConnectHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.STOMP
+    }
 
     /**
      * A CONNECT frame is a client frame used to start a STOMP session on a web socket connection.
      */
-    data class Connect(override val headers: StompConnectHeaders) : StompFrame(StompCommand.CONNECT, headers)
+    data class Connect(override val headers: StompConnectHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.CONNECT
+    }
 
     /**
      * A CONNECTED frame is a server frame received upon successful connection at the STOMP protocol level.
      */
-    data class Connected(override val headers: StompConnectedHeaders) : StompFrame(StompCommand.CONNECTED, headers)
+    data class Connected(override val headers: StompConnectedHeaders) : ServerFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.CONNECTED
+    }
 
     /**
      * A SEND frame is a client frame used to send a message to a destination in the messaging system.
@@ -82,7 +101,9 @@ sealed class StompFrame(
     data class Send(
         override val headers: StompSendHeaders,
         override val body: FrameBody?,
-    ) : StompFrame(StompCommand.SEND, headers, body)
+    ) : ClientFrame, StompFrame {
+        override val command: StompCommand get() = StompCommand.SEND
+    }
 
     /**
      * A SUBSCRIBE frame is a client frame used to register to listen to a given destination.
@@ -90,13 +111,16 @@ sealed class StompFrame(
      * Any messages received on the subscribed destination will henceforth be delivered as MESSAGE frames from the
      * server to the client. The `ack` header controls the message acknowledgment mode.
      */
-    data class Subscribe(override val headers: StompSubscribeHeaders) : StompFrame(StompCommand.SUBSCRIBE, headers)
+    data class Subscribe(override val headers: StompSubscribeHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.SUBSCRIBE
+    }
 
     /**
      * An UNSUBSCRIBE frame is a client frame used to stop a STOMP subscription.
      */
-    data class Unsubscribe(override val headers: StompUnsubscribeHeaders) :
-        StompFrame(StompCommand.UNSUBSCRIBE, headers)
+    data class Unsubscribe(override val headers: StompUnsubscribeHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.UNSUBSCRIBE
+    }
 
     /**
      * A MESSAGE frame is a server frame used to convey a message from a subscription to the client.
@@ -105,14 +129,18 @@ sealed class StompFrame(
     data class Message(
         override val headers: StompMessageHeaders,
         override val body: FrameBody?,
-    ) : StompFrame(StompCommand.MESSAGE, headers, body)
+    ) : ServerFrame {
+        override val command: StompCommand get() = StompCommand.MESSAGE
+    }
 
     /**
      * A RECEIPT frame is sent from the server to the client once the server has successfully processed a client frame
      * that requests a receipt.
      * It is expected from the server when the client frame has a `receipt` header.
      */
-    data class Receipt(override val headers: StompReceiptHeaders) : StompFrame(StompCommand.RECEIPT, headers)
+    data class Receipt(override val headers: StompReceiptHeaders) : ServerFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.RECEIPT
+    }
 
     /**
      * An ACK frame is a client frame used to acknowledge consumption of a message from a subscription using `client` or
@@ -120,13 +148,17 @@ sealed class StompFrame(
      * Any messages received from such a subscription will not be considered to have been consumed until the message has
      * been acknowledged via an ACK.
      */
-    data class Ack(override val headers: StompAckHeaders) : StompFrame(StompCommand.ACK, headers)
+    data class Ack(override val headers: StompAckHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.ACK
+    }
 
     /**
      * A NACK frame is a client frame used to tell the server that the client did not consume the message.
      * The server can then either send the message to a different client, discard it, or put it in a dead letter queue.
      */
-    data class Nack(override val headers: StompNackHeaders) : StompFrame(StompCommand.NACK, headers)
+    data class Nack(override val headers: StompNackHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.NACK
+    }
 
     /**
      * A BEGIN frame is a client frame used to start a transaction.
@@ -134,23 +166,31 @@ sealed class StompFrame(
      * Transactions in this case apply to sending and acknowledging - any messages sent or acknowledged during a
      * transaction will be processed atomically based on the transaction.
      */
-    data class Begin(override val headers: StompBeginHeaders) : StompFrame(StompCommand.BEGIN, headers)
+    data class Begin(override val headers: StompBeginHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.BEGIN
+    }
 
     /**
      * A COMMIT frame is a client frame used to commit a transaction in progress.
      */
-    data class Commit(override val headers: StompCommitHeaders) : StompFrame(StompCommand.COMMIT, headers)
+    data class Commit(override val headers: StompCommitHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.COMMIT
+    }
 
     /**
      * An ABORT frame is a client frame used to roll back a transaction in progress.
      */
-    data class Abort(override val headers: StompAbortHeaders) : StompFrame(StompCommand.ABORT, headers)
+    data class Abort(override val headers: StompAbortHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.ABORT
+    }
 
     /**
      * A DISCONNECT frame is a client frame used to gracefully disconnect from the server.
      * Waiting for a RECEIPT on DISCONNECT ensures that all previously sent messages have been received by the server.
      */
-    data class Disconnect(override val headers: StompDisconnectHeaders) : StompFrame(StompCommand.DISCONNECT, headers)
+    data class Disconnect(override val headers: StompDisconnectHeaders) : ClientFrame, ControlFrame {
+        override val command: StompCommand get() = StompCommand.DISCONNECT
+    }
 
     /**
      * An ERROR frame is a server frame sent in case of error.
@@ -160,7 +200,8 @@ sealed class StompFrame(
     data class Error(
         override val headers: StompErrorHeaders,
         override val body: FrameBody?,
-    ) : StompFrame(StompCommand.ERROR, headers, body) {
+    ) : ServerFrame {
+        override val command: StompCommand get() = StompCommand.ERROR
         /**
          * The description of the error, taken from the `message` header if present, or from the body.
          */
