@@ -28,15 +28,5 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
-        val nativeMain by getting
-        val nonAppleNativeMain by creating {
-            dependsOn(nativeMain)
-        }
-        val linuxMain by getting {
-            dependsOn(nonAppleNativeMain)
-        }
-        val mingwMain by getting {
-            dependsOn(nonAppleNativeMain)
-        }
     }
 }
