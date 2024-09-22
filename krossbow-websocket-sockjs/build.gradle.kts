@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     id("krossbow-publish")
+    id("websocket-test-server")
 }
 
 description = "Multiplatform SockJS implementation of Krossbow's WebSocket API."
@@ -21,11 +22,19 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(projects.krossbowWebsocketTest)
             }
         }
         val jvmMain by getting {
             dependencies {
                 api(projects.krossbowWebsocketSpring)
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                // JSR 356 - Java API for WebSocket (reference implementation)
+                // Low-level implementation required by Spring's client (jakarta.websocket.*)
+                implementation(libs.tyrusStandaloneClient)
             }
         }
         val jsMain by getting {
