@@ -17,22 +17,14 @@ kotlin {
                 implementation(libs.kotlinx.serialization.core)
                 implementation(libs.kotlinx.serialization.json)
 
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
             }
         }
         val jvmMain by getting {
             dependencies {
                 // for the test server
                 implementation(libs.java.websocket)
-
-                implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
             }
         }
         val nativeMain by getting
