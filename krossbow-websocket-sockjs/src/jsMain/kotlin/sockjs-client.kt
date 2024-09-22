@@ -1,7 +1,4 @@
-@file:Suppress("INTERFACE_WITH_SUPERCLASS")
-
 import org.w3c.dom.WebSocket
-import org.w3c.dom.events.Event
 
 // both annotations, so it's accessible from UMD
 @JsModule("sockjs-client")
@@ -9,27 +6,6 @@ import org.w3c.dom.events.Event
 external object SockJS {
     @nativeInvoke
     operator fun invoke(url: String, protocols: List<String> = definedExternally, options: Options = definedExternally): WebSocket
-    var prototype: WebSocket
-    var CONNECTING: String /* 0 */
-    var OPEN: String /* 1 */
-    var CLOSING: String /* 2 */
-    var CLOSED: String /* 3 */
-
-    interface BaseEvent : Event {
-        override var type: String
-    }
-
-    interface OpenEvent : BaseEvent
-
-    interface CloseEvent : BaseEvent {
-        var code: Number
-        var reason: String
-        var wasClean: Boolean
-    }
-
-    interface MessageEvent : BaseEvent {
-        var data: String
-    }
 
     interface Options {
         var server: String?
