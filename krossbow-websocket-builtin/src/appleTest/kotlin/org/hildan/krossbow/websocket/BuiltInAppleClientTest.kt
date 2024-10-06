@@ -1,13 +1,13 @@
 package org.hildan.krossbow.websocket
 
 import org.hildan.krossbow.websocket.builtin.*
-import org.hildan.krossbow.websocket.jdk.*
+import org.hildan.krossbow.websocket.darwin.*
 import kotlin.test.*
 
-class BuiltInJvmClientTest {
+class BuiltInAppleClientTest {
 
     @Test
     fun defaultClientTest() {
-        assertTrue(WebSocketClient.builtIn() is Jdk11WebSocketClient)
+        assertTrue(WebSocketClient.builtIn() is DarwinWebSocketClient)
     }
 }

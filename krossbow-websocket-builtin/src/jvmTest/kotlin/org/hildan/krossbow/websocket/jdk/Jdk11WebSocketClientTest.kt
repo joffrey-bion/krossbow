@@ -1,6 +1,6 @@
 package org.hildan.krossbow.websocket.jdk
 
-import org.hildan.krossbow.websocket.test.WebSocketClientTestSuite
+import org.hildan.krossbow.websocket.test.*
 
 class Jdk11WebSocketClientTest : WebSocketClientTestSuite() {
 

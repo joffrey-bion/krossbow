@@ -1,10 +1,8 @@
 package org.hildan.krossbow.websocket.darwin
 
-import org.hildan.krossbow.websocket.WebSocketClient
-import org.hildan.krossbow.websocket.builtin.builtIn
-import org.hildan.krossbow.websocket.test.WebSocketClientTestSuite
+import org.hildan.krossbow.websocket.test.*
 
 class DarwinWebSocketClientTest : WebSocketClientTestSuite() {
 
-    override fun provideClient() = WebSocketClient.builtIn()
+    override fun provideClient() = DarwinWebSocketClient()
 }
