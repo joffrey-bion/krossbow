@@ -20,14 +20,14 @@ internal const val DefaultHost = "<default host header>" // invalid host value t
 /**
  * Establishes a STOMP session over an existing [WebSocketConnection].
  *
- * The behaviour of the STOMP protocol can be customized via the [config].
+ * The behavior of the STOMP protocol can be customized via the given [config].
  * However, the semantics of [StompConfig.connectionTimeout] is slightly changed: it doesn't take into account
  * the web socket connection time (since it already happened outside of this method call).
  *
  * If [login] and [passcode] are provided, they are used for STOMP authentication.
  *
  * The CONNECT/STOMP frame can be further customized by using [customHeaders], which may be useful for server-specific
- * behaviour, like token-based authentication.
+ * behavior, like token-based authentication.
  *
  * If the connection at the STOMP level fails, the underlying web socket is closed.
  */

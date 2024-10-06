@@ -23,7 +23,7 @@ private const val ERROR_CODE_SOCKET_NOT_CONNECTED = 57
  * This is only available is iOS 13.0+, tvOS 13.0+, watchOS 6.0+, macOS 10.15+
  * (see [documentation](https://developer.apple.com/documentation/foundation/urlsessionwebsockettask))
  *
- * A custom [sessionConfig] can be passed to customize the behaviour of the connection.
+ * A custom [sessionConfig] can be passed to customize the behavior of the connection.
  * Also, if a non-null [maximumMessageSize] if provided, it will be used to configure the web socket.
  */
 class DarwinWebSocketClient(

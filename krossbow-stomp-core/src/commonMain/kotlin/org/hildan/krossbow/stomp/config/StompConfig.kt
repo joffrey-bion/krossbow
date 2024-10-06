@@ -37,7 +37,7 @@ class StompConfig {
      *
      * This is part of a negotiation and does not imply that this exact heart beat configuration will be used.
      * The actual heart beats are defined by the CONNECTED frame received from the server as a result of the
-     * negotiation. This behaviour is
+     * negotiation. This behavior is
      * [defined by the specification](https://stomp.github.io/stomp-specification-1.2.html#Heart-beating).
      */
     var heartBeat: HeartBeat = HeartBeat()

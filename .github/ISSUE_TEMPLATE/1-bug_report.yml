@@ -9,7 +9,7 @@ body:
     id: what-happened
     attributes:
       label: What happened?
-      placeholder: Incorrect behaviour, error message, stacktrace...
+      placeholder: Incorrect behavior, error message, stacktrace...
       description: Please describe what you see and what you expected to happen instead.
     validations:
       required: true

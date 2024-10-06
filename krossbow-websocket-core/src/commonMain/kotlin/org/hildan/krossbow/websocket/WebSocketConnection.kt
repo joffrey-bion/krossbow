@@ -47,7 +47,7 @@ interface WebSocketConnection {
      *
      * This flow is designed for a single-consumer.
      * If multiple collectors collect it at the same time, each frame will go to only one of them in a fan-out manner.
-     * For a broadcast behaviour, use [Flow.shareIn] to convert this flow into a [SharedFlow].
+     * For a broadcast behavior, use [Flow.shareIn] to convert this flow into a [SharedFlow].
      *
      * This flow is hot, meaning that the frames are coming and are buffered even when there is no collector.
      * This means that it's ok to have a delay between the connection and the collection of [incomingFrames], no

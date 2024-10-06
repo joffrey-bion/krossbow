@@ -48,7 +48,7 @@ import org.hildan.krossbow.stomp.utils.generateUuid
  * - the flow's consumer uses a terminal operator that ends the flow early, such as [first][kotlinx.coroutines.flow.first]
  *
  * Because of this automatic unsubscription, the returned flow can only be collected once.
- * Multiple collections of the returned flow (parallel or sequential) result in an unspecified behaviour.
+ * Multiple collections of the returned flow (parallel or sequential) result in an unspecified behavior.
  *
  * If an error occurs upstream (e.g. STOMP ERROR frame or unexpected web socket closure), then all subscription flow
  * collectors throw the relevant exception, but no UNSUBSCRIBE frame is sent (because the connection is failed).

@@ -24,7 +24,7 @@ The [heartBeat](config.md#heartBeat) property should be used to configure heart 
 Note that the heart beats for the STOMP session are negotiated with the server.
 The actual heart beats are defined by the CONNECTED frame received from the server as a result of the negotiation, and
 may differ from the `StompClient` configuration.
-The negotiation behaviour is [defined by the specification](https://stomp.github.io/stomp-specification-1.2.html#Heart-beating).
+The negotiation behavior is [defined by the specification](https://stomp.github.io/stomp-specification-1.2.html#Heart-beating).
 
 Sending and checking heart beats is automatically handled by `StompSession` implementations, depending on the result of 
 the negotiation with the server.

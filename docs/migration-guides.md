@@ -217,7 +217,7 @@ conn.incomingFrames.collect {
 `krossbow-websocket-spring` no longer transitively brings a dependency on Tyrus.
 
 If you didn't add any JSR-356 implementation manually, you now have to explicitly depend on one.
-If you want the same behaviour as before, add the Tyrus dependency to your `build.gradle.kts` as follows:
+If you want the same behavior as before, add the Tyrus dependency to your `build.gradle.kts` as follows:
 
 ```
 dependencies {

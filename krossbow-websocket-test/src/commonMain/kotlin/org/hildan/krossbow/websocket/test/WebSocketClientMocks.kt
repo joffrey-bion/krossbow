@@ -6,7 +6,7 @@ import org.hildan.krossbow.websocket.WebSocketConnection
 
 /**
  * A mock [WebSocketClient] implementation that allows to control entirely how the [connect] method suspends and
- * resumes. This is useful to test the behaviour of the connect mechanism of clients that build on top of existing web
+ * resumes. This is useful to test the behavior of the connect mechanism of clients that build on top of existing web
  * socket clients.
  */
 class WebSocketClientMock : WebSocketClient {
