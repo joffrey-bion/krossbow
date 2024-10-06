@@ -3,8 +3,7 @@ package org.hildan.krossbow.stomp.conversions.jackson
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
-import org.hildan.krossbow.stomp.StompReceipt
-import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.*
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.StompMessageHeaders
@@ -24,23 +23,18 @@ class MockStompSession : StompSession {
         incomingFrames.send(frame)
     }
 
-    override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? {
-        sentFrames.send(StompFrame.Send(headers, body))
-        return null
-    }
+    @OptIn(UnsafeStompSessionApi::class)
+    override suspend fun send(headers: StompSendHeaders, body: FrameBody?): StompReceipt? =
+        sendRawFrameAndMaybeAwaitReceipt(StompFrame.Send(headers, body))
 
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> =
         incomingFrames.consumeAsFlow()
 
-    override suspend fun ack(ackId: String, transactionId: String?) = error("This mock doesn't support this method")
-
-    override suspend fun nack(ackId: String, transactionId: String?) = error("This mock doesn't support this method")
-
-    override suspend fun begin(transactionId: String) = error("This mock doesn't support this method")
-
-    override suspend fun commit(transactionId: String) = error("This mock doesn't support this method")
-
-    override suspend fun abort(transactionId: String) = error("This mock doesn't support this method")
+    @UnsafeStompSessionApi
+    override suspend fun sendRawFrameAndMaybeAwaitReceipt(frame: StompFrame): StompReceipt? {
+        sentFrames.send(frame)
+        return frame.headers.receipt?.let { StompReceipt(it) }
+    }
 
     override suspend fun disconnect() = error("This mock doesn't support this method")
 }

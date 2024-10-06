@@ -60,20 +60,31 @@ public final class org/hildan/krossbow/stomp/StompReceipt {
 }
 
 public abstract interface class org/hildan/krossbow/stomp/StompSession {
-	public abstract fun abort (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun ack (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun abort (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun abort$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun ack (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun ack$default (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public abstract fun begin (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun commit (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun ack$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun begin (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun begin$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun commit (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun commit$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun disconnect (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun nack (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun nack (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun nack$default (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun nack$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun send (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun sendRawFrameAndMaybeAwaitReceipt (Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/stomp/StompSession$DefaultImpls {
+	public static fun abort (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun ack (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun ack$default (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun begin (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun commit (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun nack (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun nack$default (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
@@ -91,6 +102,9 @@ public final class org/hildan/krossbow/stomp/StompSessionKt {
 public final class org/hildan/krossbow/stomp/StompWsExtensionsKt {
 	public static final fun stomp (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun stomp$default (Lorg/hildan/krossbow/websocket/WebSocketConnection;Lorg/hildan/krossbow/stomp/config/StompConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface annotation class org/hildan/krossbow/stomp/UnsafeStompSessionApi : java/lang/annotation/Annotation {
 }
 
 public final class org/hildan/krossbow/stomp/WebSocketClosedUnexpectedly : java/lang/Exception {
@@ -170,6 +184,14 @@ public final class org/hildan/krossbow/stomp/conversions/KTypeRef {
 public abstract interface class org/hildan/krossbow/stomp/conversions/TypedStompSession : org/hildan/krossbow/stomp/StompSession {
 	public abstract fun convertAndSend (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Ljava/lang/Object;Lorg/hildan/krossbow/stomp/conversions/KTypeRef;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lorg/hildan/krossbow/stomp/conversions/KTypeRef;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class org/hildan/krossbow/stomp/conversions/TypedStompSession$DefaultImpls {
+	public static fun abort (Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun ack (Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun begin (Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun commit (Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun nack (Lorg/hildan/krossbow/stomp/conversions/TypedStompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class org/hildan/krossbow/stomp/conversions/text/TextConversionsKt {

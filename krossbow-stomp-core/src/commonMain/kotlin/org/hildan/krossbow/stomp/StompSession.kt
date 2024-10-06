@@ -1,14 +1,15 @@
 package org.hildan.krossbow.stomp
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.io.bytestring.*
-import org.hildan.krossbow.stomp.config.StompConfig
-import org.hildan.krossbow.stomp.frame.FrameBody
-import org.hildan.krossbow.stomp.frame.StompFrame
-import org.hildan.krossbow.stomp.headers.StompSendHeaders
-import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
-import org.hildan.krossbow.stomp.utils.generateUuid
+import org.hildan.krossbow.stomp.config.*
+import org.hildan.krossbow.stomp.frame.*
+import org.hildan.krossbow.stomp.headers.*
+import org.hildan.krossbow.stomp.utils.*
+
+@RequiresOptIn("This API is unsafe. Make sure you read the documentation and understand the consequences")
+@Retention(AnnotationRetention.BINARY)
+annotation class UnsafeStompSessionApi
 
 /**
  * A coroutine-based STOMP session. This interface defines interactions with a STOMP server.
@@ -117,10 +118,9 @@ interface StompSession {
      * If auto-receipt is disabled and no `receipt` header is provided, this method doesn't wait for a RECEIPT frame
      * and never throws [LostReceiptException].
      * Instead, it returns immediately after sending the SUBSCRIBE frame.
-     * This means that, in this case, there is no real guarantee that the subscription actually happened when this
-     * method returns.
+     * In this case, there is no real guarantee that the subscription actually happened when this method returns.
      *
-     * The unsubscription happens by sending an UNSUBSCRIBE frame when the flow collector's coroutine is cancelled, or
+     * The unsubscription happens by sending an `UNSUBSCRIBE` frame when the flow collector's coroutine is canceled, or
      * when a terminal operator such as [Flow.first][kotlinx.coroutines.flow.first] completes the flow from the
      * consumer's side.
      *
@@ -137,7 +137,10 @@ interface StompSession {
      * The provided [ackId] must match the `ack` header of the message to acknowledge.
      * If this acknowledgement is part of a transaction, the [transactionId] should be provided.
      */
-    suspend fun ack(ackId: String, transactionId: String? = null)
+    @OptIn(UnsafeStompSessionApi::class)
+    suspend fun ack(ackId: String, transactionId: String? = null) {
+        sendRawFrameAndMaybeAwaitReceipt(StompFrame.Ack(StompAckHeaders(ackId) { transaction = transactionId }))
+    }
 
     /**
      * Sends a NACK frame with the given [ackId].
@@ -145,28 +148,64 @@ interface StompSession {
      * The provided [ackId] must match the `ack` header of the message to refuse.
      * If this acknowledgement is part of a transaction, the [transactionId] should be provided.
      */
-    suspend fun nack(ackId: String, transactionId: String? = null)
+    @OptIn(UnsafeStompSessionApi::class)
+    suspend fun nack(ackId: String, transactionId: String? = null) {
+        sendRawFrameAndMaybeAwaitReceipt(StompFrame.Nack(StompNackHeaders(ackId) { transaction = transactionId }))
+    }
 
     /**
      * Sends a BEGIN frame with the given [transactionId].
      *
      * @see withTransaction
      */
-    suspend fun begin(transactionId: String)
+    @OptIn(UnsafeStompSessionApi::class)
+    suspend fun begin(transactionId: String) {
+        sendRawFrameAndMaybeAwaitReceipt(StompFrame.Begin(StompBeginHeaders(transactionId)))
+    }
 
     /**
      * Sends a COMMIT frame with the given [transactionId].
      *
      * @see withTransaction
      */
-    suspend fun commit(transactionId: String)
+    @OptIn(UnsafeStompSessionApi::class)
+    suspend fun commit(transactionId: String) {
+        sendRawFrameAndMaybeAwaitReceipt(StompFrame.Commit(StompCommitHeaders(transactionId)))
+    }
 
     /**
      * Sends an ABORT frame with the given [transactionId].
      *
      * @see withTransaction
      */
-    suspend fun abort(transactionId: String)
+    @OptIn(UnsafeStompSessionApi::class)
+    suspend fun abort(transactionId: String) {
+        sendRawFrameAndMaybeAwaitReceipt(StompFrame.Abort(StompAbortHeaders(transactionId)))
+    }
+
+    /**
+     * Sends the given [frame] as-is, without modifications to its headers, regardless of the configuration.
+     *
+     * This means that:
+     * * no `receipt` header is added even if [autoReceipt][StompConfig.autoReceipt] is enabled
+     * * no `content-length` header is added even if [autoContentLength][StompConfig.autoContentLength] is enabled
+     *
+     * If a `receipt` header is present in the given [frame], this method suspends until the corresponding `RECEIPT`
+     * frame is received from the server.
+     * If no `RECEIPT` frame is received in the configured [time limit][StompConfig.receiptTimeout], a
+     * [LostReceiptException] is thrown.
+     *
+     * If no `receipt` header is present in the given [frame], this method doesn't wait for a `RECEIPT` frame
+     * and never throws [LostReceiptException].
+     * Instead, it returns immediately after sending the frame.
+     * In this case, there is no guarantee that the server received the frame when this method returns.
+     *
+     * WARNING: Prefer using higher-level APIs over this function.
+     * Sending raw frames may break some invariants or the state of this session.
+     * In particular, using subscription-related frames could be a problem.
+     */
+    @UnsafeStompSessionApi
+    suspend fun sendRawFrameAndMaybeAwaitReceipt(frame: StompFrame): StompReceipt?
 
     /**
      * If [graceful disconnect][StompConfig.gracefulDisconnect] is enabled (which is the default), sends a DISCONNECT
@@ -176,7 +215,7 @@ interface StompSession {
      * If a RECEIPT frame is not received within the [configured time][StompConfig.disconnectTimeout], it may
      * be because the server closed the connection too quickly to send a RECEIPT frame, which is
      * [not considered an error](http://stomp.github.io/stomp-specification-1.2.html#Connection_Lingering).
-     * That's why this function doesn't throw an exception in this case, it just returns normally.
+     * That's why this function doesn't throw an exception in this case; it just returns normally.
      */
     suspend fun disconnect()
 }

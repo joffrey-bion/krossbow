@@ -117,18 +117,13 @@ internal class BaseStompSession(
         return prepareHeadersAndSendFrame(StompFrame.Send(headers, body))
     }
 
+    @OptIn(UnsafeStompSessionApi::class)
     private suspend fun prepareHeadersAndSendFrame(frame: StompFrame): StompReceipt? {
         val effectiveFrame = frame.copyWithHeaders {
             maybeSetContentLength(frame.body)
             maybeSetAutoReceipt()
         }
-        val receiptId = effectiveFrame.headers.receipt
-        if (receiptId == null) {
-            sendStompFrame(effectiveFrame)
-            return null
-        }
-        sendAndWaitForReceipt(receiptId, effectiveFrame)
-        return StompReceipt(receiptId)
+        return sendRawFrameAndMaybeAwaitReceipt(effectiveFrame)
     }
 
     private fun StompHeadersBuilder.maybeSetContentLength(frameBody: FrameBody?) {
@@ -142,22 +137,6 @@ internal class BaseStompSession(
             receipt = generateUuid()
         }
     }
-
-    private suspend fun sendAndWaitForReceipt(receiptId: String, frame: StompFrame) {
-        withTimeoutOrNull(frame.receiptTimeout) {
-            sharedStompEvents
-                .onSubscription {
-                    sendStompFrame(frame)
-                }
-                .dematerializeErrorsAndCompletion()
-                .filterIsInstance<StompFrame.Receipt>()
-                .firstOrNull { it.headers.receiptId == receiptId }
-                ?: throw SessionDisconnectedException("The STOMP frames flow completed unexpectedly while waiting for RECEIPT frame with id='$receiptId'")
-        } ?: throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
-    }
-
-    private val StompFrame.receiptTimeout: Duration
-        get() = if (command == StompCommand.DISCONNECT) config.disconnectTimeout else config.receiptTimeout
 
     override suspend fun subscribe(headers: StompSubscribeHeaders): Flow<StompFrame.Message> {
         return startSubscription(headers)
@@ -185,30 +164,37 @@ internal class BaseStompSession(
     }
 
     private suspend fun unsubscribe(subscriptionId: String) {
-        sendStompFrame(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
+        sendRawStompFrame(StompFrame.Unsubscribe(StompUnsubscribeHeaders(id = subscriptionId)))
     }
 
-    override suspend fun ack(ackId: String, transactionId: String?) {
-        sendStompFrame(StompFrame.Ack(StompAckHeaders(ackId) { transaction = transactionId }))
+    @UnsafeStompSessionApi
+    override suspend fun sendRawFrameAndMaybeAwaitReceipt(frame: StompFrame): StompReceipt? {
+        val receiptId = frame.headers.receipt
+        if (receiptId == null) {
+            sendRawStompFrame(frame)
+            return null
+        }
+        sendRawFrameAndAwaitReceipt(receiptId, frame)
+        return StompReceipt(receiptId)
     }
 
-    override suspend fun nack(ackId: String, transactionId: String?) {
-        sendStompFrame(StompFrame.Nack(StompNackHeaders(ackId) { transaction = transactionId }))
+    private suspend fun sendRawFrameAndAwaitReceipt(receiptId: String, frame: StompFrame) {
+        withTimeoutOrNull(frame.receiptTimeout) {
+            sharedStompEvents
+                .onSubscription {
+                    sendRawStompFrame(frame)
+                }
+                .dematerializeErrorsAndCompletion()
+                .filterIsInstance<StompFrame.Receipt>()
+                .firstOrNull { it.headers.receiptId == receiptId }
+                ?: throw SessionDisconnectedException("The STOMP frames flow completed unexpectedly while waiting for RECEIPT frame with id='$receiptId'")
+        } ?: throw LostReceiptException(receiptId, frame.receiptTimeout, frame)
     }
 
-    override suspend fun begin(transactionId: String) {
-        sendStompFrame(StompFrame.Begin(StompBeginHeaders(transactionId)))
-    }
+    private val StompFrame.receiptTimeout: Duration
+        get() = if (command == StompCommand.DISCONNECT) config.disconnectTimeout else config.receiptTimeout
 
-    override suspend fun commit(transactionId: String) {
-        sendStompFrame(StompFrame.Commit(StompCommitHeaders(transactionId)))
-    }
-
-    override suspend fun abort(transactionId: String) {
-        sendStompFrame(StompFrame.Abort(StompAbortHeaders(transactionId)))
-    }
-
-    private suspend fun sendStompFrame(frame: StompFrame) {
+    private suspend fun sendRawStompFrame(frame: StompFrame) {
         stompSocket.sendStompFrame(frame)
         heartBeater?.notifyMsgSent()
     }
@@ -221,11 +207,11 @@ internal class BaseStompSession(
         sharedStompEvents.emit(StompEvent.Close)
     }
 
+    @OptIn(UnsafeStompSessionApi::class)
     private suspend fun sendDisconnectFrameAndWaitForReceipt() {
         try {
-            val receiptId = generateUuid()
-            val disconnectFrame = StompFrame.Disconnect(StompDisconnectHeaders { receipt = receiptId })
-            sendAndWaitForReceipt(receiptId, disconnectFrame)
+            val disconnectFrame = StompFrame.Disconnect(StompDisconnectHeaders { receipt = generateUuid() })
+            sendRawFrameAndMaybeAwaitReceipt(disconnectFrame)
         } catch (e: LostReceiptException) {
             // Sometimes the server closes the connection too quickly to send a RECEIPT, which is not really an error
             // http://stomp.github.io/stomp-specification-1.2.html#Connection_Lingering
