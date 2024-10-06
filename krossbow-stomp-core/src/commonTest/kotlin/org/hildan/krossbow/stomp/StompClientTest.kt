@@ -246,7 +246,7 @@ class StompClientTest {
         launch {
             val wsSession = wsClient.awaitConnectAndSimulateSuccess()
             wsSession.awaitConnectFrameAndSimulateCompletion()
-            wsSession.simulateErrorFrameReceived("connection failed")
+            wsSession.simulateErrorFrameReceived("connection failed", "a longer error message in the body")
             wsSession.expectClose()
         }
 
@@ -254,7 +254,11 @@ class StompClientTest {
             stompClient.connect("wss://dummy.com/path")
         }
         assertEquals("dummy.com", exception.host)
-        assertNotNull(exception.cause, "StompConnectionException should have original exception as cause")
+        val cause = exception.cause
+        assertIs<StompErrorFrameReceived>(cause, "StompConnectionException should have original exception as cause")
+        assertEquals("connection failed", cause.frame.headers.message)
+        assertEquals("a longer error message in the body", cause.frame.bodyAsText)
+        assertEquals("connection failed\na longer error message in the body", cause.message)
     }
 
     @Test

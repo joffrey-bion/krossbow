@@ -7,7 +7,14 @@ import kotlin.time.Duration
  * An exception thrown when a STOMP ERROR frame is received.
  * It is usually thrown through subscription channels.
  */
-class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception(frame.message)
+class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception(frame.getExceptionMessage())
+
+private fun StompFrame.Error.getExceptionMessage(): String {
+    if (bodyAsText.isNotBlank()) {
+        return "$message\n$bodyAsText"
+    }
+    return message
+}
 
 /**
  * An exception thrown when a RECEIPT frame was expected from the server, but not received in the configured time limit.

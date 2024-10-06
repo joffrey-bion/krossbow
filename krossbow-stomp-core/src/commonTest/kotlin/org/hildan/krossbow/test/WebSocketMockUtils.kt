@@ -43,8 +43,14 @@ suspend fun WebSocketConnectionMock.simulateBinaryStompFrameReceived(frame: Stom
     simulateBinaryFrameReceived(frame.encodeToByteString())
 }
 
-suspend fun WebSocketConnectionMock.simulateErrorFrameReceived(errorMessage: String): StompFrame.Error {
-    val errorFrame = StompFrame.Error(StompErrorHeaders { message = errorMessage }, null)
+suspend fun WebSocketConnectionMock.simulateErrorFrameReceived(
+    messageHeader: String,
+    frameBody: String? = null,
+): StompFrame.Error {
+    val errorFrame = StompFrame.Error(
+        headers = StompErrorHeaders { message = messageHeader },
+        body = frameBody?.let { FrameBody.Text(it) },
+    )
     val result = runCatching {
         simulateTextStompFrameReceived(errorFrame)
     }
