@@ -14,8 +14,13 @@ fun KotlinMultiplatformExtension.allTargets() {
     }
 }
 
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 fun KotlinMultiplatformExtension.ktorTargets() {
-    jvm()
+    jvm {
+        compilerOptions {
+            freeCompilerArgs.add("-Xjvm-default=all-compatibility")
+        }
+    }
     js {
         browser()
         nodejs {

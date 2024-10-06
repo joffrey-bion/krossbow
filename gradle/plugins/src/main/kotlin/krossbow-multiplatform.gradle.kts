@@ -22,8 +22,13 @@ kotlin {
     }
     compilerOptions {
         progressiveMode = true
-        // we can't enable this yet because of -Xjvm-default=all-compatibility generating a waning on non-JVM
+
+        // We can't enable 'allWarningsAsErrors' yet because of the unique_name warning:
+        // KLIB resolver: The same 'unique_name=org.hildan.krossbow:krossbow-websocket-core' found in more than one library:
+        //   <root>\krossbow-websocket-core\build\classes\kotlin\wasmJs\main,
+        //   <root>\krossbow-websocket-core\build\libs\krossbow-websocket-core-wasm-js.klib
         // allWarningsAsErrors = true
-        freeCompilerArgs.add("-Xjvm-default=all-compatibility")
+
+        // Note: target-specific compiler options are set in the target helpers (see Targets.kt)
     }
 }
