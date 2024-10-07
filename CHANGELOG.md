@@ -1,5 +1,28 @@
 # Change Log
 
+## [8.0.0](https://github.com/joffrey-bion/krossbow/tree/8.0.0) (2024-10-07)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/7.3.0...8.0.0)
+
+**Breaking changes:**
+
+- Use a `ServerInfo` type instead of string for the `server` header in `CONNECTED` frames [\#567](https://github.com/joffrey-bion/krossbow/issues/567)
+
+**Implemented enhancements:**
+
+- Allow sending custom headers in more frames [\#507](https://github.com/joffrey-bion/krossbow/issues/507)
+- Provide the full `ERROR` frame body as message in `StompErrorFrameReceived` [\#580](https://github.com/joffrey-bion/krossbow/issues/580)
+- Add support for the `wasmJs`/`wasmWasi` targets in platform\-agnostic modules [\#468](https://github.com/joffrey-bion/krossbow/issues/468)
+- Document all STOMP headers with KDoc [\#566](https://github.com/joffrey-bion/krossbow/issues/566)
+- Rework `StompHeaders` [\#518](https://github.com/joffrey-bion/krossbow/issues/518)
+
+**Upgraded dependencies:**
+
+- Bump com.fasterxml.jackson:jackson\-bom from 2.17.2 to 2.18.0 [\#578](https://github.com/joffrey-bion/krossbow/pull/578) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-serialization to 1.7.3 [\#576](https://github.com/joffrey-bion/krossbow/pull/576) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-io from 0.5.3 to 0.5.4 [\#574](https://github.com/joffrey-bion/krossbow/pull/574) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-coroutines from 1.8.1 to 1.9.0 [\#572](https://github.com/joffrey-bion/krossbow/pull/572) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.1.12 to 6.1.13 [\#570](https://github.com/joffrey-bion/krossbow/pull/570) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [7.3.0](https://github.com/joffrey-bion/krossbow/tree/7.3.0) (2024-08-25)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/7.2.0...7.3.0)
 
