@@ -1,5 +1,17 @@
 # Change Log
 
+## [8.1.0](https://github.com/joffrey-bion/krossbow/tree/8.1.0) (2024-11-22)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/8.0.0...8.1.0)
+
+**Upgraded dependencies:**
+
+- Bump org.jetbrains.kotlinx:atomicfu from 0.25.0 to 0.26.0 [\#584](https://github.com/joffrey-bion/krossbow/pull/584) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-io from 0.5.4 to 0.6.0 [\#590](https://github.com/joffrey-bion/krossbow/pull/590) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.18.0 to 2.18.1 [\#585](https://github.com/joffrey-bion/krossbow/pull/585) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.gradle.develocity from 3.18.1 to 3.18.2 [\#588](https://github.com/joffrey-bion/krossbow/pull/588) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.1.13 to 6.2.0 [\#589](https://github.com/joffrey-bion/krossbow/pull/589) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlin from 2.0.20 to 2.0.21 [\#582](https://github.com/joffrey-bion/krossbow/pull/582) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [8.0.0](https://github.com/joffrey-bion/krossbow/tree/8.0.0) (2024-10-07)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/7.3.0...8.0.0)
 
