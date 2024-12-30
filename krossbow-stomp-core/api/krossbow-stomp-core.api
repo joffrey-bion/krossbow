@@ -61,18 +61,13 @@ public final class org/hildan/krossbow/stomp/StompReceipt {
 
 public abstract interface class org/hildan/krossbow/stomp/StompSession {
 	public fun abort (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun abort$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun ack (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun ack$default (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static synthetic fun ack$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun begin (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun begin$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun commit (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun commit$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun disconnect (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun nack (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun nack$default (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static synthetic fun nack$suspendImpl (Lorg/hildan/krossbow/stomp/StompSession;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun send (Lorg/hildan/krossbow/stomp/headers/StompSendHeaders;Lorg/hildan/krossbow/stomp/frame/FrameBody;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun sendRawFrameAndMaybeAwaitReceipt (Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun subscribe (Lorg/hildan/krossbow/stomp/headers/StompSubscribeHeaders;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -853,15 +848,10 @@ public final class org/hildan/krossbow/stomp/headers/StompUnsubscribeHeadersKt {
 
 public abstract interface class org/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation {
 	public fun onFrameDecoded (Lorg/hildan/krossbow/websocket/WebSocketFrame;Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun onFrameDecoded$suspendImpl (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Lorg/hildan/krossbow/websocket/WebSocketFrame;Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun onStompFrameSent (Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun onStompFrameSent$suspendImpl (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Lorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun onWebSocketClientError (Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun onWebSocketClientError$suspendImpl (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun onWebSocketClosed (Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun onWebSocketClosed$suspendImpl (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun onWebSocketFrameReceived (Lorg/hildan/krossbow/websocket/WebSocketFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun onWebSocketFrameReceived$suspendImpl (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;Lorg/hildan/krossbow/websocket/WebSocketFrame;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun plus (Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;)Lorg/hildan/krossbow/stomp/instrumentation/KrossbowInstrumentation;
 }
 
