@@ -92,7 +92,7 @@ extra:
     jackson: 2.18.2
     ktor: 2.3.12
     kotlinxSerialization: 1.7.3
-    moshi: 1.15.1
+    moshi: 1.15.2
     tyrus: 2.2.0
 
 copyright: Copyright &copy; 2019 - 2024 Joffrey Bion
