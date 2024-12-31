@@ -1,5 +1,17 @@
 # Change Log
 
+## [8.2.0](https://github.com/joffrey-bion/krossbow/tree/8.2.0) (2024-12-31)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/8.1.0...8.2.0)
+
+**Upgraded dependencies:**
+
+- Bump org.jetbrains.kotlinx.binary\-compatibility\-validator from 0.16.3 to 0.17.0 [\#601](https://github.com/joffrey-bion/krossbow/pull/601) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.2.0 to 6.2.1 [\#600](https://github.com/joffrey-bion/krossbow/pull/600) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump moshi from 1.15.1 to 1.15.2 [\#599](https://github.com/joffrey-bion/krossbow/pull/599) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.jetbrains.kotlinx:atomicfu from 0.26.0 to 0.26.1 [\#593](https://github.com/joffrey-bion/krossbow/pull/593) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlin from 2.0.21 to 2.1.0 [\#592](https://github.com/joffrey-bion/krossbow/pull/592) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.18.1 to 2.18.2 [\#594](https://github.com/joffrey-bion/krossbow/pull/594) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [8.1.0](https://github.com/joffrey-bion/krossbow/tree/8.1.0) (2024-11-22)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/8.0.0...8.1.0)
 
@@ -538,9 +550,6 @@
 ## [3.1.1](https://github.com/joffrey-bion/krossbow/tree/3.1.1) (2022-01-16)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.1.0...3.1.1)
 
-**Fixed bugs:**
-
-- Software caused connection abort on network disconnection [\#173](https://github.com/joffrey-bion/krossbow/issues/173)
 
 ## [3.1.0](https://github.com/joffrey-bion/krossbow/tree/3.1.0) (2021-12-31)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/3.0.0...3.1.0)
