@@ -37,7 +37,7 @@ vyarus-github-info-plugin = "2.0.0"
 npm-sockjs-client = "1.6.1"
 
 # test-only
-java-websocket = "1.5.7"
+java-websocket = "1.6.0"
 jetty-websocket = "11.0.24"
 npm-isomorphic-fetch = "3.0.0"
 npm-isomorphic-ws = "5.0.0"
