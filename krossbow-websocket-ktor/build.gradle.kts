@@ -33,6 +33,12 @@ kotlin {
                 implementation(libs.ktor.client.cio)
             }
         }
+        val jsMain by getting {
+            dependencies {
+                // workaround for https://youtrack.jetbrains.com/issue/KT-57235
+                implementation(libs.kotlinx.atomicfu.runtime)
+            }
+        }
         val jvmTest by getting {
             dependsOn(cioSupportTest)
             dependencies {
