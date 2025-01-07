@@ -18,7 +18,6 @@ kotlin {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 api(libs.ktor.client.websockets)
-                api(libs.kotlinx.atomicfu)
                 implementation(projects.krossbowIo)
             }
         }
