@@ -2,9 +2,10 @@ package org.hildan.krossbow.websocket.ktor
 
 import io.ktor.client.engine.*
 import io.ktor.client.engine.darwin.*
+import org.hildan.krossbow.websocket.test.*
 
 class KtorDarwinWebSocketClientTest : KtorClientTestSuite(
-    supportsStatusCodes = false,
+    statusCodeSupport = StatusCodeSupport.Partial(reportedCodes = setOf(401)),
     // See https://youtrack.jetbrains.com/issue/KTOR-6970
     shouldTestNegotiatedSubprotocol = false,
 ) {

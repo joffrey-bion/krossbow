@@ -9,8 +9,22 @@ import kotlin.test.*
 import kotlin.time.*
 import kotlin.time.Duration.Companion.seconds
 
+sealed interface StatusCodeSupport {
+    data object All : StatusCodeSupport {
+        override fun supports(code: Int): Boolean = true
+    }
+    data object None : StatusCodeSupport {
+        override fun supports(code: Int): Boolean = false
+    }
+    data class Partial(val reportedCodes: Set<Int>) : StatusCodeSupport {
+        override fun supports(code: Int): Boolean = code in reportedCodes
+    }
+
+    fun supports(code: Int): Boolean
+}
+
 abstract class WebSocketClientTestSuite(
-    private val supportsStatusCodes: Boolean = true,
+    private val statusCodeSupport: StatusCodeSupport = StatusCodeSupport.All,
     private val shouldTestNegotiatedSubprotocol: Boolean = true,
 ) {
     abstract fun provideClient(): WebSocketClient
@@ -178,14 +192,14 @@ abstract class WebSocketClientTestSuite(
         val ex = assertFailsWith(WebSocketConnectionException::class) {
             wsClient.connect("${testServerConfig.wsUrlWithHttpPort}/failHandshakeWithStatusCode/$statusCodeToTest?${testUrlQuery()}")
         }
-        if (supportsStatusCodes) {
+        if (statusCodeSupport.supports(statusCodeToTest)) {
             assertEquals(
                 statusCodeToTest,
                 ex.httpStatusCode,
                 "missing status code $statusCodeToTest in connection exception $ex, cause:\n${ex.cause?.stackTraceToString()}",
             )
         } else {
-            assertNull(ex.httpStatusCode, "${wsClient::class} is not expected to support status codes")
+            assertNull(ex.httpStatusCode, "${wsClient::class} is not expected to support status code $statusCodeToTest")
         }
     }
 

@@ -33,8 +33,9 @@ web socket implementations:
 
 | Artifact                                  | Description                                                                                                                                                                      |
 |-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <pre>krossbow-websocket-builtin</pre>     | A multiplatform `WebSocketClient` implementation that adapts the built-in client for each supported platform without transitive dependency.                                      |
+| <pre>krossbow-websocket-builtin</pre>     | A multiplatform `WebSocketClient` implementation that adapts the built-in client present in some platforms without transitive dependency.                                        |
 | <pre>krossbow-websocket-ktor</pre>        | A multiplatform `WebSocketClient` implementation based on Ktor {{ versions.ktor }}'s `HttpClient`.                                                                               |
+| <pre>krossbow-websocket-ktor-legacy</pre> | A multiplatform `WebSocketClient` implementation based on Ktor {{ versions.ktorLegacy }}'s `HttpClient`.                                                                         |
 | <pre>krossbow-websocket-okhttp</pre>      | A JVM implementation of the web socket API using OkHttp's client.                                                                                                                |
 | <pre>krossbow-websocket-sockjs</pre>      | A multiplatform `WebSocketClient` implementation for use with SockJS servers. It uses Spring's SockJSClient on JVM, and npm `sockjs-client` for JavaScript (NodeJS and browser). |
 | <pre>krossbow-websocket-spring</pre>      | A JVM 8+ implementation of the web socket API using Spring's WebSocketClient. Provides both a normal WebSocket client and a SockJS one.                                          |

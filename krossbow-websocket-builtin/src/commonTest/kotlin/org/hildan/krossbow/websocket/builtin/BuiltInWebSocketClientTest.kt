@@ -4,7 +4,7 @@ import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.test.*
 
 class BuiltInWebSocketClientTest : WebSocketClientTestSuite(
-    supportsStatusCodes = currentPlatform() !is Platform.Js,
+    statusCodeSupport = if (currentPlatform() is Platform.Js.Browser) StatusCodeSupport.None else StatusCodeSupport.All,
 ) {
     override fun provideClient() = WebSocketClient.builtIn()
 }

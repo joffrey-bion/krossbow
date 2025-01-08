@@ -8,7 +8,7 @@ plugins {
 description = "Multiplatform implementation of Krossbow's WebSocket API using Ktor's web sockets."
 
 kotlin {
-    ktorTargets()
+    ktor3Targets()
 
     sourceSets {
         all {

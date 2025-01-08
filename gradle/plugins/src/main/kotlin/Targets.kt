@@ -3,19 +3,25 @@ import org.jetbrains.kotlin.gradle.dsl.*
 
 @OptIn(ExperimentalWasmDsl::class)
 fun KotlinMultiplatformExtension.allTargets() {
-    ktorTargets()
+    ktor3Targets()
 
-    wasmJs {
-        browser()
-        nodejs()
-    }
     wasmWasi {
         nodejs()
     }
 }
 
+@OptIn(ExperimentalWasmDsl::class)
+fun KotlinMultiplatformExtension.ktor3Targets() {
+    ktor2Targets()
+
+    wasmJs {
+        browser()
+        nodejs()
+    }
+}
+
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
-fun KotlinMultiplatformExtension.ktorTargets() {
+fun KotlinMultiplatformExtension.ktor2Targets() {
     jvm {
         compilerOptions {
             freeCompilerArgs.add("-Xjvm-default=all-compatibility")

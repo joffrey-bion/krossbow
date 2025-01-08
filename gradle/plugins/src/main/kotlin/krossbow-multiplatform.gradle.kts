@@ -14,9 +14,12 @@ kotlin {
                     withApple()
                 }
             }
-            group("wasm") {
-                withWasmJs()
-                withWasmWasi()
+            group("jsAndWasm") {
+                withJs()
+                group("wasm") {
+                    withWasmJs()
+                    withWasmWasi()
+                }
             }
         }
     }

@@ -1,11 +1,16 @@
 # Krossbow with Ktor
 
-Krossbow allows you to use [Ktor's web socket](https://ktor.io/clients/websockets.html) as transport for STOMP.
+Krossbow allows you to use [Ktor's web socket](https://ktor.io/docs/client-websockets.html) as transport for STOMP.
 
 Ktor's implementation supports a variety of platforms and is very popular in the Kotlin world, especially in Kotlin multiplatform.
 
 The `krossbow-websocket-ktor` module provides the `KtorWebSocketClient`, which adapts Ktor {{ versions.ktor }}'s
 `HttpClient` to Krossbow's web socket interface.
+
+!!! info "Stuck with Ktor 2?"
+    Krossbow updated to Ktor 3 to benefit from all the performance improvements and the new WASM platform support.
+    If you are stuck with Ktor 2 for some reason, use the `krossbow-websocket-ktor-legacy` artifact instead.
+    You can then add Ktor dependencies in version {{ versions.ktorLegacy }}.
 
 ## Usage with StompClient
 
@@ -35,7 +40,7 @@ You will need to declare the following Gradle dependency to use the `KtorWebSock
 implementation("org.hildan.krossbow:krossbow-websocket-ktor:{{ git.short_tag }}")
 ```
 
-Ktor uses [pluggable engines](https://ktor.io/clients/http-client/engines.html) to perform the platform-specific
+Ktor uses [pluggable engines](https://ktor.io/docs/client-engines.html) to perform the platform-specific
 network operations (just like Krossbow uses different web socket implementations).
 You need to pick an engine that supports web sockets in order to use Ktor's `HttpClient` with web sockets.
 Follow Ktor's documentation to find out more about how to use engines.

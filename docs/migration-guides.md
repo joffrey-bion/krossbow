@@ -1,5 +1,12 @@
 Here are some details about how to migrate from one major version to another.
 
+## From 8.x to 9.x
+
+### Ktor 2 moved to legacy module
+
+The `krossbow-websocket-ktor` artifact is now updated to Ktor 3 to get the performance improvements and WASM support.
+If you have to stick to Ktor 2, please replace your `krossbow-websocket-ktor` with `krossbow-websocket-ktor-legacy`. 
+
 ## From 7.x to 8.x
 
 ### Headers rework
