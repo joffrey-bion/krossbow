@@ -26,6 +26,7 @@ sealed interface StatusCodeSupport {
 abstract class WebSocketClientTestSuite(
     private val statusCodeSupport: StatusCodeSupport = StatusCodeSupport.All,
     private val shouldTestNegotiatedSubprotocol: Boolean = true,
+    private val headersTestDelay: Duration? = null,
 ) {
     abstract fun provideClient(): WebSocketClient
 
@@ -205,8 +206,14 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testHandshakeSubprotocolHeader_noProtocol() = runTestRealTime {
+        // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
+        val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
         val connection = wsClient.connect(
-            url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeSubprotocolHeader_noProtocol"),
+            url = testUrl(
+                path = "/sendHandshakeHeaders",
+                testCaseName = "testHandshakeSubprotocolHeader_noProtocol",
+                otherParams = extraParams,
+            ),
             protocols = emptyList(),
         )
         try {
@@ -221,8 +228,14 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testHandshakeSubprotocolHeader_singleProtocol() = runTestRealTime {
+        // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
+        val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
         val connection = wsClient.connect(
-            url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeSubprotocolHeader_singleProtocol"),
+            url = testUrl(
+                path = "/sendHandshakeHeaders",
+                testCaseName = "testHandshakeSubprotocolHeader_singleProtocol",
+                otherParams = extraParams,
+            ),
             protocols = listOf("v12.stomp"),
         )
         try {
@@ -239,8 +252,14 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testHandshakeSubprotocolHeader_multipleProtocols() = runTestRealTime {
+        // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
+        val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
         val connection = wsClient.connect(
-            url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeSubprotocolHeader_singleProtocol"),
+            url = testUrl(
+                path = "/sendHandshakeHeaders",
+                testCaseName = "testHandshakeSubprotocolHeader_multipleProtocols",
+                otherParams = extraParams,
+            ),
             protocols = listOf("unknown-protocol", "v12.stomp", "v11.stomp", "v10.stomp"),
         )
         try {
@@ -263,14 +282,20 @@ abstract class WebSocketClientTestSuite(
     fun testHandshakeCustomHeaders() = runTestRealTime {
         if (wsClient.supportsCustomHeaders) {
             println("Connecting with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
+            // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
+            val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
             val connection = wsClient.connect(
-                url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeCustomHeaders"),
+                url = testUrl(
+                    path = "/sendHandshakeHeaders",
+                    testCaseName = "testHandshakeCustomHeaders",
+                    otherParams = extraParams,
+                ),
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
             println("Connected with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
             try {
                 // for some reason, this can be pretty long with the Ktor/JS client in nodeJS tests on macOS
-                val echoedHeadersFrame = connection.expectTextFrame("header info frame")
+                val echoedHeadersFrame = connection.expectTextFrame("header info frame", 50.seconds)
                 val headers = echoedHeadersFrame.text.lines()
                 assertContains(headers, "My-Header-1=my-value-1")
                 assertContains(headers, "My-Header-2=my-value-2")
@@ -332,7 +357,7 @@ private fun runTestRealTime(
     testBody: suspend CoroutineScope.() -> Unit,
 ) = runTest(timeout = timeout) {
     // Switches to a regular dispatcher to avoid the virtual time from runTest.
-    // We also use limitedParallelism to keep things deterministic 
+    // We also use limitedParallelism to keep things deterministic
     withContext(Dispatchers.Default.limitedParallelism(1) + context) {
         testBody()
     }

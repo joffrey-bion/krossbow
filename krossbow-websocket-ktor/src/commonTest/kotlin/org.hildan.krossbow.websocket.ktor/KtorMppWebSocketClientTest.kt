@@ -4,6 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.test.*
+import kotlin.time.Duration.Companion.milliseconds
 
 private val Platform.statusCodeSupport: StatusCodeSupport
     get() = when (this) {
@@ -26,6 +27,8 @@ class KtorMppWebSocketClientTest : WebSocketClientTestSuite(
     // Just to be sure we don't attempt to test this with the Java or JS engines
     // See https://youtrack.jetbrains.com/issue/KTOR-6970
     shouldTestNegotiatedSubprotocol = false,
+    // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883 (NOT fixed for WASM)
+    headersTestDelay = 200.milliseconds.takeIf { currentPlatform() == Platform.WasmJs.NodeJs },
 ) {
     override fun provideClient(): WebSocketClient = KtorWebSocketClient(
         HttpClient {
