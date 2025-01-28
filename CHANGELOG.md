@@ -1,11 +1,28 @@
 # Change Log
 
+## [9.0.0](https://github.com/joffrey-bion/krossbow/tree/9.0.0) (2025-01-27)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/8.2.0...9.0.0)
+
+**Implemented enhancements:**
+
+- Add at least one `wasmJs` websocket implementation \(Ktor 3\) [\#615](https://github.com/joffrey-bion/krossbow/issues/615)
+- Add support for Ktor3 and move Ktor2 support to `krossbow\-websocket\-ktor\-legacy` [\#613](https://github.com/joffrey-bion/krossbow/issues/613)
+
+**Upgraded dependencies:**
+
+- Bump kotlin from 2.1.0 to 2.1.10 [\#616](https://github.com/joffrey-bion/krossbow/pull/616) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.2.1 to 6.2.2 [\#610](https://github.com/joffrey-bion/krossbow/pull/610) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.jetbrains.kotlinx.atomicfu from 0.26.1 to 0.27.0 [\#608](https://github.com/joffrey-bion/krossbow/pull/608) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-coroutines from 1.9.0 to 1.10.1 [\#604](https://github.com/joffrey-bion/krossbow/pull/604) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-serialization from 1.7.3 to 1.8.0 [\#607](https://github.com/joffrey-bion/krossbow/pull/607) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.jetbrains.dokka from 1.9.20 to 2.0.0 [\#603](https://github.com/joffrey-bion/krossbow/pull/603) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.java\-websocket:Java\-WebSocket from 1.5.7 to 1.6.0 [\#602](https://github.com/joffrey-bion/krossbow/pull/602) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [8.2.0](https://github.com/joffrey-bion/krossbow/tree/8.2.0) (2024-12-31)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/8.1.0...8.2.0)
 
 **Upgraded dependencies:**
 
-- Bump org.jetbrains.kotlinx.binary\-compatibility\-validator from 0.16.3 to 0.17.0 [\#601](https://github.com/joffrey-bion/krossbow/pull/601) ([@dependabot[bot]](https://github.com/apps/dependabot))
 - Bump org.springframework:spring\-websocket from 6.2.0 to 6.2.1 [\#600](https://github.com/joffrey-bion/krossbow/pull/600) ([@dependabot[bot]](https://github.com/apps/dependabot))
 - Bump moshi from 1.15.1 to 1.15.2 [\#599](https://github.com/joffrey-bion/krossbow/pull/599) ([@dependabot[bot]](https://github.com/apps/dependabot))
 - Bump org.jetbrains.kotlinx:atomicfu from 0.26.0 to 0.26.1 [\#593](https://github.com/joffrey-bion/krossbow/pull/593) ([@dependabot[bot]](https://github.com/apps/dependabot))
