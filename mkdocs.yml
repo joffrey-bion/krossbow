@@ -36,28 +36,12 @@ markdown_extensions:
   - attr_list # for anchors in definition lists
   - def_list # for definition lists (stomp config)
   - footnotes
-#  - smarty
-#  - codehilite:
-#      guess_lang: false
-#  - footnotes
-#  - meta
-  # For anchor links in titles
-  - toc:
-      permalink: true
-#  - pymdownx.betterem:
-#      smart_enable: all
-#  - pymdownx.caret
   - pymdownx.emoji
   - pymdownx.highlight
-#  - pymdownx.inlinehilite
-#  - pymdownx.magiclink
-#  - pymdownx.smartsymbols
-  # Necessary for code highlighting
-  - pymdownx.superfences
-  # Tabs support
-  - pymdownx.tabbed
-#  - pymdownx.tilde
-#  - tables
+  - pymdownx.superfences # required for code highlighting
+  - pymdownx.tabbed # for tabs support
+  - toc:
+      permalink: true
 
 nav:
   - 'Overview': index.md
