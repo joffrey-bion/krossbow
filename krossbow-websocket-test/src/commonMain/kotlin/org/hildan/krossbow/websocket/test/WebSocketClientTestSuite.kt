@@ -294,7 +294,7 @@ abstract class WebSocketClientTestSuite(
     }
 
     @Test
-    fun testEchoText() = runTestRealTime {
+    open fun testEchoText() = runTestRealTime {
         val connection = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoText"))
 
         try {
@@ -310,7 +310,7 @@ abstract class WebSocketClientTestSuite(
     }
 
     @Test
-    fun testEchoBinary() = runTestRealTime {
+    open fun testEchoBinary() = runTestRealTime {
         val connection = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoBinary"))
 
         try {
