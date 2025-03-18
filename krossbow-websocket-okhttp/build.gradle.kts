@@ -14,6 +14,7 @@ dependencies {
     api(projects.krossbowWebsocketCore)
     api(libs.okhttp)
     implementation(projects.krossbowIo)
+    implementation(libs.kotlinx.io.okio)
 
     testImplementation(kotlin("test"))
     testImplementation(projects.krossbowWebsocketTest)

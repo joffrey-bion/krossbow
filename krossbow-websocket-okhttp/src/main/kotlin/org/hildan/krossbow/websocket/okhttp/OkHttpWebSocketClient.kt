@@ -2,13 +2,12 @@ package org.hildan.krossbow.websocket.okhttp
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.io.bytestring.*
 import kotlinx.io.bytestring.unsafe.*
+import kotlinx.io.okio.toKotlinxIoByteString
+import kotlinx.io.okio.toOkioByteString
 import okhttp3.*
 import okhttp3.Headers.Companion.toHeaders
 import okio.ByteString
-import okio.ByteString.Companion.toByteString
-import org.hildan.krossbow.io.*
 import org.hildan.krossbow.websocket.*
 import java.net.SocketException
 import kotlin.coroutines.Continuation
@@ -80,7 +79,7 @@ private class KrossbowToOkHttpListenerAdapter(
     }
 
     override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-        runBlocking { channelListener.onBinaryMessage(bytes.asByteBuffer().getByteString()) }
+        runBlocking { channelListener.onBinaryMessage(bytes.toKotlinxIoByteString()) }
     }
 
     override fun onMessage(webSocket: WebSocket, text: String) {
@@ -137,7 +136,7 @@ private class OkHttpSocketToKrossbowConnectionAdapter(
 
     @OptIn(UnsafeByteStringApi::class)
     override suspend fun sendBinary(frameData: kotlinx.io.bytestring.ByteString) {
-        okSocket.send(frameData.unsafeBackingByteArray().toByteString())
+        okSocket.send(frameData.toOkioByteString())
     }
 
     override suspend fun close(code: Int, reason: String?) {
