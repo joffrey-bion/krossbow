@@ -22,7 +22,7 @@ internal annotation class InternalKrossbowIoApi
 @InternalKrossbowIoApi
 @UnsafeByteStringApi
 fun ByteString.unsafeBackingByteArray(): ByteArray {
-    lateinit var backingByteArray: ByteArray
+    val backingByteArray: ByteArray
     UnsafeByteStringOperations.withByteArrayUnsafe(this) {
         backingByteArray = it
     }
