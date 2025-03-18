@@ -24,9 +24,6 @@ private val Platform.statusCodeSupport: StatusCodeSupport
 // Also, it covers cases of dynamically-selected implementations.
 class KtorMppWebSocketClientTest : WebSocketClientTestSuite(
     statusCodeSupport = currentPlatform().statusCodeSupport,
-    // Just to be sure we don't attempt to test this with the Java or JS engines
-    // See https://youtrack.jetbrains.com/issue/KTOR-6970
-    shouldTestNegotiatedSubprotocol = false,
     // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883 (NOT fixed for WASM)
     headersTestDelay = 200.milliseconds.takeIf { currentPlatform() == Platform.WasmJs.NodeJs },
 ) {

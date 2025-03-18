@@ -9,9 +9,8 @@ import kotlin.time.Duration
 
 abstract class KtorClientTestSuite(
     statusCodeSupport: StatusCodeSupport = StatusCodeSupport.All,
-    shouldTestNegotiatedSubprotocol: Boolean = true,
     headersTestDelay: Duration? = null,
-) : WebSocketClientTestSuite(statusCodeSupport, shouldTestNegotiatedSubprotocol, headersTestDelay) {
+) : WebSocketClientTestSuite(statusCodeSupport, headersTestDelay = headersTestDelay) {
 
     override fun provideClient(): WebSocketClient = KtorWebSocketClient(
         HttpClient(provideEngine()) { install(WebSockets) },
