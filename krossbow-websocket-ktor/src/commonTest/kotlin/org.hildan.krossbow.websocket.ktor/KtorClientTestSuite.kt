@@ -5,12 +5,10 @@ import io.ktor.client.engine.*
 import io.ktor.client.plugins.websocket.*
 import org.hildan.krossbow.websocket.*
 import org.hildan.krossbow.websocket.test.*
-import kotlin.time.Duration
 
 abstract class KtorClientTestSuite(
     statusCodeSupport: StatusCodeSupport = StatusCodeSupport.All,
-    headersTestDelay: Duration? = null,
-) : WebSocketClientTestSuite(statusCodeSupport, headersTestDelay = headersTestDelay) {
+) : WebSocketClientTestSuite(statusCodeSupport) {
 
     override fun provideClient(): WebSocketClient = KtorWebSocketClient(
         HttpClient(provideEngine()) { install(WebSockets) },

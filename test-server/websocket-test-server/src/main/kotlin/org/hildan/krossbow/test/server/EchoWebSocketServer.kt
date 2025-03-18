@@ -8,7 +8,6 @@ import org.java_websocket.protocols.*
 import org.java_websocket.server.*
 import java.net.*
 import java.nio.*
-import kotlin.time.Duration
 
 private val Draft6455Default = Draft_6455()
 private val Draft6455WithStomp12 = Draft_6455(emptyList(), listOf(Protocol("v12.stomp")))
@@ -17,34 +16,20 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(
     InetSocketAddress(port),
     listOf(Draft6455WithStomp12, Draft6455Default),
 ) {
-    private val delayedHeadersScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
     override fun onStart() {
     }
 
     override fun onOpen(conn: WebSocket, handshake: ClientHandshake) {
         val uri = URI.create(handshake.resourceDescriptor)
         if (uri.path == "/sendHandshakeHeaders") {
-            val queryParams = uri.queryAsMap()
-            val scheduleDelay = queryParams["scheduleDelay"]?.let(Duration::parse)
-            conn.sendMessageWithHeaders(handshake, scheduleDelay)
+            conn.sendMessageWithHeaders(handshake)
         }
     }
 
-    private fun WebSocket.sendMessageWithHeaders(handshake: ClientHandshake, scheduleDelay: Duration? = null) {
+    private fun WebSocket.sendMessageWithHeaders(handshake: ClientHandshake) {
         val headerNames = handshake.iterateHttpFields().asSequence().toList()
         val headersData = headerNames.joinToString("\n") { "$it=${handshake.getFieldValue(it)}" }
-        if (scheduleDelay != null) {
-            // necessary due to https://youtrack.jetbrains.com/issue/KTOR-6883
-            println("Scheduling message with headers in $scheduleDelay")
-            delayedHeadersScope.launch {
-                delay(scheduleDelay)
-                send(headersData)
-                println("Headers frame sent!")
-            }
-        } else {
-            send(headersData)
-        }
+        send(headersData)
     }
 
     override fun onMessage(conn: WebSocket, message: String?) {
@@ -74,13 +59,4 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(
         }
         port
     }
-
-    override fun stop(timeout: Int, closeMessage: String?) {
-        super.stop(timeout, closeMessage)
-        delayedHeadersScope.cancel()
-    }
 }
-
-private fun URI.queryAsMap() = query.split("&")
-    .map { it.split("=") }
-    .associate { it[0] to it[1] }

@@ -26,7 +26,6 @@ sealed interface StatusCodeSupport {
 abstract class WebSocketClientTestSuite(
     private val statusCodeSupport: StatusCodeSupport = StatusCodeSupport.All,
     private val shouldTestNegotiatedSubprotocol: Boolean = true,
-    private val headersTestDelay: Duration? = null,
 ) {
     abstract fun provideClient(): WebSocketClient
 
@@ -206,14 +205,8 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testHandshakeSubprotocolHeader_noProtocol() = runTestRealTime {
-        // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
-        val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
         val connection = wsClient.connect(
-            url = testUrl(
-                path = "/sendHandshakeHeaders",
-                testCaseName = "testHandshakeSubprotocolHeader_noProtocol",
-                otherParams = extraParams,
-            ),
+            url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeSubprotocolHeader_noProtocol"),
             protocols = emptyList(),
         )
         try {
@@ -228,13 +221,10 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testHandshakeSubprotocolHeader_singleProtocol() = runTestRealTime {
-        // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
-        val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
         val connection = wsClient.connect(
             url = testUrl(
                 path = "/sendHandshakeHeaders",
                 testCaseName = "testHandshakeSubprotocolHeader_singleProtocol",
-                otherParams = extraParams,
             ),
             protocols = listOf("v12.stomp"),
         )
@@ -252,13 +242,10 @@ abstract class WebSocketClientTestSuite(
 
     @Test
     fun testHandshakeSubprotocolHeader_multipleProtocols() = runTestRealTime {
-        // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
-        val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
         val connection = wsClient.connect(
             url = testUrl(
                 path = "/sendHandshakeHeaders",
                 testCaseName = "testHandshakeSubprotocolHeader_multipleProtocols",
-                otherParams = extraParams,
             ),
             protocols = listOf("unknown-protocol", "v12.stomp", "v11.stomp", "v10.stomp"),
         )
@@ -282,14 +269,8 @@ abstract class WebSocketClientTestSuite(
     fun testHandshakeCustomHeaders() = runTestRealTime {
         if (wsClient.supportsCustomHeaders) {
             println("Connecting with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
-            // workaround for https://youtrack.jetbrains.com/issue/KTOR-6883
-            val extraParams = if (headersTestDelay != null) mapOf("scheduleDelay" to headersTestDelay.toString()) else emptyMap()
             val connection = wsClient.connect(
-                url = testUrl(
-                    path = "/sendHandshakeHeaders",
-                    testCaseName = "testHandshakeCustomHeaders",
-                    otherParams = extraParams,
-                ),
+                url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeCustomHeaders"),
                 headers = mapOf("My-Header-1" to "my-value-1", "My-Header-2" to "my-value-2"),
             )
             println("Connected with agent $agent to ${testServerConfig.wsUrl}/sendHandshakeHeaders")
