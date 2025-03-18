@@ -1,5 +1,6 @@
 package org.hildan.krossbow.websocket.test
 
+import app.cash.turbine.test
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 import kotlinx.io.bytestring.*
@@ -297,33 +298,36 @@ abstract class WebSocketClientTestSuite(
     fun testEchoText() = runTestRealTime {
         val connection = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoText"))
 
-        try {
-            connection.sendText("hello")
-            val helloResponse = connection.expectTextFrame("hello frame")
-            assertEquals("hello", helloResponse.text)
-        } finally {
-            connection.close()
+        connection.incomingFrames.test {
+            try {
+                connection.sendText("hello")
+                val helloResponse = expectTextFrame("hello frame")
+                assertEquals("hello", helloResponse.text)
+            } finally {
+                connection.close()
+            }
+            expectCloseFrame("after echo text")
+            expectNoMoreFrames("after echo text CLOSE frame")
         }
-
-        connection.expectCloseFrame("after echo text")
-        connection.expectNoMoreFrames("after echo text CLOSE frame")
     }
 
     @Test
     fun testEchoBinary() = runTestRealTime {
         val connection = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoBinary"))
 
-        try {
-            val fortyTwos = ByteString(42, 42, 42)
-            connection.sendBinary(fortyTwos)
-            val fortyTwosResponse = connection.expectBinaryFrame("3 binary 42s")
-            assertEquals(fortyTwos, fortyTwosResponse.bytes)
-        } finally {
-            connection.close()
-        }
+        connection.incomingFrames.test {
+            try {
+                val fortyTwos = ByteString(42, 42, 42)
+                connection.sendBinary(fortyTwos)
+                val fortyTwosResponse = expectBinaryFrame("3 binary 42s")
+                assertEquals(fortyTwos, fortyTwosResponse.bytes)
+            } finally {
+                connection.close()
+            }
 
-        connection.expectCloseFrame("after echo binary")
-        connection.expectNoMoreFrames("after echo binary CLOSE frame")
+            expectCloseFrame("after echo binary")
+            expectNoMoreFrames("after echo binary CLOSE frame")
+        }
     }
 }
 
