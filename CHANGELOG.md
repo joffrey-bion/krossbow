@@ -1,12 +1,26 @@
 # Change Log
 
-## [9.0.0](https://github.com/joffrey-bion/krossbow/tree/9.0.0) (2025-01-27)
+## [9.1.0](https://github.com/joffrey-bion/krossbow/tree/9.1.0) (2025-03-19)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/9.0.0...9.1.0)
+
+**Upgraded dependencies:**
+
+- Bump ktor from 3.0.3 to 3.1.1 [\#621](https://github.com/joffrey-bion/krossbow/pull/621) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.eclipse.jetty.websocket:websocket\-jetty\-client from 11.0.24 to 11.0.25 [\#627](https://github.com/joffrey-bion/krossbow/pull/627) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.2.2 to 6.2.4 [\#626](https://github.com/joffrey-bion/krossbow/pull/626) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.18.2 to 2.18.3 [\#625](https://github.com/joffrey-bion/krossbow/pull/625) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-io from 0.6.0 to 0.7.0 [\#624](https://github.com/joffrey-bion/krossbow/pull/624) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+## [9.0.0](https://github.com/joffrey-bion/krossbow/tree/9.0.0) (2025-01-28)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/8.2.0...9.0.0)
+
+**Breaking changes:**
+
+- Add support for Ktor3 and move Ktor2 support to `krossbow\-websocket\-ktor\-legacy` [\#613](https://github.com/joffrey-bion/krossbow/issues/613)
 
 **Implemented enhancements:**
 
 - Add at least one `wasmJs` websocket implementation \(Ktor 3\) [\#615](https://github.com/joffrey-bion/krossbow/issues/615)
-- Add support for Ktor3 and move Ktor2 support to `krossbow\-websocket\-ktor\-legacy` [\#613](https://github.com/joffrey-bion/krossbow/issues/613)
 
 **Upgraded dependencies:**
 
