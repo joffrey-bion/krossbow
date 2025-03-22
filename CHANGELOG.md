@@ -1,5 +1,13 @@
 # Change Log
 
+## [9.2.0](https://github.com/joffrey-bion/krossbow/tree/9.2.0) (2025-03-22)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/9.1.0...9.2.0)
+
+**Upgraded dependencies:**
+
+- Bump kotlin from 2.1.10 to 2.1.20 [\#630](https://github.com/joffrey-bion/krossbow/pull/630) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 6.2.4 to 6.2.5 [\#629](https://github.com/joffrey-bion/krossbow/pull/629) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [9.1.0](https://github.com/joffrey-bion/krossbow/tree/9.1.0) (2025-03-19)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/9.0.0...9.1.0)
 
