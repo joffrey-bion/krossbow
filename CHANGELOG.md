@@ -1,5 +1,15 @@
 # Change Log
 
+## [9.3.0](https://github.com/joffrey-bion/krossbow/tree/9.3.0) (2025-04-08)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/9.2.0...9.3.0)
+
+**Upgraded dependencies:**
+
+- Bump com.gradle.develocity from 3.19.2 to 4.0 [\#634](https://github.com/joffrey-bion/krossbow/pull/634) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-coroutines from 1.10.1 to 1.10.2 [\#635](https://github.com/joffrey-bion/krossbow/pull/635) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-serialization from 1.8.0 to 1.8.1 [\#632](https://github.com/joffrey-bion/krossbow/pull/632) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ktor from 3.1.1 to 3.1.2 [\#631](https://github.com/joffrey-bion/krossbow/pull/631) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [9.2.0](https://github.com/joffrey-bion/krossbow/tree/9.2.0) (2025-03-22)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/9.1.0...9.2.0)
 
