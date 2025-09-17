@@ -31,7 +31,7 @@ moshi = "1.15.2"
 nexus-publish-plugin = "2.0.0"
 okhttp = "4.12.0"
 slf4j = "2.0.17"
-spring = "6.2.10"
+spring = "6.2.11"
 tyrus = "2.2.0"
 vyarus-github-info-plugin = "2.0.0"
 
