@@ -16,7 +16,7 @@ vyarus-github-info = { id = "ru.vyarus.github-info", version.ref = "vyarus-githu
 
 binary-compatibility-validator-plugin = "0.18.1"
 complete-kotlin-plugin = "1.1.0"
-dokka = "2.0.0"
+dokka = "2.1.0"
 hildan-kotlin-publish-plugin = "1.7.0"
 hildan-github-changelog-plugin = "2.2.0"
 jackson = "2.20.0"
