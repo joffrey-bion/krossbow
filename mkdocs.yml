@@ -63,8 +63,8 @@ nav:
     - 'Implement your own': websocket/custom.md
   - 'Artifacts summary': artifacts.md
   - 'Migration guides': migration-guides.md
-  - 'API Docs 🡕': kdoc/index.html
-  - 'Change Log 🡕': https://github.com/joffrey-bion/krossbow/blob/main/CHANGELOG.md
+  - 'API Docs ↗': kdoc/index.html
+  - 'Change Log ↗': https://github.com/joffrey-bion/krossbow/blob/main/CHANGELOG.md
   - 'License': license.md
 
 extra:
