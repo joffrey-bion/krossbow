@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>WebSocketListenerFlowAdapter</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
@@ -24,62 +24,94 @@
 <link href="../../../styles/main.css" rel="Stylesheet">
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
 <body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            krossbow
-                    </a>            </div>
-            <div class="library-version">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    krossbow
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":krossbow-websocket-core/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":krossbow-websocket-core/commonMain" data-filter=":krossbow-websocket-core/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
             </div>
         </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">common</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    krossbow
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="krossbow-websocket-core::org.hildan.krossbow.websocket/WebSocketListenerFlowAdapter///PointingToDeclaration//-845055019">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="krossbow-websocket-core::org.hildan.krossbow.websocket/WebSocketListenerFlowAdapter///PointingToDeclaration//367146633">
   <div class="breadcrumbs"><a href="../../index.html">krossbow-websocket-core</a><span class="delimiter">/</span><a href="../index.html">org.hildan.krossbow.websocket</a><span class="delimiter">/</span><span class="current">WebSocketListenerFlowAdapter</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Web</span><wbr><span>Socket</span><wbr><span>Listener</span><wbr><span>Flow</span><wbr><span><span>Adapter</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">WebSocketListenerFlowAdapter</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bufferSize<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Channel.BUFFERED<span class="token punctuation">, </span></span><span class="parameter ">onBufferOverflow<span class="token operator">: </span><a href="https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-buffer-overflow/index.html">BufferOverflow</a><span class="token operator"> = </span>BufferOverflow.SUSPEND</span></span><span class="token punctuation">)</span><span class="clearfix"><span class="floating-right">(<a href="https://github.com/null/krossbow/blob/HEAD/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/WebSocketListenerFlowAdapter.kt#L16">source</a>)</span></span></div><p class="paragraph">Adapter between listener calls and a web socket "incoming" frames flow. This is to make it easier to bridge listener-based APIs with the flow-based API of Krossbow. Methods of this listener never fail, but can send failure through the frames channel to the consumers.</p><p class="paragraph">Note: this class is not thread-safe. The callbacks must not be called concurrently.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">WebSocketListenerFlowAdapter</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bufferSize<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Channel.BUFFERED<span class="token punctuation">, </span></span><span class="parameter ">onBufferOverflow<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.channels/BufferOverflow///PointingToDeclaration/">BufferOverflow</span><span class="token operator"> = </span>BufferOverflow.SUSPEND</span></span><span class="token punctuation">)</span></div><p class="paragraph">Adapter between listener calls and a web socket "incoming" frames flow. This is to make it easier to bridge listener-based APIs with the flow-based API of Krossbow. Methods of this listener never fail, but can send failure through the frames channel to the consumers.</p><p class="paragraph">Note: this class is not thread-safe. The callbacks must not be called concurrently.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
-        <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="1345742201%2FConstructors%2F-845055019" anchor-label="WebSocketListenerFlowAdapter" id="1345742201%2FConstructors%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="1345742201%2FConstructors%2F367146633" anchor-label="WebSocketListenerFlowAdapter" id="1345742201%2FConstructors%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-web-socket-listener-flow-adapter.html"><span>Web</span><wbr><span>Socket</span><wbr><span>Listener</span><wbr><span>Flow</span><wbr><span><span>Adapter</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1345742201%2FConstructors%2F-845055019"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1345742201%2FConstructors%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bufferSize<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Channel.BUFFERED<span class="token punctuation">, </span></span><span class="parameter ">onBufferOverflow<span class="token operator">: </span><a href="https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-buffer-overflow/index.html">BufferOverflow</a><span class="token operator"> = </span>BufferOverflow.SUSPEND</span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bufferSize<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Channel.BUFFERED<span class="token punctuation">, </span></span><span class="parameter ">onBufferOverflow<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.channels/BufferOverflow///PointingToDeclaration/">BufferOverflow</span><span class="token operator"> = </span>BufferOverflow.SUSPEND</span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -87,18 +119,18 @@
         </div>
       </div>
       <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="-1882109922%2FProperties%2F-845055019" anchor-label="incomingFrames" id="-1882109922%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1882109922%2FProperties%2F367146633" anchor-label="incomingFrames" id="-1882109922%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="incoming-frames.html"><span>incoming</span><wbr><span><span>Frames</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1882109922%2FProperties%2F-845055019"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1882109922%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="incoming-frames.html">incomingFrames</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/index.html">Flow</a><span class="token operator">&lt;</span><a href="../-web-socket-frame/index.html">WebSocketFrame</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The flow of incoming web socket frames. This flow completes when the web socket connection is closed or an error occurs.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="incoming-frames.html">incomingFrames</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../-web-socket-frame/index.html">WebSocketFrame</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The flow of incoming web socket frames. This flow completes when the web socket connection is closed or an error occurs.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -106,93 +138,93 @@
         </div>
       </div>
       <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="1090764986%2FFunctions%2F-845055019" anchor-label="onBinaryMessage" id="1090764986%2FFunctions%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="1090764986%2FFunctions%2F367146633" anchor-label="onBinaryMessage" id="1090764986%2FFunctions%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="on-binary-message.html"><span>on</span><wbr><span>Binary</span><wbr><span><span>Message</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1090764986%2FFunctions%2F-845055019"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1090764986%2FFunctions%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-binary-message.html"><span class="token function">onBinaryMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isLast<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">writeData<span class="token operator">: </span><span data-unresolved-link="kotlinx.io/Sink///PointingToDeclaration/">Sink</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-binary-message.html"><span class="token function">onBinaryMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bytes<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span><span class="token punctuation">, </span></span><span class="parameter ">isLast<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Callback for binary messages (potentially partial frames).</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-binary-message.html"><span class="token function">onBinaryMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isLast<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">writeData<span class="token operator">: </span><span data-unresolved-link="kotlinx.io/Sink///PointingToDeclaration/">Sink</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-binary-message.html"><span class="token function">onBinaryMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bytes<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span><span class="token punctuation">, </span></span><span class="parameter ">isLast<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Callback for binary messages (potentially partial frames).</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1116471991%2FFunctions%2F-845055019" anchor-label="onClose" id="-1116471991%2FFunctions%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="-1116471991%2FFunctions%2F367146633" anchor-label="onClose" id="-1116471991%2FFunctions%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="on-close.html"><span>on</span><wbr><span><span>Close</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1116471991%2FFunctions%2F-845055019"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1116471991%2FFunctions%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-close.html"><span class="token function">onClose</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">code<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">reason<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sends a <a href="../-web-socket-frame/-close/index.html">WebSocketFrame.Close</a> to the <a href="incoming-frames.html">incomingFrames</a> flow, and completes it normally.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-close.html"><span class="token function">onClose</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">code<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">reason<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sends a <a href="../-web-socket-frame/-close/index.html">WebSocketFrame.Close</a> to the <a href="incoming-frames.html">incomingFrames</a> flow, and completes it normally.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-769476416%2FFunctions%2F-845055019" anchor-label="onError" id="-769476416%2FFunctions%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="-769476416%2FFunctions%2F367146633" anchor-label="onError" id="-769476416%2FFunctions%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="on-error.html"><span>on</span><wbr><span><span>Error</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-769476416%2FFunctions%2F-845055019"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-769476416%2FFunctions%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="on-error.html"><span class="token function">onError</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Fails the <a href="incoming-frames.html">incomingFrames</a> flow with a <a href="../-web-socket-exception/index.html">WebSocketException</a> with the given <a href="on-error.html">message</a>.</p></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="on-error.html"><span class="token function">onError</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">error<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Fails the <a href="incoming-frames.html">incomingFrames</a> flow with a <a href="../-web-socket-exception/index.html">WebSocketException</a> with the given <a href="on-error.html">error</a> as cause.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="on-error.html"><span class="token function">onError</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Fails the <a href="incoming-frames.html">incomingFrames</a> flow with a <a href="../-web-socket-exception/index.html">WebSocketException</a> with the given <a href="on-error.html">message</a>.</p></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="on-error.html"><span class="token function">onError</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">error<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Fails the <a href="incoming-frames.html">incomingFrames</a> flow with a <a href="../-web-socket-exception/index.html">WebSocketException</a> with the given <a href="on-error.html">error</a> as cause.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="121063324%2FFunctions%2F-845055019" anchor-label="onPing" id="121063324%2FFunctions%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="121063324%2FFunctions%2F367146633" anchor-label="onPing" id="121063324%2FFunctions%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="on-ping.html"><span>on</span><wbr><span><span>Ping</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="121063324%2FFunctions%2F-845055019"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="121063324%2FFunctions%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-ping.html"><span class="token function">onPing</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bytes<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sends a <a href="../-web-socket-frame/-ping/index.html">WebSocketFrame.Ping</a> frame with the given <a href="on-ping.html">bytes</a> to the <a href="incoming-frames.html">incomingFrames</a> flow.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-ping.html"><span class="token function">onPing</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bytes<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sends a <a href="../-web-socket-frame/-ping/index.html">WebSocketFrame.Ping</a> frame with the given <a href="on-ping.html">bytes</a> to the <a href="incoming-frames.html">incomingFrames</a> flow.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="726535126%2FFunctions%2F-845055019" anchor-label="onPong" id="726535126%2FFunctions%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="726535126%2FFunctions%2F367146633" anchor-label="onPong" id="726535126%2FFunctions%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="on-pong.html"><span>on</span><wbr><span><span>Pong</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="726535126%2FFunctions%2F-845055019"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="726535126%2FFunctions%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-pong.html"><span class="token function">onPong</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bytes<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sends a <a href="../-web-socket-frame/-pong/index.html">WebSocketFrame.Pong</a> frame with the given <a href="on-pong.html">bytes</a> to the <a href="incoming-frames.html">incomingFrames</a> flow.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-pong.html"><span class="token function">onPong</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bytes<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sends a <a href="../-web-socket-frame/-pong/index.html">WebSocketFrame.Pong</a> frame with the given <a href="on-pong.html">bytes</a> to the <a href="incoming-frames.html">incomingFrames</a> flow.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1047436967%2FFunctions%2F-845055019" anchor-label="onTextMessage" id="1047436967%2FFunctions%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="1047436967%2FFunctions%2F367146633" anchor-label="onTextMessage" id="1047436967%2FFunctions%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="on-text-message.html"><span>on</span><wbr><span>Text</span><wbr><span><span>Message</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1047436967%2FFunctions%2F-845055019"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1047436967%2FFunctions%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-text-message.html"><span class="token function">onTextMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isLast<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">writeData<span class="token operator">: </span><span data-unresolved-link="kotlinx.io/Sink///PointingToDeclaration/">Sink</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-text-message.html"><span class="token function">onTextMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">text<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">isLast<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Callback for text messages (potentially partial frames).</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-text-message.html"><span class="token function">onTextMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isLast<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">writeData<span class="token operator">: </span><span data-unresolved-link="kotlinx.io/Sink///PointingToDeclaration/">Sink</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="on-text-message.html"><span class="token function">onTextMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">text<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">isLast<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Callback for text messages (potentially partial frames).</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -202,12 +234,22 @@
     </div>
   </div>
 </div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
-

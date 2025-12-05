@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>StompSessionWithKxSerialization</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
@@ -24,62 +24,94 @@
 <link href="../../../styles/main.css" rel="Stylesheet">
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
 <body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            krossbow
-                    </a>            </div>
-            <div class="library-version">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    krossbow
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":krossbow-stomp-kxserialization/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":krossbow-stomp-kxserialization/commonMain" data-filter=":krossbow-stomp-kxserialization/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
             </div>
         </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">common</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    krossbow
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="krossbow-stomp-kxserialization::org.hildan.krossbow.stomp.conversions.kxserialization/StompSessionWithKxSerialization///PointingToDeclaration//-313276041">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="krossbow-stomp-kxserialization::org.hildan.krossbow.stomp.conversions.kxserialization/StompSessionWithKxSerialization///PointingToDeclaration//-1996838745">
   <div class="breadcrumbs"><a href="../../index.html">krossbow-stomp-kxserialization</a><span class="delimiter">/</span><a href="../index.html">org.hildan.krossbow.stomp.conversions.kxserialization</a><span class="delimiter">/</span><span class="current">StompSessionWithKxSerialization</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Stomp</span><wbr><span>Session</span><wbr><span>With</span><wbr><span>Kx</span><wbr><span><span>Serialization</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">StompSessionWithKxSerialization</a> : <a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/null/krossbow/blob/HEAD/krossbow-stomp-kxserialization/src/commonMain/kotlin/org/hildan/krossbow/stomp/conversions/kxserialization/StompSessionWithKxSerialization.kt#L17">source</a>)</span></span></div><p class="paragraph">A <a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a> with additional methods to serialize/deserialize message bodies using Kotlinx Serialization.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">StompSessionWithKxSerialization</a> : <a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a></div><p class="paragraph">A <a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a> with additional methods to serialize/deserialize message bodies using Kotlinx Serialization.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
     <div class="tabs-section-body">
       <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="-1659093777%2FProperties%2F-313276041" anchor-label="serializersModule" id="-1659093777%2FProperties%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1659093777%2FProperties%2F-1996838745" anchor-label="serializersModule" id="-1659093777%2FProperties%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="serializers-module.html"><span>serializers</span><wbr><span><span>Module</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1659093777%2FProperties%2F-313276041"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1659093777%2FProperties%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="serializers-module.html">serializersModule</a><span class="token operator">: </span><a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.modules/-serializers-module/index.html">SerializersModule</a></div><div class="brief "><p class="paragraph">The Kotlinx Serialization's <a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.modules/-serializers-module/index.html">SerializersModule</a> used to provide serializers at runtime.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="serializers-module.html">serializersModule</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization.modules/SerializersModule///PointingToDeclaration/">SerializersModule</span></div><div class="brief "><p class="paragraph">The Kotlinx Serialization's <span data-unresolved-link="kotlinx.serialization.modules/SerializersModule///PointingToDeclaration/">SerializersModule</span> used to provide serializers at runtime.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -87,228 +119,243 @@
         </div>
       </div>
       <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-1791632615%2FFunctions%2F-313276041" anchor-label="abort" id="-1791632615%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-1791632615%2FFunctions%2F-1996838745" anchor-label="abort" id="-1791632615%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-1791632615%2FFunctions%2F-313276041"><span><span>abort</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1791632615%2FFunctions%2F-313276041"></span>
+                  <div><a href="index.html#-1791632615%2FFunctions%2F-1996838745"><span><span>abort</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1791632615%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-1791632615%2FFunctions%2F-313276041"><span class="token function">abort</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-1791632615%2FFunctions%2F-1996838745"><span class="token function">abort</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-496367060%2FFunctions%2F-313276041" anchor-label="ack" id="-496367060%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-496367060%2FFunctions%2F-1996838745" anchor-label="ack" id="-496367060%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-496367060%2FFunctions%2F-313276041"><span><span>ack</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-496367060%2FFunctions%2F-313276041"></span>
+                  <div><a href="index.html#-496367060%2FFunctions%2F-1996838745"><span><span>ack</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-496367060%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-496367060%2FFunctions%2F-313276041"><span class="token function">ack</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ackId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-496367060%2FFunctions%2F-1996838745"><span class="token function">ack</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ackId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1704086994%2FFunctions%2F-313276041" anchor-label="begin" id="1704086994%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="1704086994%2FFunctions%2F-1996838745" anchor-label="begin" id="1704086994%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1704086994%2FFunctions%2F-313276041"><span><span>begin</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1704086994%2FFunctions%2F-313276041"></span>
+                  <div><a href="index.html#1704086994%2FFunctions%2F-1996838745"><span><span>begin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1704086994%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#1704086994%2FFunctions%2F-313276041"><span class="token function">begin</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#1704086994%2FFunctions%2F-1996838745"><span class="token function">begin</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1324503780%2FFunctions%2F-313276041" anchor-label="commit" id="-1324503780%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-1324503780%2FFunctions%2F-1996838745" anchor-label="commit" id="-1324503780%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-1324503780%2FFunctions%2F-313276041"><span><span>commit</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1324503780%2FFunctions%2F-313276041"></span>
+                  <div><a href="index.html#-1324503780%2FFunctions%2F-1996838745"><span><span>commit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1324503780%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-1324503780%2FFunctions%2F-313276041"><span class="token function">commit</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-1324503780%2FFunctions%2F-1996838745"><span class="token function">commit</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-202616145%2FFunctions%2F-313276041" anchor-label="convertAndSend" id="-202616145%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-202616145%2FFunctions%2F-1996838745" anchor-label="convertAndSend" id="-202616145%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="convert-and-send.html"><span>convert</span><wbr><span>And</span><wbr><span><span>Send</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-202616145%2FFunctions%2F-313276041"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-202616145%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="convert-and-send.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="convert-and-send.html"><span class="token function">convertAndSend</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-send-headers/index.html">StompSendHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="convert-and-send.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">serializer<span class="token operator">: </span><a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-serialization-strategy/index.html">SerializationStrategy</a><span class="token operator">&lt;</span><a href="convert-and-send.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Sends a SEND frame to the server with the given <a href="convert-and-send.html">headers</a> and the given <a href="convert-and-send.html">body</a>, converted appropriately using the provided <a href="convert-and-send.html">serializer</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="convert-and-send.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="convert-and-send.html"><span class="token function">convertAndSend</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-send-headers/index.html">StompSendHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="convert-and-send.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">serializer<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization/SerializationStrategy///PointingToDeclaration/">SerializationStrategy</span><span class="token operator">&lt;</span><a href="convert-and-send.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Sends a SEND frame to the server with the given <a href="convert-and-send.html">headers</a> and the given <a href="convert-and-send.html">body</a>, converted appropriately using the provided <a href="convert-and-send.html">serializer</a>.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1132684996%2FFunctions%2F-313276041" anchor-label="convertAndSend" id="-1132684996%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-1132684996%2FFunctions%2F-1996838745" anchor-label="convertAndSend" id="-1132684996%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../convert-and-send.html"><span>convert</span><wbr><span>And</span><wbr><span><span>Send</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1132684996%2FFunctions%2F-313276041"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1132684996%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">inline suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../convert-and-send.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../convert-and-send.html"><span class="token function">convertAndSend</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="../convert-and-send.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Sends a SEND frame to the given <a href="../convert-and-send.html">destination</a> with the given <a href="../convert-and-send.html">body</a>, converted appropriately.</p></div><div class="symbol monospace"><span class="token keyword">inline suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../convert-and-send.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../convert-and-send.html"><span class="token function">convertAndSend</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-send-headers/index.html">StompSendHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="../convert-and-send.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Sends a SEND frame to the server with the given <a href="../convert-and-send.html">headers</a> and the given <a href="../convert-and-send.html">body</a>, converted appropriately.</p></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../convert-and-send.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../convert-and-send.html"><span class="token function">convertAndSend</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="../convert-and-send.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">serializer<span class="token operator">: </span><a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-serialization-strategy/index.html">SerializationStrategy</a><span class="token operator">&lt;</span><a href="../convert-and-send.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Sends a SEND frame to the given <a href="../convert-and-send.html">destination</a> with the given <a href="../convert-and-send.html">body</a>, converted appropriately using the provided <a href="../convert-and-send.html">serializer</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">inline suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../convert-and-send.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../convert-and-send.html"><span class="token function">convertAndSend</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="../convert-and-send.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Sends a SEND frame to the given <a href="../convert-and-send.html">destination</a> with the given <a href="../convert-and-send.html">body</a>, converted appropriately.</p></div><div class="symbol monospace"><span class="token keyword">inline suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../convert-and-send.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../convert-and-send.html"><span class="token function">convertAndSend</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-send-headers/index.html">StompSendHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="../convert-and-send.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Sends a SEND frame to the server with the given <a href="../convert-and-send.html">headers</a> and the given <a href="../convert-and-send.html">body</a>, converted appropriately.</p></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../convert-and-send.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../convert-and-send.html"><span class="token function">convertAndSend</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="../convert-and-send.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">serializer<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization/SerializationStrategy///PointingToDeclaration/">SerializationStrategy</span><span class="token operator">&lt;</span><a href="../convert-and-send.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Sends a SEND frame to the given <a href="../convert-and-send.html">destination</a> with the given <a href="../convert-and-send.html">body</a>, converted appropriately using the provided <a href="../convert-and-send.html">serializer</a>.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="649201699%2FFunctions%2F-313276041" anchor-label="disconnect" id="649201699%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="649201699%2FFunctions%2F-1996838745" anchor-label="disconnect" id="649201699%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#649201699%2FFunctions%2F-313276041"><span><span>disconnect</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="649201699%2FFunctions%2F-313276041"></span>
+                  <div><a href="index.html#649201699%2FFunctions%2F-1996838745"><span><span>disconnect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="649201699%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#649201699%2FFunctions%2F-313276041"><span class="token function">disconnect</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#649201699%2FFunctions%2F-1996838745"><span class="token function">disconnect</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-2114174754%2FFunctions%2F-313276041" anchor-label="nack" id="-2114174754%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-2114174754%2FFunctions%2F-1996838745" anchor-label="nack" id="-2114174754%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-2114174754%2FFunctions%2F-313276041"><span><span>nack</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2114174754%2FFunctions%2F-313276041"></span>
+                  <div><a href="index.html#-2114174754%2FFunctions%2F-1996838745"><span><span>nack</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2114174754%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-2114174754%2FFunctions%2F-313276041"><span class="token function">nack</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ackId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-2114174754%2FFunctions%2F-1996838745"><span class="token function">nack</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ackId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">transactionId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-928031220%2FFunctions%2F-313276041" anchor-label="send" id="-928031220%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-928031220%2FFunctions%2F-1996838745" anchor-label="send" id="-928031220%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-928031220%2FFunctions%2F-313276041"><span><span>send</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-928031220%2FFunctions%2F-313276041"></span>
+                  <div><a href="index.html#-928031220%2FFunctions%2F-1996838745"><span><span>send</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-928031220%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-928031220%2FFunctions%2F-313276041"><span class="token function">send</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-send-headers/index.html">StompSendHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.frame/-frame-body/index.html">FrameBody</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-928031220%2FFunctions%2F-1996838745"><span class="token function">send</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-send-headers/index.html">StompSendHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.frame/-frame-body/index.html">FrameBody</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1862499416%2FFunctions%2F-313276041" anchor-label="subscribe" id="-1862499416%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-1287433705%2FFunctions%2F-1996838745" anchor-label="sendRawFrameAndMaybeAwaitReceipt" id="-1287433705%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-146021449%2FFunctions%2F-313276041"><span><span>subscribe</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1862499416%2FFunctions%2F-313276041"></span>
+                  <div><a href="index.html#-1287433705%2FFunctions%2F-1996838745"><span>send</span><wbr><span>Raw</span><wbr><span>Frame</span><wbr><span>And</span><wbr><span>Maybe</span><wbr><span>Await</span><wbr><span><span>Receipt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1287433705%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-146021449%2FFunctions%2F-313276041"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.frame/-stomp-frame/-message/index.html">StompFrame.Message</a><span class="token operator">&gt;</span></div><br><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="subscribe.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="subscribe.html"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">deserializer<span class="token operator">: </span><a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-deserialization-strategy/index.html">DeserializationStrategy</a><span class="token operator">&lt;</span><a href="subscribe.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="subscribe.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Subscribes and returns a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> of messages of type <a href="subscribe.html">T</a> that unsubscribes automatically when the collector is done or cancelled. The returned flow can be collected only once.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-1287433705%2FFunctions%2F-1996838745"><span class="token function">sendRawFrameAndMaybeAwaitReceipt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">frame<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.frame/-stomp-frame/index.html">StompFrame</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="962675941%2FFunctions%2F-313276041" anchor-label="subscribe" id="962675941%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-1862499416%2FFunctions%2F-1996838745" anchor-label="subscribe" id="-1862499416%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-146021449%2FFunctions%2F-1996838745"><span><span>subscribe</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1862499416%2FFunctions%2F-1996838745"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="index.html#-146021449%2FFunctions%2F-1996838745"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.frame/-stomp-frame/-message/index.html">StompFrame.Message</a><span class="token operator">&gt;</span></div><br><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="subscribe.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="subscribe.html"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">deserializer<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization/DeserializationStrategy///PointingToDeclaration/">DeserializationStrategy</span><span class="token operator">&lt;</span><a href="subscribe.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="subscribe.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Subscribes and returns a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> of messages of type <a href="subscribe.html">T</a> that unsubscribes automatically when the collector is done or cancelled. The returned flow can be collected only once.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="962675941%2FFunctions%2F-1996838745" anchor-label="subscribe" id="962675941%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../subscribe.html"><span><span>subscribe</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="962675941%2FFunctions%2F-313276041"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="962675941%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">inline suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../subscribe.html"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator">&gt;</span></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../subscribe.html"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">deserializer<span class="token operator">: </span><a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-deserialization-strategy/index.html">DeserializationStrategy</a><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Subscribes and returns a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> of messages of type <a href="../subscribe.html">T</a> that unsubscribes automatically when the collector is done or cancelled. The returned flow can be collected only once.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">inline suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../subscribe.html"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator">&gt;</span></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../subscribe.html"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">deserializer<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization/DeserializationStrategy///PointingToDeclaration/">DeserializationStrategy</span><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../subscribe.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Subscribes and returns a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> of messages of type <a href="../subscribe.html">T</a> that unsubscribes automatically when the collector is done or cancelled. The returned flow can be collected only once.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-163718595%2FFunctions%2F-313276041" anchor-label="subscribeOptional" id="-163718595%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-163718595%2FFunctions%2F-1996838745" anchor-label="subscribeOptional" id="-163718595%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="subscribe-optional.html"><span>subscribe</span><wbr><span><span>Optional</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-163718595%2FFunctions%2F-313276041"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-163718595%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="subscribe-optional.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="subscribe-optional.html"><span class="token function">subscribeOptional</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">deserializer<span class="token operator">: </span><a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-deserialization-strategy/index.html">DeserializationStrategy</a><span class="token operator">&lt;</span><a href="subscribe-optional.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="subscribe-optional.html">T</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Subscribes and returns a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> of messages of type <a href="subscribe-optional.html">T</a> that unsubscribes automatically when the collector is done or cancelled. The returned flow can be collected only once.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="subscribe-optional.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="subscribe-optional.html"><span class="token function">subscribeOptional</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">headers<span class="token operator">: </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp.headers/-stomp-subscribe-headers/index.html">StompSubscribeHeaders</a><span class="token punctuation">, </span></span><span class="parameter ">deserializer<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization/DeserializationStrategy///PointingToDeclaration/">DeserializationStrategy</span><span class="token operator">&lt;</span><a href="subscribe-optional.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="subscribe-optional.html">T</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Subscribes and returns a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> of messages of type <a href="subscribe-optional.html">T</a> that unsubscribes automatically when the collector is done or cancelled. The returned flow can be collected only once.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="661733605%2FFunctions%2F-313276041" anchor-label="subscribeOptional" id="661733605%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="661733605%2FFunctions%2F-1996838745" anchor-label="subscribeOptional" id="661733605%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../subscribe-optional.html"><span>subscribe</span><wbr><span><span>Optional</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="661733605%2FFunctions%2F-313276041"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="661733605%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">inline suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../subscribe-optional.html"><span class="token function">subscribeOptional</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../subscribe-optional.html"><span class="token function">subscribeOptional</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">deserializer<span class="token operator">: </span><a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-deserialization-strategy/index.html">DeserializationStrategy</a><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Subscribes and returns a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> of messages of type <a href="../subscribe-optional.html">T</a> that unsubscribes automatically when the collector is done or cancelled. The returned flow can be collected only once.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">inline suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../subscribe-optional.html"><span class="token function">subscribeOptional</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="index.html">StompSessionWithKxSerialization</a><span class="token punctuation">.</span><a href="../subscribe-optional.html"><span class="token function">subscribeOptional</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">deserializer<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization/DeserializationStrategy///PointingToDeclaration/">DeserializationStrategy</span><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../subscribe-optional.html">T</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Subscribes and returns a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> of messages of type <a href="../subscribe-optional.html">T</a> that unsubscribes automatically when the collector is done or cancelled. The returned flow can be collected only once.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-467014506%2FFunctions%2F-313276041" anchor-label="withBinaryConversions" id="-467014506%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-467014506%2FFunctions%2F-1996838745" anchor-label="withBinaryConversions" id="-467014506%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../with-binary-conversions.html"><span>with</span><wbr><span>Binary</span><wbr><span><span>Conversions</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-467014506%2FFunctions%2F-313276041"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-467014506%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a><span class="token punctuation">.</span><a href="../with-binary-conversions.html"><span class="token function">withBinaryConversions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">format<span class="token operator">: </span><a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-binary-format/index.html">BinaryFormat</a><span class="token punctuation">, </span></span><span class="parameter ">mediaType<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">StompSessionWithKxSerialization</a></div><div class="brief "><p class="paragraph">Wraps this <a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a> to add methods that can convert message bodies using the provided Kotlinx Serialization's <a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-binary-format/index.html">BinaryFormat</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a><span class="token punctuation">.</span><a href="../with-binary-conversions.html"><span class="token function">withBinaryConversions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">format<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization/BinaryFormat///PointingToDeclaration/">BinaryFormat</span><span class="token punctuation">, </span></span><span class="parameter ">mediaType<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">StompSessionWithKxSerialization</a></div><div class="brief "><p class="paragraph">Wraps this <a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a> to add methods that can convert message bodies using the provided Kotlinx Serialization's <span data-unresolved-link="kotlinx.serialization/BinaryFormat///PointingToDeclaration/">BinaryFormat</span>.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1007036430%2FFunctions%2F-313276041" anchor-label="withTextConversions" id="-1007036430%2FFunctions%2F-313276041" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain">
+<a data-name="-1007036430%2FFunctions%2F-1996838745" anchor-label="withTextConversions" id="-1007036430%2FFunctions%2F-1996838745" data-filterable-set=":krossbow-stomp-kxserialization/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":krossbow-stomp-kxserialization/commonMain" data-filterable-set=":krossbow-stomp-kxserialization/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../with-text-conversions.html"><span>with</span><wbr><span>Text</span><wbr><span><span>Conversions</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1007036430%2FFunctions%2F-313276041"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1007036430%2FFunctions%2F-1996838745"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a><span class="token punctuation">.</span><a href="../with-text-conversions.html"><span class="token function">withTextConversions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">format<span class="token operator">: </span><a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-string-format/index.html">StringFormat</a><span class="token punctuation">, </span></span><span class="parameter ">mediaType<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">StompSessionWithKxSerialization</a></div><div class="brief "><p class="paragraph">Wraps this <a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a> to add methods that can convert message bodies using the provided Kotlinx Serialization's <a href="https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-string-format/index.html">StringFormat</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-kxserialization/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a><span class="token punctuation">.</span><a href="../with-text-conversions.html"><span class="token function">withTextConversions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">format<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization/StringFormat///PointingToDeclaration/">StringFormat</span><span class="token punctuation">, </span></span><span class="parameter ">mediaType<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">StompSessionWithKxSerialization</a></div><div class="brief "><p class="paragraph">Wraps this <a href="../../../krossbow-stomp-core/org.hildan.krossbow.stomp/-stomp-session/index.html">StompSession</a> to add methods that can convert message bodies using the provided Kotlinx Serialization's <span data-unresolved-link="kotlinx.serialization/StringFormat///PointingToDeclaration/">StringFormat</span>.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -318,12 +365,22 @@
     </div>
   </div>
 </div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
-

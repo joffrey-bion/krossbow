@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>WebSocketCloseCodes</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
@@ -24,257 +24,289 @@
 <link href="../../../styles/main.css" rel="Stylesheet">
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
 <body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            krossbow
-                    </a>            </div>
-            <div class="library-version">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    krossbow
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":krossbow-websocket-core/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":krossbow-websocket-core/commonMain" data-filter=":krossbow-websocket-core/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
             </div>
         </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">common</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    krossbow
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="krossbow-websocket-core::org.hildan.krossbow.websocket/WebSocketCloseCodes///PointingToDeclaration//-845055019">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="krossbow-websocket-core::org.hildan.krossbow.websocket/WebSocketCloseCodes///PointingToDeclaration//367146633">
   <div class="breadcrumbs"><a href="../../index.html">krossbow-websocket-core</a><span class="delimiter">/</span><a href="../index.html">org.hildan.krossbow.websocket</a><span class="delimiter">/</span><span class="current">WebSocketCloseCodes</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Web</span><wbr><span>Socket</span><wbr><span>Close</span><wbr><span><span>Codes</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">WebSocketCloseCodes</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/null/krossbow/blob/HEAD/krossbow-websocket-core/src/commonMain/kotlin/org/hildan/krossbow/websocket/WebSocketCloseCodes.kt#L7">source</a>)</span></span></div><p class="paragraph">Web socket close codes as defined in the <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">WebSocket Protocol specification</a>.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">WebSocketCloseCodes</a></div><p class="paragraph">Web socket close codes as defined in the <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">WebSocket Protocol specification</a>.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="2078589225%2FProperties%2F-845055019" anchor-label="BAD_DATA" id="2078589225%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="2078589225%2FProperties%2F367146633" anchor-label="BAD_DATA" id="2078589225%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-b-a-d_-d-a-t-a.html"><span><span>BAD_DATA</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2078589225%2FProperties%2F-845055019"></span>
+                  <div><a href="-b-a-d_-d-a-t-a.html"><span>BAD_</span><wbr><span>DATA</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2078589225%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-b-a-d_-d-a-t-a.html">BAD_DATA</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1007</span></div><div class="brief "><p class="paragraph">"1007 indicates that an endpoint is terminating the connection because it has received data within a message that was not consistent with the type of the message (e.g., non-UTF-8 data within a text message)."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-b-a-d_-d-a-t-a.html">BAD_DATA</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1007</span></div><div class="brief "><p class="paragraph">"1007 indicates that an endpoint is terminating the connection because it has received data within a message that was not consistent with the type of the message (e.g., non-UTF-8 data within a text message)."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="389039514%2FProperties%2F-845055019" anchor-label="GOING_AWAY" id="389039514%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="389039514%2FProperties%2F367146633" anchor-label="GOING_AWAY" id="389039514%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-g-o-i-n-g_-a-w-a-y.html"><span><span>GOING_AWAY</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="389039514%2FProperties%2F-845055019"></span>
+                  <div><a href="-g-o-i-n-g_-a-w-a-y.html"><span>GOING_</span><wbr><span>AWAY</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="389039514%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-g-o-i-n-g_-a-w-a-y.html">GOING_AWAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1001</span></div><div class="brief "><p class="paragraph">"1001 indicates that an endpoint is "going away", such as a server going down or a browser having navigated away from a page."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-g-o-i-n-g_-a-w-a-y.html">GOING_AWAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1001</span></div><div class="brief "><p class="paragraph">"1001 indicates that an endpoint is "going away", such as a server going down or a browser having navigated away from a page."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1090910523%2FProperties%2F-845055019" anchor-label="NO_CLOSE_FRAME" id="-1090910523%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="-1090910523%2FProperties%2F367146633" anchor-label="NO_CLOSE_FRAME" id="-1090910523%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-n-o_-c-l-o-s-e_-f-r-a-m-e.html"><span><span>NO_CLOSE_FRAME</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1090910523%2FProperties%2F-845055019"></span>
+                  <div><a href="-n-o_-c-l-o-s-e_-f-r-a-m-e.html"><span>NO_</span><wbr><span>CLOSE_</span><wbr><span>FRAME</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1090910523%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-n-o_-c-l-o-s-e_-f-r-a-m-e.html">NO_CLOSE_FRAME</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1006</span></div><div class="brief "><p class="paragraph">"1006 is a reserved value and MUST NOT be set as a status code in a Close control frame by an endpoint. It is designated for use in applications expecting a status code to indicate that the connection was closed abnormally, e.g., without sending or receiving a Close control frame."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-n-o_-c-l-o-s-e_-f-r-a-m-e.html">NO_CLOSE_FRAME</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1006</span></div><div class="brief "><p class="paragraph">"1006 is a reserved value and MUST NOT be set as a status code in a Close control frame by an endpoint. It is designated for use in applications expecting a status code to indicate that the connection was closed abnormally, e.g., without sending or receiving a Close control frame."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1263773871%2FProperties%2F-845055019" anchor-label="NO_STATUS_CODE" id="-1263773871%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="-1263773871%2FProperties%2F367146633" anchor-label="NO_STATUS_CODE" id="-1263773871%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-n-o_-s-t-a-t-u-s_-c-o-d-e.html"><span><span>NO_STATUS_CODE</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1263773871%2FProperties%2F-845055019"></span>
+                  <div><a href="-n-o_-s-t-a-t-u-s_-c-o-d-e.html"><span>NO_</span><wbr><span>STATUS_</span><wbr><span>CODE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1263773871%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-n-o_-s-t-a-t-u-s_-c-o-d-e.html">NO_STATUS_CODE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1005</span></div><div class="brief "><p class="paragraph">"1005 is a reserved value and MUST NOT be set as a status code in a Close control frame by an endpoint. It is designated for use in applications expecting a status code to indicate that no status code was actually present."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-n-o_-s-t-a-t-u-s_-c-o-d-e.html">NO_STATUS_CODE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1005</span></div><div class="brief "><p class="paragraph">"1005 is a reserved value and MUST NOT be set as a status code in a Close control frame by an endpoint. It is designated for use in applications expecting a status code to indicate that no status code was actually present."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1912718582%2FProperties%2F-845055019" anchor-label="NORMAL_CLOSURE" id="-1912718582%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="-1912718582%2FProperties%2F367146633" anchor-label="NORMAL_CLOSURE" id="-1912718582%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-n-o-r-m-a-l_-c-l-o-s-u-r-e.html"><span><span>NORMAL_CLOSURE</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1912718582%2FProperties%2F-845055019"></span>
+                  <div><a href="-n-o-r-m-a-l_-c-l-o-s-u-r-e.html"><span>NORMAL_</span><wbr><span>CLOSURE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1912718582%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-n-o-r-m-a-l_-c-l-o-s-u-r-e.html">NORMAL_CLOSURE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1000</span></div><div class="brief "><p class="paragraph">"1000 indicates a normal closure, meaning that the purpose for which the connection was established has been fulfilled."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-n-o-r-m-a-l_-c-l-o-s-u-r-e.html">NORMAL_CLOSURE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1000</span></div><div class="brief "><p class="paragraph">"1000 indicates a normal closure, meaning that the purpose for which the connection was established has been fulfilled."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1080319167%2FProperties%2F-845055019" anchor-label="NOT_ACCEPTABLE" id="1080319167%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="1080319167%2FProperties%2F367146633" anchor-label="NOT_ACCEPTABLE" id="1080319167%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-n-o-t_-a-c-c-e-p-t-a-b-l-e.html"><span><span>NOT_ACCEPTABLE</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1080319167%2FProperties%2F-845055019"></span>
+                  <div><a href="-n-o-t_-a-c-c-e-p-t-a-b-l-e.html"><span>NOT_</span><wbr><span>ACCEPTABLE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1080319167%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-n-o-t_-a-c-c-e-p-t-a-b-l-e.html">NOT_ACCEPTABLE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1003</span></div><div class="brief "><p class="paragraph">"1003 indicates that an endpoint is terminating the connection because it has received a type of data it cannot accept (e.g., an endpoint that understands only text data MAY send this if it receives a binary message)."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-n-o-t_-a-c-c-e-p-t-a-b-l-e.html">NOT_ACCEPTABLE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1003</span></div><div class="brief "><p class="paragraph">"1003 indicates that an endpoint is terminating the connection because it has received a type of data it cannot accept (e.g., an endpoint that understands only text data MAY send this if it receives a binary message)."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-784067275%2FProperties%2F-845055019" anchor-label="POLICY_VIOLATION" id="-784067275%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="-784067275%2FProperties%2F367146633" anchor-label="POLICY_VIOLATION" id="-784067275%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-p-o-l-i-c-y_-v-i-o-l-a-t-i-o-n.html"><span><span>POLICY_VIOLATION</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-784067275%2FProperties%2F-845055019"></span>
+                  <div><a href="-p-o-l-i-c-y_-v-i-o-l-a-t-i-o-n.html"><span>POLICY_</span><wbr><span>VIOLATION</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-784067275%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-p-o-l-i-c-y_-v-i-o-l-a-t-i-o-n.html">POLICY_VIOLATION</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1008</span></div><div class="brief "><p class="paragraph">"1008 indicates that an endpoint is terminating the connection because it has received a message that violates its policy. This is a generic status code that can be returned when there is no other more suitable status code (e.g., 1003 or 1009) or if there is a need to hide specific details about the policy."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-p-o-l-i-c-y_-v-i-o-l-a-t-i-o-n.html">POLICY_VIOLATION</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1008</span></div><div class="brief "><p class="paragraph">"1008 indicates that an endpoint is terminating the connection because it has received a message that violates its policy. This is a generic status code that can be returned when there is no other more suitable status code (e.g., 1003 or 1009) or if there is a need to hide specific details about the policy."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1819715060%2FProperties%2F-845055019" anchor-label="PROTOCOL_ERROR" id="-1819715060%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="-1819715060%2FProperties%2F367146633" anchor-label="PROTOCOL_ERROR" id="-1819715060%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-p-r-o-t-o-c-o-l_-e-r-r-o-r.html"><span><span>PROTOCOL_ERROR</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1819715060%2FProperties%2F-845055019"></span>
+                  <div><a href="-p-r-o-t-o-c-o-l_-e-r-r-o-r.html"><span>PROTOCOL_</span><wbr><span>ERROR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1819715060%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-p-r-o-t-o-c-o-l_-e-r-r-o-r.html">PROTOCOL_ERROR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1002</span></div><div class="brief "><p class="paragraph">"1002 indicates that an endpoint is terminating the connection due to a protocol error."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-p-r-o-t-o-c-o-l_-e-r-r-o-r.html">PROTOCOL_ERROR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1002</span></div><div class="brief "><p class="paragraph">"1002 indicates that an endpoint is terminating the connection due to a protocol error."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1317043662%2FProperties%2F-845055019" anchor-label="REQUIRED_EXTENSION" id="1317043662%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="1317043662%2FProperties%2F367146633" anchor-label="REQUIRED_EXTENSION" id="1317043662%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-r-e-q-u-i-r-e-d_-e-x-t-e-n-s-i-o-n.html"><span><span>REQUIRED_EXTENSION</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1317043662%2FProperties%2F-845055019"></span>
+                  <div><a href="-r-e-q-u-i-r-e-d_-e-x-t-e-n-s-i-o-n.html"><span>REQUIRED_</span><wbr><span>EXTENSION</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1317043662%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-r-e-q-u-i-r-e-d_-e-x-t-e-n-s-i-o-n.html">REQUIRED_EXTENSION</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1010</span></div><div class="brief "><p class="paragraph">"1010 indicates that an endpoint (client) is terminating the connection because it has expected the server to negotiate one or more extension, but the server didn't return them in the response message of the WebSocket handshake. The list of extensions that are needed SHOULD appear in the /reason/ part of the Close frame. Note that this status code is not used by the server, because it can fail the WebSocket handshake instead."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-r-e-q-u-i-r-e-d_-e-x-t-e-n-s-i-o-n.html">REQUIRED_EXTENSION</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1010</span></div><div class="brief "><p class="paragraph">"1010 indicates that an endpoint (client) is terminating the connection because it has expected the server to negotiate one or more extension, but the server didn't return them in the response message of the WebSocket handshake. The list of extensions that are needed SHOULD appear in the /reason/ part of the Close frame. Note that this status code is not used by the server, because it can fail the WebSocket handshake instead."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-53851135%2FProperties%2F-845055019" anchor-label="SERVER_ERROR" id="-53851135%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="-53851135%2FProperties%2F367146633" anchor-label="SERVER_ERROR" id="-53851135%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-s-e-r-v-e-r_-e-r-r-o-r.html"><span><span>SERVER_ERROR</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-53851135%2FProperties%2F-845055019"></span>
+                  <div><a href="-s-e-r-v-e-r_-e-r-r-o-r.html"><span>SERVER_</span><wbr><span>ERROR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-53851135%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-r-v-e-r_-e-r-r-o-r.html">SERVER_ERROR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1011</span></div><div class="brief "><p class="paragraph">"1011 indicates that a server is terminating the connection because it encountered an unexpected condition that prevented it from fulfilling the request."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-r-v-e-r_-e-r-r-o-r.html">SERVER_ERROR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1011</span></div><div class="brief "><p class="paragraph">"1011 indicates that a server is terminating the connection because it encountered an unexpected condition that prevented it from fulfilling the request."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="784361161%2FProperties%2F-845055019" anchor-label="SERVICE_OVERLOAD" id="784361161%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="784361161%2FProperties%2F367146633" anchor-label="SERVICE_OVERLOAD" id="784361161%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-s-e-r-v-i-c-e_-o-v-e-r-l-o-a-d.html"><span><span>SERVICE_OVERLOAD</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="784361161%2FProperties%2F-845055019"></span>
+                  <div><a href="-s-e-r-v-i-c-e_-o-v-e-r-l-o-a-d.html"><span>SERVICE_</span><wbr><span>OVERLOAD</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="784361161%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-r-v-i-c-e_-o-v-e-r-l-o-a-d.html">SERVICE_OVERLOAD</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1013</span></div><div class="brief "><p class="paragraph">"1013 indicates that the service is experiencing overload. A client should only connect to a different IP (when there are multiple for the target) or reconnect to the same IP upon user action."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-r-v-i-c-e_-o-v-e-r-l-o-a-d.html">SERVICE_OVERLOAD</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1013</span></div><div class="brief "><p class="paragraph">"1013 indicates that the service is experiencing overload. A client should only connect to a different IP (when there are multiple for the target) or reconnect to the same IP upon user action."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="899358697%2FProperties%2F-845055019" anchor-label="SERVICE_RESTARTED" id="899358697%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="899358697%2FProperties%2F367146633" anchor-label="SERVICE_RESTARTED" id="899358697%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-s-e-r-v-i-c-e_-r-e-s-t-a-r-t-e-d.html"><span><span>SERVICE_RESTARTED</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="899358697%2FProperties%2F-845055019"></span>
+                  <div><a href="-s-e-r-v-i-c-e_-r-e-s-t-a-r-t-e-d.html"><span>SERVICE_</span><wbr><span>RESTARTED</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="899358697%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-r-v-i-c-e_-r-e-s-t-a-r-t-e-d.html">SERVICE_RESTARTED</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1012</span></div><div class="brief "><p class="paragraph">"1012 indicates that the service is restarted. A client may reconnect, and if it chooses to do, should reconnect using a randomized delay of 5 - 30s."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-r-v-i-c-e_-r-e-s-t-a-r-t-e-d.html">SERVICE_RESTARTED</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1012</span></div><div class="brief "><p class="paragraph">"1012 indicates that the service is restarted. A client may reconnect, and if it chooses to do, should reconnect using a randomized delay of 5 - 30s."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1891432495%2FProperties%2F-845055019" anchor-label="TLS_HANDSHAKE_FAILURE" id="1891432495%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="1891432495%2FProperties%2F367146633" anchor-label="TLS_HANDSHAKE_FAILURE" id="1891432495%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-t-l-s_-h-a-n-d-s-h-a-k-e_-f-a-i-l-u-r-e.html"><span><span>TLS_HANDSHAKE_FAILURE</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1891432495%2FProperties%2F-845055019"></span>
+                  <div><a href="-t-l-s_-h-a-n-d-s-h-a-k-e_-f-a-i-l-u-r-e.html"><span>TLS_</span><wbr><span>HANDSHAKE_</span><wbr><span>FAILURE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1891432495%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-t-l-s_-h-a-n-d-s-h-a-k-e_-f-a-i-l-u-r-e.html">TLS_HANDSHAKE_FAILURE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1015</span></div><div class="brief "><p class="paragraph">"1015 is a reserved value and MUST NOT be set as a status code in a Close control frame by an endpoint. It is designated for use in applications expecting a status code to indicate that the connection was closed due to a failure to perform a TLS handshake (e.g., the server certificate can't be verified)."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-t-l-s_-h-a-n-d-s-h-a-k-e_-f-a-i-l-u-r-e.html">TLS_HANDSHAKE_FAILURE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1015</span></div><div class="brief "><p class="paragraph">"1015 is a reserved value and MUST NOT be set as a status code in a Close control frame by an endpoint. It is designated for use in applications expecting a status code to indicate that the connection was closed due to a failure to perform a TLS handshake (e.g., the server certificate can't be verified)."</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="515947096%2FProperties%2F-845055019" anchor-label="TOO_BIG_TO_PROCESS" id="515947096%2FProperties%2F-845055019" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":krossbow-websocket-core:dokkaHtmlPartial/commonMain" data-filterable-set=":krossbow-websocket-core:dokkaHtmlPartial/commonMain">
+<a data-name="515947096%2FProperties%2F367146633" anchor-label="TOO_BIG_TO_PROCESS" id="515947096%2FProperties%2F367146633" data-filterable-set=":krossbow-websocket-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":krossbow-websocket-core/commonMain" data-filterable-set=":krossbow-websocket-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-t-o-o_-b-i-g_-t-o_-p-r-o-c-e-s-s.html"><span><span>TOO_BIG_TO_PROCESS</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="515947096%2FProperties%2F-845055019"></span>
+                  <div><a href="-t-o-o_-b-i-g_-t-o_-p-r-o-c-e-s-s.html"><span>TOO_</span><wbr><span>BIG_</span><wbr><span>TO_</span><wbr><span>PROCESS</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="515947096%2FProperties%2F367146633"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-t-o-o_-b-i-g_-t-o_-p-r-o-c-e-s-s.html">TOO_BIG_TO_PROCESS</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1009</span></div><div class="brief "><p class="paragraph">"1009 indicates that an endpoint is terminating the connection because it has received a message that is too big for it to process."</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-websocket-core/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-t-o-o_-b-i-g_-t-o_-p-r-o-c-e-s-s.html">TOO_BIG_TO_PROCESS</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1009</span></div><div class="brief "><p class="paragraph">"1009 indicates that an endpoint is terminating the connection because it has received a message that is too big for it to process."</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -284,12 +316,22 @@
     </div>
   </div>
 </div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
-
