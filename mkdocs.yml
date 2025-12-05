@@ -4,6 +4,7 @@ repo_name: krossbow
 repo_url: https://github.com/joffrey-bion/krossbow
 site_description: "A coroutine-based Kotlin multi-platform STOMP 1.2 client over web sockets."
 site_author: Joffrey Bion
+copyright: Copyright &copy; 2019 - 2025 Joffrey Bion
 
 theme:
   name: material
@@ -83,4 +84,12 @@ extra:
     moshi: 1.15.2
     tyrus: 2.2.0
 
-copyright: Copyright &copy; 2019 - 2025 Joffrey Bion
+
+# Fails the docs build if there are any warnings (this avoids publishing a site with broken links)
+strict: true
+
+validation:
+  absolute_links: relative_to_docs
+  anchors: warn
+  omitted_files: warn
+  unrecognized_links: warn
