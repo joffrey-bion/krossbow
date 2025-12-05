@@ -16,8 +16,17 @@ allprojects {
     group = "org.hildan.krossbow"
 }
 
-tasks.withType<org.jetbrains.dokka.gradle.DokkaMultiModuleTask>().configureEach {
-    outputDirectory.set(file("$rootDir/docs/kdoc"))
+tasks.register<Copy>("generateWebsiteKDocs") {
+    group = "documentation"
+    dependsOn(tasks.dokkaGenerate)
+    from(layout.buildDirectory.dir("dokka/html"))
+    into("$rootDir/docs/kdoc")
+}
+
+dependencies {
+    subprojects.forEach { subproject ->
+        dokka(subproject)
+    }
 }
 
 changelog {

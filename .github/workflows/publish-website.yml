@@ -30,7 +30,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Generate KDocs
-        run: ./gradlew dokkaHtmlMultiModule
+        run: ./gradlew generateWebsiteKDocs
 
       - name: Setup Python
         uses: actions/setup-python@v6
