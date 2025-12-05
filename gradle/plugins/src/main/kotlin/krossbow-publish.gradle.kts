@@ -1,31 +1,42 @@
 plugins {
-    id("org.hildan.kotlin-publish")
+    id("com.vanniktech.maven.publish")
     id("org.jetbrains.dokka")
     id("krossbow-githubinfo")
     id("org.jetbrains.kotlinx.binary-compatibility-validator")
     signing
 }
 
-publishing {
-    // configureEach reacts on new publications being registered and configures them too
-    publications.configureEach {
-        if (this is MavenPublication) {
-            pom {
-                developers {
-                    developer {
-                        id.set("joffrey-bion")
-                        name.set("Joffrey Bion")
-                        email.set("joffrey.bion@gmail.com")
-                    }
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
+    pom {
+        name.set(project.name)
+        description.set(project.description)
+        developers {
+            developer {
+                id.set("joffrey-bion")
+                name.set("Joffrey Bion")
+                email.set("joffrey.bion@gmail.com")
+            }
+        }
+    }
+}
+
+dokka {
+    dokkaSourceSets {
+        configureEach {
+            sourceRoots.forEach { sourceRootDir ->
+                val sourceRootRelativePath = sourceRootDir.relativeTo(rootProject.projectDir).toSlashSeparatedString()
+                sourceLink {
+                    localDirectory.set(sourceRootDir)
+                    // HEAD points to the default branch of the repo.
+                    remoteUrl("${github.repositoryUrl}/blob/HEAD/$sourceRootRelativePath")
                 }
             }
         }
     }
 }
 
-signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(extensions.getByType<PublishingExtension>().publications)
-}
+// ensures slash separator even on Windows, useful for URLs creation
+private fun File.toSlashSeparatedString(): String = toPath().joinToString("/")

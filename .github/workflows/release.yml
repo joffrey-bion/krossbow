@@ -39,3 +39,4 @@ jobs:
           gpg-signing-password: ${{ secrets.GPG_PASSWORD }}
           sonatype-username: ${{ secrets.OSSRH_USER_TOKEN }}
           sonatype-password: ${{ secrets.OSSRH_KEY }}
+          gradle-publish-tasks: publishAndReleaseToMavenCentral

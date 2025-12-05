@@ -33,6 +33,7 @@ okhttp = "4.12.0"
 slf4j = "2.0.17"
 spring = "7.0.1"
 tyrus = "2.2.1"
+vanniktech-maven-publish-plugin = "0.35.0"
 vyarus-github-info-plugin = "2.0.0"
 
 npm-sockjs-client = "1.6.1"
