@@ -25,6 +25,12 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.jdk-version }}
 
+      - name: Cache Kotlin/Native binaries
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}
+
       - name: Release
         uses: joffrey-bion/gradle-library-release-action@v2
         with:
