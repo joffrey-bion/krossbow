@@ -1,0 +1,48 @@
+name: update-kotlin-lock-files
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  update-locks:
+    if: >
+      github.actor == 'dependabot[bot]' &&
+      startsWith(github.event.pull_request.title, 'Bump kotlin ')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v6
+        with:
+          # Important: checkout the PR head, not merge commit
+          ref: ${{ github.event.pull_request.head.ref }}
+          # Needed so we can push
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Update Kotlin JS/Wasm lock files
+        run: |
+          ./gradlew kotlinUpgradeYarnLock kotlinWasmUpgradeYarnLock
+
+      - name: Commit changes (if any)
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add kotlin-js-store
+            git commit -m "Update yarn lock files after Kotlin bump"
+            git push
+          else
+            echo "No changes to commit"
+          fi
