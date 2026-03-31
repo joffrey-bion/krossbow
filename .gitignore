@@ -1,6 +1,10 @@
 .idea
 .fleet
 
+# MKdocs Material (social plugin)
+.cache
+
+# Gradle
 .gradle
 .kotlin
 build/
