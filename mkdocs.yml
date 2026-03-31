@@ -4,43 +4,88 @@ repo_name: krossbow
 repo_url: https://github.com/joffrey-bion/krossbow
 site_description: "A coroutine-based Kotlin multi-platform STOMP 1.2 client over web sockets."
 site_author: Joffrey Bion
-copyright: Copyright &copy; 2019 - 2025 Joffrey Bion
+copyright: Copyright &copy; 2019 - 2026 Joffrey Bion
 
 theme:
   name: material
-  features:
-    - navigation.expand
   icon:
+    annotation: material/information-slab-circle
     repo: fontawesome/brands/github
+  font:
+    code: JetBrains Mono
+  features:
+    - content.action.edit # adds an "Edit this page" button to each page
+    - content.code.annotate # allows annotations (tooltips) inside code blocks
+    - content.code.copy # adds a copy button to code blocks
+    - content.footnote.tooltips # adds a tooltip to footnotes references on hover
+    - content.tooltips # replaces the default browser title tooltips with nicer tooltips
+    - navigation.expand # makes the navigation sections collapsible
+    - navigation.footer # for next/prev links at the bottom of each page
+    - navigation.indexes # to be able to associate a Markdown file with the "root" of a section without a nested page
+    - navigation.instant # to use XHR instead of reloading the page when following links
+    - navigation.instant.preview # to show a preview tooltip when hovering links to other pages
+    - navigation.top # adds a back-to-top button when scrolling up after scrolling down on a page
+    - navigation.tracking # updates the URL bar with anchors as the user scrolls
+    - search.highlight # highlights the search term in the target page when clicking a search result
+    - search.share # allows deep linking to search results
+    - search.suggest # enables completion in the search bar
   palette:
-    - scheme: default
-      media: "(prefers-color-scheme: light)"
-      primary: 'teal'
-      accent: 'teal'
+    - media: "(prefers-color-scheme)"
       toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
-    - scheme: slate
-      media: "(prefers-color-scheme: dark)"
-      primary: 'light blue'
-      accent: 'light blue'
-      toggle:
-        icon: material/weather-sunny
+        icon: material/brightness-auto
         name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
 
 plugins:
-  - macros # for variables like git.tag (requires mkdocs-macros-plugin)
+  - macros # for variable substitution in Markdown files
+  - git-revision-date-localized: # to have the "last update" date in the footer of each page
+      enabled: !ENV [CI, false] # we don't put the whole repo in the docker container locally, so there is no git repo
   - search
+  - social # for proper previews in social media links
 
 markdown_extensions:
-  - admonition # for info/warn/tip sections
-  - attr_list # for anchors in definition lists
+  - abbr # for abbreviation tooltips
+  - admonition # for info/warn/tip/... sections
+  - attr_list # required for attribute-based features (grid, alignment, buttons, tooltips, etc.)
   - def_list # for definition lists (stomp config)
   - footnotes
-  - pymdownx.emoji
-  - pymdownx.highlight
-  - pymdownx.superfences # required for code highlighting
-  - pymdownx.tabbed # for tabs support
+  - md_in_html # to process Markdown inside HTML (useful for grids)
+  - pymdownx.details # for collapsible admonitions
+  - pymdownx.emoji: # for emoji shortcuts with :name: syntax
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - .icons
+  - pymdownx.highlight # for syntax highlighting in code blocks
+  - pymdownx.inlinehilite # for inline code highlighting
+  - pymdownx.snippets
+  - pymdownx.superfences: # required for code highlighting, tabs, and nested content in general
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed: # for tabs support
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify # use the tab name in URL anchor instead of '__tabbed_1_1'
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - tables
   - toc:
       permalink: true
 
