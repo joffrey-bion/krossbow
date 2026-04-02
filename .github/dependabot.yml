@@ -18,13 +18,14 @@ updates:
       # Gradle plugins that don't have user visible consequences and
       # thus shouldn't appear in the changelog (mark as 'internal')
       infra-gradle-plugins:
+        # Using quotes when starting with '*', otherwise YAML interprets them as YAML aliases
         patterns:
-          - *:com.gradle.develocity*
-          - *:com.vanniktech.maven.publish*
-          - *:org.hildan.github.changelog*
-          - *:org.jetbrains.dokka*
-          - *:org.jetbrains.kotlinx.binary-compatibility-validator*
-          - *:ru.vyarus.github-info*
+          - '*:com.gradle.develocity*'
+          - '*:com.vanniktech.maven.publish*'
+          - '*:org.hildan.github.changelog*'
+          - '*:org.jetbrains.dokka*'
+          - '*:org.jetbrains.kotlinx.binary-compatibility-validator*'
+          - '*:ru.vyarus.github-info*'
         labels:
           - internal
       test-dependencies:
