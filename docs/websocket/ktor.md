@@ -7,11 +7,6 @@ Ktor's implementation supports a variety of platforms and is very popular in the
 The `krossbow-websocket-ktor` module provides the `KtorWebSocketClient`, which adapts Ktor {{ versions.ktor }}'s
 `HttpClient` to Krossbow's web socket interface.
 
-!!! info "Stuck with Ktor 2?"
-    Krossbow updated to Ktor 3 to benefit from all the performance improvements and the new WASM platform support.
-    If you are stuck with Ktor 2 for some reason, use the `krossbow-websocket-ktor-legacy` artifact instead.
-    You can then add Ktor dependencies in version {{ versions.ktorLegacy }}.
-
 ## Usage with StompClient
 
 To use the `KtorWebSocketClient` pass an instance of it when creating your `StompClient`:

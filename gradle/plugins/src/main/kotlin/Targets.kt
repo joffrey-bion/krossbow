@@ -12,16 +12,6 @@ fun KotlinMultiplatformExtension.allTargets() {
 
 @OptIn(ExperimentalWasmDsl::class)
 fun KotlinMultiplatformExtension.ktor3Targets() {
-    ktor2Targets()
-
-    wasmJs {
-        browser()
-        nodejs()
-    }
-}
-
-@OptIn(ExperimentalKotlinGradlePluginApi::class)
-fun KotlinMultiplatformExtension.ktor2Targets() {
     jvm()
     js {
         browser()
@@ -33,7 +23,13 @@ fun KotlinMultiplatformExtension.ktor2Targets() {
             }
         }
     }
+    wasmJs {
+        browser()
+        nodejs()
+    }
+
     appleTargets()
+
     linuxX64()
     linuxArm64()
     mingwX64()
