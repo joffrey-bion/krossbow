@@ -1,4 +1,4 @@
-name: update-kotlin-lock-files
+name: dependabot-pr-post-processing
 
 on:
   pull_request:
@@ -8,6 +8,22 @@ permissions:
   contents: write
 
 jobs:
+  internal-label:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Add the 'internal' label for non user-visible dependencies
+        if: steps.metadata.outputs.dependency-group == 'infra-gradle-plugins' || steps.metadata.outputs.dependency-group == 'test-dependencies'
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+        run: gh pr edit "$PR_URL" --add-label "internal"
+
   update-locks:
     if: >
       github.actor == 'dependabot[bot]' &&

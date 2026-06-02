@@ -26,8 +26,6 @@ updates:
           - '*:org.jetbrains.dokka*'
           - '*:org.jetbrains.kotlinx.binary-compatibility-validator*'
           - '*:ru.vyarus.github-info*'
-        labels:
-          - internal
       test-dependencies:
         patterns:
           - org.eclipse.jetty.websocket:websocket-jetty-client
@@ -35,5 +33,3 @@ updates:
           - org.slf4j:slf4j-simple
           - org.testcontainers:*
           - uk.org.lidalia:slf4j-test
-        labels:
-          - internal
