@@ -25,6 +25,7 @@ kotlin {
     }
     compilerOptions {
         progressiveMode = true
+        freeCompilerArgs.add("-Xrender-internal-diagnostic-names")
 
         // We can't enable 'allWarningsAsErrors' yet because of the unique_name warning:
         // KLIB resolver: The same 'unique_name=org.hildan.krossbow:krossbow-websocket-core' found in more than one library:
