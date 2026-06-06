@@ -5,7 +5,8 @@ on:
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: write
+  contents: write # to commit
+  pull-requests: write # to label PRs
 
 jobs:
   internal-label:
@@ -21,8 +22,8 @@ jobs:
       - name: Add the 'internal' label for non user-visible dependencies
         if: steps.metadata.outputs.dependency-group == 'infra-gradle-plugins' || steps.metadata.outputs.dependency-group == 'test-dependencies'
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-          PR_URL: ${{github.event.pull_request.html_url}}
+          GH_TOKEN: ${{ github.token }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
         run: gh pr edit "$PR_URL" --add-label "internal"
 
   update-locks:
