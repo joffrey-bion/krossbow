@@ -21,7 +21,7 @@ jobs:
       - name: Add the 'internal' label for non user-visible dependencies
         if: steps.metadata.outputs.dependency-group == 'infra-gradle-plugins' || steps.metadata.outputs.dependency-group == 'test-dependencies'
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
           PR_URL: ${{github.event.pull_request.html_url}}
         run: gh pr edit "$PR_URL" --add-label "internal"
 
