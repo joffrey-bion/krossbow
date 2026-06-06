@@ -16,11 +16,12 @@ updates:
     labels:
       - dependencies
     groups:
-      # Gradle plugins that don't have user visible consequences and
-      # thus shouldn't appear in the changelog (mark as 'internal')
-      infra-gradle-plugins:
+      # This group includes the Gradle wrapper and Gradle plugins that don't have user visible consequences
+      # (and thus shouldn't appear in the changelog)
+      infra-gradle:
         # Using quotes when starting with '*', otherwise YAML interprets them as YAML aliases
         patterns:
+          - 'gradle-wrapper'
           - 'com.gradle.develocity'
           - '*:com.vanniktech.maven.publish*'
           - '*:org.hildan.github.changelog*'

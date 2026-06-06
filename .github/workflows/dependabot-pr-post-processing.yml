@@ -20,7 +20,7 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Add the 'internal' label for non user-visible dependencies
-        if: steps.metadata.outputs.dependency-group == 'infra-gradle-plugins' || steps.metadata.outputs.dependency-group == 'test-dependencies'
+        if: steps.metadata.outputs.dependency-group == 'infra-gradle' || steps.metadata.outputs.dependency-group == 'test-dependencies'
         env:
           GH_TOKEN: ${{ github.token }}
           PR_URL: ${{ github.event.pull_request.html_url }}
