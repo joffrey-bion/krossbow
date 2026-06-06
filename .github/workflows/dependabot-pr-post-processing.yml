@@ -9,7 +9,7 @@ permissions:
   pull-requests: write # to label PRs
 
 jobs:
-  internal-label:
+  internal-deps:
     runs-on: ubuntu-latest
     if: github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
@@ -19,12 +19,14 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Add the 'internal' label for non user-visible dependencies
+      - name: Add the 'internal' label and enable auto-merge for internal deps
         if: steps.metadata.outputs.dependency-group == 'infra-gradle' || steps.metadata.outputs.dependency-group == 'test-dependencies'
         env:
           GH_TOKEN: ${{ github.token }}
           PR_URL: ${{ github.event.pull_request.html_url }}
-        run: gh pr edit "$PR_URL" --add-label "internal"
+        run: |
+          gh pr edit "$PR_URL" --add-label "internal"
+          gh pr merge "$PR_URL" --auto --rebase
 
   update-locks:
     if: >
