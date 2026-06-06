@@ -31,6 +31,7 @@ updates:
       test-dependencies:
         patterns:
           - org.eclipse.jetty.websocket:websocket-jetty-client
+          - org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk
           - org.java-websocket:Java-WebSocket
           - org.slf4j:slf4j-simple
           - org.testcontainers:*
