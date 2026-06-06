@@ -42,7 +42,7 @@ jetty-websocket = "11.0.26"
 npm-isomorphic-fetch = "3.0.0"
 npm-isomorphic-ws = "5.0.0"
 npm-ws = "8.10.0"
-slf4j = "2.0.17"
+slf4j = "2.0.18"
 slf4jTest = "1.2.0"
 
 [libraries]
