@@ -10,10 +10,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
 }
 
-allprojects {
-    group = "org.hildan.krossbow"
-}
-
 tasks.register<Copy>("generateWebsiteKDocs") {
     group = "documentation"
     dependsOn(tasks.dokkaGenerate)

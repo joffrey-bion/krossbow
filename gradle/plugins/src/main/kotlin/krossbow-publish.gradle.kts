@@ -6,6 +6,8 @@ plugins {
     signing
 }
 
+group = "org.hildan.krossbow"
+
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
