@@ -36,4 +36,4 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Gradle build
-        run: ./gradlew build --warning-mode all
+        run: ./gradlew build --stacktrace --warning-mode all
