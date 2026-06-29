@@ -1,9 +1,12 @@
+import kotlinx.coroutines.runBlocking
 import org.hildan.krossbow.test.server.*
 import org.hildan.krossbow.test.server.TestServer
 
 abstract class WSTestServerService : BuildService<BuildServiceParameters.None>, AutoCloseable {
 
-    val wsServer: TestServer = startTestServer()
+    val wsServer: TestServer = runBlocking {
+        startTestServer()
+    }
 
     override fun close() {
         wsServer.stop()

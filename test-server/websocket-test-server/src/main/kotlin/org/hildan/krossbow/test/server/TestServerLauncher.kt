@@ -1,7 +1,5 @@
 package org.hildan.krossbow.test.server
 
-import kotlinx.coroutines.*
-
 interface TestServer {
     val host: String
     val wsPort: Int
@@ -10,7 +8,7 @@ interface TestServer {
     fun stop()
 }
 
-fun startTestServer(): TestServer = runBlocking {
+suspend fun startTestServer(): TestServer {
     println("Starting test WS server...")
     val wsServer = EchoWebSocketServer()
     val wsPort = wsServer.startAndAwaitPort()
@@ -21,7 +19,7 @@ fun startTestServer(): TestServer = runBlocking {
     val httpPort = httpServer.startAndAwaitPort()
     println("Test HTTP server listening on port $httpPort")
 
-    object : TestServer {
+    return object : TestServer {
         override val host: String = "localhost"
         override val wsPort: Int get() = wsPort
         override val httpPort: Int get() = httpPort

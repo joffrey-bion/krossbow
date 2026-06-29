@@ -8,6 +8,7 @@ import org.java_websocket.protocols.*
 import org.java_websocket.server.*
 import java.net.*
 import java.nio.*
+import kotlin.time.Duration.Companion.milliseconds
 
 private val Draft6455Default = Draft_6455()
 private val Draft6455WithStomp12 = Draft_6455(emptyList(), listOf(Protocol("v12.stomp")))
@@ -53,9 +54,9 @@ internal class EchoWebSocketServer(port: Int = 0) : WebSocketServer(
         return awaitPort(timeoutMillis)
     }
 
-    private suspend fun awaitPort(timeoutMillis: Long): Int = withTimeout(timeoutMillis) {
+    private suspend fun awaitPort(timeoutMillis: Long): Int = withTimeout(timeoutMillis.milliseconds) {
         while (port <= 0) {
-            delay(10)
+            delay(10.milliseconds)
         }
         port
     }
