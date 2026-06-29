@@ -14,7 +14,7 @@ class PartialMessagesTest {
     @Test
     fun testTextHandler() = runTest {
         var result: String? = null
-        val handler = PartialTextMessageHandler { result = it.toString() }
+        val handler = PartialTextMessageHandler { result = it }
 
         assertNull(result)
 
