@@ -12,14 +12,15 @@ plugins {
 
 tasks.register<Copy>("generateWebsiteKDocs") {
     group = "documentation"
-    dependsOn(tasks.dokkaGenerate)
+    description = "Generates all KDocs into the docs/kdocs directory for the website"
+    dependsOn(tasks.dokkaGeneratePublicationHtml)
     from(layout.buildDirectory.dir("dokka/html"))
     into("$rootDir/docs/kdoc")
 }
 
 dependencies {
     subprojects.forEach { subproject ->
-        dokka(subproject)
+        dokka(project(subproject.path))
     }
 }
 
