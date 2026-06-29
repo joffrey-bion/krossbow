@@ -8,7 +8,7 @@ description = "Internal IO utilities for kotlinx-io conversions"
 kotlin {
     allTargets()
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(libs.kotlinx.io.bytestring)
             }

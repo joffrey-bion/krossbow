@@ -8,14 +8,14 @@ description = "WebSocket client API used by the Krossbow STOMP client"
 kotlin {
     allTargets()
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(libs.kotlinx.coroutines.core)
                 api(libs.kotlinx.io.bytestring)
                 implementation(libs.kotlinx.io.core)
             }
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(projects.krossbowWebsocketTest)
                 implementation(libs.kotlinx.coroutines.test)

@@ -12,7 +12,7 @@ kotlin {
         all {
             languageSettings.optIn("org.hildan.krossbow.io.InternalKrossbowIoApi")
         }
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(projects.krossbowStompCore)
                 api(libs.kotlinx.serialization.core)

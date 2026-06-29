@@ -13,22 +13,22 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(projects.krossbowWebsocketCore)
             }
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting {
+        jvmMain {
             dependencies {
                 api(projects.krossbowWebsocketSpring)
             }
         }
-        val jsMain by getting {
+        jsMain {
             dependencies {
                 api(projects.krossbowWebsocketBuiltin)
                 implementation(npm("sockjs-client", libs.versions.npm.sockjs.client.get()))

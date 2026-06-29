@@ -10,7 +10,7 @@ kotlin {
     allTargets()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 api(libs.kotlinx.coroutines.core)
@@ -21,7 +21,7 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting {
+        jvmMain {
             dependencies {
                 // for the test server
                 implementation(libs.java.websocket)

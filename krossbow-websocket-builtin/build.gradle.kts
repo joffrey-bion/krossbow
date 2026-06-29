@@ -18,20 +18,20 @@ kotlin {
         all {
             languageSettings.optIn("org.hildan.krossbow.io.InternalKrossbowIoApi")
         }
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 api(libs.kotlinx.coroutines.core)
                 implementation(projects.krossbowIo)
             }
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(projects.krossbowWebsocketTest)
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting {
+        jvmMain {
             dependencies {
                 implementation(libs.kotlinx.io.core)
             }

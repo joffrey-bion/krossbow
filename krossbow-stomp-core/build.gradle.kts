@@ -18,7 +18,7 @@ kotlin {
             languageSettings.optIn("org.hildan.krossbow.io.InternalKrossbowIoApi")
             languageSettings.optIn("org.hildan.krossbow.stomp.headers.ExperimentalHeadersApi")
         }
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 api(libs.kotlinx.io.bytestring)
@@ -27,14 +27,14 @@ kotlin {
                 implementation(libs.kotlinx.io.core)
             }
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(projects.krossbowWebsocketTest)
                 implementation(kotlin("test"))
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
-        val jvmTest by getting {
+        jvmTest {
             dependencies {
                 implementation(libs.slf4j.test)
             }

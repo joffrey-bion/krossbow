@@ -10,7 +10,7 @@ kotlin {
     allTargets()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(projects.krossbowStompKxserialization)
                 api(libs.kotlinx.serialization.json)

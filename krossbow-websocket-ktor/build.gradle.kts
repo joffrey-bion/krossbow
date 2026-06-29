@@ -14,32 +14,32 @@ kotlin {
         all {
             languageSettings.optIn("org.hildan.krossbow.io.InternalKrossbowIoApi")
         }
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(projects.krossbowWebsocketCore)
                 api(libs.ktor.client.websockets)
                 implementation(projects.krossbowIo)
             }
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(projects.krossbowWebsocketTest)
             }
         }
-        val cioSupportTest by creating {
-            dependsOn(commonTest)
+        val cioSupportTest = create("cioSupportTest") {
+            dependsOn(commonTest.get())
             dependencies {
                 implementation(libs.ktor.client.cio)
             }
         }
-        val jsMain by getting {
+        jsMain {
             dependencies {
                 // workaround for https://youtrack.jetbrains.com/issue/KT-57235
                 implementation(libs.kotlinx.atomicfu.runtime)
             }
         }
-        val jvmTest by getting {
+        jvmTest {
             dependsOn(cioSupportTest)
             dependencies {
                 implementation(libs.ktor.client.java)
@@ -47,15 +47,15 @@ kotlin {
                 implementation(libs.slf4j.simple)
             }
         }
-        val linuxX64Test by getting {
+        linuxX64Test {
             dependsOn(cioSupportTest)
         }
-        val mingwX64Test by getting {
+        mingwX64Test {
             dependencies {
                 implementation(libs.ktor.client.winhttp)
             }
         }
-        val appleTest by getting {
+        appleTest {
             dependsOn(cioSupportTest)
             dependencies {
                 implementation(libs.ktor.client.darwin)
