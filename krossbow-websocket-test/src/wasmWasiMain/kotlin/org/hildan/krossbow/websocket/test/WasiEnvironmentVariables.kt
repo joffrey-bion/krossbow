@@ -76,6 +76,7 @@ private fun environSizesGet(): EnvSizes = withScopedMemoryAllocator { allocator 
  * @param environ A WebAssembly pointer to a buffer where the environment variable pointers will be written.
  * @param environ_buf A WebAssembly pointer to a buffer where the environment variable string data will be written.
  */
+@OptIn(ExperimentalWasmInterop::class)
 @WasmImport("wasi_snapshot_preview1", "environ_get")
 private external fun wasiEnvironGet(environ: Int, environ_buf: Int): Int
 
@@ -88,5 +89,6 @@ private external fun wasiEnvironGet(environ: Int, environ_buf: Int): Int
  * @param environ_count A WebAssembly pointer to a memory location where the number of environment variables will be written.
  * @param environ_buf_size A WebAssembly pointer to a memory location where the size of the environment variable string data will be written.
  */
+@OptIn(ExperimentalWasmInterop::class)
 @WasmImport("wasi_snapshot_preview1", "environ_sizes_get")
 private external fun wasiEnvironSizesGet(environ_count: Int, environ_buf_size: Int): Int

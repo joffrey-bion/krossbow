@@ -7,6 +7,7 @@ actual fun getTestServerConfig(): TestServerConfig = when (currentWasmJsPlatform
 
 // This variable is defined using the webpack DefinePlugin in karma.config.d/<somename>.js
 // which is itself generated from Gradle in the test-server plugin
+@OptIn(ExperimentalWasmJsInterop::class)
 private fun getTestServerConfigBrowser(): TestServerConfigJson = js("testServerConfig")
 
 private external interface TestServerConfigJson {
