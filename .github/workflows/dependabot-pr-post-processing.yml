@@ -9,9 +9,12 @@ permissions:
   pull-requests: write # to label PRs
 
 jobs:
-  internal-deps:
+  metadata:
     runs-on: ubuntu-latest
     if: github.event.pull_request.user.login == 'dependabot[bot]'
+    outputs:
+      dependency-names: ${{ steps.metadata.outputs.dependency-names }}
+      dependency-group: ${{ steps.metadata.outputs.dependency-group }}
     steps:
       - name: Dependabot metadata
         id: metadata
@@ -19,8 +22,12 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
+  internal-deps:
+    needs: metadata
+    if: needs.metadata.outputs.dependency-group == 'infra-gradle' || needs.metadata.outputs.dependency-group == 'test-dependencies'
+    runs-on: ubuntu-latest
+    steps:
       - name: Add the 'internal' label and enable auto-merge for internal deps
-        if: steps.metadata.outputs.dependency-group == 'infra-gradle' || steps.metadata.outputs.dependency-group == 'test-dependencies'
         env:
           GH_TOKEN: ${{ github.token }}
           PR_URL: ${{ github.event.pull_request.html_url }}
@@ -29,11 +36,13 @@ jobs:
           gh pr merge "$PR_URL" --auto --rebase
 
   update-locks:
-    if: >
-      github.actor == 'dependabot[bot]' &&
-      startsWith(github.event.pull_request.title, 'Bump kotlin ')
+    needs: metadata
+    if: contains(needs.metadata.outputs.dependency-names, 'kotlin')
     runs-on: ubuntu-latest
     steps:
+      - name: List dependencies
+        run: |
+          echo "Dependencies that triggered this job: ${{ needs.metadata.outputs.dependency-names }}"
       - name: Checkout PR branch
         uses: actions/checkout@v7
         with:
