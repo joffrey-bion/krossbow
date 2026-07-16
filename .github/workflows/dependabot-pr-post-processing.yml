@@ -37,12 +37,20 @@ jobs:
 
   update-locks:
     needs: metadata
-    if: contains(needs.metadata.outputs.dependency-names, 'kotlin')
+    # Example dependencies we want to trigger on:
+    #   org.jetbrains.kotlin.jvm
+    #   org.jetbrains.kotlin.multiplatform
+    #   org.jetbrains.kotlin.plugin.serialization
+    #   org.jetbrains.kotlin:kotlinx-atomicfu-runtime
+    # It's ok to trigger on more dependencies than we want, it just will not result in any
+    # lock file changes, and be a no-op.
+    if: contains(needs.metadata.outputs.dependency-names, 'org.jetbrains.kotlin')
     runs-on: ubuntu-latest
     steps:
       - name: List dependencies
         run: |
           echo "Dependencies that triggered this job: ${{ needs.metadata.outputs.dependency-names }}"
+
       - name: Checkout PR branch
         uses: actions/checkout@v7
         with:
