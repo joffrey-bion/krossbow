@@ -67,7 +67,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest> {
     }
 }
 
-val generateKarmaConfig by tasks.registering {
+val generateKarmaConfig = tasks.register("generateKarmaConfig") {
     group = "js test setup"
     description = "Generates a Karma configuration that exposes the 'testServerConfig' variable to the browser, " +
         "which contains the host and ports of the running test server."
