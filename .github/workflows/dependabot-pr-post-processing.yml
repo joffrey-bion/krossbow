@@ -11,5 +11,20 @@ permissions:
 jobs:
   dependabot-pr-post-processing:
     uses: joffrey-bion/gh-workflows/.github/workflows/dependabot-pr-post-processing.yml@main
+    with:
+      internal-dependencies: |
+        gradle-wrapper
+        com.gradle.develocity
+        com.vanniktech.maven.publish*
+        org.hildan.github.changelog*
+        org.jetbrains.dokka*
+        org.jetbrains.kotlinx.binary-compatibility-validator*
+        ru.vyarus.github-info*
+        org.eclipse.jetty.websocket:websocket-jetty-client
+        org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk
+        org.java-websocket:Java-WebSocket
+        org.slf4j:slf4j-simple
+        org.testcontainers:*
+        uk.org.lidalia:slf4j-test
     secrets:
-      github-token: ${{ github.token }}
+      github-token: ${{ secrets.GH_PAT }}
