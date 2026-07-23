@@ -73,21 +73,27 @@ private class KtorWebSocketConnectionAdapter(
                     emittedCloseFrame.getAndSet(true)
                 }
             }
-            .onCompletion { error ->
+            .onCompletion {
                 // Ktor just closes the channel without sending the close frame, so we build it ourselves here.
+                // It doesn't matter how the flow ends (error, cancellation, etc.), the source of truth is whether the
+                // session contains the information of the close frame (closeReason != null).
                 // Clients could collect the flow multiple times, which calls onCompletion each time, but we only want
-                // to emit the Close frame once, as if it were in the channel like the other frames.
-                if (error == null && !emittedCloseFrame.getAndSet(true)) {
-                    buildCloseFrame()?.let { emit(it) }
+                // to emit the Close frame once, as if it were in the channel like the other frames, hence the atomic.
+                val closeReason = wsSession.closeReason.getOrNull() // we don't await because sometimes it never completes
+                if (closeReason != null && !emittedCloseFrame.getAndSet(true)) {
+                    emit(closeReason.toCloseFrame())
                 }
             }
             .catch { th ->
                 throw WebSocketException("error in Ktor's websocket: $th", cause = th)
             }
 
-    private suspend fun buildCloseFrame(): WebSocketFrame.Close? = wsSession.closeReason.await()?.let { reason ->
-        WebSocketFrame.Close(reason.code.toInt(), reason.message)
-    }
+    /**
+     * Gets this [Deferred]'s value if it has already completed, or `null` otherwise (never wait).
+     */
+    private suspend fun <T> Deferred<T>.getOrNull(): T? = if (isCompleted) await() else null
+
+    private fun CloseReason.toCloseFrame(): WebSocketFrame.Close = WebSocketFrame.Close(code.toInt(), message)
 
     override suspend fun sendText(frameText: String) {
         wsSession.outgoing.send(Frame.Text(frameText))
