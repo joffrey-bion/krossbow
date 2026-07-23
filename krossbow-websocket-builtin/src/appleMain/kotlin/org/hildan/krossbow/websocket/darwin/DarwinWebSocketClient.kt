@@ -211,8 +211,7 @@ private fun NSURLSessionWebSocketTask.forwardNextIncomingMessagesAsyncTo(incomin
                 if (nsError.code.toInt() == ERROR_CODE_SOCKET_NOT_CONNECTED) {
                     // If the channel is not closed, it might be worth continuing to forward messages (maybe we got this
                     // error for another reason, like the websocket was not connected *yet*) - it shouldn't hurt anyway.
-                    // TODO check if we actually do get this error in this case, and thus continuing to forward new
-                    //  messages is indeed useful
+                    @OptIn(DelicateCoroutinesApi::class) // the check is just an optimization, but it would work anyway
                     if (!incomingFrames.isClosedForSend) {
                         forwardNextIncomingMessagesAsyncTo(incomingFrames)
                     }
@@ -230,7 +229,6 @@ private fun NSURLSessionWebSocketTask.forwardNextIncomingMessagesAsyncTo(incomin
                     throw closeException
                 }
                 if (result.isClosed) {
-                    // TODO should we throw here instead? In which cases exactly this can happen?
                     // if the channel is already closed, maybe it is just a race with the closing handshake
                     // and we can simply ignore the extra message
                     return@receiveMessageWithCompletionHandler
