@@ -331,7 +331,6 @@ abstract class WebSocketClientTestSuite(
  * Behaves like [runTest] but without virtual time capabilities, so we can interact with real systems like the test
  * server without instant timeouts.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 private fun runTestRealTime(
     context: CoroutineContext = EmptyCoroutineContext,
     timeout: Duration = 60.seconds, // same default as runTest
