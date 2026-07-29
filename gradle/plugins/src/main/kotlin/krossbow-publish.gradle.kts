@@ -13,8 +13,10 @@ mavenPublishing {
     signAllPublications()
 
     pom {
-        name.set(project.name)
-        description.set(project.description)
+        // Read lazily because the description is set in the module's build script *after* this plugin is applied,
+        // so it would be null if read eagerly here. The project.name could also be overridden in the build script.
+        name.set(project.provider { project.name })
+        description.set(project.provider { project.description })
         developers {
             developer {
                 id.set("joffrey-bion")
