@@ -35,7 +35,7 @@ fun StompErrorHeaders(configure: StompErrorHeadersBuilder.() -> Unit = {}): Stom
 
 @Deprecated(
     message = "This overload will be removed in a future version, please use the overload with lambda instead to set optional headers.",
-    level = DeprecationLevel.WARNING,
+    level = DeprecationLevel.ERROR,
     replaceWith = ReplaceWith(
         expression = "StompErrorHeaders {\n" +
             "    this.message = message\n" +
