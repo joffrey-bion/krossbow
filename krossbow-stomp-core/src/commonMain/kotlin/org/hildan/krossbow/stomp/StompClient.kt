@@ -85,18 +85,6 @@ class StompClient(
     }
 }
 
-@Suppress("unused")
-@Deprecated(message = "kept only for binary compatibility", level = DeprecationLevel.HIDDEN)
-@JvmName("stomp")
-suspend fun WebSocketConnection.stompHidden(
-    config: StompConfig,
-    host: String? = DefaultHost,
-    login: String? = null,
-    passcode: String? = null,
-    customHeaders: Map<String, String> = emptyMap(),
-    sessionCoroutineContext: CoroutineContext = EmptyCoroutineContext,
-): StompSession = stomp(config, host, login, passcode, customHeaders, sessionCoroutineContext)
-
 /**
  * Exception thrown when the websocket connection + STOMP connection takes too much time.
  */
