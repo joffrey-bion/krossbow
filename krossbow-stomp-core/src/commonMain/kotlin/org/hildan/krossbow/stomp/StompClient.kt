@@ -104,20 +104,6 @@ class ConnectionTimeout(url: String, timeout: Duration) :
     ConnectionException(url, "Timed out waiting for $timeout when connecting to $url")
 
 /**
- * Exception thrown when the connection attempt failed at web socket level.
- */
-@Deprecated(
-    message = "This exception is no longer thrown by the StompClient, in favor of org.hildan.krossbow.websocket.WebSocketConnectionException.",
-    level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("org.hildan.krossbow.websocket.WebSocketConnectionException"),
-)
-open class WebSocketConnectionException(
-    url: String,
-    message: String = "Failed to connect at web socket level to $url",
-    cause: Throwable? = null,
-) : ConnectionException(url, message, cause)
-
-/**
  * Exception thrown when the connection attempt failed at STOMP protocol level.
  */
 class StompConnectionException(val host: String?, cause: Throwable? = null) :
