@@ -80,10 +80,11 @@ private class KtorWebSocketConnectionAdapter(
                 // failed (e.g. the CIO engine cancels the incoming channel on close), onCompletion runs its action on
                 // a collector that re-throws the upstream exception on emit, so the Close frame is instead emitted from
                 // catch below.
-                // Clients could collect the flow multiple times, which calls onCompletion each time, but we only want
-                // to emit the Close frame once, as if it were in the channel like the other frames, hence the atomic.
                 if (cause == null) {
-                    val closeReason = awaitSessionCloseReasonOrJobEnd()
+                    val closeReason = wsSession.closeReason.await()
+                    // Clients could collect the flow multiple times, which calls onCompletion each time, but we only
+                    // want to emit the Close frame once, as if it were in the channel like the other frames, hence the
+                    // atomic guard here.
                     if (closeReason != null && !emittedCloseFrame.getAndSet(true)) {
                         emit(closeReason.toCloseFrame())
                     }
@@ -96,8 +97,11 @@ private class KtorWebSocketConnectionAdapter(
                 // which surfaces here as a CancellationException rather than a normal completion. If the session
                 // recorded a close reason, this is a normal close: emit our synthesized Close frame (once) and let the
                 // flow complete normally. Otherwise it's a genuine error and we wrap it.
-                val closeReason = awaitSessionCloseReasonOrJobEnd()
+                val closeReason = wsSession.closeReason.await()
                 if (closeReason != null) {
+                    // Clients could collect the flow multiple times, which calls onCompletion/catch each time, but we
+                    // only want to emit the Close frame once, as if it were in the channel like the other frames, hence
+                    // the atomic guard here.
                     if (!emittedCloseFrame.getAndSet(true)) {
                         emit(closeReason.toCloseFrame())
                     }
