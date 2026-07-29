@@ -39,13 +39,6 @@ interface WebSocketClient {
         protocols: List<String> = emptyList(),
         headers: Map<String, String> = emptyMap(),
     ): WebSocketConnection
-    
-    @Deprecated(
-        message = "This method is only kept for binary compatibility. Use the overload with the 'protocols' parameter",
-        level = DeprecationLevel.HIDDEN,
-    )
-    suspend fun connect(url: String, headers: Map<String, String> = emptyMap()): WebSocketConnection =
-        connect(url, protocols = emptyList(), headers)
 
     companion object
 }
