@@ -1,5 +1,17 @@
 Here are some details about how to migrate from one major version to another.
 
+## From 9.x to 10.x
+
+### Upgrade to OkHttp 5
+
+The `krossbow-websocket-okhttp` module now uses OkHttp 5.
+If you're using this web socket engine, make sure you align your dependencies to avoid surprises.
+
+### Ktor 2 (legacy) module removal
+
+The `krossbow-websocket-ktor-legacy` artifact is no longer published. Please migrate to Ktor 3 and use 
+`krossbow-websocket-ktor`.
+
 ## From 8.x to 9.x
 
 ### Ktor 2 moved to legacy module
