@@ -4,9 +4,11 @@ on:
   push:
     branches: [ "*" ]
     paths-ignore:
-      - 'mkdocs.yml'
       - 'docs/**'
   pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   build:

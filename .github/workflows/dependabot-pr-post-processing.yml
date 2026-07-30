@@ -4,9 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+# We don't need any permissions here, because they are handled in the PAT.
+# We need the PAT because Dependabot workflows don't have enough permissions to process the PRs properly.
 permissions:
-  contents: write # to commit yarn.lock
-  pull-requests: write # to label PRs
+  contents: none
 
 jobs:
   dependabot-pr-post-processing:

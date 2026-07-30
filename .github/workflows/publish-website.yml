@@ -8,6 +8,9 @@ on:
 
 run-name: "Website update (${{ github.ref_name }})"
 
+permissions:
+  contents: write # to push to the gh-pages branch
+
 jobs:
   publish-website:
     runs-on: ubuntu-latest
