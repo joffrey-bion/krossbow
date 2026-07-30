@@ -38,6 +38,12 @@ dokka {
                     remoteUrl("${github.repositoryUrl}/blob/HEAD/$sourceRootRelativePath")
                 }
             }
+            externalDocumentationLinks.register("kotlinx.serialization") {
+                url("https://kotlin.github.io/kotlinx.serialization/")
+            }
+            externalDocumentationLinks.register("kotlinx.coroutines") {
+                url("https://kotlinlang.org/api/kotlinx.coroutines/")
+            }
         }
     }
 }

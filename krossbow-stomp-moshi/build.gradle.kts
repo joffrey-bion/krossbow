@@ -13,4 +13,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
-dokkaExternalDocLink("https://square.github.io/moshi/1.x/moshi/")
+dokkaExternalDocLink(
+    name = "moshi",
+    docsUrl = "https://square.github.io/moshi/1.x/moshi/",
+)

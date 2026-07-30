@@ -15,4 +15,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
-dokkaExternalDocLink("https://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind/${libs.versions.jackson.get()}/")
+dokkaExternalDocLink(
+    name = "jackson",
+    docsUrl = "https://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind/${libs.versions.jackson.get()}/",
+)

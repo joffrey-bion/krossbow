@@ -65,6 +65,7 @@ kotlin {
 }
 
 dokkaExternalDocLink(
-    docsUrl = "https://api.ktor.io/ktor-client/",
+    name = "ktor",
+    docsUrl = "https://api.ktor.io/",
     packageListUrl = "https://api.ktor.io/package-list",
 )

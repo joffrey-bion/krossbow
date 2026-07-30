@@ -30,4 +30,8 @@ dependencies {
     testImplementation(libs.jettyWebsocketCient)
 }
 
-dokkaExternalDocLink("https://javadoc.io/doc/org.springframework/spring-websocket/${libs.versions.spring.get()}/")
+dokkaExternalDocLink(
+    name = "spring-websocket",
+    docsUrl = "https://javadoc.io/doc/org.springframework/spring-websocket/${libs.versions.spring.get()}/",
+    packageListUrl = "https://javadoc.io/doc/org.springframework/spring-websocket/${libs.versions.spring.get()}/element-list",
+)
