@@ -1,11 +1,42 @@
 # Change Log
 
-## [9.3.0](https://github.com/joffrey-bion/krossbow/tree/9.3.0) (2025-04-08)
+## [10.0.0](https://github.com/joffrey-bion/krossbow/tree/10.0.0) (2026-07-30)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/9.3.0...10.0.0)
+
+**Breaking changes:**
+
+- Raise deprecation level to error for header factory functions with optional headers as parameters [\#748](https://github.com/joffrey-bion/krossbow/issues/748)
+- Remove support for Ktor 2 \(legacy\) [\#719](https://github.com/joffrey-bion/krossbow/issues/719)
+
+**Removals:**
+
+- Remove the deprecated `WebSocketClient.connect\(url, headers\)` function [\#750](https://github.com/joffrey-bion/krossbow/issues/750)
+- Remove the deprecated hidden `WebSocketConnection.stomp` and containing `StompClientKt.class` [\#751](https://github.com/joffrey-bion/krossbow/issues/751)
+- Remove the deprecated `org.hildan.krossbow.stomp.WebSocketConnectionException` [\#749](https://github.com/joffrey-bion/krossbow/issues/749)
+
+**Upgraded dependencies:**
+
+- Bump OkHttp from 4.12.0 to 5.4.0 [\#734](https://github.com/joffrey-bion/krossbow/pull/734) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlin from 2.4.0 to 2.4.10 [\#744](https://github.com/joffrey-bion/krossbow/pull/744) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ktor from 3.5.0 to 3.5.1 [\#739](https://github.com/joffrey-bion/krossbow/pull/739) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-io from 0.9.0 to 0.9.1 [\#741](https://github.com/joffrey-bion/krossbow/pull/741) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.22.0 to 2.22.1 [\#743](https://github.com/joffrey-bion/krossbow/pull/743) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 7.0.7 to 7.0.8 [\#733](https://github.com/joffrey-bion/krossbow/pull/733) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-coroutines from 1.10.2 to 1.11.0 [\#723](https://github.com/joffrey-bion/krossbow/pull/723) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.jetbrains.kotlinx.atomicfu from 0.31.0 to 0.33.0 [\#726](https://github.com/joffrey-bion/krossbow/pull/726) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kotlinx\-serialization from 1.9.0 to 1.11.0 [\#722](https://github.com/joffrey-bion/krossbow/pull/722) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 7.0.3 to 7.0.7 [\#718](https://github.com/joffrey-bion/krossbow/pull/718) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.eclipse.jetty.websocket:websocket\-jetty\-client from 11.0.25 to 11.0.26 [\#664](https://github.com/joffrey-bion/krossbow/pull/664) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+**Fixed bugs:**
+
+- \[ktor\] Fix missing synthetic Close frame on native CIO engine [\#746](https://github.com/joffrey-bion/krossbow/pull/746) ([@joffrey-bion](https://github.com/joffrey-bion))
+
+## [9.3.0](https://github.com/joffrey-bion/krossbow/tree/9.3.0) (2025-04-09)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/9.2.0...9.3.0)
 
 **Upgraded dependencies:**
 
-- Bump com.gradle.develocity from 3.19.2 to 4.0 [\#634](https://github.com/joffrey-bion/krossbow/pull/634) ([@dependabot[bot]](https://github.com/apps/dependabot))
 - Bump kotlinx\-coroutines from 1.10.1 to 1.10.2 [\#635](https://github.com/joffrey-bion/krossbow/pull/635) ([@dependabot[bot]](https://github.com/apps/dependabot))
 - Bump kotlinx\-serialization from 1.8.0 to 1.8.1 [\#632](https://github.com/joffrey-bion/krossbow/pull/632) ([@dependabot[bot]](https://github.com/apps/dependabot))
 - Bump ktor from 3.1.1 to 3.1.2 [\#631](https://github.com/joffrey-bion/krossbow/pull/631) ([@dependabot[bot]](https://github.com/apps/dependabot))
