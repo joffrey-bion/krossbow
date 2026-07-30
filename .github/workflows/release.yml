@@ -6,6 +6,11 @@ on:
       version:
         description: "New version (and git tag)"
         required: true
+      doPublish:
+        type: boolean
+        description: "Publish to maven (if unchecked, only the changelog, GitHub release, and git tag are done)"
+        required: true
+        default: true
 
 run-name: "Release ${{ inputs.version }}"
 
@@ -39,4 +44,4 @@ jobs:
           gpg-signing-password: ${{ secrets.GPG_PASSWORD }}
           sonatype-username: ${{ secrets.MAVEN_CENTRAL_TOKEN_USERNAME }}
           sonatype-password: ${{ secrets.MAVEN_CENTRAL_TOKEN_PASSWORD }}
-          gradle-publish-tasks: publishAndReleaseToMavenCentral
+          gradle-publish-tasks: ${{ inputs.doPublish && 'publishAndReleaseToMavenCentral' || '' }}
