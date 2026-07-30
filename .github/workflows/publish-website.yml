@@ -11,9 +11,6 @@ run-name: "Website update (${{ github.ref_name }})"
 jobs:
   publish-website:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        jdk-version: [ 17 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -24,7 +21,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: ${{ matrix.jdk-version }}
+          java-version: 17
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
