@@ -18,7 +18,6 @@
         }
       }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../styles/style.css" rel="Stylesheet">
 <link href="../../styles/main.css" rel="Stylesheet">
@@ -95,7 +94,7 @@
   <div class="cover ">
     <h1 class="cover"><span>send</span><wbr><span><span>Text</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="-stomp-session/index.html">StompSession</a><span class="token punctuation">.</span><a href="send-text.html"><span class="token function">sendText</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span></div><p class="paragraph">Sends a SEND frame to the server at the given <a href="send-text.html">destination</a> with the given textual <a href="send-text.html">body</a>.</p><span class="kdoc-tag"><h4 class="">Return</h4><p class="paragraph">null right after sending the frame if auto-receipt is disabled. Otherwise, this method suspends until the relevant RECEIPT frame is received from the server, and then returns a <a href="-stomp-receipt/index.html">StompReceipt</a>. If no RECEIPT frame is received from the server in the configured <a href="../org.hildan.krossbow.stomp.config/-stomp-config/receipt-timeout.html">time limit</a>, a <a href="-lost-receipt-exception/index.html">LostReceiptException</a> is thrown.</p></span></div></div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":krossbow-stomp-core/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="-stomp-session/index.html">StompSession</a><span class="token punctuation">.</span><a href="send-text.html"><span class="token function">sendText</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">destination<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-stomp-receipt/index.html">StompReceipt</a><span class="token operator">?</span><span class="source-link-wrapper"><span class="source-link" data-element-type="source-link">(<a href="https://github.com/joffrey-bion/krossbow/blob/HEAD/krossbow-stomp-core/src/commonMain/kotlin/org/hildan/krossbow/stomp/StompSession.kt#L255">source</a>)</span></span></div><p class="paragraph">Sends a SEND frame to the server at the given <a href="send-text.html">destination</a> with the given textual <a href="send-text.html">body</a>.</p><span class="kdoc-tag"><h4 class="">Return</h4><p class="paragraph">null right after sending the frame if auto-receipt is disabled. Otherwise, this method suspends until the relevant RECEIPT frame is received from the server, and then returns a <a href="-stomp-receipt/index.html">StompReceipt</a>. If no RECEIPT frame is received from the server in the configured <a href="../org.hildan.krossbow.stomp.config/-stomp-config/receipt-timeout.html">time limit</a>, a <a href="-lost-receipt-exception/index.html">LostReceiptException</a> is thrown.</p></span></div></div>
 </div>
     <div class="footer">
         <div class="footer--container">
@@ -106,7 +105,7 @@
                     <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
                         Dokka
                     </a>
-                    <div>© 2025 Copyright</div>
+                    <div>© 2026 Copyright</div>
                 </div>
             </div>
         </div>
