@@ -15,7 +15,7 @@ tasks.register<Copy>("generateWebsiteKDocs") {
     description = "Generates all KDocs into the docs/kdocs directory for the website"
     dependsOn(tasks.dokkaGeneratePublicationHtml)
     from(layout.buildDirectory.dir("dokka/html"))
-    into("$rootDir/docs/kdoc")
+    into("$rootDir/docs/src/kdoc")
 }
 
 dependencies {

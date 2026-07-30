@@ -6,6 +6,8 @@ site_description: "A coroutine-based Kotlin multi-platform STOMP 1.2 client over
 site_author: Joffrey Bion
 copyright: Copyright &copy; 2019 - 2026 Joffrey Bion
 
+docs_dir: src
+
 theme:
   name: material
   icon:

@@ -48,4 +48,6 @@ jobs:
       - name: Deploy doc to GitHub pages
         # --strict aborts on any warning
         # --force forces the push to the repo (gh-pages branch)
-        run: mkdocs gh-deploy --strict --force
+        run: |
+          cd docs
+          mkdocs gh-deploy --strict --force
