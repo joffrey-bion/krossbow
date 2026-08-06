@@ -1,5 +1,7 @@
 package org.hildan.krossbow.stomp.frame
 
+import org.hildan.krossbow.stomp.StompException
+
 /**
  * A STOMP command.
  */
@@ -36,4 +38,4 @@ enum class StompCommand(
 /**
  * Exception thrown when some text could not be parsed as a [StompCommand].
  */
-class InvalidStompCommandException(val invalidText: String) : Exception("Unknown STOMP command '$invalidText'")
+class InvalidStompCommandException(val invalidText: String) : StompException("Unknown STOMP command '$invalidText'")

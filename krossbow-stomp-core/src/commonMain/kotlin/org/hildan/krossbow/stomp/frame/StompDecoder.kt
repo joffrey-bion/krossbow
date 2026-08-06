@@ -2,6 +2,7 @@ package org.hildan.krossbow.stomp.frame
 
 import kotlinx.io.*
 import kotlinx.io.bytestring.*
+import org.hildan.krossbow.stomp.StompException
 import org.hildan.krossbow.stomp.frame.StompFrame.*
 import org.hildan.krossbow.stomp.headers.*
 
@@ -39,8 +40,8 @@ private fun create(
     headers: MutableMap<String, String>,
     body: FrameBody?,
 ): StompFrame = when (command) {
-    StompCommand.STOMP -> Stomp(StompConnectHeaders(headers))
-    StompCommand.CONNECT -> Connect(StompConnectHeaders(headers))
+    StompCommand.STOMP -> Stomp(StompConnectHeaders(headers, forbidFrameStructuringChars = false))
+    StompCommand.CONNECT -> Connect(StompConnectHeaders(headers, forbidFrameStructuringChars = true))
     StompCommand.CONNECTED -> Connected(StompConnectedHeaders(headers))
     StompCommand.MESSAGE -> Message(StompMessageHeaders(headers), body)
     StompCommand.RECEIPT -> Receipt(StompReceiptHeaders(headers))
@@ -113,7 +114,10 @@ private fun Source.expectOnlyEOLs() {
 /**
  * Exception thrown when some frame data could not be decoded as a STOMP frame.
  */
-class InvalidStompFrameException(cause: Throwable) : Exception("Failed to decode invalid STOMP frame", cause)
+class InvalidStompFrameException(cause: Throwable) : StompException("Failed to decode invalid STOMP frame", cause)
 
-// ok to be private, it will be wrapped in InvalidStompFrameException anyway
-private class InvalidStompHeaderException(message: String) : Exception(message)
+/**
+ * Exception thrown when a STOMP header is invalid (for example, its name or value contains invalid characters).
+ */
+// It's ok to be private because it will be wrapped in InvalidStompFrameException anyway
+private class InvalidStompHeaderException(message: String) : StompException(message)

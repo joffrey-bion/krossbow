@@ -2,6 +2,7 @@ package org.hildan.krossbow.stomp.frame
 
 import kotlinx.io.*
 import kotlinx.io.bytestring.*
+import org.hildan.krossbow.stomp.StompException
 import org.hildan.krossbow.stomp.headers.HeaderEscaper
 
 internal fun StompFrame.encodeToByteString(): ByteString {
@@ -27,7 +28,7 @@ private fun requireValidContentLength(frame: StompFrame) {
     val contentLength = frame.headers.contentLength
     val bodyLength = frame.body?.bytes?.size ?: 0
     if (contentLength != null && contentLength != bodyLength) {
-        throw InvalidContentLengthException(contentLength, bodyLength)
+        throw ContentLengthMismatchException(contentLength, bodyLength)
     }
 }
 
@@ -52,5 +53,5 @@ private val StompFrame.preambleText: String
 
 private fun StompFrame.maybeEscape(s: String) = if (command.supportsHeaderEscapes) HeaderEscaper.escape(s) else s
 
-internal class InvalidContentLengthException(headerValue: Int, actualBodyLength: Int) :
-    RuntimeException("The content-length header ($headerValue) does not match the actual body size ($actualBodyLength)")
+internal class ContentLengthMismatchException(headerValue: Int, actualBodyLength: Int) :
+    StompException("The content-length header ($headerValue) does not match the actual body size ($actualBodyLength)")

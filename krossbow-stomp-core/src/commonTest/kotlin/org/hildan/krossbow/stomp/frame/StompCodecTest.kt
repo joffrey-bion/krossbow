@@ -255,8 +255,8 @@ class StompCodecTest {
         val bodyText = "The body of the message."
         val textFrame = StompFrame.Send(headers, FrameBody.Text(bodyText))
         val binFrame = StompFrame.Send(headers, FrameBody.Binary(bodyText.encodeToByteString()))
-        assertFailsWith<InvalidContentLengthException> { textFrame.encodeToText() }
-        assertFailsWith<InvalidContentLengthException> { binFrame.encodeToByteString() }
+        assertFailsWith<ContentLengthMismatchException> { textFrame.encodeToText() }
+        assertFailsWith<ContentLengthMismatchException> { binFrame.encodeToByteString() }
     }
 
     @Test
@@ -415,8 +415,8 @@ class StompCodecTest {
         val bodyText = "The body of the message."
         val textFrame = StompFrame.Message(headers, FrameBody.Text(bodyText))
         val binFrame = StompFrame.Message(headers, FrameBody.Binary(bodyText.encodeToByteString()))
-        assertFailsWith<InvalidContentLengthException> { textFrame.encodeToText() }
-        assertFailsWith<InvalidContentLengthException> { binFrame.encodeToByteString() }
+        assertFailsWith<ContentLengthMismatchException> { textFrame.encodeToText() }
+        assertFailsWith<ContentLengthMismatchException> { binFrame.encodeToByteString() }
     }
 
     private fun assertEncodingDecoding(frameText: String, textFrame: StompFrame, binFrame: StompFrame) {

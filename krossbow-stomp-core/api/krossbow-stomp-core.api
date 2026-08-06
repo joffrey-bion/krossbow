@@ -1,4 +1,4 @@
-public class org/hildan/krossbow/stomp/ConnectionException : java/lang/Exception {
+public class org/hildan/krossbow/stomp/ConnectionException : org/hildan/krossbow/stomp/StompException {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getUrl ()Ljava/lang/String;
@@ -8,19 +8,19 @@ public final class org/hildan/krossbow/stomp/ConnectionTimeout : org/hildan/kros
 	public synthetic fun <init> (Ljava/lang/String;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
-public final class org/hildan/krossbow/stomp/LostReceiptException : java/lang/Exception {
+public final class org/hildan/krossbow/stomp/LostReceiptException : org/hildan/krossbow/stomp/StompException {
 	public synthetic fun <init> (Ljava/lang/String;JLorg/hildan/krossbow/stomp/frame/StompFrame;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getConfiguredTimeout-UwyO8pc ()J
 	public final fun getFrame ()Lorg/hildan/krossbow/stomp/frame/StompFrame;
 	public final fun getReceiptId ()Ljava/lang/String;
 }
 
-public final class org/hildan/krossbow/stomp/MissingHeartBeatException : java/lang/Exception {
+public final class org/hildan/krossbow/stomp/MissingHeartBeatException : org/hildan/krossbow/stomp/StompException {
 	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getExpectedPeriod-UwyO8pc ()J
 }
 
-public final class org/hildan/krossbow/stomp/SessionDisconnectedException : java/lang/Exception {
+public final class org/hildan/krossbow/stomp/SessionDisconnectedException : org/hildan/krossbow/stomp/StompException {
 	public fun <init> (Ljava/lang/String;)V
 }
 
@@ -38,9 +38,14 @@ public final class org/hildan/krossbow/stomp/StompConnectionException : org/hild
 	public final fun getHost ()Ljava/lang/String;
 }
 
-public final class org/hildan/krossbow/stomp/StompErrorFrameReceived : java/lang/Exception {
+public final class org/hildan/krossbow/stomp/StompErrorFrameReceived : org/hildan/krossbow/stomp/StompException {
 	public fun <init> (Lorg/hildan/krossbow/stomp/frame/StompFrame$Error;)V
 	public final fun getFrame ()Lorg/hildan/krossbow/stomp/frame/StompFrame$Error;
+}
+
+public class org/hildan/krossbow/stomp/StompException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class org/hildan/krossbow/stomp/StompReceipt {
@@ -97,7 +102,7 @@ public final class org/hildan/krossbow/stomp/StompWsExtensionsKt {
 public abstract interface annotation class org/hildan/krossbow/stomp/UnsafeStompSessionApi : java/lang/annotation/Annotation {
 }
 
-public final class org/hildan/krossbow/stomp/WebSocketClosedUnexpectedly : java/lang/Exception {
+public final class org/hildan/krossbow/stomp/WebSocketClosedUnexpectedly : org/hildan/krossbow/stomp/StompException {
 	public fun <init> (ILjava/lang/String;)V
 	public final fun getCode ()I
 	public final fun getReason ()Ljava/lang/String;
@@ -217,12 +222,12 @@ public final class org/hildan/krossbow/stomp/frame/FrameBody$Text : org/hildan/k
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class org/hildan/krossbow/stomp/frame/InvalidStompCommandException : java/lang/Exception {
+public final class org/hildan/krossbow/stomp/frame/InvalidStompCommandException : org/hildan/krossbow/stomp/StompException {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun getInvalidText ()Ljava/lang/String;
 }
 
-public final class org/hildan/krossbow/stomp/frame/InvalidStompFrameException : java/lang/Exception {
+public final class org/hildan/krossbow/stomp/frame/InvalidStompFrameException : org/hildan/krossbow/stomp/StompException {
 	public fun <init> (Ljava/lang/Throwable;)V
 }
 

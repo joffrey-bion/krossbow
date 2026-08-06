@@ -5,7 +5,6 @@ import org.hildan.krossbow.stomp.config.*
 import org.hildan.krossbow.stomp.version.*
 import org.hildan.krossbow.websocket.*
 import kotlin.coroutines.*
-import kotlin.jvm.*
 import kotlin.time.*
 
 /**
@@ -100,4 +99,4 @@ class StompConnectionException(val host: String?, cause: Throwable? = null) :
 /**
  * Exception thrown when something went wrong during the connection.
  */
-open class ConnectionException(val url: String, message: String, cause: Throwable? = null) : Exception(message, cause)
+open class ConnectionException(val url: String, message: String, cause: Throwable? = null) : StompException(message, cause)

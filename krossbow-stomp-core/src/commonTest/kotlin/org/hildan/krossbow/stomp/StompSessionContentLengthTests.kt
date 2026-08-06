@@ -44,7 +44,7 @@ class StompSessionContentLengthTests {
         val headers = StompSendHeaders("/destination") {
             contentLength = 5
         }
-        assertFailsWith<InvalidContentLengthException> {
+        assertFailsWith<ContentLengthMismatchException> {
             stompSession.send(headers, FrameBody.Text("something"))
         }
     }
@@ -57,7 +57,7 @@ class StompSessionContentLengthTests {
         val headers = StompSendHeaders("/destination") {
             contentLength = 100
         }
-        assertFailsWith<InvalidContentLengthException> {
+        assertFailsWith<ContentLengthMismatchException> {
             stompSession.send(headers, FrameBody.Text("something"))
         }
     }

@@ -3,11 +3,13 @@ package org.hildan.krossbow.stomp
 import org.hildan.krossbow.stomp.frame.StompFrame
 import kotlin.time.Duration
 
+open class StompException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+
 /**
  * An exception thrown when a STOMP ERROR frame is received.
  * It is usually thrown through subscription channels.
  */
-class StompErrorFrameReceived(val frame: StompFrame.Error) : Exception(frame.getExceptionMessage())
+class StompErrorFrameReceived(val frame: StompFrame.Error) : StompException(frame.getExceptionMessage())
 
 private fun StompFrame.Error.getExceptionMessage(): String {
     if (bodyAsText.isNotBlank()) {
@@ -26,7 +28,7 @@ class LostReceiptException(
     val configuredTimeout: Duration,
     /** The frame which did not get acknowledged by the server. */
     val frame: StompFrame,
-) : Exception("No RECEIPT frame received for receiptId '$receiptId' (in ${frame.command} frame) within $configuredTimeout")
+) : StompException("No RECEIPT frame received for receiptId '$receiptId' (in ${frame.command} frame) within $configuredTimeout")
 
 /**
  * An exception thrown when expected heart beats are not received.
@@ -34,7 +36,7 @@ class LostReceiptException(
 class MissingHeartBeatException(
     /** The expected period for heartbeats received from the server, which was exceeded, causing this exception. */
     val expectedPeriod: Duration,
-) : Exception("A server heart beat was missing (expecting data every $expectedPeriod at most)")
+) : StompException("A server heart beat was missing (expecting data every $expectedPeriod at most)")
 
 /**
  * An exception thrown when the underlying websocket connection was closed at an inappropriate time.
@@ -42,9 +44,9 @@ class MissingHeartBeatException(
 class WebSocketClosedUnexpectedly(
     val code: Int,
     val reason: String?,
-) : Exception("the WebSocket was closed while subscriptions were still active. Code: $code Reason: $reason")
+) : StompException("the WebSocket was closed while subscriptions were still active. Code: $code Reason: $reason")
 
 /**
  * An exception thrown when the STOMP frames flow completed while some consumer was expecting more frames.
  */
-class SessionDisconnectedException(message: String) : Exception(message)
+class SessionDisconnectedException(message: String) : StompException(message)
