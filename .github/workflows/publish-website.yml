@@ -37,17 +37,19 @@ jobs:
         with:
           python-version: 3.x
 
-      - name: Install MkDocs Material
-        run: |
-          pip install \
-            mkdocs-material \
-            mkdocs-macros-plugin \
-            mkdocs-git-revision-date-localized-plugin \
-            "mkdocs-material[imaging]"
+      - name: Install Zensical
+        run: pip install zensical
 
-      - name: Deploy doc to GitHub pages
-        # --strict aborts on any warning
-        # --force forces the push to the repo (gh-pages branch)
+      - name: Build website
+        # --strict aborts on any warning (broken links, undefined variables, ...)
         run: |
           cd docs
-          mkdocs gh-deploy --strict --force
+          zensical build --strict
+
+      - name: Deploy doc to GitHub pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/site
+          publish_branch: gh-pages
+          force_orphan: true # keep a single commit on gh-pages (mirrors `mkdocs gh-deploy --force`)
