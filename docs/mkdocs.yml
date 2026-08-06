@@ -52,7 +52,6 @@ theme:
         name: Switch to system preference
 
 plugins:
-  - macros # for variable substitution in Markdown files
   - git-revision-date-localized: # to have the "last update" date in the footer of each page
       enabled: !ENV [CI, false] # we don't put the whole repo in the docker container locally, so there is no git repo
   - search
@@ -67,8 +66,9 @@ markdown_extensions:
   - md_in_html # to process Markdown inside HTML (useful for grids)
   - pymdownx.details # for collapsible admonitions
   - pymdownx.emoji: # for emoji shortcuts with :name: syntax
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      # Zensical ships its own emoji index/generator (the material.extensions.emoji.* symbols don't exist in Zensical)
+      emoji_index: !!python/name:zensical.extensions.emoji.twemoji
+      emoji_generator: !!python/name:zensical.extensions.emoji.to_svg
       options:
         custom_icons:
           - .icons
@@ -90,6 +90,12 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+  - zensical.extensions.macros: # Jinja2 templating in Markdown (replaces the mkdocs-macros-plugin)
+      # macros doesn't read `extra`, so version numbers are loaded from a data file (relative to this config)
+      include_yaml:
+        versions: data/versions.yml
+      on_error_fail: true # fail the build on any template rendering error
+      on_undefined: strict # fail the build on undefined variables instead of leaving them raw
 
 nav:
   - 'Overview': index.md
@@ -123,12 +129,6 @@ extra:
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/joffreybion
       name: "Joffrey on Twitter"
-  versions:
-    jackson: 2.22.1
-    ktor: 3.5.1
-    kotlinxSerialization: 1.11.0
-    moshi: 1.15.2
-    tyrus: 2.2.2
 
 
 # Fails the docs build if there are any warnings (this avoids publishing a site with broken links)
