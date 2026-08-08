@@ -5,6 +5,8 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
+import org.hildan.krossbow.stomp.frame.StompCommand
+import org.hildan.krossbow.stomp.frame.StompFrame
 import org.hildan.krossbow.stomp.headers.*
 import org.hildan.krossbow.test.*
 import org.hildan.krossbow.websocket.test.*
@@ -104,21 +106,27 @@ class StompClientTest {
 
     @Test
     fun connect_sendsCorrectHeaders_fullHttpUrl() = runTest {
-        testConnectHeaders(StompConnectHeaders(host = "some.host") { heartBeat = HeartBeat() }) { client ->
+        val expectedHeaders = StompConnectHeaders(host = "some.host", forStompCommand = false) {
+            heartBeat = HeartBeat()
+        }
+        testConnectHeaders(expectedHeaders) { client ->
             client.connect("http://some.host:8080/ws")
         }
     }
 
     @Test
     fun connect_sendsCorrectHeaders_standardWsUrl() = runTest {
-        testConnectHeaders(StompConnectHeaders(host = "some.host") { heartBeat = HeartBeat() }) { client ->
+        val expectedHeaders = StompConnectHeaders(host = "some.host", forStompCommand = false) {
+            heartBeat = HeartBeat()
+        }
+        testConnectHeaders(expectedHeaders) { client ->
             client.connect("ws://some.host/socket")
         }
     }
 
     @Test
     fun connect_sendsCorrectHeaders_withCredentials() = runTest {
-        val expectedHeaders = StompConnectHeaders(host = "some.host") {
+        val expectedHeaders = StompConnectHeaders(host = "some.host", forStompCommand = false) {
             login = "login"
             passcode = "pass"
             heartBeat = HeartBeat()
@@ -131,7 +139,9 @@ class StompClientTest {
     @Test
     fun connect_sendsCorrectHeaders_withCustomHeartBeats() = runTest {
         val customHeartBeat = HeartBeat(10.milliseconds, 50.milliseconds)
-        val expectedHeaders = StompConnectHeaders(host = "some.host") { heartBeat = customHeartBeat }
+        val expectedHeaders = StompConnectHeaders(host = "some.host", forStompCommand = false) {
+            heartBeat = customHeartBeat
+        }
         testConnectHeaders(
             expectedHeaders = expectedHeaders,
             configureClient = { heartBeat = customHeartBeat },
@@ -143,7 +153,7 @@ class StompClientTest {
     @Test
     fun connect_sendsCorrectHeaders_withCustomHeaders() = runTest {
         val userProvidedHeaders = mapOf("Authorization" to "Bearer -jwt-")
-        val expectedHeaders = StompConnectHeaders(host = "some.host") {
+        val expectedHeaders = StompConnectHeaders(host = "some.host", forStompCommand = false) {
             heartBeat = HeartBeat()
             setAll(headers = userProvidedHeaders)
         }
@@ -154,7 +164,7 @@ class StompClientTest {
 
     @Test
     fun connect_sendsCorrectHeaders_withCustomHostHeader() = runTest {
-        val expectedHeaders = StompConnectHeaders(host = "custom") {
+        val expectedHeaders = StompConnectHeaders(host = "custom", forStompCommand = false) {
             heartBeat = HeartBeat()
         }
         testConnectHeaders(expectedHeaders) { client ->
@@ -164,11 +174,32 @@ class StompClientTest {
 
     @Test
     fun connect_sendsCorrectHeaders_withNoHostHeader() = runTest {
-        val expectedHeaders = StompConnectHeaders(host = null) {
+        val expectedHeaders = StompConnectHeaders(host = null, forStompCommand = false) {
             heartBeat = HeartBeat()
         }
         testConnectHeaders(expectedHeaders) { client ->
             client.connect("http://some.host/ws", host = null)
+        }
+    }
+
+    @Test
+    fun connect_stompCommand_escapesSpecialCharsInHeaders() = runTest {
+        val expectedHeaders = StompConnectHeaders(host = null, forStompCommand = true) {
+            heartBeat = HeartBeat()
+            set("my:key", "value")
+            set("my\nkey", "my\r\nvalue")
+        }
+        testConnectHeaders(expectedHeaders, configureClient = {
+            connectWithStompCommand = true
+        }) { client ->
+            client.connect(
+                url = "http://some.host/ws",
+                host = null,
+                customStompConnectHeaders = mapOf(
+                    "my:key" to "value",
+                    "my\nkey" to "my\r\nvalue",
+                ),
+            )
         }
     }
 
@@ -179,20 +210,54 @@ class StompClientTest {
     ) {
         coroutineScope {
             val webSocketClient = WebSocketClientMock()
-            val stompClient = StompClient(webSocketClient, configureClient)
+            val config = StompConfig().apply { configureClient() }
+            val stompClient = StompClient(webSocketClient, config)
 
             launch {
                 val session = connectCall(stompClient)
                 session.disconnect()
             }
             val wsSession = webSocketClient.awaitConnectAndSimulateSuccess()
-            val frame = wsSession.awaitConnectFrameAndSimulateCompletion()
-            assertEquals(expectedHeaders, frame.headers)
-            assertNull(frame.body, "connect frame should not have a body")
+            try {
+                val frame = if (config.connectWithStompCommand) {
+                    wsSession.awaitSentStompFrameAndSimulateCompletion<StompFrame.Stomp>(StompCommand.STOMP)
+                } else {
+                    wsSession.awaitConnectFrameAndSimulateCompletion()
+                }
+                // We need to end the connect call before checking the headers, otherwise the assertion failure will
+                // be hidden by a timeout of the connect call in the test body.
+                wsSession.simulateConnectedFrameReceived()
+                assertEquals(expectedHeaders, frame.headers)
+            } finally {
+                wsSession.expectClose()
+            }
+        }
+    }
 
-            // just to end the connect call
-            wsSession.simulateConnectedFrameReceived()
-            wsSession.expectClose()
+    @Test
+    fun connect_defaultConnectCommand_failsOnNewLineInHeaderValues() = runTest {
+        val wsClient = WebSocketClientMock()
+        launch {
+            wsClient.awaitConnectAndSimulateSuccess()
+        }
+        val stompClient = StompClient(wsClient)
+        assertFailsWith<InvalidStompHeaderException> {
+            stompClient.connect("http://some.host/ws", login = "foo\nbar")
+        }
+    }
+
+    @Test
+    fun connect_defaultConnectCommand_failsOnColonInHeaderNames() = runTest {
+        val wsClient = WebSocketClientMock()
+        launch {
+            wsClient.awaitConnectAndSimulateSuccess()
+        }
+        val stompClient = StompClient(wsClient)
+        assertFailsWith<InvalidStompHeaderException> {
+            stompClient.connect(
+                url = "http://some.host/ws",
+                customStompConnectHeaders = mapOf("my:key" to "value"),
+            )
         }
     }
 

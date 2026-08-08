@@ -320,7 +320,7 @@ public final class org/hildan/krossbow/stomp/frame/StompFrame$Commit : org/hilda
 public final class org/hildan/krossbow/stomp/frame/StompFrame$Companion {
 }
 
-public final class org/hildan/krossbow/stomp/frame/StompFrame$Connect : org/hildan/krossbow/stomp/frame/StompFrame {
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Connect : org/hildan/krossbow/stomp/frame/StompFrame$ForConnection {
 	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;)V
 	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
 	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Connect;
@@ -368,6 +368,14 @@ public final class org/hildan/krossbow/stomp/frame/StompFrame$Error : org/hildan
 	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class org/hildan/krossbow/stomp/frame/StompFrame$ForConnection : org/hildan/krossbow/stomp/frame/StompFrame {
+	public synthetic fun <init> (Lorg/hildan/krossbow/stomp/frame/StompCommand;Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getBody ()Ljava/lang/Void;
+	public synthetic fun getBody ()Lorg/hildan/krossbow/stomp/frame/FrameBody;
+	public fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
+	public synthetic fun getHeaders ()Lorg/hildan/krossbow/stomp/headers/StompHeaders;
 }
 
 public final class org/hildan/krossbow/stomp/frame/StompFrame$Message : org/hildan/krossbow/stomp/frame/StompFrame {
@@ -422,7 +430,7 @@ public final class org/hildan/krossbow/stomp/frame/StompFrame$Send : org/hildan/
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class org/hildan/krossbow/stomp/frame/StompFrame$Stomp : org/hildan/krossbow/stomp/frame/StompFrame {
+public final class org/hildan/krossbow/stomp/frame/StompFrame$Stomp : org/hildan/krossbow/stomp/frame/StompFrame$ForConnection {
 	public fun <init> (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;)V
 	public final fun component1 ()Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
 	public final fun copy (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;)Lorg/hildan/krossbow/stomp/frame/StompFrame$Stomp;
@@ -513,6 +521,10 @@ public final class org/hildan/krossbow/stomp/headers/InvalidEscapeException : ja
 public final class org/hildan/krossbow/stomp/headers/InvalidServerHeaderException : java/lang/Exception {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getInvalidText ()Ljava/lang/String;
+}
+
+public final class org/hildan/krossbow/stomp/headers/InvalidStompHeaderException : org/hildan/krossbow/stomp/StompException {
+	public fun <init> (Ljava/lang/String;)V
 }
 
 public final class org/hildan/krossbow/stomp/headers/ServerInfo {
@@ -628,8 +640,10 @@ public abstract interface class org/hildan/krossbow/stomp/headers/StompConnectHe
 public final class org/hildan/krossbow/stomp/headers/StompConnectHeadersKt {
 	public static final fun StompConnectHeaders (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;Ljava/util/Map;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
 	public static final fun StompConnectHeaders (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
+	public static final fun StompConnectHeaders (Ljava/lang/String;ZLkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
 	public static synthetic fun StompConnectHeaders$default (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lorg/hildan/krossbow/stomp/config/HeartBeat;Ljava/util/Map;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
 	public static synthetic fun StompConnectHeaders$default (Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
+	public static synthetic fun StompConnectHeaders$default (Ljava/lang/String;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
 	public static final fun copy (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;Lkotlin/jvm/functions/Function1;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
 	public static synthetic fun copy$default (Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/hildan/krossbow/stomp/headers/StompConnectHeaders;
 }

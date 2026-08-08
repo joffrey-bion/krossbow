@@ -17,7 +17,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host") {
+        val headers = StompConnectHeaders(host = "some.host", forStompCommand = false) {
             acceptVersion = listOf("1.2")
         }
         val frame = StompFrame.Stomp(headers)
@@ -34,7 +34,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host") {
+        val headers = StompConnectHeaders(host = "some.host", forStompCommand = false) {
             acceptVersion = listOf("1.2")
         }
         val frame = StompFrame.Connect(headers)
@@ -51,7 +51,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host")
+        val headers = StompConnectHeaders(host = "some.host", forStompCommand = false)
         val frame = StompFrame.Connect(headers)
         assertEncodingDecoding(frameText, frame, frame)
     }
@@ -68,7 +68,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host") {
+        val headers = StompConnectHeaders(host = "some.host", forStompCommand = false) {
             acceptVersion = listOf("1.2")
             login = "bob"
             passcode = "mypass"
@@ -90,7 +90,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host") {
+        val headers = StompConnectHeaders(host = "some.host", forStompCommand = false) {
             acceptVersion = listOf("1.2")
             login = "bob"
             passcode = "mypass"
@@ -110,7 +110,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = "some.host") {
+        val headers = StompConnectHeaders(host = "some.host", forStompCommand = false) {
             acceptVersion = listOf("1.0", "1.1", "1.2")
         }
         val frame = StompFrame.Connect(headers)
@@ -126,7 +126,7 @@ class StompCodecTest {
             $nullChar
         """.trimIndent()
 
-        val headers = StompConnectHeaders(host = null) {
+        val headers = StompConnectHeaders(host = null, forStompCommand = false) {
             acceptVersion = listOf("1.2")
         }
         val frame = StompFrame.Connect(headers)
