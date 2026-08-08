@@ -26,8 +26,8 @@ internal const val DefaultHost = "<default host header>" // invalid host value t
  *
  * If [login] and [passcode] are provided, they are used for STOMP authentication.
  *
- * The CONNECT/STOMP frame can be further customized by using [customHeaders], which may be useful for server-specific
- * behavior, like token-based authentication.
+ * The `CONNECT`/`STOMP` frame can be further customized by using [customHeaders], which may be useful for
+ * server-specific behavior, like token-based authentication.
  *
  * If the connection at the STOMP level fails, the underlying web socket is closed.
  */
@@ -42,7 +42,7 @@ suspend fun WebSocketConnection.stomp(
     val wsStompVersion = StompVersion.fromWsProtocol(protocol)
     val serverPossiblySupportsHost = wsStompVersion == null || wsStompVersion.supportsHostHeader
     val effectiveHost = if (host == DefaultHost) this.host.takeIf { serverPossiblySupportsHost } else host
-    val connectHeaders = StompConnectHeaders(host = effectiveHost) {
+    val connectHeaders = StompConnectHeaders(host = effectiveHost, forStompCommand = config.connectWithStompCommand) {
         this.login = login
         this.passcode = passcode
         this.heartBeat = config.heartBeat

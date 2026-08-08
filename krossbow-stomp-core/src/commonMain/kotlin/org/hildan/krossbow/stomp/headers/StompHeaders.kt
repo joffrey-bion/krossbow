@@ -1,5 +1,6 @@
 package org.hildan.krossbow.stomp.headers
 
+import org.hildan.krossbow.stomp.StompException
 import org.hildan.krossbow.stomp.headers.HeaderNames.CONTENT_LENGTH
 import org.hildan.krossbow.stomp.headers.HeaderNames.CONTENT_TYPE
 import org.hildan.krossbow.stomp.headers.HeaderNames.RECEIPT
@@ -112,7 +113,25 @@ sealed interface StompHeadersBuilder : StompHeaders { // override mostly to get 
  */
 internal abstract class MapBasedStompHeaders(
     internal val backingMap: MutableMap<String, String>,
+    /**
+     * Whether characters that affect the frame structure should be forbidden in header names and values.
+     * This should be set to `true` for the few frame types that don't escape the names and values of their headers
+     * (namely, `CONNECT` and `CONNECTED`).
+     *
+     * If this is set to `true`, the colon ':' character will be forbidden in header names, and the NUL, LF, and CR
+     * characters will be forbidden in both the header names and values.
+     */
+    private val forbidFrameStructuringChars: Boolean = false,
 ) : StompHeadersBuilder {
+
+    init {
+        if (forbidFrameStructuringChars) {
+            backingMap.forEach { (headerName, headerValue) ->
+                requireNoStructuringChars(headerName, headerValue)
+            }
+        }
+    }
+
     override var contentLength: Int? by optionalHeader(
         name = CONTENT_LENGTH,
         default = null,
@@ -125,6 +144,9 @@ internal abstract class MapBasedStompHeaders(
     override fun get(headerName: String): String? = backingMap[headerName]
 
     override fun set(headerName: String, headerValue: String?) {
+        if (forbidFrameStructuringChars) {
+            requireNoStructuringChars(headerName, headerValue)
+        }
         if (headerValue == null) {
             backingMap.remove(headerName)
         } else {
@@ -133,6 +155,11 @@ internal abstract class MapBasedStompHeaders(
     }
 
     override fun setAll(headers: Map<String, String>) {
+        if (forbidFrameStructuringChars) {
+            headers.forEach { (headerName, headerValue) ->
+                requireNoStructuringChars(headerName, headerValue)
+            }
+        }
         backingMap.putAll(headers)
     }
 
@@ -149,3 +176,24 @@ internal abstract class MapBasedStompHeaders(
 
     override fun toString(): String = "StompHeaders${backingMap}"
 }
+
+private fun requireNoStructuringChars(headerName: String, headerValue: String?) {
+    requireNoStructuringChars(headerName)
+    if (headerValue != null) {
+        requireNoStructuringChars(headerValue)
+    }
+    if (':' in headerName) {
+        throw InvalidStompHeaderException("Colon ':' characters are not allowed in the header names of a CONNECT or CONNECTED frame, got '$headerName'")
+    }
+}
+
+private fun requireNoStructuringChars(headerName: String) {
+    if ('\n' in headerName || '\r' in headerName) {
+        throw InvalidStompHeaderException("New line characters are not allowed in the headers of a CONNECT or CONNECTED frame, got '$headerName'")
+    }
+}
+
+/**
+ * Exception thrown when a STOMP header is invalid (for example, its name or value contains invalid characters).
+ */
+class InvalidStompHeaderException(message: String) : StompException(message)

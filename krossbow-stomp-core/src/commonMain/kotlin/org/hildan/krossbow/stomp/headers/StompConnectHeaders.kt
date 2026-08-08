@@ -51,20 +51,43 @@ interface StompConnectHeadersBuilder : StompConnectHeaders, StompHeadersBuilder 
 /**
  * Creates an instance of [StompConnectHeaders] with the given [host] header.
  * Optional headers can be configured using the [configure] lambda.
+ *
+ * @param host The host to connect to. This must not be null in modern STOMP versions. Only use `null` if your server
+ *     doesn't allow the `host` header.
+ * @param forStompCommand `true` if these headers will be used in a `STOMP` frame, `false` for a `CONNECT` frame.
+ *     A `STOMP` frame can escape special characters like `:` or`\n`, while a `CONNECT` frame doesn't support these
+ *     characters at all.
  */
 // We put a 'host' parameter without a default value because it is required since STOMP 1.1.
 // Setting 'null' should be a conscious choice and not a default.
-fun StompConnectHeaders(host: String?, configure: StompConnectHeadersBuilder.() -> Unit = {}): StompConnectHeaders =
-    MapBasedStompConnectHeaders().apply {
-        this.host = host
-        configure()
-    }
+fun StompConnectHeaders(
+    host: String?,
+    forStompCommand: Boolean,
+    configure: StompConnectHeadersBuilder.() -> Unit = {},
+): StompConnectHeaders = MapBasedStompConnectHeaders(forbidFrameStructuringChars = !forStompCommand).apply {
+    this.host = host
+    configure()
+}
+
+@Deprecated(
+    message = "This overload will be removed in a future version, please specify the forStompCommand parameter to " +
+        "ensure adequate header name/value validation.",
+    level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith(
+        expression = "StompConnectHeaders(host, forStompCommand = false, configure)",
+        imports = [ "org.hildan.krossbow.stomp.headers.StompConnectHeaders" ],
+    ),
+)
+fun StompConnectHeaders(
+    host: String?,
+    configure: StompConnectHeadersBuilder.() -> Unit = {},
+): StompConnectHeaders = StompConnectHeaders(host, forStompCommand = false, configure)
 
 @Deprecated(
     message = "This overload will be removed in a future version, please use the overload with lambda instead to set optional headers.",
     level = DeprecationLevel.ERROR,
     replaceWith = ReplaceWith(
-        expression = "StompConnectHeaders(host) {\n" +
+        expression = "StompConnectHeaders(host, forStompCommand = false) {\n" +
             "    this.acceptVersion = acceptVersion\n" +
             "    this.login = login\n" +
             "    this.passcode = passcode\n" +
@@ -81,7 +104,12 @@ fun StompConnectHeaders(
     passcode: String? = null,
     heartBeat: HeartBeat? = null,
     customHeaders: Map<String, String> = emptyMap(),
-): StompConnectHeaders = StompConnectHeaders(host) {
+): StompConnectHeaders = StompConnectHeaders(
+    host = host,
+    // In this legacy factory function, we can't know if these headers are for a STOMP or CONNECT frame (and thus allow
+    // or not frame-structuring chars). When in doubt, better to forbid problematic values.
+    forStompCommand = false,
+) {
     this.acceptVersion = acceptVersion
     this.login = login
     this.passcode = passcode
@@ -93,14 +121,25 @@ fun StompConnectHeaders(
  * Creates a copy of these headers with the given [transform] applied.
  */
 fun StompConnectHeaders.copy(transform: StompConnectHeadersBuilder.() -> Unit = {}): StompConnectHeaders =
-    MapBasedStompConnectHeaders(backingMap = asMap().toMutableMap()).apply(transform)
+    MapBasedStompConnectHeaders(
+        backingMap = asMap().toMutableMap(),
+        // If not using our own MapBasedStompConnectHeaders type, we can't know if these headers are for a STOMP or
+        // CONNECT frame (and thus allow or not frame-structuring chars). When in doubt, better to forbid weird values.
+        forbidFrameStructuringChars = (this as? MapBasedStompConnectHeaders)?.forbidFrameStructuringChars ?: true,
+    ).apply(transform)
 
-internal fun StompConnectHeaders(rawHeaders: MutableMap<String, String>): StompConnectHeaders =
-    MapBasedStompConnectHeaders(backingMap = rawHeaders)
+internal fun StompConnectHeaders(
+    rawHeaders: MutableMap<String, String>,
+    forbidFrameStructuringChars: Boolean,
+): StompConnectHeaders = MapBasedStompConnectHeaders(backingMap = rawHeaders, forbidFrameStructuringChars)
 
 private class MapBasedStompConnectHeaders(
     backingMap: MutableMap<String, String> = mutableMapOf(),
-) : MapBasedStompHeaders(backingMap), StompConnectHeadersBuilder {
+    val forbidFrameStructuringChars: Boolean,
+) : MapBasedStompHeaders(
+    backingMap = backingMap,
+    forbidFrameStructuringChars = forbidFrameStructuringChars,
+), StompConnectHeadersBuilder {
 
     override var host: String? by optionalHeader(HOST) // required since 1.1, but forbidden in some 1.0 servers
     override var acceptVersion: List<String> by requiredHeader(

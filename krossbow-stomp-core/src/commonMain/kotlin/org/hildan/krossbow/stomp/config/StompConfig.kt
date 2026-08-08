@@ -29,6 +29,10 @@ class StompConfig {
      * Clients that use the `STOMP` frame instead of the `CONNECT` frame will only be able to connect to STOMP 1.2
      * servers (as well as some STOMP 1.1 servers) but the advantage is that a protocol sniffer/discriminator will be
      * able to differentiate the STOMP connection from an HTTP connection.
+     *
+     * Also, using `STOMP` instead of `CONNECT` allows using ':', '\r', or '\n' in header names and values, because
+     * `STOMP` frames are allowed to escape these characters inside headers, unlike `CONNECT`.
+     * See https://stomp.github.io/stomp-specification-1.2.html#Value_Encoding.
      */
     var connectWithStompCommand: Boolean = false
 

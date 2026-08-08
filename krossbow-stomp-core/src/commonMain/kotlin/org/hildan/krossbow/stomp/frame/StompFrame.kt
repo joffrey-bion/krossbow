@@ -56,6 +56,16 @@ sealed class StompFrame(
     val bodyAsText: String by lazy { body?.asText(headers.contentType) ?: "" }
 
     /**
+     * A parent class for connection frames (`CONNECT` and `STOMP`).
+     */
+    sealed class ForConnection(
+        command: StompCommand,
+        override val headers: StompConnectHeaders,
+    ) : StompFrame(command, headers) {
+        override val body: Nothing? = null
+    }
+
+    /**
      * A STOMP frame is a STOMP 1.2 replacement for the CONNECT frame, used to start a STOMP session on a web socket
      * connection.
      *
@@ -63,12 +73,12 @@ sealed class StompFrame(
      * (as well as some STOMP 1.1 servers) but the advantage is that a protocol sniffer/discriminator will be able to
      * differentiate the STOMP connection from an HTTP connection.
      */
-    data class Stomp(override val headers: StompConnectHeaders) : StompFrame(StompCommand.STOMP, headers)
+    data class Stomp(override val headers: StompConnectHeaders) : ForConnection(StompCommand.STOMP, headers)
 
     /**
      * A CONNECT frame is a client frame used to start a STOMP session on a web socket connection.
      */
-    data class Connect(override val headers: StompConnectHeaders) : StompFrame(StompCommand.CONNECT, headers)
+    data class Connect(override val headers: StompConnectHeaders) : ForConnection(StompCommand.CONNECT, headers)
 
     /**
      * A CONNECTED frame is a server frame received upon successful connection at the STOMP protocol level.
@@ -205,6 +215,7 @@ private fun inferCharset(contentTypeHeader: String?): Charset {
 // and would mean more bloat in the headers classes (which should be redesigned soon anyway).
 @Suppress("UNCHECKED_CAST")
 internal fun <T : StompFrame> T.copyWithHeaders(updateHeadersCopy: StompHeadersBuilder.() -> Unit): T = when (this) {
+    is StompFrame.Stomp -> copy(headers.copy(updateHeadersCopy)) as T
     is StompFrame.Connect -> copy(headers.copy(updateHeadersCopy)) as T
     is StompFrame.Connected -> copy(headers.copy(updateHeadersCopy)) as T
     is StompFrame.Send -> copy(headers.copy(updateHeadersCopy)) as T
@@ -219,5 +230,4 @@ internal fun <T : StompFrame> T.copyWithHeaders(updateHeadersCopy: StompHeadersB
     is StompFrame.Message -> copy(headers.copy(updateHeadersCopy)) as T
     is StompFrame.Receipt -> copy(headers.copy(updateHeadersCopy)) as T
     is StompFrame.Error -> copy(headers.copy(updateHeadersCopy)) as T
-    else -> error("Unknown StompFrame type ${this::class.simpleName}") // qualifiedName cannot be used in JS
 }

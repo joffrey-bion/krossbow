@@ -115,9 +115,3 @@ private fun Source.expectOnlyEOLs() {
  * Exception thrown when some frame data could not be decoded as a STOMP frame.
  */
 class InvalidStompFrameException(cause: Throwable) : StompException("Failed to decode invalid STOMP frame", cause)
-
-/**
- * Exception thrown when a STOMP header is invalid (for example, its name or value contains invalid characters).
- */
-// It's ok to be private because it will be wrapped in InvalidStompFrameException anyway
-private class InvalidStompHeaderException(message: String) : StompException(message)

@@ -87,7 +87,7 @@ internal fun StompConnectedHeaders(rawHeaders: MutableMap<String, String>): Stom
 
 private class MapBasedStompConnectedHeaders(
     backingMap: MutableMap<String, String> = mutableMapOf(),
-) : MapBasedStompHeaders(backingMap), StompConnectedHeadersBuilder {
+) : MapBasedStompHeaders(backingMap, forbidFrameStructuringChars = true), StompConnectedHeadersBuilder {
     override var version: String by requiredHeader(VERSION, "1.2")
     override var session: String? by optionalHeader(SESSION)
     override var server: ServerInfo? by optionalHeader(

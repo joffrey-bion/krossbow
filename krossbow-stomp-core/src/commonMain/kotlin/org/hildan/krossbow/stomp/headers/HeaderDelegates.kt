@@ -82,16 +82,10 @@ internal class HeaderDelegate<T>(
     private val setTransform: (T) -> String?,
 ) : ReadWriteProperty<MapBasedStompHeaders, T> {
 
-    override operator fun getValue(thisRef: MapBasedStompHeaders, property: KProperty<*>): T {
-        return getTransform(thisRef.backingMap[headerName])
-    }
+    override operator fun getValue(thisRef: MapBasedStompHeaders, property: KProperty<*>): T =
+        getTransform(thisRef[headerName])
 
     override operator fun setValue(thisRef: MapBasedStompHeaders, property: KProperty<*>, value: T) {
-        val strValue = setTransform(value)
-        if (strValue == null) {
-            thisRef.backingMap.remove(headerName)
-        } else {
-            thisRef.backingMap[headerName] = strValue
-        }
+        thisRef[headerName] = setTransform(value)
     }
 }
