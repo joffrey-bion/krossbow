@@ -114,21 +114,22 @@ sealed interface StompHeadersBuilder : StompHeaders { // override mostly to get 
 internal abstract class MapBasedStompHeaders(
     internal val backingMap: MutableMap<String, String>,
     /**
-     * Whether characters that affect the frame structure should be forbidden in header names and values.
+     * Whether characters that affect the structure of the headers should be forbidden in header names and values.
      * This should be set to `true` for the few frame types that don't escape the names and values of their headers
      * (namely, `CONNECT` and `CONNECTED`).
      *
-     * If this is set to `true`, the colon ':' character will be forbidden in header names, and the NUL, LF, and CR
+     * If this is set to `true`, the colon ':' character will be forbidden in header names, and the LF and CR
      * characters will be forbidden in both the header names and values.
+     *
+     * Note that the `NUL` character is always forbidden in header names and values, regardless of this flag, because it
+     * terminates the frame and has no escape sequence.
      */
-    private val forbidFrameStructuringChars: Boolean = false,
+    private val forbidHeaderStructuringChars: Boolean = false,
 ) : StompHeadersBuilder {
 
     init {
-        if (forbidFrameStructuringChars) {
-            backingMap.forEach { (headerName, headerValue) ->
-                requireNoStructuringChars(headerName, headerValue)
-            }
+        backingMap.forEach { (headerName, headerValue) ->
+            validateHeader(headerName, headerValue)
         }
     }
 
@@ -144,9 +145,7 @@ internal abstract class MapBasedStompHeaders(
     override fun get(headerName: String): String? = backingMap[headerName]
 
     override fun set(headerName: String, headerValue: String?) {
-        if (forbidFrameStructuringChars) {
-            requireNoStructuringChars(headerName, headerValue)
-        }
+        validateHeader(headerName, headerValue)
         if (headerValue == null) {
             backingMap.remove(headerName)
         } else {
@@ -155,12 +154,22 @@ internal abstract class MapBasedStompHeaders(
     }
 
     override fun setAll(headers: Map<String, String>) {
-        if (forbidFrameStructuringChars) {
-            headers.forEach { (headerName, headerValue) ->
-                requireNoStructuringChars(headerName, headerValue)
-            }
+        headers.forEach { (headerName, headerValue) ->
+            validateHeader(headerName, headerValue)
         }
         backingMap.putAll(headers)
+    }
+
+    private fun validateHeader(headerName: String, headerValue: String?) {
+        // The NUL character terminates a STOMP frame and has no escape sequence, so it can never appear in a header,
+        // regardless of whether the frame type escapes its header names and values.
+        requireNoNulChar(headerName)
+        if (headerValue != null) {
+            requireNoNulChar(headerValue)
+        }
+        if (forbidHeaderStructuringChars) {
+            requireNoStructuringChars(headerName, headerValue)
+        }
     }
 
     override fun asMap(): Map<String, String> = backingMap
@@ -177,17 +186,24 @@ internal abstract class MapBasedStompHeaders(
     override fun toString(): String = "StompHeaders${backingMap}"
 }
 
+private fun requireNoNulChar(headerNameOrValue: String) {
+    if ('\u0000' in headerNameOrValue) {
+        throw InvalidStompHeaderException("The NUL character is not allowed in STOMP headers because it terminates " +
+                                              "the frame and has no escape sequence, got '$headerNameOrValue'")
+    }
+}
+
 private fun requireNoStructuringChars(headerName: String, headerValue: String?) {
-    requireNoStructuringChars(headerName)
+    requireNoNewLines(headerName)
     if (headerValue != null) {
-        requireNoStructuringChars(headerValue)
+        requireNoNewLines(headerValue)
     }
     if (':' in headerName) {
         throw InvalidStompHeaderException("Colon ':' characters are not allowed in the header names of a CONNECT or CONNECTED frame, got '$headerName'")
     }
 }
 
-private fun requireNoStructuringChars(headerName: String) {
+private fun requireNoNewLines(headerName: String) {
     if ('\n' in headerName || '\r' in headerName) {
         throw InvalidStompHeaderException("New line characters are not allowed in the headers of a CONNECT or CONNECTED frame, got '$headerName'")
     }

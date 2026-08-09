@@ -256,7 +256,7 @@ abstract class WebSocketClientTestSuite(
                 .flatMap { it.removePrefix("Sec-WebSocket-Protocol=").split(",") }
                 .map { it.trim() }
                 .toList()
-            assertEquals(protocols, listOf("unknown-protocol", "v12.stomp", "v11.stomp", "v10.stomp"))
+            assertEquals(listOf("unknown-protocol", "v12.stomp", "v11.stomp", "v10.stomp"), protocols)
             if (shouldTestNegotiatedSubprotocol) {
                 assertEquals("v12.stomp", connection.protocol)
             }
