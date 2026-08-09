@@ -138,7 +138,7 @@ private class MapBasedStompConnectHeaders(
     val forbidFrameStructuringChars: Boolean,
 ) : MapBasedStompHeaders(
     backingMap = backingMap,
-    forbidFrameStructuringChars = forbidFrameStructuringChars,
+    forbidHeaderStructuringChars = forbidFrameStructuringChars,
 ), StompConnectHeadersBuilder {
 
     override var host: String? by optionalHeader(HOST) // required since 1.1, but forbidden in some 1.0 servers

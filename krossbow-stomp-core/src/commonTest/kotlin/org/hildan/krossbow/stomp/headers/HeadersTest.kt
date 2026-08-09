@@ -80,4 +80,76 @@ class HeadersTest {
         }
     }
 
+    @Test
+    fun StompConnectHeaders_fails_on_NUL_in_header_value() {
+        val e = assertFailsWith<InvalidStompHeaderException> {
+            StompConnectHeaders(host = "some.host", forStompCommand = false) {
+                login = "foo\u0000bar"
+            }
+        }
+        assertEquals(
+            expected = "The NUL character is not allowed in STOMP headers because it terminates the " +
+                "frame and has no escape sequence, got 'foo\u0000bar'",
+            actual = e.message,
+        )
+    }
+
+    @Test
+    fun StompConnectHeaders_fails_on_NUL_in_header_name() {
+        val e = assertFailsWith<InvalidStompHeaderException> {
+            StompConnectHeaders(host = "some.host", forStompCommand = false) {
+                set("name\u0000withNUL", "value")
+            }
+        }
+        assertEquals(
+            expected = "The NUL character is not allowed in STOMP headers because it terminates the " +
+                "frame and has no escape sequence, got 'name\u0000withNUL'",
+            actual = e.message,
+        )
+    }
+
+    @Test
+    fun StompConnectHeaders_fails_on_NUL_even_for_STOMP_command() {
+        // The STOMP frame escapes special chars, but NUL has no escape sequence, so it must still be rejected.
+        assertFailsWith<InvalidStompHeaderException> {
+            StompConnectHeaders(host = "some.host", forStompCommand = true) {
+                login = "foo\u0000bar"
+            }
+        }
+        assertFailsWith<InvalidStompHeaderException> {
+            StompConnectHeaders(host = "some.host", forStompCommand = true) {
+                set("name\u0000withNUL", "value")
+            }
+        }
+    }
+
+    @Test
+    fun StompSendHeaders_fails_on_NUL_in_header_value() {
+        // SEND frames escape special chars in headers, but NUL has no escape sequence, so it must still be rejected.
+        val e = assertFailsWith<InvalidStompHeaderException> {
+            StompSendHeaders(destination = "/some/dest") {
+                set("my-header", "foo\u0000bar")
+            }
+        }
+        assertEquals(
+            expected = "The NUL character is not allowed in STOMP headers because it terminates the " +
+                "frame and has no escape sequence, got 'foo\u0000bar'",
+            actual = e.message,
+        )
+    }
+
+    @Test
+    fun StompSendHeaders_fails_on_NUL_in_header_name() {
+        val e = assertFailsWith<InvalidStompHeaderException> {
+            StompSendHeaders(destination = "/some/dest") {
+                set("name\u0000withNUL", "value")
+            }
+        }
+        assertEquals(
+            expected = "The NUL character is not allowed in STOMP headers because it terminates the " +
+                "frame and has no escape sequence, got 'name\u0000withNUL'",
+            actual = e.message,
+        )
+    }
+
 }
