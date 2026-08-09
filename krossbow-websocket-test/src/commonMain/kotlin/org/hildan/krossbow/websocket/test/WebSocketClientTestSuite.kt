@@ -294,6 +294,43 @@ abstract class WebSocketClientTestSuite(
     }
 
     @Test
+    fun testHandshakeCustomHeaders_notLeakedAcrossConnections() = runTestRealTime {
+        if (!wsClient.supportsCustomHeaders) {
+            return@runTestRealTime
+        }
+        // First connection with a set of custom headers
+        val firstConnection = wsClient.connect(
+            url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeCustomHeaders_notLeakedAcrossConnections_1"),
+            headers = mapOf("My-Header-1" to "my-value-1"),
+        )
+        try {
+            val echoedHeadersFrame = firstConnection.expectTextFrame("first header info frame", 50.seconds)
+            assertContains(echoedHeadersFrame.text.lines(), "My-Header-1=my-value-1")
+        } finally {
+            firstConnection.close()
+        }
+
+        // Second connection from the same client with different custom headers.
+        // The headers from the first connection must not be sent again.
+        val secondConnection = wsClient.connect(
+            url = testUrl(path = "/sendHandshakeHeaders", testCaseName = "testHandshakeCustomHeaders_notLeakedAcrossConnections_2"),
+            headers = mapOf("My-Header-2" to "my-value-2"),
+        )
+        try {
+            val echoedHeadersFrame = secondConnection.expectTextFrame("second header info frame", 50.seconds)
+            val headers = echoedHeadersFrame.text.lines()
+            assertContains(headers, "My-Header-2=my-value-2")
+            assertFalse(
+                headers.any { it.startsWith("My-Header-1") },
+                "The custom header 'My-Header-1' from the first connection must not be sent on the second connection, " +
+                    "but the received headers were:\n${echoedHeadersFrame.text}",
+            )
+        } finally {
+            secondConnection.close()
+        }
+    }
+
+    @Test
     open fun testEchoText() = runTestRealTime {
         val connection = wsClient.connect(testUrl(path = "/echo", testCaseName = "echoText"))
 
