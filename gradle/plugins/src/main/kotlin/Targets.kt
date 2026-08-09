@@ -26,6 +26,7 @@ fun KotlinMultiplatformExtension.ktor3Targets() {
     wasmJs {
         browser()
         nodejs()
+        d8()
     }
 
     appleTargets()
