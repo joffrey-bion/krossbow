@@ -82,10 +82,20 @@ private suspend fun WebSocketConnection.stomp(
         // this cancellation comes from the outside, we should not wrap this exception
         throw e
     } catch (e: ConnectionTimeout) {
-        stompSocket.close(e)
+        try {
+            stompSocket.close(e)
+        } catch (closeException: Exception) {
+            e.addSuppressed(closeException)
+        }
         throw e
     } catch (e: Exception) {
-        throw StompConnectionException(headers.host, cause = e)
+        throw StompConnectionException(headers.host, cause = e).also {
+            try {
+                stompSocket.close(e)
+            } catch (closeException: Exception) {
+                it.addSuppressed(closeException)
+            }
+        }
     }
 }
 
