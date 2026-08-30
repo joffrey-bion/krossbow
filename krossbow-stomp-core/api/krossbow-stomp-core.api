@@ -512,7 +512,7 @@ public final class org/hildan/krossbow/stomp/headers/InvalidAckHeaderException :
 	public final fun getInvalidText ()Ljava/lang/String;
 }
 
-public final class org/hildan/krossbow/stomp/headers/InvalidEscapeException : java/lang/IllegalArgumentException {
+public final class org/hildan/krossbow/stomp/headers/InvalidEscapeException : org/hildan/krossbow/stomp/StompException {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getInvalidSequence ()Ljava/lang/String;
