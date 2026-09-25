@@ -346,7 +346,7 @@ class StompClientTest {
     }
 
     @Test
-    fun connect_shouldNotLeakWebSocketConnectionIfCancelled() = runTest {
+    fun connect_shouldNotLeakWebSocketConnection_ifCancelled() = runTest {
         val wsClient = WebSocketClientMock()
         val stompClient = StompClient(wsClient)
 
@@ -359,6 +359,27 @@ class StompClientTest {
         // simulates the cancellation of the connect() call during the STOMP connect handshake
         connectJob.cancel()
         wsSession.expectClose()
+    }
+
+    @Test
+    fun connect_shouldNotLeakWebSocketConnection_ifReceivesInvalidHeartBeat() = runTest {
+        val wsClient = WebSocketClientMock()
+        val stompClient = StompClient(wsClient) {
+            // necessary so runTest knows to wait for the session's coroutines to progress
+            defaultSessionCoroutineContext = testScheduler // retrieves the test dispatcher
+        }
+        val deferredConnectionException = async {
+            assertFailsWith<StompConnectionException> {
+                stompClient.connect("dummy URL")
+            }
+        }
+
+        val wsSession = wsClient.awaitConnectAndSimulateSuccess()
+        wsSession.awaitConnectFrameAndSimulateCompletion()
+        // a valid frame with invalid heart beat header
+        wsSession.simulateTextFrameReceived("CONNECTED\nversion:1.2\nheart-beat:notANumber,0\n\n\u0000")
+        deferredConnectionException.await()
+        assertTrue(wsSession.closed, "web socket should be closed on heart-beat negotiation failure")
     }
 
     @Test
