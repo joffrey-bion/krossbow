@@ -136,7 +136,7 @@ internal abstract class MapBasedStompHeaders(
     override var contentLength: Int? by optionalHeader(
         name = CONTENT_LENGTH,
         default = null,
-        decode = { it.toIntOrNull() ?: error("invalid 'content-length' header '$it'") },
+        decode = { it.toIntOrNull() ?: throw InvalidStompHeaderException("invalid 'content-length' header '$it'") },
         encode = { it?.toString() },
     )
     override var contentType: String? by optionalHeader(CONTENT_TYPE)

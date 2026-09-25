@@ -1,5 +1,7 @@
 package org.hildan.krossbow.stomp.headers
 
+import org.hildan.krossbow.stomp.StompException
+
 /**
  * Implementation of the header escapes described in
  * [the specification](https://stomp.github.io/stomp-specification-1.2.html#Value_Encoding).
@@ -53,5 +55,5 @@ internal object HeaderEscaper {
 
 class InvalidEscapeException(
     val invalidSequence: String,
-    message: String = "Invalid header escape sequence '$invalidSequence'"
-) : IllegalArgumentException(message)
+    message: String = "Invalid header escape sequence '$invalidSequence'",
+) : StompException(message)
