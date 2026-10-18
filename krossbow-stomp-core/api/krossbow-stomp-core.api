@@ -109,6 +109,7 @@ public final class org/hildan/krossbow/stomp/WebSocketClosedUnexpectedly : org/h
 }
 
 public final class org/hildan/krossbow/stomp/config/HeartBeat {
+	public fun <init> ()V
 	public synthetic fun <init> (JJILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (JJLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-UwyO8pc ()J
@@ -123,6 +124,7 @@ public final class org/hildan/krossbow/stomp/config/HeartBeat {
 }
 
 public final class org/hildan/krossbow/stomp/config/HeartBeatTolerance {
+	public fun <init> ()V
 	public synthetic fun <init> (JJILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (JJLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-UwyO8pc ()J
