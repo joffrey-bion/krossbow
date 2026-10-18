@@ -181,6 +181,7 @@ public final class org/hildan/krossbow/websocket/WebSocketListenerFlowAdapter {
 }
 
 public final class org/hildan/krossbow/websocket/reconnection/ExponentialBackOff : org/hildan/krossbow/websocket/reconnection/RetryDelayStrategy {
+	public fun <init> ()V
 	public synthetic fun <init> (JDILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (JDLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun computeDelay-5sfh64U (I)J
