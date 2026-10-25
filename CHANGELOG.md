@@ -1,5 +1,27 @@
 # Change Log
 
+## [10.1.0](https://github.com/joffrey-bion/krossbow/tree/10.1.0) (2026-10-25)
+[View commits](https://github.com/joffrey-bion/krossbow/compare/10.0.0...10.1.0)
+
+**Implemented enhancements:**
+
+- Make all exceptions extend the same `StompException` parent [\#757](https://github.com/joffrey-bion/krossbow/issues/757)
+
+**Upgraded dependencies:**
+
+- Bump kotlin from 2.4.10 to 2.4.21 [\#786](https://github.com/joffrey-bion/krossbow/pull/786) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.springframework:spring\-websocket from 7.0.8 to 7.0.9 [\#771](https://github.com/joffrey-bion/krossbow/pull/771) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.22.2 to 2.22.3 [\#780](https://github.com/joffrey-bion/krossbow/pull/780) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ktor from 3.5.2 to 3.6.0 [\#779](https://github.com/joffrey-bion/krossbow/pull/779) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.squareup.okhttp3:okhttp from 5.4.0 to 5.5.0 [\#768](https://github.com/joffrey-bion/krossbow/pull/768) ([@dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.fasterxml.jackson:jackson\-bom from 2.22.1 to 2.22.2 [\#769](https://github.com/joffrey-bion/krossbow/pull/769) ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+**Fixed bugs:**
+
+- Web socket connection leaked on protocol negotiation failure [\#764](https://github.com/joffrey-bion/krossbow/issues/764)
+- `DarwinWebSocketClient` re\-uses headers from past connections [\#760](https://github.com/joffrey-bion/krossbow/issues/760)
+- Reject special frame\-structuring chars in `CONNECT` and `CONNECTED` frame headers [\#747](https://github.com/joffrey-bion/krossbow/issues/747)
+
 ## [10.0.0](https://github.com/joffrey-bion/krossbow/tree/10.0.0) (2026-07-30)
 [View commits](https://github.com/joffrey-bion/krossbow/compare/9.3.0...10.0.0)
 
